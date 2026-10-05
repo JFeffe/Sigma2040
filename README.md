@@ -368,3 +368,8 @@ Les trois boutons Contact, Preuves et Arrestation filtrent les actions du dossie
 ## Version 169 — Enquêtes
 
 Parcours partagé en cinq étapes dans les dossiers et l’onglet Enquête, boutons d’actions et intervention en parallèle. Mandat optionnel par pays. La deuxième preuve peut toujours être vérifiée et plusieurs agents peuvent recevoir la même action. Identification conservée uniquement pour la révélation du portrait.
+
+## Évaluer BotBrillant1 (BB1)
+
+Cette branche ajoute BB1 comme choix supplémentaire ; Facile, Normal et Expert sont conservés.
+[Guide de test pour le PO](docs/bots/BB1.md) — démarrage local : `node scripts/preview-bb1.mjs`.

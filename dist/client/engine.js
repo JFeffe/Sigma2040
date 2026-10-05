@@ -1,3 +1,4 @@
+import {planBB1Faction} from './bot-brillant-1.js?v=173';
 import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=173';
 import {balanceThreatCountries} from './threat-placement.js?v=173';
 import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=173';
@@ -348,6 +349,9 @@ function collectTurnAlerts(s,knownThreats){s.threatReports=visiblePlots(s).filte
 export function recruit(s,id,replaceId=null){const f=s.factions[s.player],candidate=ROSTER.find(a=>a.id===id);if(s.ended||!candidate||s.agents.some(a=>a.id===id)||s.recruitments.some(r=>r.id===id))throw Error('Recrue indisponible.');if(f.recruitOffer&&!recruitmentCandidates(s).some(a=>a.id===id))throw Error('Choisissez une des recrues proposées.');const current=team(s);if(current.length+s.recruitments.filter(r=>r.faction===s.player).length>=4){const a=current.find(a=>a.id===replaceId);if(!a||a.task||a.country!==s.player||a.status==='captured')throw Error('Libérez un poste ou relevez un agent disponible au QG.');a.status='retired';}s.recruitments.push({id,remaining:2,faction:s.player});if(f.recruitOffer){if(team(s).length+s.recruitments.filter(r=>r.faction===s.player).length<4)replacementOffer(s,s.player);else delete f.recruitOffer;}log(s,`${candidate.name} rejoindra le QG dans deux tours.`,'info',s.player);}
 export const visiblePlots=s=>s.plots.filter(p=>!p.resolved&&!p.cancelled&&!(p.cell===3&&s.suspects.find(t=>t.id==='s6').arrested)&&threatAnnounced(s,p)&&!cellsDone(s).includes(p.cell));
 export function planFaction(s,f){
+ // BB1 is opt-in. The build-173 planner below remains unchanged for all
+ // existing difficulty values and saves (including those without a value).
+ if(aiLevel(s)==='bb1')return planBB1Faction(s,f,{team,knownTargets,visiblePlots,evidenceQueue,evidenceFor,travelTurns,getTechSlots,activateTech,governmentOptions,requestGovernmentFavor,options,assign,hasSafehouse,analysisAgent,cellsDone,funding});
  const hard=aiLevel(s)==='expert',level=hard?'normal':aiLevel(s),faction=s.factions[f],members=team(s,f),available=members.filter(a=>a.status!=='captured'),strategy=s.npcStrategies?.[f]||s.npcStrategy||'balanced';
  if(members.length+s.recruitments.filter(r=>r.faction===f).length<4)s.recruitments.push({id:`${f}-R${s.nextAgent++}`,remaining:2,faction:f});
  const targets=knownTargets(s,f).filter(t=>!t.arrested),threats=visiblePlots(s),analyst=available.filter(a=>a.country===f&&!['travel','sneak'].includes(a.task?.type)).sort((a,b)=>(options(s,b.id,'analyze').chance-options(s,a.id,'analyze').chance-(hard?(b.stats[2]-a.stats[2])*6:0))||missionFatigue(a,'analyze')-missionFatigue(b,'analyze'))[0]||available.slice().sort((a,b)=>b.stats[0]-a.stats[0])[0];

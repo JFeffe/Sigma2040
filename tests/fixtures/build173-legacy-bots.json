@@ -1,0 +1,68 @@
+{
+  "source": "origin/main a37781b, captured before BB1 integration; complete deterministic campaign state",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "2e406c7772d36ef819a0e225455c01a4844e20795cf0edee38a96d728ec587a0",
+      "outcome": "defeat",
+      "turn": 21
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "d7edd30b56d99e79085099d1018e90adf8ca76d7564a56f0671e78fbe3f832cf",
+      "outcome": "victory",
+      "turn": 28
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "99fdd1350c0890cc5cbc275b2515311fd8413982238a98608844c5679a5574d3",
+      "outcome": "defeat",
+      "turn": 29
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "8acde14c376ada160d2512bc3459e8f483f480349d1d925055432e67905e3db9",
+      "outcome": "defeat",
+      "turn": 29
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "72b259ca8a77406442e76d7b19aa56ff0efa0409f1abd02eda49ef49f1df8a0a",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "b49ee40ad265ab772dcda39dc95c4a44c15f324474c63af8a5c03825136abb9e",
+      "outcome": "victory",
+      "turn": 23
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "89a1dc1ddb1b5552deaddd6c1e69294436994b7cc235d2c83229e5a3f419afd5",
+      "outcome": "victory",
+      "turn": 22
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "472ce38ee18a6d08a97e69fde08e39c6b82f6a9547018c1ca2e752ac44fb2054",
+      "outcome": "defeat",
+      "turn": 16
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "68eeea9c755eafed224a6725c4e53a5d54fd6d71bf8610a755cb3df88eddbb13",
+      "outcome": "defeat",
+      "turn": 16
+    }
+  ]
+}
