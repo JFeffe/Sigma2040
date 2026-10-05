@@ -1,0 +1,26 @@
+@font-face{font-family:Oxanium;src:url('./assets/oxanium.ttf') format('truetype');font-weight:200 800;font-display:swap}
+.main-menu{position:fixed;inset:0;overflow:auto;overflow-x:hidden;isolation:isolate;background:radial-gradient(ellipse at 77% 48%,#0c2033,#040910 72%);color:#eef5fc}
+.menu-particles{position:fixed;inset:0;width:100%;height:100%;z-index:-3;pointer-events:none}
+.menu-earth{position:fixed;width:min(88vw,122vh);height:min(88vw,122vh);right:-8vw;top:50%;transform:translateY(-50%);z-index:-2;pointer-events:none}
+.menu-earth canvas{position:absolute;inset:0;width:100%;height:100%}.menu-earth .menu-earth-fallback{width:100%;height:100%;inset:0}
+.main-menu:after{content:'';position:fixed;inset:0;background:linear-gradient(90deg,#040910d9 0%,#040910a6 29%,#04091012 57%,transparent 75%);z-index:-1;pointer-events:none}
+.menu-panel{width:clamp(390px,38vw,500px);margin:clamp(38px,9vh,110px) 0 65px clamp(28px,8.3vw,155px);padding:20px 0;box-sizing:border-box}
+.menu-brand{margin-bottom:54px}.menu-brand .brand{font-family:Oxanium,sans-serif;font-weight:500;font-size:clamp(25px,2.65vw,41px);letter-spacing:.15em;gap:20px;white-space:nowrap;color:#eaf6ff}.menu-brand .brand svg{width:49px;height:46px;color:#9fcfeb;flex-shrink:0}.menu-brand .brand span{color:#92c4ed;font-weight:400;font-size:.8em;letter-spacing:.2em}.menu-brand .brand small{display:none}
+.menu-eyebrow{font-family:Oxanium,sans-serif;font-size:11px;font-weight:400;letter-spacing:3px;color:#acbdce;margin:0 0 30px}
+.menu-panel h1{font-family:Oxanium,sans-serif;font-size:clamp(23px,2.05vw,31px);font-weight:400;letter-spacing:-.5px;line-height:1.35;margin:0 0 22px;text-wrap:balance}
+.menu-intro{font-size:16px;line-height:1.65;color:#afc2d4;margin:0 0 34px}.menu-panel nav{display:grid;gap:11px;max-width:410px}
+.menu-panel nav .btn{min-height:48px;justify-content:flex-start;padding:12px 20px;text-align:left;font-size:16px;background:linear-gradient(115deg,#102033c9,#091421c7);border:1px solid #7a9db538;border-radius:5px;box-shadow:none;color:#edf4fb;transition:border-color .2s,background .2s,box-shadow .2s}
+.menu-panel nav .btn.primary{background:linear-gradient(105deg,#bbd0dc,#849aaac9);color:#091522;border-color:#a0e2f3}.menu-panel nav .btn:hover:not(:disabled){border-color:#8fdcff;background-color:#1a344b;box-shadow:0 0 20px #51bfff19}.menu-panel nav .btn:focus-visible{outline:2px solid #a1e5ff;outline-offset:4px}
+.menu-panel nav .menu-help{font-size:14px;background:transparent;border-color:transparent;color:#b8c9d7;margin-top:8px}.menu-save{font-size:12px;color:#8a9db0;margin-top:15px}.main-menu .btn:disabled{opacity:.5}
+.main-menu footer{position:relative;margin:0 32px 20px;display:flex;justify-content:space-between;gap:16px;font-size:11px;letter-spacing:1px;color:#73889c;background:none;border:0}
+@media(min-height:820px) and (min-width:701px){.main-menu footer{position:absolute;bottom:0;left:0;right:0}}
+@media(max-width:700px){.menu-earth{width:150vw;height:150vw;right:-66vw;top:37%;opacity:.75}.main-menu:after{background:linear-gradient(90deg,#040910e8,#040910a8 65%,#04091055)}.menu-panel{width:calc(100% - 48px);max-width:410px;margin:35px 24px 30px;padding:10px 0}.menu-brand{margin-bottom:40px}.menu-brand .brand{font-size:clamp(22px,6vw,30px);gap:13px;letter-spacing:.12em}.menu-brand .brand svg{width:36px;height:38px}.menu-eyebrow{font-size:10px;letter-spacing:2px;margin-bottom:25px}.menu-panel h1{font-size:clamp(21px,5.5vw,27px)}.menu-intro{font-size:15px;margin-bottom:27px}.main-menu footer{margin:0 24px 20px;flex-direction:column;line-height:1.6}}
+@media(prefers-reduced-motion:reduce){.menu-panel nav .btn{transition:none}}
+.music-settings{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #ffffff24}.music-settings label{display:block;font-size:15px;margin:14px 0 9px}.music-settings input[type=range]{width:100%}.music-settings small{display:block;margin:12px 0;color:#b8b3be;line-height:1.5}.music-settings p{font-size:14px;line-height:1.5}.music-settings summary{cursor:pointer;font-size:14px}.settings-modal{width:580px;max-width:100%}.settings-modal h2{font-size:28px}.setup-menu-return{margin:16px 24px}.main-menu .btn:disabled{opacity:.4}
+.main-menu .menu-build{position:absolute;top:18px;left:22px;z-index:5;color:#b9bccb;font:12px/1.4 Arial,sans-serif;letter-spacing:.1em;pointer-events:none}
+
+/* Compact main menu and saved campaign metadata. */
+.main-menu .menu-panel{margin-top:clamp(38px,5vh,65px)}
+.main-menu .menu-brand{margin-bottom:28px}.main-menu .menu-eyebrow{margin-bottom:18px}
+.menu-panel nav .continue-button{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.continue-details{font-size:12px;font-weight:400;line-height:1.4;letter-spacing:0;opacity:.8}

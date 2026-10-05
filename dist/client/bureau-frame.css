@@ -1,0 +1,15 @@
+/* Cadre de la modale du bureau des enquêtes ; son contenu est isolé (shadow DOM, bureau.css). */
+dialog#bureau{width:min(1560px,calc(100vw - 24px));max-width:none;height:calc(100dvh - 24px);max-height:none;padding:0;margin:auto;overflow:hidden;border:1px solid #4a434a;border-radius:12px;background:#151315;box-shadow:0 24px 120px #000}
+dialog#bureau::backdrop{background:#04050acc}
+dialog#bureau>#sigma-bureau{display:block;height:100%}
+.deck-tab[data-cmd="bureau"] .icon{color:#e6bc7e}
+@media(max-width:700px){dialog#bureau{width:100vw;height:100dvh;border-radius:0}}
+
+.deck-tab[data-cmd="bureau"]>span{white-space:normal;line-height:1.2}
+
+/* Same panel bounds as the standard pages; navigation remains interactive. */
+dialog#bureau{position:fixed;inset:var(--bureau-top,188px) 24px 24px 100px;width:auto;height:auto;margin:0;z-index:25;border:1px solid #65515e;border-radius:10px;background:#141319f5;box-shadow:0 25px 60px #0009}
+@media(max-width:760px){dialog#bureau{inset:var(--bureau-top,220px) 8px 68px;width:auto;height:auto;border-radius:10px}}
+.nav-availability-badge{pointer-events:none}.deck-tab:not(.nav-available) .nav-availability-badge{background:#333743;color:#d5d7df;box-shadow:none}
+
+.immersive-deck .field-team .agent-brief .compact-energy{font-size:11px;white-space:nowrap}.immersive-deck .field-team .agent-brief{flex-wrap:wrap;gap:3px 8px}

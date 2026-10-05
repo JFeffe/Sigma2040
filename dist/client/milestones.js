@@ -1,0 +1,25 @@
+import {caseFor} from './intelligence.js?v=173';
+import {SUSPECT_PROFILES,suspectPortrait,discoveryMarkup,identityKnown} from './fracture-profiles.js?v=173';
+import * as E from './engine.js?v=173';
+import {COUNTRY,CELLS} from './data.js?v=173';
+import {esc,portrait,button} from './ui.js?v=173';
+import {cityArt} from './visuals.js?v=173';
+const stages={verified:['Preuve vérifiée','Une pièce a été vérifiée et peut étayer le dossier.'],evidence:['Preuves réunies','Deux preuves sont disponibles, dont au moins une vérifiée.'],located:['Cible localisée','Une position précise est confirmée pour une durée limitée.'],prepared:['Intervention préparée','Le dossier et la préparation opérationnelle sont prêts.'],arrested:['Cible arrêtée','La cible est en détention. Son rôle dans le réseau est neutralisé.']};
+export function investigationSnapshot(s){return {turn:s.turn,campaign:s.seed+':'+s.player,log:s.logId,targets:Object.fromEntries(E.knownTargets(s).map(t=>{const e=E.evidenceFor(s,s.player,t.id),verified=e.filter(x=>x.verified).length;return [t.id,{identity:!!t.identified,verified:verified>0,evidence:e.length>=2&&verified>0,located:t.locationUntil>0,prepared:!!t.prepared,arrested:!!t.arrested}];})),cells:E.cellsDone(s)};}
+export function investigationHighlights(before,s){
+ if(!before||before.campaign!==s.seed+':'+s.player)return [];
+ const after=investigationSnapshot(s),result=[];
+ for(const t of E.knownTargets(s)){
+  const old=before.targets[t.id]||{},now=after.targets[t.id];
+  const achieved=Object.keys(stages).filter(k=>now[k]&&!old[k]);if(!before.targets[t.id]){result.push({id:t.id,phase:'discovered',title:'Nouveau dossier découvert',detail:caseFor(s,t).brief,caseTitle:caseFor(s,t).title,name:t.name,country:t.country,target:t,achieved:achieved.map(k=>stages[k][0]),actor:'Dossier de votre unité',next:E.nextOperation(s,t).text});continue;}if(!achieved.length)continue;
+  const phase=achieved.at(-1),entry=E.evidenceFor(s,s.player,t.id).find(e=>e.verified),faction=phase==='arrested'?t.arrestedBy:phase==='prepared'?t.prepBy:phase==='located'?t.locBy:phase==='identity'?t.identityBy:entry?.verifiedBy;
+  // Portrait only when the new visible report explicitly names this case.
+  const types={identity:['collect','surveil','hack','drone'],verified:['analyze'],evidence:['collect','analyze','hack'],located:['surveil','hack','drone'],prepared:['prepare'],arrested:['arrest']}[phase];
+  const report=(s.operationReports||[]).find(r=>r.turn===before.turn&&r.status==='RÉUSSITE'&&types.includes(r.type)&&r.notes.some(n=>n.includes(t.name)));
+  const agent=faction===s.player&&s.logId>before.log&&report?s.agents.find(a=>a.id===report.agentId):null;
+  result.push({id:t.id,phase,title:stages[phase][0],detail:phase==='located'?`Position confirmée jusqu’au tour ${t.locationUntil} inclus.`:stages[phase][1],name:t.name,country:t.country,target:t,achieved:achieved.map(k=>stages[k][0]),actor:phase==='evidence'?'Dossier de votre unité':agent?.name||(COUNTRY[faction]?.name||'Cellule de renseignement'),agent,next:E.nextOperation(s,t).text});
+ }
+ for(const cell of after.cells.filter(c=>!before.cells.includes(c))){const t=s.suspects.find(t=>t.cell===cell);result.push({id:'cell-'+cell,phase:'cell',title:'Cellule démantelée',detail:'Tous les membres de cette cellule sont en détention. Ses attaques restantes sont abandonnées.',name:CELLS[cell],country:t.country,achieved:[],actor:'Opération collective',next:s.ended==='victory'?'L’Architecte est capturé et les objectifs collectifs sont atteints.':after.cells.length>=2?'Deux cellules sont neutralisées. La capture de L’Architecte reste nécessaire pour remporter la campagne.':'Poursuivre les autres cellules et remonter jusqu’à L’Architecte.'});}
+ return result;
+}
+export function milestoneBanner(item,index,total){return `<section class="milestone-scene phase-${item.phase} ${item.target?'dossier-milestone':''}" aria-label="Étape d’enquête accomplie"><div class="milestone-art">${cityArt(item.country,'milestone-city')}${item.target?suspectPortrait(item.target,'discovery-portrait'):''}${item.agent&&!item.target?`<div class="milestone-agent">${portrait(item.agent)}</div>`:''}</div><div class="milestone-copy"><div class="milestone-kicker">AVANCÉE DE L’ENQUÊTE <span>${index+1} / ${total}</span></div><p class="milestone-case">${esc(item.name)} · ${COUNTRY[item.country].city}</p><h2>${esc(item.title)}</h2>${item.caseTitle?`<h3>${esc(item.caseTitle)}</h3>`:''}<p class="milestone-detail">${esc(item.detail)}</p>${item.phase==='discovered'&&item.target?discoveryMarkup(item.target):''}${item.achieved.length>1?`<ul class="milestone-steps">${item.achieved.map(x=>`<li>✓ ${esc(x)}</li>`).join('')}</ul>`:''}<p class="milestone-credit">${esc(item.actor)}</p><div class="milestone-next"><span>SUITE DU DOSSIER</span><p>${esc(item.next)}</p></div><div class="milestone-actions">${button(index+1<total?'Avancée suivante':'Continuer','milestone-next','primary')}${button('Passer la séquence','milestone-skip','')}</div></div></section>`;}

@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as E from '../dist/client/engine.js';
+import {DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
+import {portraitAsset} from '../dist/client/ui.js';
+import {fullBody} from '../dist/client/visuals.js';
+import {agentMapMarkers} from '../dist/client/map.js';
+import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
+
+test('Mercer follows Midnight and survives recruitment, save and multiplayer identity changes',()=>{
+ assert.equal(DISPLAY_ROSTER[DISPLAY_ROSTER.findIndex(a=>a.id==='p17')+1].id,'p18');
+ assert.deepEqual(DEFAULT_TEAM_IDS,['p0','p12','p13','p14']);
+ const s=E.createGame('FR',DEFAULT_TEAM_IDS,11);
+ E.recruit(s,'p18','p13');E.advance(s);E.advance(s);
+ const a=E.team(E.validateSave(structuredClone(s))).find(a=>a.id==='p18');
+ assert.ok(a);assert.deepEqual(a.stats,[7,6,7]);
+ assert.deepEqual(a.talents,['contacts','combat','infiltration']);
+ assert.ok(a.nationalities.includes('US'));assert.equal(a.age,undefined);
+ assert.equal(portraitAsset(a),'./assets/mercer-portrait.webp');
+ assert.match(fullBody(a),/mercer-full.png/);
+ assert.match(agentMapMarkers(s),/mercer-portrait.webp/);
+ const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-mercer-0000000000','Hôte');
+ joinRoom(r,{invite:r.invite,token:'guest-mercer-000000000',name:'Invité'});
+ r.members[0].agents=['p0','p12','p16','p18'];r.members.forEach(m=>{if(!m.agents.length)m.agents=['p0','p12','p13','p14'];m.confirmed=true;});startRoom(r,11);
+ const view=playerView(restoreRoom(structuredClone(r)),'FR');
+ const m=view.agents.find(a=>a.templateId==='p18');
+ assert.ok(m);assert.equal(portraitAsset(m),'./assets/mercer-portrait.webp');
+ assert.match(fullBody(m),/mercer-full.png/);
+ assert.match(agentMapMarkers(view),/mercer-portrait.webp/);
+});

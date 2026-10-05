@@ -1,0 +1,53 @@
+{
+  "unitTests": {
+    "passed": 367,
+    "failed": 0
+  },
+  "commonRulesUnchanged": true,
+  "acceptedPlannerIdentical": true,
+  "acceptanceReplays": [
+    {
+      "level": "easy",
+      "seeds": [
+        30001,
+        31000
+      ],
+      "games": 1000,
+      "counts": [
+        177,
+        389,
+        434
+      ],
+      "passed": true
+    },
+    {
+      "level": "normal",
+      "seeds": [
+        10001,
+        11000
+      ],
+      "games": 1000,
+      "counts": [
+        354,
+        345,
+        301
+      ],
+      "passed": true
+    },
+    {
+      "level": "expert",
+      "seeds": [
+        100001,
+        101000
+      ],
+      "games": 1000,
+      "counts": [
+        640,
+        178,
+        182
+      ],
+      "passed": true
+    }
+  ],
+  "published": false
+}

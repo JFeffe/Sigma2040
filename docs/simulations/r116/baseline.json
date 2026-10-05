@@ -1,0 +1,187 @@
+{
+  "games": 300,
+  "strategy": "balanced",
+  "victories": 2,
+  "turns": 5202,
+  "arrests": 607,
+  "attacks": 1584,
+  "intercepted": 409,
+  "cancelled": 228,
+  "zeroScoreTeams": 410,
+  "actions": {
+    "travel": {
+      "count": 11803,
+      "success": 11803,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "counter": {
+      "count": 6205,
+      "success": 5292,
+      "failed": 913,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "contacts": {
+      "count": 8840,
+      "success": 5850,
+      "failed": 2990,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "rest": {
+      "count": 5881,
+      "success": 5881,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "cyberSupport": {
+      "count": 15160,
+      "success": 10930,
+      "failed": 4230,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "surveil": {
+      "count": 9538,
+      "success": 5777,
+      "failed": 2598,
+      "stopped": 1163,
+      "cost": 23826,
+      "prestige": 0
+    },
+    "collect": {
+      "count": 6346,
+      "success": 3715,
+      "failed": 2173,
+      "stopped": 458,
+      "cost": 0,
+      "prestige": 0
+    },
+    "authorize": {
+      "count": 4687,
+      "success": 3213,
+      "failed": 1474,
+      "stopped": 0,
+      "cost": 8886,
+      "prestige": 0
+    },
+    "hide": {
+      "count": 2811,
+      "success": 2811,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "findSafehouse": {
+      "count": 7182,
+      "success": 5799,
+      "failed": 1383,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "analyze": {
+      "count": 3878,
+      "success": 3353,
+      "failed": 431,
+      "stopped": 94,
+      "cost": 4110,
+      "prestige": 0
+    },
+    "prepare": {
+      "count": 1878,
+      "success": 1226,
+      "failed": 575,
+      "stopped": 77,
+      "cost": 7890,
+      "prestige": 0
+    },
+    "arrest": {
+      "count": 994,
+      "success": 607,
+      "failed": 335,
+      "stopped": 52,
+      "cost": 5106,
+      "prestige": 0
+    },
+    "fieldRest": {
+      "count": 8973,
+      "success": 8973,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "protect": {
+      "count": 2001,
+      "success": 1379,
+      "failed": 622,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "rescue": {
+      "count": 69,
+      "success": 39,
+      "failed": 19,
+      "stopped": 11,
+      "cost": 318,
+      "prestige": 0
+    },
+    "equip": {
+      "count": 302,
+      "success": 234,
+      "failed": 68,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "heal": {
+      "count": 158,
+      "success": 158,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    }
+  },
+  "countries": {
+    "FR": {
+      "score": 1694.8000000000002,
+      "arrests": 109
+    },
+    "US": {
+      "score": 1428.5,
+      "arrests": 72
+    },
+    "CN": {
+      "score": 1486.8,
+      "arrests": 86
+    },
+    "IN": {
+      "score": 1518.3000000000002,
+      "arrests": 79
+    },
+    "RU": {
+      "score": 1815.8000000000002,
+      "arrests": 114
+    },
+    "GB": {
+      "score": 2121.8,
+      "arrests": 147
+    }
+  },
+  "meanTurns": 17.34,
+  "meanArrests": 2.0233333333333334,
+  "winRate": 0.006666666666666667,
+  "zeroScoreRate": 0.22777777777777777
+}

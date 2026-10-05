@@ -1,0 +1,594 @@
+{
+  "seeds": [
+    200001,
+    201000
+  ],
+  "note": "Unseen seeds, accepted Easy/Normal and published v164 Expert; all AI. Composition and strategy pilots use first 200 seeds in Normal.",
+  "results": [
+    {
+      "level": "easy",
+      "variant": "baseline",
+      "games": 1000,
+      "seeds": [
+        200001,
+        201000
+      ],
+      "counts": [
+        210,
+        233,
+        557
+      ],
+      "countries": {
+        "FR": {
+          "games": 1000,
+          "score": 25106.20000000018,
+          "arrests": 752,
+          "topShare": 154.58333333333331
+        },
+        "US": {
+          "games": 1000,
+          "score": 26299.400000000194,
+          "arrests": 813,
+          "topShare": 183.58333333333331
+        },
+        "CN": {
+          "games": 1000,
+          "score": 25216.300000000192,
+          "arrests": 751,
+          "topShare": 172
+        },
+        "IN": {
+          "games": 1000,
+          "score": 25929.1000000002,
+          "arrests": 759,
+          "topShare": 181.75
+        },
+        "RU": {
+          "games": 1000,
+          "score": 25574.300000000196,
+          "arrests": 796,
+          "topShare": 154.33333333333331
+        },
+        "GB": {
+          "games": 1000,
+          "score": 25202.70000000019,
+          "arrests": 765,
+          "topShare": 153.75
+        }
+      },
+      "timeouts": {
+        "total": 557,
+        "architectOnly": 328,
+        "cellsOnly": 79,
+        "both": 150,
+        "architectStage": {
+          "0": 1,
+          "1": 21,
+          "2": 158,
+          "3": 140,
+          "4": 76,
+          "5": 82
+        },
+        "architectFailedAttempts": 45,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 36,
+          "1": 193,
+          "2": 221,
+          "3": 107
+        }
+      }
+    },
+    {
+      "level": "normal",
+      "variant": "baseline",
+      "games": 1000,
+      "seeds": [
+        200001,
+        201000
+      ],
+      "counts": [
+        326,
+        163,
+        511
+      ],
+      "countries": {
+        "FR": {
+          "games": 1000,
+          "score": 25228.00000000015,
+          "arrests": 758,
+          "topShare": 157.16666666666666
+        },
+        "US": {
+          "games": 1000,
+          "score": 26130.20000000015,
+          "arrests": 793,
+          "topShare": 197.83333333333334
+        },
+        "CN": {
+          "games": 1000,
+          "score": 25630.100000000137,
+          "arrests": 767,
+          "topShare": 156.83333333333334
+        },
+        "IN": {
+          "games": 1000,
+          "score": 25778.400000000158,
+          "arrests": 764,
+          "topShare": 179.5
+        },
+        "RU": {
+          "games": 1000,
+          "score": 25644.80000000016,
+          "arrests": 757,
+          "topShare": 158.66666666666666
+        },
+        "GB": {
+          "games": 1000,
+          "score": 25342.50000000015,
+          "arrests": 758,
+          "topShare": 150
+        }
+      },
+      "timeouts": {
+        "total": 511,
+        "architectOnly": 243,
+        "cellsOnly": 88,
+        "both": 180,
+        "architectStage": {
+          "0": 10,
+          "1": 20,
+          "2": 118,
+          "3": 105,
+          "4": 80,
+          "5": 90
+        },
+        "architectFailedAttempts": 38,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 77,
+          "1": 191,
+          "2": 167,
+          "3": 76
+        }
+      }
+    },
+    {
+      "level": "expert",
+      "variant": "baseline",
+      "games": 1000,
+      "seeds": [
+        200001,
+        201000
+      ],
+      "counts": [
+        519,
+        103,
+        378
+      ],
+      "countries": {
+        "FR": {
+          "games": 1000,
+          "score": 25299.40000000008,
+          "arrests": 814,
+          "topShare": 151.50000000000003
+        },
+        "US": {
+          "games": 1000,
+          "score": 26268.100000000082,
+          "arrests": 935,
+          "topShare": 184.5
+        },
+        "CN": {
+          "games": 1000,
+          "score": 25908.700000000073,
+          "arrests": 894,
+          "topShare": 154.66666666666669
+        },
+        "IN": {
+          "games": 1000,
+          "score": 25755.60000000007,
+          "arrests": 894,
+          "topShare": 170.5
+        },
+        "RU": {
+          "games": 1000,
+          "score": 25903.30000000008,
+          "arrests": 871,
+          "topShare": 162.33333333333334
+        },
+        "GB": {
+          "games": 1000,
+          "score": 26140.900000000078,
+          "arrests": 905,
+          "topShare": 176.50000000000003
+        }
+      },
+      "timeouts": {
+        "total": 378,
+        "architectOnly": 254,
+        "cellsOnly": 51,
+        "both": 73,
+        "architectStage": {
+          "0": 4,
+          "1": 4,
+          "2": 87,
+          "3": 50,
+          "4": 73,
+          "5": 109
+        },
+        "architectFailedAttempts": 51,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 22,
+          "1": 102,
+          "2": 147,
+          "3": 107
+        }
+      }
+    },
+    {
+      "level": "normal",
+      "variant": "investigators",
+      "games": 200,
+      "seeds": [
+        200001,
+        200200
+      ],
+      "counts": [
+        61,
+        37,
+        102
+      ],
+      "countries": {
+        "FR": {
+          "games": 200,
+          "score": 5202.999999999996,
+          "arrests": 156,
+          "topShare": 33.5
+        },
+        "US": {
+          "games": 200,
+          "score": 5208.599999999997,
+          "arrests": 168,
+          "topShare": 41
+        },
+        "CN": {
+          "games": 200,
+          "score": 5089.099999999997,
+          "arrests": 151,
+          "topShare": 29
+        },
+        "IN": {
+          "games": 200,
+          "score": 4991.199999999996,
+          "arrests": 136,
+          "topShare": 32.5
+        },
+        "RU": {
+          "games": 200,
+          "score": 4997.699999999996,
+          "arrests": 153,
+          "topShare": 30
+        },
+        "GB": {
+          "games": 200,
+          "score": 5020.399999999996,
+          "arrests": 142,
+          "topShare": 34
+        }
+      },
+      "timeouts": {
+        "total": 102,
+        "architectOnly": 45,
+        "cellsOnly": 20,
+        "both": 37,
+        "architectStage": {
+          "0": 6,
+          "1": 3,
+          "2": 17,
+          "3": 21,
+          "4": 17,
+          "5": 18
+        },
+        "architectFailedAttempts": 6,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 12,
+          "1": 45,
+          "2": 36,
+          "3": 9
+        }
+      }
+    },
+    {
+      "level": "normal",
+      "variant": "intervention",
+      "games": 200,
+      "seeds": [
+        200001,
+        200200
+      ],
+      "counts": [
+        81,
+        21,
+        98
+      ],
+      "countries": {
+        "FR": {
+          "games": 200,
+          "score": 5129.7999999999965,
+          "arrests": 156,
+          "topShare": 33
+        },
+        "US": {
+          "games": 200,
+          "score": 5169.799999999996,
+          "arrests": 146,
+          "topShare": 34.5
+        },
+        "CN": {
+          "games": 200,
+          "score": 5246.599999999996,
+          "arrests": 174,
+          "topShare": 38.5
+        },
+        "IN": {
+          "games": 200,
+          "score": 5129.999999999996,
+          "arrests": 146,
+          "topShare": 26
+        },
+        "RU": {
+          "games": 200,
+          "score": 5187.9999999999945,
+          "arrests": 154,
+          "topShare": 38.5
+        },
+        "GB": {
+          "games": 200,
+          "score": 5069.7999999999965,
+          "arrests": 152,
+          "topShare": 29.5
+        }
+      },
+      "timeouts": {
+        "total": 98,
+        "architectOnly": 43,
+        "cellsOnly": 17,
+        "both": 38,
+        "architectStage": {
+          "0": 3,
+          "1": 3,
+          "2": 22,
+          "3": 21,
+          "4": 20,
+          "5": 12
+        },
+        "architectFailedAttempts": 11,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 19,
+          "1": 36,
+          "2": 32,
+          "3": 11
+        }
+      }
+    },
+    {
+      "level": "normal",
+      "variant": "support",
+      "games": 200,
+      "seeds": [
+        200001,
+        200200
+      ],
+      "counts": [
+        64,
+        35,
+        101
+      ],
+      "countries": {
+        "FR": {
+          "games": 200,
+          "score": 5243.699999999994,
+          "arrests": 160,
+          "topShare": 38
+        },
+        "US": {
+          "games": 200,
+          "score": 4989.599999999995,
+          "arrests": 143,
+          "topShare": 28
+        },
+        "CN": {
+          "games": 200,
+          "score": 5060.299999999995,
+          "arrests": 145,
+          "topShare": 34
+        },
+        "IN": {
+          "games": 200,
+          "score": 5044.7999999999965,
+          "arrests": 150,
+          "topShare": 33
+        },
+        "RU": {
+          "games": 200,
+          "score": 5139.299999999994,
+          "arrests": 165,
+          "topShare": 36.5
+        },
+        "GB": {
+          "games": 200,
+          "score": 5048.299999999994,
+          "arrests": 155,
+          "topShare": 30.5
+        }
+      },
+      "timeouts": {
+        "total": 101,
+        "architectOnly": 46,
+        "cellsOnly": 11,
+        "both": 44,
+        "architectStage": {
+          "1": 6,
+          "2": 29,
+          "3": 20,
+          "4": 14,
+          "5": 21
+        },
+        "architectFailedAttempts": 8,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 16,
+          "1": 39,
+          "2": 29,
+          "3": 17
+        }
+      }
+    },
+    {
+      "level": "normal",
+      "variant": "strategy-investigation",
+      "games": 200,
+      "seeds": [
+        200001,
+        200200
+      ],
+      "counts": [
+        78,
+        96,
+        26
+      ],
+      "countries": {
+        "FR": {
+          "games": 200,
+          "score": 4540.699999999997,
+          "arrests": 138,
+          "topShare": 23.5
+        },
+        "US": {
+          "games": 200,
+          "score": 4414.199999999997,
+          "arrests": 141,
+          "topShare": 31.5
+        },
+        "CN": {
+          "games": 200,
+          "score": 4519.199999999997,
+          "arrests": 145,
+          "topShare": 38.5
+        },
+        "IN": {
+          "games": 200,
+          "score": 4752.599999999998,
+          "arrests": 168,
+          "topShare": 42.5
+        },
+        "RU": {
+          "games": 200,
+          "score": 4439.999999999997,
+          "arrests": 152,
+          "topShare": 29
+        },
+        "GB": {
+          "games": 200,
+          "score": 4555.299999999997,
+          "arrests": 150,
+          "topShare": 35
+        }
+      },
+      "timeouts": {
+        "total": 26,
+        "architectOnly": 16,
+        "cellsOnly": 9,
+        "both": 1,
+        "architectStage": {
+          "3": 3,
+          "4": 4,
+          "5": 10
+        },
+        "architectFailedAttempts": 7,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "1": 10,
+          "2": 10,
+          "3": 6
+        }
+      }
+    },
+    {
+      "level": "normal",
+      "variant": "strategy-defense",
+      "games": 200,
+      "seeds": [
+        200001,
+        200200
+      ],
+      "counts": [
+        0,
+        3,
+        197
+      ],
+      "countries": {
+        "FR": {
+          "games": 200,
+          "score": 3846.199999999999,
+          "arrests": 17,
+          "topShare": 30.5
+        },
+        "US": {
+          "games": 200,
+          "score": 4030.2000000000007,
+          "arrests": 28,
+          "topShare": 32
+        },
+        "CN": {
+          "games": 200,
+          "score": 3853.2000000000007,
+          "arrests": 21,
+          "topShare": 29.5
+        },
+        "IN": {
+          "games": 200,
+          "score": 3995.900000000001,
+          "arrests": 23,
+          "topShare": 35
+        },
+        "RU": {
+          "games": 200,
+          "score": 4009.1999999999994,
+          "arrests": 19,
+          "topShare": 38.5
+        },
+        "GB": {
+          "games": 200,
+          "score": 3955.3000000000006,
+          "arrests": 16,
+          "topShare": 34.5
+        }
+      },
+      "timeouts": {
+        "total": 197,
+        "architectOnly": 1,
+        "cellsOnly": 1,
+        "both": 195,
+        "architectStage": {
+          "0": 135,
+          "1": 38,
+          "2": 15,
+          "3": 6,
+          "5": 2
+        },
+        "architectFailedAttempts": 0,
+        "architectArrestInProgress": 0,
+        "cellsHistogram": {
+          "0": 184,
+          "1": 12,
+          "2": 1
+        }
+      }
+    }
+  ]
+}

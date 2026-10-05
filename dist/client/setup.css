@@ -1,0 +1,25 @@
+/* Compact new-game controls remain in view while selecting agents. */
+.setup-menu-return{margin:8px 24px 0}
+.setup-shell>header{margin:8px 12px;padding:12px 20px}
+.setup-main{padding:12px 24px 24px}
+.setup-main .page-heading{margin-bottom:18px}
+.setup-main h1{font-size:34px}
+.setup-main .page-heading p{margin-top:6px}
+.setup-columns{grid-template-columns:minmax(0,1fr) 310px;gap:24px;align-items:start}
+.setup-selection{grid-column:1;grid-row:1;min-width:0}
+.setup-columns>.briefing{grid-column:2;grid-row:1;position:sticky;top:12px;align-self:start;display:flex;flex-direction:column;gap:16px;padding:16px;max-height:calc(100dvh - 24px);overflow:auto}
+.briefing .team-balance{padding:0;margin:0;border:0;background:none;box-shadow:none}
+.briefing .team-balance h3{font-size:16px;margin:0 0 12px}
+.briefing .team-balance>p,.briefing .team-balance>small{display:none}
+.briefing .balance-row{margin:10px 0;gap:6px;font-size:14px}
+.briefing .balance-row small{font-size:12px;line-height:1.3}
+.briefing .setup-difficulty{margin:0;padding:14px 0 0;border:0;border-top:1px solid #ffffff26;background:none}
+.setup-difficulty h3{font-size:16px;margin:0 0 10px}
+.setup-difficulty .suspect-actions{display:flex;gap:6px;flex-wrap:wrap;margin:0}
+.setup-difficulty .btn{flex:1;padding:10px 8px;min-height:44px;font-size:14px}
+.setup-columns>.briefing>.setup-launch{width:100%;margin:0;min-height:46px;flex-shrink:0;font-size:14px}
+.setup-main .doctrine{margin-bottom:22px}
+@media(max-width:1100px){.setup-columns{grid-template-columns:minmax(0,1fr) 280px;gap:18px}.setup-main .recruit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.setup-main{padding:12px}.setup-shell>header{padding:10px 14px}.setup-main h1{font-size:28px}.setup-columns{grid-template-columns:minmax(0,1fr);gap:16px}.setup-selection{grid-column:1;grid-row:2}.setup-columns>.briefing{grid-column:1;grid-row:1;z-index:5;gap:10px;top:6px;padding:12px;background:#182238;max-height:calc(100dvh - 12px)}.briefing .team-balance{display:none}.briefing .setup-difficulty{border:0;padding:0}.setup-difficulty h3{margin-bottom:6px}.setup-menu-return{margin:6px 12px 0}}
+
+.setup-country{margin-bottom:22px}

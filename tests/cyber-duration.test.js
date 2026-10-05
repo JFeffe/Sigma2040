@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as E from '../dist/client/engine.js';
+import {makeScreens} from '../dist/client/screens.js';
+import {createCamera} from '../dist/client/globe.js';
+test('Repeated successful hacks extend duration, retain +10, expire and survive save reload',()=>{
+ const s=E.createGame('FR',['p0','p1','p2','p3'],47);s.humanFactions=Object.keys(s.factions);s.plots=[];
+ const [a,b,c]=s.agents;b.country='DE';b.stats[0]=5;s.factions.FR.access.DE=true;
+ const base=E.options(s,b.id,'collect','s0').chance;
+ E.assign(s,a.id,'cyberSupport','DE');E.assign(s,c.id,'cyberSupport','DE');a.task.chance=c.task.chance=100;E.advance(s);
+ assert.deepEqual(s.factions.FR.cyberSupport.DE,{from:2,until:7,cost:0});
+ assert.equal(E.cyberStatus(s,'FR','DE').remaining,6);
+ assert.equal(E.options(s,b.id,'collect','s0').chance,base+10);
+ s.turn=7;if(s.event)E.answerEvent(s,1);E.assign(s,a.id,'cyberSupport','DE');a.task.chance=100;E.advance(s);
+ assert.equal(s.factions.FR.cyberSupport.DE.until,10);
+ assert.equal(E.cyberStatus(s,'FR','DE').remaining,3);
+ s.turn=11;assert.equal(E.cyberStatus(s,'FR','DE').active,false);assert.equal(E.options(s,b.id,'collect','s0').chance,base);
+ E.assign(s,a.id,'cyberSupport','DE');a.task.chance=100;E.advance(s);assert.deepEqual(s.factions.FR.cyberSupport.DE,{from:12,until:14,cost:0});
+ s.factions.FR.cyberSupport.DE.until=60;const restored=E.validateSave(structuredClone(s));assert.equal(restored.factions.FR.cyberSupport.DE.until,60);
+ const html=makeScreens(restored,'DE',null,[],createCamera()).world();
+ assert.match(html,/Hack · 49 tour\(s\)/);assert.match(html,/class="is-active" title="Accès : actif"/);
+});

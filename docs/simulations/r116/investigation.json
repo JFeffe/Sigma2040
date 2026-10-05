@@ -1,0 +1,211 @@
+{
+  "games": 300,
+  "strategy": "investigation",
+  "victories": 262,
+  "turns": 6728,
+  "arrests": 1874,
+  "attacks": 2096,
+  "intercepted": 1435,
+  "cancelled": 1840,
+  "zeroScoreTeams": 15,
+  "actions": {
+    "travel": {
+      "count": 18101,
+      "success": 18101,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "counter": {
+      "count": 6785,
+      "success": 5589,
+      "failed": 1196,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "intimidate": {
+      "count": 9101,
+      "success": 6407,
+      "failed": 2523,
+      "stopped": 171,
+      "cost": 0,
+      "prestige": 0
+    },
+    "analyze": {
+      "count": 14888,
+      "success": 12508,
+      "failed": 1823,
+      "stopped": 557,
+      "cost": 2976,
+      "prestige": 6946
+    },
+    "protect": {
+      "count": 5605,
+      "success": 4252,
+      "failed": 1353,
+      "stopped": 0,
+      "cost": 25626,
+      "prestige": 0
+    },
+    "drone": {
+      "count": 7906,
+      "success": 5012,
+      "failed": 2590,
+      "stopped": 304,
+      "cost": 0,
+      "prestige": 0
+    },
+    "influence": {
+      "count": 822,
+      "success": 535,
+      "failed": 287,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "authorize": {
+      "count": 7858,
+      "success": 4819,
+      "failed": 3039,
+      "stopped": 0,
+      "cost": 6378,
+      "prestige": 0
+    },
+    "prepare": {
+      "count": 6776,
+      "success": 3621,
+      "failed": 2786,
+      "stopped": 369,
+      "cost": 4056,
+      "prestige": 0
+    },
+    "hide": {
+      "count": 11223,
+      "success": 11223,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "rest": {
+      "count": 8122,
+      "success": 8122,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "arrest": {
+      "count": 3137,
+      "success": 1874,
+      "failed": 1037,
+      "stopped": 226,
+      "cost": 11256,
+      "prestige": 11244
+    },
+    "findSafehouse": {
+      "count": 3877,
+      "success": 3044,
+      "failed": 833,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "cyberSupport": {
+      "count": 5818,
+      "success": 4190,
+      "failed": 1628,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "hack": {
+      "count": 3890,
+      "success": 2513,
+      "failed": 869,
+      "stopped": 508,
+      "cost": 0,
+      "prestige": 0
+    },
+    "surveil": {
+      "count": 2709,
+      "success": 1556,
+      "failed": 938,
+      "stopped": 215,
+      "cost": 0,
+      "prestige": 0
+    },
+    "fieldRest": {
+      "count": 3577,
+      "success": 3577,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "heal": {
+      "count": 712,
+      "success": 712,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "collect": {
+      "count": 658,
+      "success": 419,
+      "failed": 157,
+      "stopped": 82,
+      "cost": 0,
+      "prestige": 0
+    },
+    "contacts": {
+      "count": 818,
+      "success": 619,
+      "failed": 199,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "rescue": {
+      "count": 258,
+      "success": 190,
+      "failed": 68,
+      "stopped": 0,
+      "cost": 1074,
+      "prestige": 0
+    }
+  },
+  "countries": {
+    "FR": {
+      "score": 4951.199999999998,
+      "arrests": 341
+    },
+    "US": {
+      "score": 4772.399999999998,
+      "arrests": 297
+    },
+    "CN": {
+      "score": 4584.999999999999,
+      "arrests": 309
+    },
+    "IN": {
+      "score": 4550.099999999998,
+      "arrests": 316
+    },
+    "RU": {
+      "score": 4578.399999999999,
+      "arrests": 284
+    },
+    "GB": {
+      "score": 4710.899999999998,
+      "arrests": 327
+    }
+  },
+  "meanTurns": 22.426666666666666,
+  "meanArrests": 6.246666666666667,
+  "winRate": 0.8733333333333333,
+  "zeroScoreRate": 0.008333333333333333
+}

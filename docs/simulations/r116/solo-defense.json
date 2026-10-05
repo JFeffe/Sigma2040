@@ -1,0 +1,227 @@
+{
+  "seedStart": 2001,
+  "seedEnd": 2300,
+  "player": {
+    "score": 4463.399999999995,
+    "first": 25,
+    "arrests": 98
+  },
+  "points": {
+    "protection": 13494.000000000215,
+    "proofs": 8314,
+    "prepare": 3756,
+    "location": 3756,
+    "arrest": 3756
+  },
+  "defeatCrisis": 0,
+  "defeatDeadline": 69,
+  "games": 300,
+  "strategy": "solo-defense",
+  "victories": 231,
+  "turns": 7797,
+  "arrests": 1878,
+  "attacks": 2526,
+  "intercepted": 2249,
+  "cancelled": 1556,
+  "zeroScoreTeams": 1,
+  "actions": {
+    "travel": {
+      "count": 22919,
+      "success": 22919,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "counter": {
+      "count": 7415,
+      "success": 6036,
+      "failed": 1379,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "intimidate": {
+      "count": 8357,
+      "success": 5889,
+      "failed": 2337,
+      "stopped": 131,
+      "cost": 0,
+      "prestige": 0
+    },
+    "contacts": {
+      "count": 729,
+      "success": 540,
+      "failed": 189,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "analyze": {
+      "count": 14091,
+      "success": 11901,
+      "failed": 1784,
+      "stopped": 406,
+      "cost": 2250,
+      "prestige": 7172
+    },
+    "drone": {
+      "count": 7305,
+      "success": 4798,
+      "failed": 2287,
+      "stopped": 220,
+      "cost": 0,
+      "prestige": 0
+    },
+    "hack": {
+      "count": 3503,
+      "success": 2361,
+      "failed": 743,
+      "stopped": 399,
+      "cost": 0,
+      "prestige": 0
+    },
+    "hide": {
+      "count": 11914,
+      "success": 11914,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "authorize": {
+      "count": 7095,
+      "success": 4561,
+      "failed": 2534,
+      "stopped": 0,
+      "cost": 3228,
+      "prestige": 0
+    },
+    "prepare": {
+      "count": 6640,
+      "success": 3491,
+      "failed": 2828,
+      "stopped": 321,
+      "cost": 2730,
+      "prestige": 0
+    },
+    "arrest": {
+      "count": 3247,
+      "success": 1878,
+      "failed": 1200,
+      "stopped": 169,
+      "cost": 9270,
+      "prestige": 11268
+    },
+    "rest": {
+      "count": 10114,
+      "success": 10114,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "protect": {
+      "count": 10759,
+      "success": 7722,
+      "failed": 3037,
+      "stopped": 0,
+      "cost": 42558,
+      "prestige": 0
+    },
+    "cyberSupport": {
+      "count": 7452,
+      "success": 5407,
+      "failed": 2045,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "surveil": {
+      "count": 2988,
+      "success": 1635,
+      "failed": 1150,
+      "stopped": 203,
+      "cost": 0,
+      "prestige": 0
+    },
+    "findSafehouse": {
+      "count": 5061,
+      "success": 3992,
+      "failed": 1069,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "fieldRest": {
+      "count": 5600,
+      "success": 5600,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "influence": {
+      "count": 667,
+      "success": 446,
+      "failed": 221,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "collect": {
+      "count": 556,
+      "success": 345,
+      "failed": 150,
+      "stopped": 61,
+      "cost": 0,
+      "prestige": 0
+    },
+    "heal": {
+      "count": 900,
+      "success": 900,
+      "failed": 0,
+      "stopped": 0,
+      "cost": 0,
+      "prestige": 0
+    },
+    "rescue": {
+      "count": 328,
+      "success": 251,
+      "failed": 77,
+      "stopped": 0,
+      "cost": 1410,
+      "prestige": 0
+    }
+  },
+  "countries": {
+    "FR": {
+      "score": 5296.99999999999,
+      "arrests": 307
+    },
+    "US": {
+      "score": 5775.499999999989,
+      "arrests": 322
+    },
+    "CN": {
+      "score": 5372.699999999991,
+      "arrests": 300
+    },
+    "IN": {
+      "score": 5507.69999999999,
+      "arrests": 313
+    },
+    "RU": {
+      "score": 5511.59999999999,
+      "arrests": 316
+    },
+    "GB": {
+      "score": 5611.499999999988,
+      "arrests": 320
+    }
+  },
+  "meanTurns": 25.99,
+  "meanArrests": 6.26,
+  "winRate": 0.77,
+  "zeroScoreRate": 0.0005555555555555556
+}

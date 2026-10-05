@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as E from '../dist/client/engine.js';
+import {DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
+import {portraitAsset} from '../dist/client/ui.js';
+import {fullBody} from '../dist/client/visuals.js';
+import {agentMapMarkers} from '../dist/client/map.js';
+import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
+
+test('Marlowe follows Mercer and survives recruitment, save and multiplayer identity changes',()=>{
+ assert.equal(DISPLAY_ROSTER[DISPLAY_ROSTER.findIndex(a=>a.id==='p18')+1].id,'p19');
+ assert.deepEqual(DEFAULT_TEAM_IDS,['p0','p12','p13','p14']);
+ const s=E.createGame('FR',DEFAULT_TEAM_IDS,11);
+ E.recruit(s,'p19','p13');E.advance(s);E.advance(s);
+ const a=E.team(E.validateSave(structuredClone(s))).find(a=>a.id==='p19');
+ assert.ok(a);assert.deepEqual(a.stats,[4,8,8]);
+ assert.deepEqual(a.talents,['contacts','drones','endurance']);
+ assert.ok(a.nationalities.includes('ZA'));assert.equal(a.age,undefined);
+ assert.equal(portraitAsset(a),'./assets/marlowe-portrait.webp');
+ assert.match(fullBody(a),/marlowe-full.png/);
+ assert.match(agentMapMarkers(s),/marlowe-portrait.webp/);
+ const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-marlowe-0000000000','Hôte');
+ joinRoom(r,{invite:r.invite,token:'guest-marlowe-000000000',name:'Invité'});
+ r.members[0].agents=['p0','p12','p16','p19'];r.members.forEach(m=>{if(!m.agents.length)m.agents=['p0','p12','p13','p14'];m.confirmed=true;});startRoom(r,11);
+ const view=playerView(restoreRoom(structuredClone(r)),'FR');
+ const m=view.agents.find(a=>a.templateId==='p19');
+ assert.ok(m);assert.equal(portraitAsset(m),'./assets/marlowe-portrait.webp');
+ assert.match(fullBody(m),/marlowe-full.png/);
+ assert.match(agentMapMarkers(view),/marlowe-portrait.webp/);
+});
