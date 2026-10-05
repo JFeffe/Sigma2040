@@ -14,3 +14,9 @@ test('population names are explicit and separate experimental prototype from pub
  for(const label of ['BotBrillant1 — 6 bots','Prototype compétitif — 6 bots','BB1 face à 5 prototypes','BB1 — 48 compositions d’équipe'])assert.ok(html.includes(label));
  assert.match(app,/Ce prototype ne correspond pas au bot Normal du jeu publié/);
 });
+
+test('country comparison uses every selected game for every country, including lost games',async()=>{
+ const {countryComparisons}=await import('../tools/bot-explorer/core.mjs');
+ const a=row({home:'FR',finalScores:{FR:10,US:8}}),b=row({home:'US',finalScores:{FR:3,US:9}}),d=row({home:'FR',victory:false,reason:'crisis',finalScores:{FR:1,US:12}});
+ const results=countryComparisons([a,b,d]);assert.deepEqual(results.map(r=>r.n),[3,3]);assert.deepEqual(results.map(r=>r.individual),[1/3,1/3]);assert.equal(results[0].score,14/3);assert.deepEqual(countryComparisons([row()]),[]);
+});

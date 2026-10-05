@@ -77,3 +77,27 @@ ou un simple numéro de révision. Les références exactes restent dans la mét
 
 Le design d’exploration s’inspire du [Stats Lab partagé](https://claude.ai/artifact/8EheCj5RsVuuHD5D2ercwb).
 Ses résultats concernent un autre build/protocole et ne sont pas mélangés aux nôtres.
+
+## Interpréter les écarts entre pays
+
+La vue d’ensemble conserve les résultats du **pays suivi** : dans la validation BB1,
+120 parties distinctes par pays (72 tirages au hasard, 24 complémentaires et seulement
+8 par test de compétence faible). Ces sous-échantillons ne constituent pas une comparaison
+sur les mêmes campagnes. La vue **Pays** ajoute maintenant les six pays sur les mêmes
+parties sélectionnées, avec des scores finaux complets et des ex æquo fractionnés.
+
+L’audit `node scripts/audit-country-balance.mjs` produit `country-balance-audit.json`.
+Sur les mêmes 720 campagnes BB1 : États-Unis 18,17 %, Chine 16,55 %, Royaume-Uni 15,32 %,
+France 13,96 %, Inde 13,87 %, Russie 13,80 %. La somme vaut le taux de victoire collective
+91,67 % : les défaites ne produisent aucune victoire individuelle.
+
+Les bonus nationaux sont désactivés, mais la proximité n’est pas parfaitement symétrique :
+Canada et Brésil sont à un tour des seuls États-Unis ; Allemagne de trois puissances ;
+Turquie de cinq ; Japon de deux ; Afrique du Sud d’aucune. La concurrence locale peut donc
+différer malgré deux destinations proches par puissance. Cela constitue une hypothèse
+explicative, pas une mesure de l’effet causal de la géographie.
+
+Autre limite du protocole : le pays focal tourne selon l’indice de graine et reste associé
+à un résidu fixe modulo six. Certaines initialisations utilisent aussi ce résidu. Une étude
+causale dédiée doit croiser pays, équipes et scénarios, sans attacher un pays à une série
+particulière de graines. Aucun équilibrage du jeu n’a été changé par cet audit.
