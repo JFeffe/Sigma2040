@@ -1,21 +1,19 @@
 # Laboratoire statistique Sigma 2040
 
-## Accès depuis GitHub
+## Ouvrir le dashboard
 
-Cette branche contient l’interface, les résultats et les journaux détaillés. Le dépôt reste
-privé : le PO et les collaborateurs autorisés peuvent consulter et télécharger ces fichiers.
-GitHub affiche le code HTML, pas une application interactive. Pour ouvrir le laboratoire :
+**[Accéder au dashboard interactif](https://jutrasimon.github.io/sigma2040-stats/)**
 
-```sh
-git fetch origin
-git switch feat/stats-dashboard
-node scripts/serve-normal-bot-dashboard.mjs docs/bots/explorer 4177
-```
+Aucune installation ni serveur local à lancer. Le dashboard est hébergé sur GitHub Pages,
+avec accès public autorisé par le propriétaire des données. Le dépôt privé du jeu reste privé.
 
-Avec Node.js 20 ou supérieur, ouvrir <http://127.0.0.1:4177/dashboard.html>.
-Aucune installation de dépendances ni connexion à un service tiers n’est requise.
-Un hébergement GitHub Pages n’est pas activé : sa configuration et l’exposition éventuelle
-du contenu privé relèvent du propriétaire du dépôt.
+[Dépôt public de publication](https://github.com/jutrasimon/sigma2040-stats) : interface
+et résultats fictifs des simulations uniquement, sans code du jeu jouable ni sauvegardes humaines.
+Les sources de développement et les outils de reproduction restent dans cette branche.
+
+Pour mettre à jour le site, synchroniser les fichiers de `docs/bots/explorer/` vers la branche
+`gh-pages` du dépôt de publication, et copier `dashboard.html` vers `index.html`.
+Ne pas copier les modules du jeu ni le contenu de `docs/bots/reference/` dans le dépôt public.
 
 ## Libellés durables
 

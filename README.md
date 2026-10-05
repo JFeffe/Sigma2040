@@ -371,6 +371,8 @@ Parcours partagé en cinq étapes dans les dossiers et l’onglet Enquête, bout
 
 ## Laboratoire statistique
 
+**[Ouvrir le dashboard en ligne](https://jutrasimon.github.io/sigma2040-stats/)** — aucun serveur local nécessaire.
+
 [Ouvrir le guide du dashboard et des résultats](docs/bots/README.md).
 Cette branche ne modifie pas les bots du jeu. Le laboratoire se lance avec
 `node scripts/serve-normal-bot-dashboard.mjs docs/bots/explorer 4177`.
