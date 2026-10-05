@@ -1,0 +1,44 @@
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';import {gzipSync,gunzipSync} from 'node:zlib';import {pathToFileURL,fileURLToPath} from 'node:url';import {resolve} from 'node:path';import assert from 'node:assert/strict';import {DISPLAY_ROSTER,COUNTRIES,ACTIONS,TECH} from '../docs/bots/reference/build173/data.js';
+const out='docs/bots/explorer',validation='docs/bots/reference';mkdirSync(out+'/details',{recursive:true});
+const root=pathToFileURL(resolve('docs/bots/reference/build173')+'/').href,dm=x=>'data:text/javascript;charset=utf-8,'+encodeURIComponent(x.replaceAll("'./","'"+root));
+const engine=readFileSync('docs/bots/reference/build173/engine.js','utf8'),v2=readFileSync(validation+'/v2.js','utf8'),v3=readFileSync(validation+'/v3.js','utf8');
+assert.equal(v3,readFileSync('docs/bots/reference/build173/normal-bot.js','utf8'));
+const E=await import(dm(engine.replace("import {planNormalFaction} from './normal-bot.js?v=173';",`import {planNormalFaction as oldPlan} from ${JSON.stringify(dm(v2))};import {planNormalFaction as newPlan} from ${JSON.stringify(dm(v3))};const planNormalFaction=(s,f,E)=>(s.botPolicies?.[f]==='v2'?oldPlan:newPlan)(s,f,E);`)));
+const homes=COUNTRIES.filter(c=>c.power).map(c=>c.id),source=JSON.parse(gunzipSync(readFileSync(validation+'/rows.json.gz'))),rows=[];
+const sources=(s,f)=>{const o={protection:0,proofs:0,location:0,preparation:0,arrest:0,other:0};for(const e of s.prestigeLedger.filter(e=>e.faction===f)){const k=e.reason.startsWith('attentat déjoué')?'protection':e.key.startsWith('proof:')?'proofs':e.key.startsWith('loc:')?'location':e.key.startsWith('prep:')?'preparation':e.key.startsWith('arrest:')?'arrest':'other';o[k]+=e.points;}return o;};
+export function play(s,meta,detail){
+ const initialAgents=E.team(s,s.player).map(a=>a.id),initialCases=s.suspects.map(t=>({id:t.id,templateId:t.templateId||t.id,name:t.name,role:t.role,cell:t.cell,country:t.country})),timeline=[],decisions=[],attacks=[],milestones={};
+ for(const t of s.suspects)milestones[t.id]={known:s.factions[s.player].known[t.id]?0:null,proofs:null,verified:null,prepared:null,arrest:null};
+ while(!s.ended){const turn=s.turn;E.advance(s);if(detail){timeline.push({turn,crisis:s.crisis,scores:Object.fromEntries(homes.map(f=>[f,s.factions[f].score]))});for(const f of homes)decisions.push({faction:f,turn,decisions:structuredClone(s.factions[f].normalBot?.decisions||[])});}
+  attacks.push(...structuredClone(s.attackReports));
+  for(const t of s.suspects){const m=milestones[t.id],k=s.factions[s.player].known[t.id],p=E.evidenceFor(s,s.player,t.id);if(k&&m.known===null)m.known=turn;if(p.length>=2&&m.proofs===null)m.proofs=turn;if(p.some(p=>p.verified)&&m.verified===null)m.verified=turn;if(k?.prepared&&m.prepared===null)m.prepared=turn;if(t.arrested&&m.arrest===null)m.arrest=turn;}
+ }
+ const f=s.factions[s.player],max=Math.max(...homes.map(h=>s.factions[h].score)),ties=homes.filter(h=>Math.abs(s.factions[h].score-max)<1e-8).length;
+ const risks=Array.from({length:9},(_,i)=>({lo:10+i*10,n:0,wins:0,chance:0}));for(const e of s.campaignStats.events.filter(e=>e.faction===s.player&&!ACTIONS[e.type].safe&&e.status!=='INTERROMPUE')){const r=risks[Math.min(8,Math.floor((e.chance-10)/10))];r.n++;r.wins+=+(e.status==='RÉUSSITE');r.chance+=e.chance;}
+ const record={...meta,finalScores:Object.fromEntries(homes.map(h=>[h,s.factions[h].score])),key:meta.population+'-'+meta.seed+(meta.teamKey?'-'+meta.teamKey:''),home:s.player,turn:s.turn,victory:s.ended==='victory',reason:s.ended==='victory'?'victory':s.crisis>=100?'crisis':'deadline',crisis:s.crisis,score:f.score,rank:1+homes.filter(h=>s.factions[h].score>f.score+1e-8).length,first:Math.abs(f.score-max)<1e-8?1/ties:0,confidence:f.confidence,budget:f.budget,dead:s.agents.filter(a=>a.faction===s.player&&a.status==='dead').length,captured:s.agents.filter(a=>a.faction===s.player&&a.status==='captured').length,sources:sources(s,s.player),actions:s.campaignStats.factions[s.player],support:s.campaignStats.support[s.player],risks,agents:initialAgents.map(id=>({id,...s.campaignStats.agents[s.player][id],conditionHistory:undefined})),suspects:initialCases.map(t=>({...t,arrested:!!s.suspects.find(x=>x.id===t.id).arrested,by:s.suspects.find(x=>x.id===t.id).arrestedBy||null,...milestones[t.id]})),attacks:{defended:attacks.filter(r=>r.status==='INTERCEPTÉE').length,failed:attacks.filter(r=>r.status==='RÉUSSIE').length},detail};
+ if(detail)writeFileSync(out+'/details/'+record.key+'.json.gz',gzipSync(JSON.stringify({key:record.key,timeline,decisions,events:s.campaignStats.events,ledger:s.prestigeLedger,agents:s.agents.map(a=>({id:a.id,templateId:a.templateId||a.id,name:a.name,faction:a.faction,status:a.status})),agentStats:s.campaignStats.agents,factionStats:s.campaignStats.factions,support:s.campaignStats.support,attacks,suspects:record.suspects,rosters:meta.rosters})));
+ record.curve=detail?timeline.map(t=>[t.turn,t.crisis,t.scores[s.player]]):undefined;
+ return record;
+}
+export async function buildOriginalDatasets(){
+for(let i=0;i<source.length;i++){
+ const r=source[i],s=E.createGame(r.home,DISPLAY_ROSTER.slice(0,4).map(a=>a.id),r.seed);s.humanFactions=[];
+ for(const f of homes)E.team(s,f).forEach((a,j)=>{const t=DISPLAY_ROSTER.find(t=>t.id===r.rosters[f][j]);Object.assign(a,structuredClone(t),{id:f+'-'+j,templateId:t.id,faction:f,country:f,nationalities:[...new Set([...t.nationalities,f])]});});
+ s.botPolicies=Object.fromEntries(homes.filter(f=>r.name==='v2'||r.mode==='mixed'&&f!==r.home).map(f=>[f,'v2']));
+ const rec=play(s,{population:r.name==='v2'?'v2':r.mode==='mixed'?'mixed':'v3',seed:r.seed,profile:r.profile,team:r.rosters[r.home],rosters:r.rosters},true);
+ assert.equal(rec.victory,r.victory);assert.equal(rec.turn,r.turn);assert.equal(rec.score,r.score);for(const f of homes)assert.equal(s.factions[f].score,r.scores[f]);rows.push(rec);
+ if((i+1)%360===0)console.log('Replays audited: '+(i+1)+' / '+source.length);
+}
+writeFileSync(out+'/validation.json.gz',gzipSync(JSON.stringify(rows)));
+// Twelve shuffled partitions of the visible roster: every agent appears in
+// exactly twelve benchmark compositions. No selection based on observed wins.
+let rng=1302040;const rnd=()=>((rng=(Math.imul(rng,1664525)+1013904223)>>>0)/4294967296),teams=[];const used=new Set();
+while(teams.length<48){const shuffled=[...DISPLAY_ROSTER];for(let i=15;i>0;i--){const j=Math.floor(rnd()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}const block=Array.from({length:4},(_,i)=>shuffled.slice(i*4,i*4+4).map(a=>a.id).sort());if(block.some(t=>used.has(t.join(','))))continue;for(const t of block){teams.push(t);used.add(t.join(','));}}
+const bench=[];for(let ti=0;ti<teams.length;ti++){for(let i=0;i<72;i++){const team=teams[ti],shift=Math.floor(i/6)%4,ordered=[...team.slice(shift),...team.slice(0,shift)],seed=1301001+i,s=E.createGame(homes[i%6],ordered,seed);s.humanFactions=[];const rosters=Object.fromEntries(homes.map(f=>[f,E.team(s,f).map(a=>a.templateId||a.id)]));bench.push(play(s,{population:'benchmark',seed,profile:'benchmark',team:ordered,teamKey:String(ti+1),rosters},false));}if((ti+1)%8===0)console.log('Balanced compositions: '+(ti+1)+' / 48');}
+writeFileSync(out+'/benchmark.json.gz',gzipSync(JSON.stringify(bench)));
+writeFileSync(out+'/meta.json',JSON.stringify({populations:JSON.parse(readFileSync('tools/bot-explorer/populations.json','utf8')),generated:new Date().toISOString(),validation:rows.length,replayAudit:'All 2160 outcomes, durations and six final scores identical to recorded validation.',benchmark:{teams:48,gamesPerTeam:72,worlds:72,total:bench.length,agentAppearances:12,chiefRotation:true,seedStart:1301001,note:'48 compositions selected before outcomes; each visible agent occurs in 12 teams. Same 72 starts and country schedule across teams; generated opponents use the engine standard roster weighting. Six V3 bots. Worlds reused across compositions, not independent observations.'},agents:DISPLAY_ROSTER.map(({id,name,role,stats,talents})=>({id,name,role,stats,talents})),actions:Object.fromEntries(Object.entries(ACTIONS).filter(([,v])=>!v.disabled).map(([id,a])=>[id,{name:a.name,safe:!!a.safe,stat:a.stat}])),countries:COUNTRIES.map(({id,name})=>({id,name})),tech:TECH,teams},null,2));
+console.log('Explorer datasets ready; original results unchanged.');
+
+}
+export {E,homes};
+if(process.argv[1]&&resolve(process.argv[1])===resolve(fileURLToPath(import.meta.url)))await buildOriginalDatasets();

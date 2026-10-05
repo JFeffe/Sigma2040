@@ -1,0 +1,279 @@
+{
+  "policy": "BB1",
+  "games": 720,
+  "definition": "Individual win requires collective victory; ties split. Same-game rates have denominator 720 including collective defeats.",
+  "countries": [
+    {
+      "country": "FR",
+      "focal": {
+        "n": 120,
+        "collectiveWins": 114,
+        "individualWins": 15.5,
+        "individualRate": 0.12916666666666668,
+        "meanScore": 23.14416666666666
+      },
+      "sameGames": {
+        "n": 720,
+        "collectiveWins": 660,
+        "individualWins": 100.5,
+        "individualRate": 0.13958333333333334,
+        "meanScore": 23.561666666666756
+      },
+      "nearby": [
+        "DE",
+        "TR"
+      ],
+      "seedResidues": [
+        3
+      ],
+      "profiles": {
+        "uniform": 72,
+        "balanced": 24,
+        "weak-analysis": 8,
+        "weak-combat": 8,
+        "weak-protection": 8
+      }
+    },
+    {
+      "country": "US",
+      "focal": {
+        "n": 120,
+        "collectiveWins": 105,
+        "individualWins": 17.333333333333336,
+        "individualRate": 0.14444444444444446,
+        "meanScore": 23.932499999999994
+      },
+      "sameGames": {
+        "n": 720,
+        "collectiveWins": 660,
+        "individualWins": 130.83333333333331,
+        "individualRate": 0.18171296296296294,
+        "meanScore": 25.27861111111121
+      },
+      "nearby": [
+        "CA",
+        "BR"
+      ],
+      "seedResidues": [
+        4
+      ],
+      "profiles": {
+        "uniform": 72,
+        "balanced": 24,
+        "weak-analysis": 8,
+        "weak-combat": 8,
+        "weak-protection": 8
+      }
+    },
+    {
+      "country": "CN",
+      "focal": {
+        "n": 120,
+        "collectiveWins": 114,
+        "individualWins": 23,
+        "individualRate": 0.19166666666666668,
+        "meanScore": 25.179999999999982
+      },
+      "sameGames": {
+        "n": 720,
+        "collectiveWins": 660,
+        "individualWins": 119.16666666666667,
+        "individualRate": 0.16550925925925927,
+        "meanScore": 24.469861111111218
+      },
+      "nearby": [
+        "TR",
+        "JP"
+      ],
+      "seedResidues": [
+        5
+      ],
+      "profiles": {
+        "uniform": 72,
+        "balanced": 24,
+        "weak-analysis": 8,
+        "weak-combat": 8,
+        "weak-protection": 8
+      }
+    },
+    {
+      "country": "IN",
+      "focal": {
+        "n": 120,
+        "collectiveWins": 106,
+        "individualWins": 16.5,
+        "individualRate": 0.1375,
+        "meanScore": 25.053333333333324
+      },
+      "sameGames": {
+        "n": 720,
+        "collectiveWins": 660,
+        "individualWins": 99.83333333333334,
+        "individualRate": 0.13865740740740742,
+        "meanScore": 24.139027777777873
+      },
+      "nearby": [
+        "TR",
+        "JP"
+      ],
+      "seedResidues": [
+        0
+      ],
+      "profiles": {
+        "uniform": 72,
+        "balanced": 24,
+        "weak-analysis": 8,
+        "weak-combat": 8,
+        "weak-protection": 8
+      }
+    },
+    {
+      "country": "RU",
+      "focal": {
+        "n": 120,
+        "collectiveWins": 111,
+        "individualWins": 13,
+        "individualRate": 0.10833333333333334,
+        "meanScore": 23.259999999999994
+      },
+      "sameGames": {
+        "n": 720,
+        "collectiveWins": 660,
+        "individualWins": 99.33333333333333,
+        "individualRate": 0.13796296296296295,
+        "meanScore": 23.615833333333427
+      },
+      "nearby": [
+        "DE",
+        "TR"
+      ],
+      "seedResidues": [
+        1
+      ],
+      "profiles": {
+        "uniform": 72,
+        "balanced": 24,
+        "weak-analysis": 8,
+        "weak-combat": 8,
+        "weak-protection": 8
+      }
+    },
+    {
+      "country": "GB",
+      "focal": {
+        "n": 120,
+        "collectiveWins": 110,
+        "individualWins": 19,
+        "individualRate": 0.15833333333333333,
+        "meanScore": 23.568333333333324
+      },
+      "sameGames": {
+        "n": 720,
+        "collectiveWins": 660,
+        "individualWins": 110.33333333333334,
+        "individualRate": 0.15324074074074076,
+        "meanScore": 24.032222222222313
+      },
+      "nearby": [
+        "DE",
+        "TR"
+      ],
+      "seedResidues": [
+        2
+      ],
+      "profiles": {
+        "uniform": 72,
+        "balanced": 24,
+        "weak-analysis": 8,
+        "weak-combat": 8,
+        "weak-protection": 8
+      }
+    }
+  ],
+  "proximity": [
+    {
+      "country": "CA",
+      "nearbyPowers": [
+        "US"
+      ]
+    },
+    {
+      "country": "BR",
+      "nearbyPowers": [
+        "US"
+      ]
+    },
+    {
+      "country": "DE",
+      "nearbyPowers": [
+        "FR",
+        "RU",
+        "GB"
+      ]
+    },
+    {
+      "country": "TR",
+      "nearbyPowers": [
+        "FR",
+        "CN",
+        "IN",
+        "RU",
+        "GB"
+      ]
+    },
+    {
+      "country": "ZA",
+      "nearbyPowers": []
+    },
+    {
+      "country": "JP",
+      "nearbyPowers": [
+        "CN",
+        "IN"
+      ]
+    }
+  ],
+  "meanScoreSources": {
+    "FR": {
+      "protection": 7.995000000000141,
+      "proofs": 9.833333333334231,
+      "arrest": 1.911111111111105,
+      "other": 3.8222222222222095
+    },
+    "US": {
+      "protection": 8.700833333333483,
+      "proofs": 9.902777777778686,
+      "arrest": 2.224999999999993,
+      "other": 4.450000000000057
+    },
+    "CN": {
+      "protection": 8.169861111111242,
+      "proofs": 9.991666666667589,
+      "arrest": 2.102777777777771,
+      "other": 4.205555555555574
+    },
+    "IN": {
+      "protection": 8.055694444444576,
+      "proofs": 10.033333333334262,
+      "arrest": 2.0166666666666604,
+      "other": 4.033333333333325
+    },
+    "RU": {
+      "protection": 8.054722222222358,
+      "proofs": 9.81944444444534,
+      "arrest": 1.9138888888888828,
+      "other": 3.827777777777765
+    },
+    "GB": {
+      "protection": 8.107222222222381,
+      "proofs": 10.041666666667597,
+      "arrest": 1.9611111111111048,
+      "other": 3.922222222222209
+    }
+  },
+  "limitations": [
+    "Same-game view removes differing country subsets but does not isolate country causally from teams, geography or seed effects.",
+    "Focal country is deterministically tied to seed modulo 6; architect attack countries also depend on seed modulo 6 before threat balancing. This is a design confound, not a quantified causal effect.",
+    "No gameplay or bot change in this audit."
+  ]
+}
