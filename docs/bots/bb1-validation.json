@@ -1,0 +1,9 @@
+{
+  "policy": "BotBrillant1 (BB1)",
+  "base": "build 173 / a37781b",
+  "source": "Frozen validation of candidate v3 (now BB1), seeds 1001001–1001720",
+  "games": 720,
+  "collectiveWins": 660,
+  "rate": 0.9166666666666666,
+  "audit": "Every outcome, ending turn and all six faction scores match the archived candidate. This verifies packaging equivalence, not a new independent validation sample."
+}
