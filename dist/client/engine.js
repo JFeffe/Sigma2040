@@ -1,18 +1,18 @@
-import {planBB1Faction} from './bot-brillant-1.js?v=174';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=174';
-import {balanceThreatCountries} from './threat-placement.js?v=174';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=174';
-import {exposurePenalty} from './exposure.js?v=174';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=174';
-import {cellName,namedCells} from './data.js?v=174';
-import {campaignRules} from './campaign-rules.js?v=174';
-import {stopClock} from './campaign-clock.js?v=174';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=174';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=174';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=174';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=174';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=174';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=174';
+import {planBB1Faction} from './bot-brillant-1.js?v=175';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=175';
+import {balanceThreatCountries} from './threat-placement.js?v=175';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=175';
+import {exposurePenalty} from './exposure.js?v=175';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=175';
+import {cellName,namedCells} from './data.js?v=175';
+import {campaignRules} from './campaign-rules.js?v=175';
+import {stopClock} from './campaign-clock.js?v=175';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=175';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=175';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=175';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=175';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=175';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=175';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -351,7 +351,7 @@ export const visiblePlots=s=>s.plots.filter(p=>!p.resolved&&!p.cancelled&&!(p.ce
 export function planFaction(s,f){
  // BB1 is opt-in. The build-173 planner below remains unchanged for all
  // existing difficulty values and saves (including those without a value).
- if(aiLevel(s)==='bb1')return planBB1Faction(s,f,{team,knownTargets,visiblePlots,evidenceQueue,evidenceFor,travelTurns,getTechSlots,activateTech,governmentOptions,requestGovernmentFavor,options,assign,hasSafehouse,analysisAgent,cellsDone,funding});
+ if(aiLevel(s)==='bb1')return planBB1Faction(s,f,{team,knownTargets,visiblePlots,evidenceQueue,evidenceFor,travelTurns,getTechSlots,activateTech,governmentOptions,requestGovernmentFavor,options,assign,hasSafehouse,analysisAgent,cellsDone,funding,missionExposure});
  const hard=aiLevel(s)==='expert',level=hard?'normal':aiLevel(s),faction=s.factions[f],members=team(s,f),available=members.filter(a=>a.status!=='captured'),strategy=s.npcStrategies?.[f]||s.npcStrategy||'balanced';
  if(members.length+s.recruitments.filter(r=>r.faction===f).length<4)s.recruitments.push({id:`${f}-R${s.nextAgent++}`,remaining:2,faction:f});
  const targets=knownTargets(s,f).filter(t=>!t.arrested),threats=visiblePlots(s),analyst=available.filter(a=>a.country===f&&!['travel','sneak'].includes(a.task?.type)).sort((a,b)=>(options(s,b.id,'analyze').chance-options(s,a.id,'analyze').chance-(hard?(b.stats[2]-a.stats[2])*6:0))||missionFatigue(a,'analyze')-missionFatigue(b,'analyze'))[0]||available.slice().sort((a,b)=>b.stats[0]-a.stats[0])[0];

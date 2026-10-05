@@ -85,3 +85,44 @@ test('BB1 verifies the first proof of a new dossier before a redundant verificat
  for(const a of m.slice(1))a.task={type:'rest',remaining:1};
  E.planFaction(s,'FR');assert.equal(m[0].task.type,'analyze');assert.equal(m[0].task.target,newProof.id);
 });
+
+function passageFixture(){
+ const {s,f,m}=fixture(),t=s.suspects.find(t=>t.cell===3);
+ f.known={[t.id]:{country:'DE',identified:true,intimidated:true,prepared:true,locationUntil:5}};
+ f.evidence=s.proofs.filter(p=>p.suspect===t.id).slice(0,2).map(p=>({id:p.id,verified:true,contested:false}));
+ f.budget=12;f.authorized.DE=false;f.cooperation.DE=0;
+ for(const a of m){a.country='FR';a.task={type:'rest',remaining:1};}
+ const a=m[1];a.task=null;a.templateId='p14';a.stats=[4,7,9];a.talents=['combat','endurance','infiltration'];a.exposure=35;a.weapon=true;
+ return {s,f,m,t,a};
+}
+test('BB1 can choose a boosted clandestine passage when the retained weapon and discretion improve the dossier',()=>{
+ const {s,f,a}=passageFixture();E.planFaction(s,'FR');
+ assert.equal(a.task.type,'sneak');assert.equal(a.task.target,'DE');assert.equal(a.task.chance,90);assert.equal(a.task.cost,6);
+ assert.equal(f.budget,6);assert.equal(f.bb1.plans[a.id].type,'case');assert.ok(Number.isFinite(f.bb1.decisions.find(d=>d.agent===a.id).utility));
+});
+test('Clandestine travel remains conditional on its benefit, the real odds and the budget',()=>{
+ for(const change of [({a})=>{a.weapon=false;},({a})=>{a.exposure=0;},({a})=>{a.stats[2]=4;},({a})=>{a.fatigue=41;},({f})=>{f.budget=0;},({f})=>{f.authorized.DE=true;f.cooperation.DE=4;}]){
+  const scenario=passageFixture();change(scenario);E.planFaction(scenario.s,'FR');assert.equal(scenario.a.task.type,'travel');
+ }
+});
+test('The passage comparison accounts for faster passport logistics',()=>{
+ const {s,f,a,t}=passageFixture();a.country='BR';f.known[t.id].country='JP';
+ E.planFaction(s,'FR');assert.equal(a.task.type,'travel');assert.equal(a.task.total,1);assert.equal(a.task.target,'JP');assert.ok(f.tech.some(t=>t.type==='logistics'&&t.used));
+});
+test('A clandestine traveler already counts toward the agents allocated to its destination',()=>{
+ const {s,f,m}=fixture();m[1].country='BR';m[1].weapon=false;
+ m[0].task={type:'rest',remaining:1};m[2].country='FR';m[2].task={type:'sneak',target:'DE',remaining:1};m[3].task={type:'rest',remaining:1};
+ E.planFaction(s,'FR');assert.equal(m[1].task,null);assert.equal(m[2].task.type,'sneak');
+});
+test('A clandestine protector keeps the funding reserved during transit',()=>{
+ const {s,f,m,t}=fixture();s.turn=2;f.budget=8;f.evidence=[];f.known[t.id].prepared=false;f.known[t.id].intimidated=false;
+ const traveler=m[3];traveler.country='FR';traveler.task={type:'sneak',target:'BR',remaining:1};
+ f.bb1={version:2,plans:{[traveler.id]:{key:'protect:reserve',type:'protect',country:'BR',deadline:4,reserved:6,started:1}},delayed:{}};
+ for(const a of m.slice(0,3)){a.stats=[7,7,7];a.talents=[];}
+ E.planFaction(s,'FR');assert.ok(f.budget>=4);assert.equal(traveler.task.type,'sneak');
+});
+test('The clandestine comparison cannot inspect hidden positions, authenticity, rival orders or future rolls',()=>{
+ const {s}=passageFixture(),other=structuredClone(s);other.seed=991;other.proofs.forEach(p=>p.authentic=!p.authentic);other.suspects.forEach(t=>t.country='BR');
+ for(const a of other.agents.filter(a=>a.faction!=='FR')){a.country='DE';a.task={type:'arrest',target:'s6',remaining:1};}
+ E.planFaction(s,'FR');E.planFaction(other,'FR');assert.deepEqual(E.team(s,'FR').map(a=>a.task),E.team(other,'FR').map(a=>a.task));assert.deepEqual(s.factions.FR.bb1,other.factions.FR.bb1);
+});

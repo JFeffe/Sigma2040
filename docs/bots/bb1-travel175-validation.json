@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-05",
+  "baselineBuild": 174,
+  "candidateBuild": 175,
+  "baselineGithubCommit": "a04d15f45b7adc8269586df614adac22f8c2c47b",
+  "method": {
+    "difficulty": "bb1",
+    "botsPerGame": 6,
+    "humanFactions": [],
+    "pairs": 1200,
+    "simulations": 2400,
+    "seedStart": 2615050001,
+    "seedEnd": 2615051200,
+    "homeCountryGames": 200,
+    "rosters": "Uniform shuffled focal four; other five seeded engine rosters",
+    "bootstrap": {
+      "replicates": 10000,
+      "seed": 26151005,
+      "unit": "paired campaign",
+      "interval": "percentile 95%"
+    },
+    "checkedSaves": 589,
+    "deterministicReplays": 12,
+    "finalSourceReplays": 12,
+    "errors": 0
+  },
+  "sourceHashes": {
+    "before": {
+      "engine.js": "5b8f45ad248697204ff7361261d2ca0dcbdbb32d0903c28051b10c32c1cd22ed",
+      "bot-brillant-1.js": "3f3f910f53793409169023e53d304c30a6d0e47c85aecf991393ad4172b3ad64",
+      "data.js": "d38968db109d0de59096cfbf3c3003d9aa12acc867cf607fc2ff764b5f67ee8c",
+      "build-version.js": "9bcd6905ab55e7fed299af17d3de898bb7f84e436f8901298c673722ac53c2b2"
+    },
+    "after": {
+      "engine.js": "285d21eb0883594471093eaac2b56dab86d637245d9ec6ac7802256fe94822ff",
+      "bot-brillant-1.js": "e63306f3a6567171ad5fec35e57a540f2f4eb19f06225786da867bc02691b837",
+      "data.js": "d38968db109d0de59096cfbf3c3003d9aa12acc867cf607fc2ff764b5f67ee8c",
+      "build-version.js": "2dfab367f49aeaefb06f1594d3953e32f14510180868c08354f213e080082d9c"
+    }
+  },
+  "summary": {
+    "before": {
+      "games": 1200,
+      "causes": {
+        "victory": 1113,
+        "crisis": 79,
+        "turn_30": 8
+      },
+      "victoryRate": 0.9275,
+      "meanPointsPerCountry": 23.84583333333333,
+      "meanTurn": 22.506666666666668,
+      "orders": {
+        "travel": 71082,
+        "sneak": 0
+      },
+      "resolved": {
+        "travel": {
+          "count": 70925,
+          "success": 70925,
+          "failed": 0,
+          "stopped": 0,
+          "cost": 0,
+          "fatigue": 446635,
+          "exposure": 671639,
+          "chance": 0,
+          "rolls": 0,
+          "prestige": 0
+        }
+      },
+      "incidents": {
+        "death": 0,
+        "capture": 0,
+        "injury": 0
+      },
+      "gamesWithSneak": 0
+    },
+    "after": {
+      "games": 1200,
+      "causes": {
+        "victory": 1109,
+        "crisis": 82,
+        "turn_30": 9
+      },
+      "victoryRate": 0.9241666666666667,
+      "meanPointsPerCountry": 23.80833333333333,
+      "meanTurn": 22.465,
+      "orders": {
+        "travel": 70866,
+        "sneak": 170
+      },
+      "resolved": {
+        "travel": {
+          "count": 70708,
+          "success": 70708,
+          "failed": 0,
+          "stopped": 0,
+          "cost": 0,
+          "fatigue": 445361,
+          "exposure": 669617,
+          "chance": 0,
+          "rolls": 0,
+          "prestige": 0
+        },
+        "sneak": {
+          "count": 168,
+          "success": 139,
+          "failed": 29,
+          "stopped": 0,
+          "cost": 762,
+          "fatigue": 2034,
+          "exposure": 278,
+          "chance": 13005,
+          "rolls": 168,
+          "prestige": 0
+        }
+      },
+      "incidents": {
+        "death": 1,
+        "capture": 7,
+        "injury": 13
+      },
+      "gamesWithSneak": 147
+    },
+    "paired": {
+      "pointsPerCountry": {
+        "difference": -0.03750000000000001,
+        "ci95": [
+          -0.07555555555555547,
+          0.0011111111111111072
+        ]
+      },
+      "victoryRate": {
+        "difference": -0.0033333333333333335,
+        "ci95": [
+          -0.008333333333333333,
+          0.0008333333333333334
+        ]
+      },
+      "transitions": {
+        "victory->victory": 1107,
+        "victory->crisis": 5,
+        "crisis->crisis": 77,
+        "turn_30->turn_30": 8,
+        "crisis->victory": 2,
+        "victory->turn_30": 1
+      },
+      "changedCampaigns": 147
+    }
+  }
+}

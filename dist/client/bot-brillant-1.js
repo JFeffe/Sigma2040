@@ -1,5 +1,5 @@
-import {TECH,COUNTRY} from './data.js?v=174';
-import {campaignRules} from './campaign-rules.js?v=174';
+import {TECH,COUNTRY} from './data.js?v=175';
+import {campaignRules} from './campaign-rules.js?v=175';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -11,10 +11,11 @@ export function planBB1Faction(s,id,E){
  const memory=f.bb1?.version===2&&f.bb1.plans&&f.bb1.delayed?f.bb1:{version:2,plans:{},delayed:{}};
  f.bb1=memory;memory.turn=s.turn;memory.decisions=[];
  const claimed=(type,target,country)=>members.some(a=>a.task?.type===type&&(target?a.task.target===target:a.country===country));
- const at=(a,c)=>a.task?.type==='travel'?a.task.target===c:a.country===c;
+ const moving=a=>['travel','sneak'].includes(a.task?.type);
+ const at=(a,c)=>moving(a)?a.task.target===c:a.country===c;
  const sighted=c=>new Set(Object.values(f.publicAgents).filter(a=>a.country===c&&(a.until??a.turn+2)>=s.turn).map(a=>a.faction));
  const progress=t=>proofs(t).length+2*Number(proofs(t).some(e=>e.verified))+3*Number(t.prepared);
- const reserved=(except=null)=>agents.filter(a=>a.id!==except&&memory.plans[a.id]?.type==='protect'&&memory.plans[a.id].deadline>=s.turn+1&&!(a.task&&a.task.type!=='travel')&&at(a,memory.plans[a.id].country)&&!(f.defense[memory.plans[a.id].country]>=memory.plans[a.id].deadline)).reduce((sum,a)=>sum+Math.max(0,(memory.plans[a.id].reserved||0)-(a.task?.type==='travel'?a.task.remaining:0)*E.funding(f).income),0);
+ const reserved=(except=null)=>agents.filter(a=>a.id!==except&&memory.plans[a.id]?.type==='protect'&&memory.plans[a.id].deadline>=s.turn+1&&!(a.task&&!moving(a))&&at(a,memory.plans[a.id].country)&&!(f.defense[memory.plans[a.id].country]>=memory.plans[a.id].deadline)).reduce((sum,a)=>sum+Math.max(0,(memory.plans[a.id].reserved||0)-(moving(a)?a.task.remaining:0)*E.funding(f).income),0);
  const activate=type=>{if(E.getTechSlots(s,id)>=2||f.budget-reserved()<TECH[type].cost||f.tech.some(t=>t.type===type&&t.until>=s.turn))return false;const player=s.player;s.player=id;try{E.activateTech(s,type,id);return true;}finally{s.player=player;}};
  const projected=(a,c,type,target)=>{
   // A future action uses a hypothetical own agent, not the hidden world state.
@@ -22,6 +23,26 @@ export function planBB1Faction(s,id,E){
   const b={...a,country:c,task:null,fatigue:Math.min(100,a.fatigue+distance*6),weapon:distance?false:a.weapon};
   const view={...s,agents:s.agents.map(x=>x.id===a.id?b:x)};
   return E.options(view,a.id,type,target);
+ };
+ const caseArrival=(a,t,mode,route)=>{
+  // Compare the whole remaining field work, not just arrival odds. The view
+  // contains only this agent's projection and the faction's public dossier.
+  const b={...a,country:t.country,task:null,cover:mode==='sneak'?'Clandestine':'Légale',weapon:mode==='sneak'&&a.weapon,fatigue:Math.min(100,a.fatigue+route.fatigue*route.duration),exposure:Math.min(100,a.exposure+E.missionExposure(a,mode,true))};
+  const stages=[],count=proofs(t).length;let missing=Math.max(0,2-count);
+  if(missing&&!t.intimidated){stages.push('intimidate');missing--;}
+  for(let i=0;i<missing;i++)stages.push('collect');
+  if(!t.prepared)stages.push('prepare');
+  // A stale position will need refreshing before the final intervention.
+  if(t.locationUntil<s.turn+route.duration+stages.length*2)stages.push('surveil');
+  stages.push('arrest');let chance=1,turn=s.turn+route.duration;
+  for(const type of stages){
+   const view={...s,turn,agents:s.agents.map(x=>x.id===a.id?b:x)},o=E.options(view,a.id,type,t.id);
+   chance*=o.chance/100;
+   b.fatigue=Math.min(100,b.fatigue+o.fatigue*o.duration);
+   b.exposure=Math.min(100,b.exposure+E.missionExposure(b,type,true));
+   turn+=o.duration;
+  }
+  return chance;
  };
  // Evaluate the allocation as a whole: do not strand the only field analyst at HQ.
  let analyst=agents[0],allocation=-Infinity;
@@ -41,10 +62,10 @@ export function planBB1Faction(s,id,E){
   const boost=!paid.error&&f.budget-6>=reserved(a.id)&&paid.chance-base.chance>=7&&(['arrest','protect','rescue'].includes(type)||f.budget>=12);
   return {...(boost?paid:base),paid:boost};
  };
- const go=(a,type,target,reason,goal=null,utility=null)=>{
+ const go=(a,type,target,reason,goal=null,utility=null,paid=null)=>{
   // Spend the actual logistics cost through the engine; shorten only new orders.
   if(type==='travel'&&E.options(s,a.id,type,target).duration>1&&f.budget-reserved(a.id)>=3)activate('logistics');
-  const o=risk(a,type,target);if(o.error)return false;
+  const o=paid===null?risk(a,type,target):{...E.options(s,a.id,type,target,paid),paid};if(o.error)return false;
   E.assign(s,a.id,type,target,o.paid);
   if(goal)memory.plans[a.id]={...goal,started:memory.plans[a.id]?.key===goal.key?memory.plans[a.id].started:s.turn};
   memory.decisions.push({agent:a.id,type,target,reason,chance:o.chance,utility,goal:goal?.key??null});return true;
@@ -75,18 +96,18 @@ export function planBB1Faction(s,id,E){
  }
  for(let iteration=0;iteration<agents.length;iteration++){
   const choices=[];
-  const add=(a,type,target,value,reason,goal=null,expected=null)=>{
-   if(claimed(type,target,a.country)&&!['travel','rest','hide','fieldRest'].includes(type))return;
-   const o=risk(a,type,target);if(o.error)return;
+  const add=(a,type,target,value,reason,goal=null,expected=null,paid=null)=>{
+   if(claimed(type,target,a.country)&&!['travel','sneak','rest','hide','fieldRest'].includes(type))return;
+   const o=paid===null?risk(a,type,target):{...E.options(s,a.id,type,target,paid),paid};if(o.error)return;
    if(s.turn+o.duration-1>campaignRules(s).maxTurns)return;
-   if(['travel','collect','hack','prepare','surveil','authorize','influence','contacts','drone','equip','findSafehouse','counter','cyberSupport'].includes(type)&&s.turn+o.duration>campaignRules(s).maxTurns)return;
+   if(['travel','sneak','collect','hack','prepare','surveil','authorize','influence','contacts','drone','equip','findSafehouse','counter','cyberSupport'].includes(type)&&s.turn+o.duration>campaignRules(s).maxTurns)return;
    const p=o.chance/100,duration=type==='surveil'&&f.budget>=3&&E.getTechSlots(s,id)<2?1:o.duration;
    // Failures lose future actor time as well as the current attempt. A low roll
    // can still win this comparison when the payoff or disappearing window warrants it.
    const failure=['arrest','rescue'].includes(type)?14:['collect','hack','prepare','surveil'].includes(type)?7:4;
    let utility=expected??(value*p/Math.sqrt(duration)-(1-p)*failure-o.fatigue*duration*.12);
    if(goal&&memory.plans[a.id]?.key===goal.key)utility+=6;
-   choices.push({a,type,target,utility,reason,goal});
+   choices.push({a,type,target,utility,reason,goal,paid});
   };
   for(const a of agents.filter(a=>!a.task&&!wait.has(a.id))){
    const home=a.id===analyst?.id;
@@ -101,7 +122,7 @@ export function planBB1Faction(s,id,E){
     const income=6/(1+competition),value=52+income*10;
     const goal={key:'protect:'+p.id,country:p.country,deadline:p.turn,type:'protect',reserved:future.chance<70?6:0};
     if(distance){
-     if(agents.some(b=>b.id!==a.id&&b.task?.type==='travel'&&b.task.target===p.country))continue;
+     if(agents.some(b=>b.id!==a.id&&moving(b)&&b.task.target===p.country))continue;
      const expected=value*chance/(distance+1.6)-(1-chance)*5-(p.turn-end)*1.5;
      add(a,'travel',p.country,0,'Rejoindre une protection : chances à l’arrivée et financement inclus.',goal,expected);
     }else add(a,'protect',null,value,'Encaisser sa part de protection avant l’échéance.',goal);
@@ -123,12 +144,23 @@ export function planBB1Faction(s,id,E){
     const bonus=(t.cell===3?90:0)+(closing?8:0)+(t.flightUntil===s.turn?15:0);
     if(!local){
      const colleagues=agents.filter(b=>b.id!==a.id&&b.id!==analyst?.id&&at(b,t.country));if(colleagues.length>=2)continue;
-     const distance=E.options(s,a.id,'travel',t.country).duration;
+     const passport=E.options(s,a.id,'travel',t.country),distance=passport.duration;
      const type=t.prepared?'arrest':count>=2&&verified?'prepare':!t.intimidated?'intimidate':f.access[t.country]?'collect':'influence';
      const chance=projected(a,t.country,type,t.id).chance/100;
      // Only send a second agent when it adds a needed, complementary competence.
      const need=colleagues.length?Math.max(0,a.stats[0]-colleagues[0].stats[0],a.stats[2]-colleagues[0].stats[2])*3:9;
-     add(a,'travel',t.country,0,'Avancer un dossier avec une compétence utile à la prochaine étape.',goal,(30+progress(t)*5+bonus+need)*chance/(distance+.5)-sighted(t.country).size*2);
+     const value=(30+progress(t)*5+bonus+need)*chance/(distance+.5),competition=sighted(t.country).size*2;
+     add(a,'travel',t.country,0,'Avancer un dossier avec une compétence utile à la prochaine étape.',goal,value-competition);
+     // Logistics can make the guaranteed route faster; sneak never receives it.
+     const fast=distance>1&&E.getTechSlots(s,id)<2&&f.budget-reserved(a.id)>=TECH.logistics.cost;
+     const arrival={...passport,duration:fast?distance-1:distance},legal=caseArrival(a,t,'travel',arrival);
+     for(const paid of [false,true]){
+      const route=E.options(s,a.id,'sneak',t.country,paid);if(route.error||paid&&(f.budget-6<reserved(a.id)||route.boostGain<7))continue;
+      const p=route.chance/100,continuation=caseArrival(a,t,'sneak',route)/legal;
+      const extraEnergy=Math.max(0,route.fatigue*route.duration-arrival.fatigue*arrival.duration);
+      const expected=value*continuation*p*(arrival.duration+.5)/(route.duration+.5)-competition-(1-p)*14-extraEnergy*.12-route.cost*.5;
+      add(a,'sneak',t.country,0,'Comparer arme conservée et discrétion au risque, à la fatigue et au coût du passage.',goal,expected,paid);
+     }
      continue;
     }
     const pending=members.filter(b=>b.task?.target===t.id&&['intimidate','collect','hack'].includes(b.task.type)).length;
@@ -152,7 +184,7 @@ export function planBB1Faction(s,id,E){
   }
   choices.sort((a,b)=>b.utility-a.utility||a.a.id.localeCompare(b.a.id));const best=choices[0];if(!best)break;
   if(best.type==='surveil'&&E.options(s,best.a.id,'surveil',best.target).duration>1)activate('relay');
-  go(best.a,best.type,best.target,best.reason,best.goal,best.utility);
+  go(best.a,best.type,best.target,best.reason,best.goal,best.utility,best.paid);
  }
  for(const a of agents.filter(a=>!a.task&&!wait.has(a.id))){if(a.country===id&&a.fatigue>0)go(a,'rest',null,'Récupérer sans occasion immédiate.');else if(a.country!==id&&(a.fatigue||a.exposure))go(a,E.hasSafehouse(s,id,a.country)?'fieldRest':'hide',null,'Préserver les ressources avant la prochaine occasion.');}
 }

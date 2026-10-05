@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {DISPLAY_ROSTER} from '../dist/client/data.js?v=174';
-import {resetRecruitFilters,recruitSlots,toggleRecruitSelection,setRecruitView,isRecruitPortrait,setRecruitFilter,selectedRecruitSlots,recruitCard} from '../dist/client/recruit-selection.js?v=174';
+import {DISPLAY_ROSTER} from '../dist/client/data.js?v=175';
+import {resetRecruitFilters,recruitSlots,toggleRecruitSelection,setRecruitView,isRecruitPortrait,setRecruitFilter,selectedRecruitSlots,recruitCard} from '../dist/client/recruit-selection.js?v=175';
 import {setupScreen} from '../dist/client/screens.js';
 test('Selection fills the leftmost vacancy without moving the chief; solo and multiplayer are independent',()=>{
  for(const mode of ['solo','multi']){

@@ -1,4 +1,4 @@
-# Publication GitHub — build 174
+# Publication GitHub — build 175
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
@@ -374,3 +374,9 @@ Parcours partagé en cinq étapes dans les dossiers et l’onglet Enquête, bout
 BB1 rejoint les choix d’IA sans remplacer Facile, Normal ou Expert. Normal reste le choix par défaut. Les règles du jeu et le niveau des anciennes sauvegardes sont conservés. En multijoueur, l’hôte sélectionne BB1 pour les pays contrôlés par l’ordinateur.
 
 Validation : 415 tests réussis, dont les tests BB1, sauvegardes et multijoueur. Neuf campagnes sur les niveaux historiques reproduisent les états complets de la version 173. Les résultats archivés des 720 départs BB1 restent un contrôle d’équivalence, pas une mesure de difficulté face à des humains.
+
+## Version 175 — Passage clandestin de BB1
+
+BB1 compare désormais le voyage sous passeport au passage clandestin pour ses enquêtes. Le choix tient compte de l’arme conservée, de l’exposition, de l’énergie, du risque d’échec, du prix du renfort et du raccourcissement réservé à la logistique du passeport. Les passages en cours comptent dans les affectations à destination.
+
+Validation : 421 tests réussis et 1 200 paires de parties à six BB1, avec les mêmes départs avant et après correction. 170 passages choisis contre zéro ; 1 109 victoires contre 1 113. L’écart ne démontre pas une amélioration du taux de victoire. [Méthode et résultats](docs/bots/BB1.md#correction-du-passage-clandestin--version-175).
