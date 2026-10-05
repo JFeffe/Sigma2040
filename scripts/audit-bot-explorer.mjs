@@ -4,9 +4,11 @@ import {gunzipSync} from 'node:zlib';
 import assert from 'node:assert/strict';
 import * as core from '../tools/bot-explorer/core.mjs';
 const load=f=>JSON.parse(gunzipSync(fs.readFileSync('docs/bots/explorer/'+f+'.json.gz')));
-const validation=load('validation'),benchmark=load('benchmark');
+const validation=load('validation'),benchmark=load('benchmark'),large=load('bb1-5000');
+assert.equal(large.length,5000);assert.equal(new Set(large.map(r=>r.seed)).size,5000);
+for(const r of large){assert.equal(r.population,'bb1-5000');assert.equal(r.profile,'uniform');assert.equal(r.curve.length,r.turn);for(const roster of Object.values(r.rosters))assert.equal(new Set(roster).size,4);const journal=load('details/'+r.key);assert.equal(journal.timeline.length,r.turn);assert.deepEqual(journal.timeline.at(-1).scores,r.finalScores);}
 assert.equal(validation.length,2160);assert.equal(benchmark.length,3456);
-for(const r of [...validation,...benchmark]){
+for(const r of [...validation,...benchmark,...large]){
  assert.ok(Math.abs(core.sum(Object.values(r.sources),x=>x)-r.score)<1e-7,r.key);
  assert.ok(r.first>=0&&r.first<=1);
 }
@@ -42,4 +44,4 @@ for(const pop of Object.keys(popNames)){
 detailRow=all.find(r=>r.key===INPUT.d.key);detailData=INPUT.d;dfaction=detailRow.home;dturn=detailRow.turn;
 for(const t of ['course','operations','agents','prestige','dossiers']){dtab=t;renderDetail();}
 `,context);
-console.log('PASS: 5616 records, source points, team balance, 32 views, 5 detail tabs and synchronized assets.');
+console.log('PASS: 10616 records, source points, team balance, 40 views, 5 detail tabs and synchronized assets.');

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-05T17:40:31.620Z",
+  "generated": "2026-10-05T19:28:16.337Z",
   "validation": 2160,
   "replayAudit": "All 2160 outcomes, durations and six final scores identical to recorded validation.",
   "benchmark": {
@@ -768,6 +768,23 @@
     "benchmark": {
       "label": "BB1 — 48 compositions d’équipe",
       "policy": "BB1"
+    },
+    "bb1-5000": {
+      "label": "BB1 — 5 000 parties, six bots",
+      "policy": "BB1",
+      "note": "Independent new seeds; uniform random rosters in all six countries. Frozen policy."
     }
+  },
+  "largeBatch": {
+    "population": "bb1-5000",
+    "total": 5000,
+    "seedStart": 2401001,
+    "seedEnd": 2406000,
+    "started": "2026-10-05T19:26:46.161Z",
+    "finished": "2026-10-05T19:28:16.337Z",
+    "policy": "Frozen BB1 / build 173",
+    "policySha256": "4bf31a8568e39af20fbd4911693e0856f1d889301a004748e665780d5ebf4dad",
+    "rosterProtocol": "All six countries: four distinct visible agents drawn uniformly without replacement per country. Separate seeded roster RNG. Focal country rotates independently of roster selection. No tuning or seed selection based on results.",
+    "details": true
   }
 }

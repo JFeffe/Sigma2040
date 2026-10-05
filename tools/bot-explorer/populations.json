@@ -18,5 +18,10 @@
   "benchmark": {
     "label": "BB1 — 48 compositions d’équipe",
     "policy": "BB1"
+  },
+  "bb1-5000": {
+    "label": "BB1 — 5 000 parties, six bots",
+    "policy": "BB1",
+    "note": "Independent new seeds; uniform random rosters in all six countries. Frozen policy."
   }
 }

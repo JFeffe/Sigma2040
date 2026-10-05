@@ -19,6 +19,7 @@ Ne pas copier les modules du jeu ni le contenu de `docs/bots/reference/` dans le
 
 | Libellé | Signification | Identifiant d’archive |
 | --- | --- | --- |
+| BB1 — 5 000 parties, six bots | Nouveau lot indépendant, équipes variées dans les six pays | `bb1-5000` |
 | BotBrillant1 — 6 bots | Six exemplaires du candidat retenu, BB1 | `v3` |
 | Prototype compétitif — 6 bots | Six exemplaires du prédécesseur expérimental | `v2` |
 | BB1 face à 5 prototypes | Pays suivi contrôlé par BB1, cinq adversaires expérimentaux | `mixed` |
@@ -30,6 +31,11 @@ Le catalogue est conservé dans `tools/bot-explorer/populations.json` et les mé
 
 ## Données et lecture
 
+- Nouveau lot : **5 000 parties à six BB1**, 4 673 victoires collectives (**93,46 %**).
+  Graines 2401001–2406000 ; quatre agents distincts tirés uniformément dans chacun
+  des six pays, avec rotation du pays suivi. Politique BB1 figée et journal complet
+  pour chaque partie. Ce lot ne remplace pas les anciennes comparaisons appariées.
+  Reproduire avec `node scripts/run-bb1-large-batch.mjs 5000`.
 - Validation : 720 départs × trois populations = 2 160 parties avec journal détaillé.
   Les replays ont reproduit les issues, durées et six scores de l’archive. BB1 : 660/720
   victoires collectives (91,7 %), sans changement de bot pour produire ce dashboard.
@@ -99,3 +105,5 @@ Autre limite du protocole : le pays focal tourne selon l’indice de graine et r
 à un résidu fixe modulo six. Certaines initialisations utilisent aussi ce résidu. Une étude
 causale dédiée doit croiser pays, équipes et scénarios, sans attacher un pays à une série
 particulière de graines. Aucun équilibrage du jeu n’a été changé par cet audit.
+
+Les en-têtes des tableaux proposent une aide au survol et un bouton « ? » cliquable.

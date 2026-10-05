@@ -1,4 +1,4 @@
-import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';import {gzipSync,gunzipSync} from 'node:zlib';import {pathToFileURL} from 'node:url';import {resolve} from 'node:path';import assert from 'node:assert/strict';import {DISPLAY_ROSTER,COUNTRIES,ACTIONS,TECH} from '../docs/bots/reference/build173/data.js';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';import {gzipSync,gunzipSync} from 'node:zlib';import {pathToFileURL,fileURLToPath} from 'node:url';import {resolve} from 'node:path';import assert from 'node:assert/strict';import {DISPLAY_ROSTER,COUNTRIES,ACTIONS,TECH} from '../docs/bots/reference/build173/data.js';
 const out='docs/bots/explorer',validation='docs/bots/reference';mkdirSync(out+'/details',{recursive:true});
 const root=pathToFileURL(resolve('docs/bots/reference/build173')+'/').href,dm=x=>'data:text/javascript;charset=utf-8,'+encodeURIComponent(x.replaceAll("'./","'"+root));
 const engine=readFileSync('docs/bots/reference/build173/engine.js','utf8'),v2=readFileSync(validation+'/v2.js','utf8'),v3=readFileSync(validation+'/v3.js','utf8');
@@ -6,7 +6,7 @@ assert.equal(v3,readFileSync('docs/bots/reference/build173/normal-bot.js','utf8'
 const E=await import(dm(engine.replace("import {planNormalFaction} from './normal-bot.js?v=173';",`import {planNormalFaction as oldPlan} from ${JSON.stringify(dm(v2))};import {planNormalFaction as newPlan} from ${JSON.stringify(dm(v3))};const planNormalFaction=(s,f,E)=>(s.botPolicies?.[f]==='v2'?oldPlan:newPlan)(s,f,E);`)));
 const homes=COUNTRIES.filter(c=>c.power).map(c=>c.id),source=JSON.parse(gunzipSync(readFileSync(validation+'/rows.json.gz'))),rows=[];
 const sources=(s,f)=>{const o={protection:0,proofs:0,location:0,preparation:0,arrest:0,other:0};for(const e of s.prestigeLedger.filter(e=>e.faction===f)){const k=e.reason.startsWith('attentat déjoué')?'protection':e.key.startsWith('proof:')?'proofs':e.key.startsWith('loc:')?'location':e.key.startsWith('prep:')?'preparation':e.key.startsWith('arrest:')?'arrest':'other';o[k]+=e.points;}return o;};
-function play(s,meta,detail){
+export function play(s,meta,detail){
  const initialAgents=E.team(s,s.player).map(a=>a.id),initialCases=s.suspects.map(t=>({id:t.id,templateId:t.templateId||t.id,name:t.name,role:t.role,cell:t.cell,country:t.country})),timeline=[],decisions=[],attacks=[],milestones={};
  for(const t of s.suspects)milestones[t.id]={known:s.factions[s.player].known[t.id]?0:null,proofs:null,verified:null,prepared:null,arrest:null};
  while(!s.ended){const turn=s.turn;E.advance(s);if(detail){timeline.push({turn,crisis:s.crisis,scores:Object.fromEntries(homes.map(f=>[f,s.factions[f].score]))});for(const f of homes)decisions.push({faction:f,turn,decisions:structuredClone(s.factions[f].normalBot?.decisions||[])});}
@@ -20,6 +20,7 @@ function play(s,meta,detail){
  record.curve=detail?timeline.map(t=>[t.turn,t.crisis,t.scores[s.player]]):undefined;
  return record;
 }
+export async function buildOriginalDatasets(){
 for(let i=0;i<source.length;i++){
  const r=source[i],s=E.createGame(r.home,DISPLAY_ROSTER.slice(0,4).map(a=>a.id),r.seed);s.humanFactions=[];
  for(const f of homes)E.team(s,f).forEach((a,j)=>{const t=DISPLAY_ROSTER.find(t=>t.id===r.rosters[f][j]);Object.assign(a,structuredClone(t),{id:f+'-'+j,templateId:t.id,faction:f,country:f,nationalities:[...new Set([...t.nationalities,f])]});});
@@ -37,3 +38,7 @@ const bench=[];for(let ti=0;ti<teams.length;ti++){for(let i=0;i<72;i++){const te
 writeFileSync(out+'/benchmark.json.gz',gzipSync(JSON.stringify(bench)));
 writeFileSync(out+'/meta.json',JSON.stringify({populations:JSON.parse(readFileSync('tools/bot-explorer/populations.json','utf8')),generated:new Date().toISOString(),validation:rows.length,replayAudit:'All 2160 outcomes, durations and six final scores identical to recorded validation.',benchmark:{teams:48,gamesPerTeam:72,worlds:72,total:bench.length,agentAppearances:12,chiefRotation:true,seedStart:1301001,note:'48 compositions selected before outcomes; each visible agent occurs in 12 teams. Same 72 starts and country schedule across teams; generated opponents use the engine standard roster weighting. Six V3 bots. Worlds reused across compositions, not independent observations.'},agents:DISPLAY_ROSTER.map(({id,name,role,stats,talents})=>({id,name,role,stats,talents})),actions:Object.fromEntries(Object.entries(ACTIONS).filter(([,v])=>!v.disabled).map(([id,a])=>[id,{name:a.name,safe:!!a.safe,stat:a.stat}])),countries:COUNTRIES.map(({id,name})=>({id,name})),tech:TECH,teams},null,2));
 console.log('Explorer datasets ready; original results unchanged.');
+
+}
+export {E,homes};
+if(process.argv[1]&&resolve(process.argv[1])===resolve(fileURLToPath(import.meta.url)))await buildOriginalDatasets();
