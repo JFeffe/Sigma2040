@@ -4,29 +4,26 @@ Cette branche ajoute **BotBrillant1 (BB1)** comme quatrième choix de bot, à c�
 **Facile, Normal et Expert**. Normal reste le choix par défaut. Les anciennes
 sauvegardes restent sur leur difficulté d’origine ; aucun remplacement automatique.
 
-## Tester en solo
+## Recette du PO : sur le serveur
 
-Avec Node.js 20 ou supérieur, depuis ce dépôt :
+Le PO teste BB1 depuis une **URL hébergée**, sans installer Node.js, cloner le dépôt
+ni lancer un serveur sur son ordinateur. La branche à déployer est
+`feat/bot-brillant-1` ; aucune fusion dans `main` n’est nécessaire pour sa recette.
 
-```sh
-git fetch origin
-git switch feat/bot-brillant-1
-node scripts/preview-bb1.mjs
-```
+**État actuel : branche poussée, URL de test pas encore configurée.** Le dépôt GitHub
+ne contient actuellement aucun workflow de déploiement ni environnement déployé.
+Le site de production indiqué dans le README est hébergé sur Sites ; sa gestion
+n’est pas accessible au compte Sites connecté à ce chantier. L’environnement de test
+et l’accès à son hébergeur doivent être identifiés avant de fournir une URL validée.
 
-Ouvrir <http://127.0.0.1:4180>, choisir **Nouvelle partie**, son pays et quatre agents,
-puis **BotBrillant1 (BB1)** dans Difficulté, et lancer l’opération.
-Le port 4180 utilise un stockage navigateur distinct du site de production.
-Le script ne nécessite aucune installation de dépendance.
+L’environnement de test doit déployer le client et son relais multijoueur D1 avec
+une base de test distincte. Tous les participants utilisent la même URL/version.
+Une fois l’URL disponible : **Nouvelle partie → pays et quatre agents → BotBrillant1
+(BB1) → Lancer l’opération**. En multijoueur, l’hôte choisit BB1 dans le salon avant
+le lancement ; les places humaines restent manuelles.
 
-## Multijoueur
-
-L’hôte peut choisir BB1 dans le salon avant de lancer la campagne. Ce choix s’applique
-aux places contrôlées par l’ordinateur ; les humains restent manuels. Tous les participants
-doivent utiliser cette branche. Le serveur d’aperçu ci-dessus sert le client solo seulement :
-pour une partie réseau, utiliser l’environnement de test du projet avec son relais habituel.
-Les contrôles de l’hôte, la propagation de BB1 et la confidentialité des souvenirs du bot
-sont couverts par les tests d’intégration.
+Le propriétaire conserve le choix de la fusion et de la publication en production.
+Une branche GitHub poussée ne constitue pas, à elle seule, un déploiement jouable.
 
 ## Périmètre et vérifications
 

@@ -372,4 +372,4 @@ Parcours partagé en cinq étapes dans les dossiers et l’onglet Enquête, bout
 ## Évaluer BotBrillant1 (BB1)
 
 Cette branche ajoute BB1 comme choix supplémentaire ; Facile, Normal et Expert sont conservés.
-[Guide de test pour le PO](docs/bots/BB1.md) — démarrage local : `node scripts/preview-bb1.mjs`.
+[Guide de recette pour le PO](docs/bots/BB1.md) — test sur une URL hébergée depuis la branche BB1 ; environnement de test à configurer.
