@@ -1,0 +1,22 @@
+{
+  "v3": {
+    "label": "BotBrillant1 — 6 bots",
+    "policy": "BB1",
+    "historicalId": "v3"
+  },
+  "v2": {
+    "label": "Prototype compétitif — 6 bots",
+    "policy": "Prototype compétitif",
+    "historicalId": "v2",
+    "note": "Experimental predecessor; not the published Normal bot."
+  },
+  "mixed": {
+    "label": "BB1 face à 5 prototypes",
+    "focal": "BB1",
+    "opponents": "Prototype compétitif"
+  },
+  "benchmark": {
+    "label": "BB1 — 48 compositions d’équipe",
+    "policy": "BB1"
+  }
+}

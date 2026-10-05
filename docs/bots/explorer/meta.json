@@ -1,0 +1,773 @@
+{
+  "generated": "2026-10-05T17:40:31.620Z",
+  "validation": 2160,
+  "replayAudit": "All 2160 outcomes, durations and six final scores identical to recorded validation.",
+  "benchmark": {
+    "teams": 48,
+    "gamesPerTeam": 72,
+    "worlds": 72,
+    "total": 3456,
+    "agentAppearances": 12,
+    "chiefRotation": true,
+    "seedStart": 1301001,
+    "note": "48 compositions selected before outcomes; each visible agent occurs in 12 teams. Same 72 starts and country schedule across teams; generated opponents use the engine standard roster weighting. Six V3 bots. Worlds reused across compositions, not independent observations."
+  },
+  "agents": [
+    {
+      "id": "p0",
+      "name": "IRIS",
+      "role": "L’Ambassadrice",
+      "stats": [
+        7,
+        4,
+        9
+      ],
+      "talents": [
+        "diplomatie",
+        "contacts",
+        "langues"
+      ]
+    },
+    {
+      "id": "p12",
+      "name": "BISHOP",
+      "role": "Officier de terrain",
+      "stats": [
+        9,
+        6,
+        5
+      ],
+      "talents": [
+        "enquete",
+        "infiltration",
+        "tactique"
+      ]
+    },
+    {
+      "id": "p13",
+      "name": "AMBER",
+      "role": "L’Entrepreneuse",
+      "stats": [
+        5,
+        7,
+        8
+      ],
+      "talents": [
+        "contacts",
+        "informatique",
+        "drones"
+      ]
+    },
+    {
+      "id": "p14",
+      "name": "LEI",
+      "role": "Le Prédateur",
+      "stats": [
+        4,
+        7,
+        9
+      ],
+      "talents": [
+        "combat",
+        "endurance",
+        "infiltration"
+      ]
+    },
+    {
+      "id": "p15",
+      "name": "APÉRO",
+      "role": "Le Hacker",
+      "stats": [
+        9,
+        8,
+        3
+      ],
+      "talents": [
+        "surveillance",
+        "informatique",
+        "enquete"
+      ]
+    },
+    {
+      "id": "p16",
+      "name": "MIRA",
+      "role": "La Vigie",
+      "stats": [
+        8,
+        6,
+        7
+      ],
+      "talents": [
+        "secours",
+        "langues",
+        "surveillance"
+      ]
+    },
+    {
+      "id": "p17",
+      "name": "MIDNIGHT",
+      "role": "Le Coordinateur",
+      "stats": [
+        8,
+        7,
+        5
+      ],
+      "talents": [
+        "drones",
+        "tactique",
+        "surveillance"
+      ]
+    },
+    {
+      "id": "p18",
+      "name": "MERCER",
+      "role": "L’Intermédiaire",
+      "stats": [
+        7,
+        6,
+        7
+      ],
+      "talents": [
+        "contacts",
+        "combat",
+        "infiltration"
+      ]
+    },
+    {
+      "id": "p19",
+      "name": "MARLOWE",
+      "role": "La Convoyeuse",
+      "stats": [
+        4,
+        8,
+        8
+      ],
+      "talents": [
+        "contacts",
+        "drones",
+        "endurance"
+      ]
+    },
+    {
+      "id": "p20",
+      "name": "NOX",
+      "role": "La Veilleuse",
+      "stats": [
+        7,
+        9,
+        4
+      ],
+      "talents": [
+        "informatique",
+        "surveillance",
+        "drones"
+      ]
+    },
+    {
+      "id": "p21",
+      "name": "ADLER",
+      "role": "Le Consul",
+      "stats": [
+        8,
+        9,
+        3
+      ],
+      "talents": [
+        "diplomatie",
+        "contacts",
+        "tactique"
+      ]
+    },
+    {
+      "id": "p22",
+      "name": "DANTE",
+      "role": "Le Traqueur",
+      "stats": [
+        8,
+        5,
+        7
+      ],
+      "talents": [
+        "enquete",
+        "combat",
+        "endurance"
+      ]
+    },
+    {
+      "id": "p23",
+      "name": "SELIN",
+      "role": "La Stratège",
+      "stats": [
+        6,
+        8,
+        6
+      ],
+      "talents": [
+        "langues",
+        "informatique",
+        "tactique"
+      ]
+    },
+    {
+      "id": "p24",
+      "name": "ROCKET",
+      "role": "Le Médiateur",
+      "stats": [
+        8,
+        8,
+        4
+      ],
+      "talents": [
+        "secours",
+        "diplomatie",
+        "enquete"
+      ]
+    },
+    {
+      "id": "p25",
+      "name": "ALBA",
+      "role": "La Faussaire",
+      "stats": [
+        7,
+        7,
+        6
+      ],
+      "talents": [
+        "diplomatie",
+        "endurance",
+        "infiltration"
+      ]
+    },
+    {
+      "id": "p26",
+      "name": "RAVEN",
+      "role": "L’Expérimentée",
+      "stats": [
+        5,
+        6,
+        9
+      ],
+      "talents": [
+        "secours",
+        "langues",
+        "combat"
+      ]
+    }
+  ],
+  "actions": {
+    "travel": {
+      "name": "Voyager sous passeport",
+      "safe": true,
+      "stat": 2
+    },
+    "sneak": {
+      "name": "Passage clandestin",
+      "safe": false,
+      "stat": 2
+    },
+    "contacts": {
+      "name": "Activer un contact",
+      "safe": false,
+      "stat": 1
+    },
+    "collect": {
+      "name": "Recueillir une preuve",
+      "safe": false,
+      "stat": 0
+    },
+    "analyze": {
+      "name": "Vérifier une preuve",
+      "safe": false,
+      "stat": 0
+    },
+    "surveil": {
+      "name": "Localiser une cible",
+      "safe": false,
+      "stat": 0
+    },
+    "hack": {
+      "name": "Intrusion numérique",
+      "safe": false,
+      "stat": 1
+    },
+    "authorize": {
+      "name": "Obtenir un mandat",
+      "safe": false,
+      "stat": 1
+    },
+    "prepare": {
+      "name": "Préparer une arrestation",
+      "safe": false,
+      "stat": 0
+    },
+    "arrest": {
+      "name": "Procéder à l’arrestation",
+      "safe": false,
+      "stat": 2
+    },
+    "hide": {
+      "name": "Faire profil bas",
+      "safe": true,
+      "stat": 2
+    },
+    "findSafehouse": {
+      "name": "Trouver une planque",
+      "safe": false,
+      "stat": 2
+    },
+    "fieldRest": {
+      "name": "Se reposer dans la planque",
+      "safe": true,
+      "stat": 2
+    },
+    "rest": {
+      "name": "Se reposer au QG",
+      "safe": true,
+      "stat": 2
+    },
+    "heal": {
+      "name": "Recevoir des soins",
+      "safe": true,
+      "stat": 2
+    },
+    "protect": {
+      "name": "Protéger une infrastructure",
+      "safe": false,
+      "stat": 1
+    },
+    "counter": {
+      "name": "Contre-espionnage",
+      "safe": false,
+      "stat": 0
+    },
+    "equip": {
+      "name": "Trouver une arme",
+      "safe": false,
+      "stat": 2
+    },
+    "influence": {
+      "name": "Chantage diplomatique",
+      "safe": false,
+      "stat": 0
+    },
+    "intimidate": {
+      "name": "Intimider un intermédiaire",
+      "safe": false,
+      "stat": 2
+    },
+    "drone": {
+      "name": "Reconnaissance par drone",
+      "safe": false,
+      "stat": 1
+    },
+    "cyberSupport": {
+      "name": "Hack d’un pays",
+      "safe": false,
+      "stat": 1
+    },
+    "rescue": {
+      "name": "Extraire un agent capturé",
+      "safe": false,
+      "stat": 2
+    }
+  },
+  "countries": [
+    {
+      "id": "FR",
+      "name": "France"
+    },
+    {
+      "id": "US",
+      "name": "États-Unis"
+    },
+    {
+      "id": "CN",
+      "name": "Chine"
+    },
+    {
+      "id": "IN",
+      "name": "Inde"
+    },
+    {
+      "id": "RU",
+      "name": "Russie"
+    },
+    {
+      "id": "GB",
+      "name": "Royaume-Uni"
+    },
+    {
+      "id": "CA",
+      "name": "Canada"
+    },
+    {
+      "id": "BR",
+      "name": "Brésil"
+    },
+    {
+      "id": "DE",
+      "name": "Allemagne"
+    },
+    {
+      "id": "TR",
+      "name": "Turquie"
+    },
+    {
+      "id": "ZA",
+      "name": "Afrique du Sud"
+    },
+    {
+      "id": "JP",
+      "name": "Japon"
+    }
+  ],
+  "tech": {
+    "ai": {
+      "name": "IA d’analyse",
+      "cost": 2,
+      "duration": 3,
+      "icon": "terminal",
+      "art": "analyze",
+      "effect": "+10 aux nouvelles vérifications · plafond 90 %",
+      "desc": "Pendant 3 tours, +10 points aux nouvelles vérifications affectées au QG. Aucun agent dédié ; les preuves doivent être traitées par vos agents. Une remontée de piste à la première fin de tour. Aucun cumul."
+    },
+    "relay": {
+      "name": "Relais satellite",
+      "cost": 3,
+      "duration": 2,
+      "icon": "world",
+      "art": "surveil",
+      "effect": "Localisation en 1 tour · positions prolongées de +2 tours",
+      "desc": "Pendant 2 tours, toute votre équipe lance « Localiser une cible » en 1 tour. Toutes les positions encore valides gagnent immédiatement 2 tours ; les nouvelles localisations obtenues pendant le relais gagnent aussi 2 tours, quelle que soit leur source. Les prolongations acquises restent après expiration ou annulation. Une fuite invalide toujours la position. Remboursable uniquement avant tout effet."
+    },
+    "logistics": {
+      "name": "Logistique prioritaire",
+      "cost": 3,
+      "duration": 2,
+      "icon": "plane",
+      "art": "travel",
+      "effect": "Nouveaux voyages sous passeport : −1 tour",
+      "desc": "Pendant 2 tours, tous les nouveaux voyages sous passeport de votre équipe durent un tour de moins, minimum 1. Aucun effet sur les voyages commencés ou clandestins. La durée obtenue reste acquise."
+    },
+    "guard": {
+      "name": "Sentinelle autonome",
+      "cost": 5,
+      "duration": 5,
+      "icon": "shield",
+      "art": "protect",
+      "desc": "Ancien appui : protège un pays pendant 5 tours."
+    }
+  },
+  "teams": [
+    [
+      "p17",
+      "p20",
+      "p21",
+      "p22"
+    ],
+    [
+      "p13",
+      "p15",
+      "p18",
+      "p23"
+    ],
+    [
+      "p0",
+      "p12",
+      "p19",
+      "p25"
+    ],
+    [
+      "p14",
+      "p16",
+      "p24",
+      "p26"
+    ],
+    [
+      "p0",
+      "p19",
+      "p24",
+      "p25"
+    ],
+    [
+      "p14",
+      "p16",
+      "p17",
+      "p22"
+    ],
+    [
+      "p12",
+      "p15",
+      "p18",
+      "p26"
+    ],
+    [
+      "p13",
+      "p20",
+      "p21",
+      "p23"
+    ],
+    [
+      "p0",
+      "p16",
+      "p23",
+      "p25"
+    ],
+    [
+      "p14",
+      "p18",
+      "p22",
+      "p26"
+    ],
+    [
+      "p15",
+      "p19",
+      "p20",
+      "p24"
+    ],
+    [
+      "p12",
+      "p13",
+      "p17",
+      "p21"
+    ],
+    [
+      "p12",
+      "p14",
+      "p16",
+      "p25"
+    ],
+    [
+      "p13",
+      "p17",
+      "p24",
+      "p26"
+    ],
+    [
+      "p15",
+      "p18",
+      "p20",
+      "p23"
+    ],
+    [
+      "p0",
+      "p19",
+      "p21",
+      "p22"
+    ],
+    [
+      "p15",
+      "p16",
+      "p22",
+      "p23"
+    ],
+    [
+      "p14",
+      "p18",
+      "p19",
+      "p20"
+    ],
+    [
+      "p0",
+      "p12",
+      "p24",
+      "p26"
+    ],
+    [
+      "p13",
+      "p17",
+      "p21",
+      "p25"
+    ],
+    [
+      "p14",
+      "p18",
+      "p19",
+      "p23"
+    ],
+    [
+      "p0",
+      "p15",
+      "p16",
+      "p26"
+    ],
+    [
+      "p12",
+      "p17",
+      "p21",
+      "p22"
+    ],
+    [
+      "p13",
+      "p20",
+      "p24",
+      "p25"
+    ],
+    [
+      "p18",
+      "p22",
+      "p24",
+      "p26"
+    ],
+    [
+      "p13",
+      "p17",
+      "p20",
+      "p21"
+    ],
+    [
+      "p12",
+      "p15",
+      "p16",
+      "p25"
+    ],
+    [
+      "p0",
+      "p14",
+      "p19",
+      "p23"
+    ],
+    [
+      "p12",
+      "p13",
+      "p18",
+      "p23"
+    ],
+    [
+      "p0",
+      "p16",
+      "p21",
+      "p24"
+    ],
+    [
+      "p17",
+      "p19",
+      "p20",
+      "p25"
+    ],
+    [
+      "p14",
+      "p15",
+      "p22",
+      "p26"
+    ],
+    [
+      "p14",
+      "p23",
+      "p24",
+      "p25"
+    ],
+    [
+      "p12",
+      "p15",
+      "p17",
+      "p22"
+    ],
+    [
+      "p0",
+      "p13",
+      "p19",
+      "p21"
+    ],
+    [
+      "p16",
+      "p18",
+      "p20",
+      "p26"
+    ],
+    [
+      "p14",
+      "p21",
+      "p22",
+      "p25"
+    ],
+    [
+      "p12",
+      "p16",
+      "p19",
+      "p23"
+    ],
+    [
+      "p0",
+      "p13",
+      "p15",
+      "p17"
+    ],
+    [
+      "p18",
+      "p20",
+      "p24",
+      "p26"
+    ],
+    [
+      "p16",
+      "p17",
+      "p19",
+      "p23"
+    ],
+    [
+      "p14",
+      "p18",
+      "p20",
+      "p24"
+    ],
+    [
+      "p0",
+      "p13",
+      "p15",
+      "p25"
+    ],
+    [
+      "p12",
+      "p21",
+      "p22",
+      "p26"
+    ],
+    [
+      "p0",
+      "p13",
+      "p17",
+      "p21"
+    ],
+    [
+      "p12",
+      "p14",
+      "p20",
+      "p23"
+    ],
+    [
+      "p16",
+      "p18",
+      "p22",
+      "p24"
+    ],
+    [
+      "p15",
+      "p19",
+      "p25",
+      "p26"
+    ]
+  ],
+  "populations": {
+    "v3": {
+      "label": "BotBrillant1 — 6 bots",
+      "policy": "BB1",
+      "historicalId": "v3"
+    },
+    "v2": {
+      "label": "Prototype compétitif — 6 bots",
+      "policy": "Prototype compétitif",
+      "historicalId": "v2",
+      "note": "Experimental predecessor; not the published Normal bot."
+    },
+    "mixed": {
+      "label": "BB1 face à 5 prototypes",
+      "focal": "BB1",
+      "opponents": "Prototype compétitif"
+    },
+    "benchmark": {
+      "label": "BB1 — 48 compositions d’équipe",
+      "policy": "BB1"
+    }
+  }
+}
