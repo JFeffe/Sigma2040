@@ -1,8 +1,8 @@
-# Publication GitHub — build 173
+# Publication GitHub — build 174
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
-Import du build 173. Le jeu en ligne reste hébergé sur Sites avec son relais multijoueur D1. La branche `mods` conserve cette version complète compatible et le Bureau des enquêtes intégré.
+BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md).
 
 # Sigma 2040 — Ligne de faille
 
@@ -369,7 +369,8 @@ Les trois boutons Contact, Preuves et Arrestation filtrent les actions du dossie
 
 Parcours partagé en cinq étapes dans les dossiers et l’onglet Enquête, boutons d’actions et intervention en parallèle. Mandat optionnel par pays. La deuxième preuve peut toujours être vérifiée et plusieurs agents peuvent recevoir la même action. Identification conservée uniquement pour la révélation du portrait.
 
-## Évaluer BotBrillant1 (BB1)
+## Version 174 — BotBrillant1 (BB1)
 
-Cette branche ajoute BB1 comme choix supplémentaire ; Facile, Normal et Expert sont conservés.
-[Guide de test pour le PO](docs/bots/BB1.md) — démarrage local : `node scripts/preview-bb1.mjs`.
+BB1 rejoint les choix d’IA sans remplacer Facile, Normal ou Expert. Normal reste le choix par défaut. Les règles du jeu et le niveau des anciennes sauvegardes sont conservés. En multijoueur, l’hôte sélectionne BB1 pour les pays contrôlés par l’ordinateur.
+
+Validation : 415 tests réussis, dont les tests BB1, sauvegardes et multijoueur. Neuf campagnes sur les niveaux historiques reproduisent les états complets de la version 173. Les résultats archivés des 720 départs BB1 restent un contrôle d’équivalence, pas une mesure de difficulté face à des humains.

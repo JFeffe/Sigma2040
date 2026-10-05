@@ -1,6 +1,6 @@
-# BotBrillant1 (BB1) — évaluation par le PO
+# BotBrillant1 (BB1) — guide de jeu et de validation
 
-Cette branche ajoute **BotBrillant1 (BB1)** comme quatrième choix de bot, à côté de
+Depuis la version 174, **BotBrillant1 (BB1)** est un quatrième choix de bot, à côté de
 **Facile, Normal et Expert**. Normal reste le choix par défaut. Les anciennes
 sauvegardes restent sur leur difficulté d’origine ; aucun remplacement automatique.
 
@@ -10,7 +10,7 @@ Avec Node.js 20 ou supérieur, depuis ce dépôt :
 
 ```sh
 git fetch origin
-git switch feat/bot-brillant-1
+git switch main
 node scripts/preview-bb1.mjs
 ```
 
@@ -23,7 +23,7 @@ Le script ne nécessite aucune installation de dépendance.
 
 L’hôte peut choisir BB1 dans le salon avant de lancer la campagne. Ce choix s’applique
 aux places contrôlées par l’ordinateur ; les humains restent manuels. Tous les participants
-doivent utiliser cette branche. Le serveur d’aperçu ci-dessus sert le client solo seulement :
+doivent utiliser la version 174 ou une version ultérieure compatible. Le serveur d’aperçu ci-dessus sert le client solo seulement :
 pour une partie réseau, utiliser l’environnement de test du projet avec son relais habituel.
 Les contrôles de l’hôte, la propagation de BB1 et la confidentialité des souvenirs du bot
 sont couverts par les tests d’intégration.
@@ -47,9 +47,9 @@ sont couverts par les tests d’intégration.
 npm test
 ```
 
-La branche est destinée à l’évaluation. Elle ne publie pas le jeu de production et ne change
-pas son numéro de build. La publication décidée par le propriétaire devra suivre AGENTS.md
-(numéro de build, notes de version et versions de cache alignées).
+BB1 est intégré au jeu publié : [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site).
+Les numéros de build, les notes de version et les versions de cache suivent AGENTS.md.
+Le script d’aperçu ci-dessus reste un outil local sans relais réseau de production.
 
 Le [laboratoire statistique](https://github.com/JFeffe/Sigma2040/tree/feat/stats-dashboard/docs/bots)
 est sur une branche indépendante : il peut être révisé sans intégrer BB1.

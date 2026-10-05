@@ -1,12 +1,12 @@
 // Bureau des enquêtes : portage de la maquette validée (module.js / style.css),
 // branché sur le moteur réel. Même structure et mêmes interactions ; seules la source
 // des données, la palette et les demandes de suivi changent.
-import {COOPERATION} from './cooperation.js?v=173';
-import * as E from './engine.js?v=173';
-import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=173';
-import {proofTitle} from './intelligence.js?v=173';
-import {portraitAsset, icon} from './ui.js?v=173';
-import {suspectPortrait} from './fracture-profiles.js?v=173';
+import {COOPERATION} from './cooperation.js?v=174';
+import * as E from './engine.js?v=174';
+import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=174';
+import {proofTitle} from './intelligence.js?v=174';
+import {portraitAsset, icon} from './ui.js?v=174';
+import {suspectPortrait} from './fracture-profiles.js?v=174';
 
 const asset = p => new URL(p, location.href).href;
 const opened = new Set();
@@ -126,7 +126,7 @@ export async function openBureau(caseId = null) {
   if (!s || !ctx.ready()) return;
   mountBureau();
   try {
-    stylePromise ||= fetch(asset('./bureau.css?v=173')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
+    stylePromise ||= fetch(asset('./bureau.css?v=174')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
     styles = await stylePromise;
   } catch (error) { stylePromise = null; ctx.notify?.(error.message); return; }
   if (!ctx.ready()) return;

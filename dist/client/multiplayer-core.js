@@ -1,9 +1,9 @@
-import {threatAnnounced} from './fracture.js?v=173';
-import {AI_LEVELS} from './ai-difficulty.js?v=173';
-import {recordAgentCondition} from './campaign-stats.js?v=173';
-import {startClock} from './campaign-clock.js?v=173';
-import * as E from './engine.js?v=173';
-import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=173';
+import {threatAnnounced} from './fracture.js?v=174';
+import {AI_LEVELS} from './ai-difficulty.js?v=174';
+import {recordAgentCondition} from './campaign-stats.js?v=174';
+import {startClock} from './campaign-clock.js?v=174';
+import * as E from './engine.js?v=174';
+import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=174';
 export const PROTOCOL=16;
 export const playingMembers=room=>room.members.filter(m=>!m.observer);
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);
