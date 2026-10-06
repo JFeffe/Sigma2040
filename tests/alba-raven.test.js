@@ -5,6 +5,7 @@ import {DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
 import {portraitAsset,nationalityFlags} from '../dist/client/ui.js';
 import {fullBody} from '../dist/client/visuals.js';
 import {agentMapMarkers} from '../dist/client/map.js';
+import {BUILD_VERSION} from '../dist/client/build-version.js';
 import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
 
 const agents=[
@@ -16,7 +17,7 @@ function check(a,expected){
  assert.deepEqual(a.stats,expected.stats);
  assert.deepEqual(a.talents,expected.talents);
  assert.ok(a.nationalities.includes(expected.nationality));
- assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait.webp${expected.id==='p26'?'?v=176':''}`);
+ assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait.webp${expected.id==='p26'?'?v='+BUILD_VERSION:''}`);
  assert.ok(fullBody(a).includes(`${expected.slug}-full.png`));
  assert.ok(nationalityFlags(a).includes(`flags/${expected.nationality.toLowerCase()}.svg`));
 }

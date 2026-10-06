@@ -1,12 +1,12 @@
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=176';
-import {threatCoverage} from './threat-status.js?v=176';
-import {ACTIONS,COUNTRY,CELLS} from './data.js?v=176';
-import * as E from './engine.js?v=176';
-import {ACTION_GROUPS} from './presentation.js?v=176';
-import {esc,icon,button,flag,portrait} from './ui.js?v=176';
-import {suspectPortrait} from './fracture-profiles.js?v=176';
-import {countrySignals} from './country-signals.js?v=176';
-import {proofTitle} from './intelligence.js?v=176';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=178';
+import {threatCoverage} from './threat-status.js?v=178';
+import {ACTIONS,COUNTRY,CELLS} from './data.js?v=178';
+import * as E from './engine.js?v=178';
+import {ACTION_GROUPS} from './presentation.js?v=178';
+import {esc,icon,button,flag,portrait} from './ui.js?v=178';
+import {suspectPortrait} from './fracture-profiles.js?v=178';
+import {countrySignals} from './country-signals.js?v=178';
+import {proofTitle} from './intelligence.js?v=178';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -75,7 +75,7 @@ function paint(open=false){
  const locked=readOnly(),done=inquiryCompleted(s,t,type),e=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player];
  const progress=plot?null:investigationSteps(s,t),stage=INVESTIGATION_STEPS.find(x=>x.id===selection.step)||INVESTIGATION_STEPS[0];
  const actionKeys=stage.id==='intervention'?INTERVENTION_ACTIONS[selection.substep||'prepare']:stage.actions;
- const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3><span>${progress.done}/5 étapes</span></div>${stage.id==='intervention'?`<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle. Le mandat est facultatif.</p>${interventionMarkup(s,t,true,selection.substep)}`:''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
+ const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3></div>${stage.id==='intervention'?`<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle. Le mandat est facultatif.</p>${interventionMarkup(s,t,true,selection.substep)}`:''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
  const running=E.team(s).filter(a=>a.task&&(a.task.target===t.id||a.task.type==='analyze'&&s.proofs.find(p=>p.id===a.task.target)?.suspect===t.id||a.country===t.country&&['contacts','influence','authorize','drone',...(plot?['protect']:[])].includes(a.task.type)));
  const missions=running.length?`<section class="inquiry-running"><h3>Missions affectées · ${running.length}</h3>${running.map(a=>`<div>${button(portrait(a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${a.id}" aria-label="Ouvrir les actions de ${esc(a.name)}"`)}<span><strong>${esc(a.name)}</strong><small>${esc(ACTIONS[a.task.type].name)} · ${a.task.remaining} tour(s)${a.task.queued?' · planifiée':''}</small></span></div>`).join('')}</section>`:'';
 

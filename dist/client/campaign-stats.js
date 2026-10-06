@@ -1,7 +1,7 @@
-import {locationExpiry} from './engine.js?v=176';
-import {dataTable} from './data-tables.js?v=176';
-import {ACTIONS,STAT_NAMES,COUNTRY,TECH} from './data.js?v=176';
-import {esc,formatScore,portrait} from './ui.js?v=176';
+import {locationExpiry} from './engine.js?v=178';
+import {dataTable} from './data-tables.js?v=178';
+import {ACTIONS,STAT_NAMES,COUNTRY,TECH} from './data.js?v=178';
+import {esc,formatScore,portrait} from './ui.js?v=178';
 const emptyRow=()=>({count:0,success:0,failed:0,stopped:0,cost:0,fatigue:0,exposure:0,chance:0,rolls:0,prestige:0});
 function addResult(v,r){v.count++;v.success+=+(r.status==='RÉUSSITE');v.failed+=+(r.status==='ÉCHEC');v.stopped+=+(r.status==='INTERROMPUE');for(const key of ['cost','fatigue','exposure','prestige'])v[key]=(v[key]||0)+(r[key]||0);if(!ACTIONS[r.type].safe&&r.status!=='INTERROMPUE'&&Number.isFinite(r.chance)){v.rolls++;v.chance+=r.chance;}}
 export function recordOperation(s,r){
@@ -40,7 +40,7 @@ export function prestigeChart(s,factions){const ledger=s.prestigeLedger||[],max=
  return `<figure class="report-chart"><figcaption>Évolution du prestige <small>Contributions enregistrées au fil des tours</small></figcaption><svg viewBox="0 0 770 210" role="img" aria-label="Évolution du prestige par pays, détaillée dans la chronologie"><path d="M44 25V175H734" class="chart-axis"/>${[0,.5,1].map(n=>`<g><path d="M44 ${y(n*max)}H734" class="chart-grid"/><text x="4" y="${y(n*max)+4}">${formatScore(n*max)}</text></g>`).join('')}${factions.map((f,i)=>{let total=ledger.filter(e=>e.faction===f.id&&e.turn===null).reduce((n,e)=>n+e.points,0),path=`M${x(0)} ${y(total)}`;for(let turn=1;turn<=turns;turn++){path+=` H${x(turn)}`;total+=ledger.filter(e=>e.faction===f.id&&e.turn===turn).reduce((n,e)=>n+e.points,0);path+=` V${y(total)}`;}return `<path d="${path}" fill="none" stroke="${colors[i%colors.length]}" stroke-width="2.5"><title>${esc(COUNTRY[f.id].name)} : ${formatScore(total)} points enregistrés</title></path>`;}).join('')}<text x="44" y="201">Départ</text><text x="692" y="201">Tour ${turns}</text></svg><div class="chart-legend">${factions.map((f,i)=>`<span><i style="background:${colors[i%colors.length]}"></i>${COUNTRY[f.id].name}</span>`).join('')}</div></figure>`;
 }
 export function campaignSummary(s,{country=s.player,tab='overview'}={}){
- const factions=Object.values(s.factions).sort((a,b)=>b.score-a.score),stats=s.campaignStats||{partial:true,factions:{}},rows=Object.entries(stats.factions[country]||{}).filter(([k])=>ACTIONS[k]);
+ const factions=Object.values(s.factions).sort((a,b)=>b.score-a.score),stats=s.campaignStats||{partial:true,factions:{}},recorded=stats.factions[country]||{},rows=Object.entries(ACTIONS).filter(([k,a])=>!a.disabled||recorded[k]).map(([k])=>[k,{...emptyRow(),...recorded[k]}]);
  const byStat=STAT_NAMES.map((name,i)=>{const items=rows.filter(([k])=>!ACTIONS[k].safe&&ACTIONS[k].stat===i);return {name,...items.reduce((a,[,v])=>{for(const k of ['success','failed','stopped','cost','chance','rolls'])a[k]+=v[k];return a;},{success:0,failed:0,stopped:0,cost:0,chance:0,rolls:0})};});
  const ranking=factions.map(f=>{const c=contributionBreakdown(s,f.id),v=operationTotals(s,f.id);return [COUNTRY[f.id].name+(f.id===s.player?' · Vous':''),cell(formatScore(f.score),f.score),cell(formatScore(c.protection),c.protection),c.defended,s.suspects.filter(t=>t.arrestedBy===f.id).length,v.count,v.cost,cell(pct(v.rolls?Math.round(v.randomSuccess/v.rolls*100):null),v.rolls?v.randomSuccess/v.rolls:-1)];});
  const own=contributionBreakdown(s,country),sum=own.protection+own.proofs+own.arrests+own.other,parts=[['Protection',own.protection],['Preuves',own.proofs],['Arrestations',own.arrests],['Autres / antérieur',own.other]];let angle=0;const stops=parts.map(([,v],i)=>{const start=angle;angle+=sum?v/sum*100:0;return `${colors[i]} ${start}% ${angle}%`;}).join(',');

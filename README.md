@@ -1,6 +1,12 @@
-# Publication GitHub — build 176
+# Publication GitHub — build 178
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+La version 178 ouvre directement le menu d’un agent par double-clic même hors du centre, annonce les reports d’attaque avec « Image à venir », rembourse le renfort d’un ordre annulé avant son début et interrompt immédiatement collecte et intrusion lorsque leur cible quitte le pays. La démarche diplomatique coûte 15 / 15 / 10 / 5 confiance ; le soutien médical restaure +12 énergie.
+
+Les corrections de la version 177 sont incluses : confirmation multijoueur mise en avant, étapes d’enquête sans numéros, dossiers accessibles depuis l’agent sélectionné, opérations à 0 / 0 dans le bilan et Iris à Analyse 9, Habileté 4, Sang-froid 7. Les fichiers `dist/client/` et `dist/server/` publiés sont identiques à ceux du dépôt GitHub pour ce build.
+
+Validation du build 178 : `npm test`, 448 tests réussis, dont les scénarios solo et multijoueur de remboursement, départ de cible, annonces et double-clic.
 
 BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md). La version 176 améliore ses choix gouvernementaux, ses modules et la recherche d’arme.
 

@@ -14,8 +14,10 @@ test('BB1 is an additional explicit option; Normal remains the default',()=>{
  assert.match(aiDifficultyControl('bb1',true,false),/data-cmd="mp-ai-difficulty" data-id="bb1" aria-pressed="true" disabled/);
  const s=E.createGame('FR',ids,55);delete s.aiDifficulty;assert.equal(E.validateSave(s).aiDifficulty,'normal');
 });
-test('Easy, Normal and Expert reproduce the complete build-173 campaign states',()=>{
- const {results}=JSON.parse(readFileSync(new URL('./fixtures/build173-legacy-bots.json',import.meta.url)));
+test('Easy, Normal and Expert remain deterministic with the current Iris, diplomacy and medical rules',()=>{
+ const {results}=JSON.parse(readFileSync(new URL('./fixtures/build178-legacy-bots.json',import.meta.url)));
+ // Keep the historical build-173 fixture; this baseline applies the requested
+ // build-177/178 stats and rules to the existing planners.
  for(const {level,seed,hash} of results){const s=E.createGame('FR',ids,seed,level);s.humanFactions=[];while(!s.ended)E.advance(s);assert.equal(createHash('sha256').update(JSON.stringify(s)).digest('hex'),hash,level+' '+seed);assert.ok(Object.values(s.factions).every(f=>!f.bb1));}
 });
 test('Only the multiplayer host selects BB1, the room propagates it and humans stay manual',()=>{

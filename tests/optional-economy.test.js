@@ -21,11 +21,11 @@ function fixture(type){const s=fresh(),a=E.team(s)[0],f=s.factions.FR;a.stats=[5
 test('Every available mission can be assigned with zero credits; duration and costs stay fixed',()=>{
  for(const [type,d] of Object.entries(ACTIONS).filter(([,d])=>!d.disabled)){const {s,a,f,target}=fixture(type);f.budget=0;const o=E.options(s,a.id,type,target);assert.equal(o.error,null,type);assert.equal(o.cost,0,type);E.assign(s,a.id,type,target);assert.equal(f.budget,0);assert.equal(a.task.cost,0);E.cancel(s,a.id);assert.equal(f.budget,0);}
 });
-test('Every risky action offers exactly one +10 boost, charges once without cancellation refunds',()=>{
+test('Every risky action offers exactly one +10 boost, charges once and refunds a cancelled queued boost',()=>{
  for(const [type,d] of Object.entries(ACTIONS).filter(([,d])=>!d.disabled)){const {s,a,f,target}=fixture(type);const normal=E.options(s,a.id,type,target),boost=E.options(s,a.id,type,target,true);
  if(d.safe){assert.ok(boost.error,type);assert.throws(()=>E.assign(s,a.id,type,target,true));continue;}
  assert.equal(boost.error,null,type);assert.equal(boost.cost,6);assert.equal(boost.chance,Math.min(90,normal.chance+10));assert.equal(boost.duration,normal.duration);assert.equal(boost.fatigue,normal.fatigue);
- E.assign(s,a.id,type,target,true);assert.equal(f.budget,0);assert.equal(a.task.bonusCredits,6);const saved=E.validateSave(structuredClone(s));assert.equal(saved.agents.find(x=>x.id===a.id).task.chance,boost.chance);assert.throws(()=>E.assign(s,a.id,type,target,true));assert.equal(f.budget,0);E.cancel(s,a.id);assert.equal(f.budget,0);E.cancel(s,a.id);assert.equal(f.budget,0);
+ E.assign(s,a.id,type,target,true);assert.equal(f.budget,0);assert.equal(a.task.bonusCredits,6);const saved=E.validateSave(structuredClone(s));assert.equal(saved.agents.find(x=>x.id===a.id).task.chance,boost.chance);assert.throws(()=>E.assign(s,a.id,type,target,true));assert.equal(f.budget,0);E.cancel(s,a.id);assert.equal(f.budget,6);E.cancel(s,a.id);assert.equal(f.budget,6);
  }
 });
 test('Boost stays optional when broke, respects both probability bounds, and no-effect purchase is rejected',()=>{
@@ -50,8 +50,8 @@ test('A resolved reinforcement is consumed on success or failure, including Hack
 test('Cancelling AI preserves the paid bonus at and below the cap, including save/reload',()=>{
  for(const stat of [4,6,7]){const {s,a,f,target}=fixture('analyze');a.stats[0]=stat;f.budget=10;const base=E.options(s,a.id,'analyze',target,true).chance,t=E.activateTech(s,'ai');E.assign(s,a.id,'analyze',target,true);const loaded=E.validateSave(structuredClone(s));E.cancelTech(loaded,t.id);assert.equal(loaded.agents.find(x=>x.id===a.id).task.chance,base);assert.equal(loaded.factions.FR.budget,10-6-(s.agents.find(x=>x.id===a.id).task.aiBonus>0?2:0));assert.equal(loaded.agents.find(x=>x.id===a.id).task.cost,6);}
 });
-test('Legacy paid tasks, reserves and chance survive migration; cancellation never refunds',()=>{
- const {s,a,f}=fixture('authorize');delete s.economyRules;f.budget=37;a.task={type:'authorize',target:null,remaining:1,total:1,cost:3,chance:73,fatigue:8,queued:true,origin:'TR',bonusCredits:2};const t=structuredClone(a.task),loaded=E.validateSave(structuredClone(s));assert.equal(loaded.factions.FR.budget,37);assert.deepEqual(loaded.agents[0].task,{...t,fatigue:E.missionFatigue(a,t.type),energyRules:2});assert.deepEqual(E.validateSave(structuredClone(loaded)),loaded);E.cancel(loaded,a.id);assert.equal(loaded.factions.FR.budget,37);E.cancel(loaded,a.id);assert.equal(loaded.factions.FR.budget,37);tick(loaded);assert.equal(loaded.factions.FR.budget,37);
+test('Legacy paid tasks, reserves and chance survive migration; only an unstarted boost is refunded',()=>{
+ const {s,a,f}=fixture('authorize');delete s.economyRules;f.budget=37;a.task={type:'authorize',target:null,remaining:1,total:1,cost:3,chance:73,fatigue:8,queued:true,origin:'TR',bonusCredits:2};const t=structuredClone(a.task),loaded=E.validateSave(structuredClone(s));assert.equal(loaded.factions.FR.budget,37);assert.deepEqual(loaded.agents[0].task,{...t,fatigue:E.missionFatigue(a,t.type),energyRules:2});assert.deepEqual(E.validateSave(structuredClone(loaded)),loaded);E.cancel(loaded,a.id);assert.equal(loaded.factions.FR.budget,39);E.cancel(loaded,a.id);assert.equal(loaded.factions.FR.budget,39);tick(loaded);assert.equal(loaded.factions.FR.budget,39);
 });
 test('Original solo save is preserved byte-for-byte once before migration and never overwritten',()=>{
  const s=fresh();delete s.economyRules;const raw=JSON.stringify(s),m=new Map([[CAMPAIGN_KEY,raw]]),storage={getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,v)};

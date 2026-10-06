@@ -25,8 +25,8 @@ test('HQ cyber support is national, geographic, time-limited and never grants ev
  assert.ok(!E.options(s,s.agents.find(x=>x.faction==='US').id,'counter').explanations.some(x=>x.includes('Soutien')));
  assert.equal(E.options(s,b.id,'cyberSupport','DE').error,'Cette action se prépare au QG, dans votre pays.');s.turn=5;assert.equal(E.options(s,b.id,'collect','s0').chance,before);
 });
-test('Mission reinforcement remains consumed and confidence threshold raises income',()=>{
- const s=fresh(),a=s.agents[1],f=s.factions.FR;f.budget=20;a.country='DE';a.stats[1]=5;const base=E.options(s,a.id,'authorize').chance;assert.equal(E.options(s,a.id,'authorize',null,true).chance,base+10);E.assign(s,a.id,'authorize',null,true);assert.equal(f.budget,14);assert.equal(a.task.bonusCredits,6);E.cancel(s,a.id);assert.equal(f.budget,14);E.assign(s,a.id,'authorize',null,true);finish(s,a);assert.equal(f.influence,undefined);
+test('Queued reinforcement refunds and confidence threshold raises income',()=>{
+ const s=fresh(),a=s.agents[1],f=s.factions.FR;f.budget=20;a.country='DE';a.stats[1]=5;const base=E.options(s,a.id,'authorize').chance;assert.equal(E.options(s,a.id,'authorize',null,true).chance,base+10);E.assign(s,a.id,'authorize',null,true);assert.equal(f.budget,14);assert.equal(a.task.bonusCredits,6);E.cancel(s,a.id);assert.equal(f.budget,20);E.assign(s,a.id,'authorize',null,true);finish(s,a);assert.equal(f.influence,undefined);
  s.turn=3;f.confidence=60;f.budget=6;E.requestGovernmentFavor(s,'funding');assert.equal(f.confidence,45);assert.equal(f.budget,11);assert.throws(()=>E.requestGovernmentFavor(s,'funding'));f.budget=0;if(s.event)E.answerEvent(s,1);E.advance(s);assert.equal(f.budget,2);f.confidence=90;f.budget=0;s.event=null;E.advance(s);assert.equal(f.budget,3);
 });
 test('Targeted verification reserves one piece and records the verifying country independently of discovery',()=>{

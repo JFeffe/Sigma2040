@@ -44,7 +44,7 @@ test('Refunds preserve paid technology prices including event audits and old sav
  const s=fresh(),t=E.activateTech(s,'ai');assert.equal(s.factions.FR.budget,18);E.cancelTech(s,t.id);assert.equal(s.factions.FR.budget,20);
 });
 test('Reserves above the income cap survive cancellation, next turn and reload',()=>{
- const s=fresh(),a=s.agents[0];a.country='TR';E.assign(s,a.id,'drone',null,true);s.factions.FR.budget=30;E.cancel(s,a.id);assert.equal(s.factions.FR.budget,30);tick(s);assert.equal(s.factions.FR.budget,30);assert.equal(E.validateSave(structuredClone(s)).factions.FR.budget,30);
+ const s=fresh(),a=s.agents[0];a.country='TR';E.assign(s,a.id,'drone',null,true);s.factions.FR.budget=30;E.cancel(s,a.id);assert.equal(s.factions.FR.budget,36);tick(s);assert.equal(s.factions.FR.budget,36);assert.equal(E.validateSave(structuredClone(s)).factions.FR.budget,36);
 });
 test('Digital support stores and refunds the total paid for its active extensions exactly once',()=>{
  const s=fresh(),a=s.agents[0];for(let i=0;i<2;i++){E.assign(s,a.id,'cyberSupport','TR');a.task.chance=100;tick(s);}const f=s.factions.FR;assert.equal(f.cyberSupport.TR.cost,0);const before=f.budget;E.cancelCyberSupport(s,'TR');assert.equal(f.budget,before);assert.throws(()=>E.cancelCyberSupport(s,'TR'));assert.equal(f.budget,before);

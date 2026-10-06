@@ -1,0 +1,68 @@
+{
+  "source": "Build 178: existing Easy/Normal/Expert planners with Iris 9-4-7, diplomatic prices 15/15/10/5, medical +12, immediate evidence interruption and postponement reports; deterministic complete campaign state",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "f58c220addc5d67496d96dd5a6ce104022c534ea05dc963cc787f6f1f0d52eb7",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "2ba1862f34c9049ec8e7e87352069f4d1040a635f943b4594ea4f4ccf4827a49",
+      "outcome": "defeat",
+      "turn": 22
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "2c94e4266459da64ea5af3ae003cc2fe7b67e1a47349546098d766fea6db126c",
+      "outcome": "defeat",
+      "turn": 28
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "876096b281bcf2ef72e1ab11967134e57538017cf4f979d7af51acf9f5c51015",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "b4ce259dd61875164e59d5b7a9d0d89a2879241c458fafa27da49b6edc2d8b8c",
+      "outcome": "defeat",
+      "turn": 17
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "aa9e93eb8e32df57f156eb38429e6f90d7a6cb8fa6a4e37d54ab06b4e83a74b7",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "cfbbd68680dc0131db6b96ea781c6b7bfba4c8d4843556b922e8ffb6c5fd8987",
+      "outcome": "victory",
+      "turn": 26
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "3d73cde780ea0f9b5d08475da098e554684de44341cc22f36edac51b53033036",
+      "outcome": "defeat",
+      "turn": 21
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "7afaf105de151d65dac03a4ac472465fcba66d368da7526ea403b96d69d5290b",
+      "outcome": "defeat",
+      "turn": 30
+    }
+  ]
+}

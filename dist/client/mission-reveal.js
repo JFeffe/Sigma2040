@@ -1,12 +1,12 @@
-import {cellName,namedCells} from './data.js?v=176';
-import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=176';
-import {recruitmentCandidates,team} from './engine.js?v=176';
-import {ACTIONS,COUNTRY} from './data.js?v=176';
-import {esc,button,portrait,flag,formatScore} from './ui.js?v=176';
+import {cellName,namedCells} from './data.js?v=178';
+import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=178';
+import {recruitmentCandidates,team} from './engine.js?v=178';
+import {ACTIONS,COUNTRY} from './data.js?v=178';
+import {esc,button,portrait,flag,formatScore} from './ui.js?v=178';
 export const MISSION_IMAGES=Object.fromEntries(['travel','drone','arrest','equip','hack','cyberSupport','sneak','contacts','hide','findSafehouse','analyze','rest','surveil','influence','collect','intimidate','authorize','fieldRest','prepare','heal','protect','counter','rescue'].map(k=>[k,`./assets/missions/${k}.webp`]));
 MISSION_IMAGES.fieldRest='./assets/missions/field-rest.webp';
-export function missionCards(s){return [...(s.turnActivities||[]).filter(r=>r.faction===s.player&&['RÉUSSITE','ÉCHEC','INTERROMPUE'].includes(r.status)).flatMap(r=>r.proofRejection?[r,{...r,type:'forgery'}]:r.condition==='dead'?[r,{...r,type:'death'}]:r.newCapture?[r,{...r,type:'capture'}]:r.newInjury?[r,{...r,type:'injury'}]:[r]),...(s.flightReports||[]).filter(r=>r.faction===s.player&&s.factions[s.player].known[r.suspectId]),...(s.cellReports||[]),...(s.attackReports||[]).filter(r=>!s.plots?.some(p=>p.id===r.plotId&&p.cancelled)&&!s.cellReports?.some(c=>c.attacks.some(p=>p.plotId===r.plotId))),...(s.threatReports||[])];}
-export function revealDelay(r){return ['flight','forgery','cell','attack','death','threat','injury','capture'].includes(r.type)||ACTIONS[r.type]?.safe||r.status==='INTERROMPUE'?0:850;}
+export function missionCards(s){return [...(s.turnActivities||[]).filter(r=>r.faction===s.player&&['RÉUSSITE','ÉCHEC','INTERROMPUE'].includes(r.status)).flatMap(r=>r.proofRejection?[r,{...r,type:'forgery'}]:r.condition==='dead'?[r,{...r,type:'death'}]:r.newCapture?[r,{...r,type:'capture'}]:r.newInjury?[r,{...r,type:'injury'}]:[r]),...(s.attackDelayReports||[]),...(s.flightReports||[]).filter(r=>r.faction===s.player&&s.factions[s.player].known[r.suspectId]),...(s.cellReports||[]),...(s.attackReports||[]).filter(r=>!s.plots?.some(p=>p.id===r.plotId&&p.cancelled)&&!s.cellReports?.some(c=>c.attacks.some(p=>p.plotId===r.plotId))),...(s.threatReports||[])];}
+export function revealDelay(r){return ['flight','forgery','cell','attack','death','threat','injury','capture','postponement'].includes(r.type)||ACTIONS[r.type]?.safe||r.status==='INTERROMPUE'?0:850;}
 export function compactOutcome(r){
  const notes=r.notes||[];
  if(r.status==='INTERROMPUE'){const n=notes.find(n=>/mission close|suspendue|interrompue/i.test(n));return (n||'Conditions de mission devenues invalides.').replace(/^.*? : /,'').split('. ')[0]+'.';}
@@ -21,6 +21,7 @@ export function compactOutcome(r){
 }
 export function outcomeMetrics(r){return [['Énergie',-r.fatigue],['Exposition',r.exposure],['Prestige',r.prestige],['Crise',r.crisis]].filter(([,n])=>Number.isFinite(n)&&n!==0).map(([label,n])=>`<span>${label} <b>${n>0?'+':''}${n}</b></span>`).join('');}
 export function missionRevealMarkup(r,index,total,revealed=false,agent=null,state=null){
+ if(r.type==='postponement')return postponementRevealMarkup(r,index,total);
  if(r.type==='flight')return flightRevealMarkup(r,index,total,state);
  if(r.type==='forgery')return forgeryRevealMarkup(r,index,total);
  if(r.type==='cell')return cellRevealMarkup(r,index,total,state);
@@ -29,6 +30,12 @@ export function missionRevealMarkup(r,index,total,revealed=false,agent=null,stat
  const img=MISSION_IMAGES[r.type],outcome=r.status==='RÉUSSITE'?'success':r.status==='ÉCHEC'?'failure':'interrupted',symbol=outcome==='success'?'✓':outcome==='failure'?'✕':'—';
  const face=revealed?symbol:'20',chance=Number.isFinite(r.chance)?r.chance+' %':'Non consignée';
  return `<section class="mission-reveal compact-action-reveal"><div class="mission-art">${img?`<img src="${img}" alt="${esc(ACTIONS[r.type]?.name||'Mission')}"/>`:'<div class="mission-placeholder">Mission</div>'}<div class="mission-art-caption"><span>DÉBRIEFING / TOUR ${r.turn} · ${index+1} / ${total}</span><h2>${esc(ACTIONS[r.type]?.name||'Aucun ordre')}</h2><p class="result-country" title="${esc(COUNTRY[r.country]?.name||'')}">${COUNTRY[r.country]?flag(r.country):''}</p>${agent?portrait(agent,'debrief-portrait'):''}<h3 class="debrief-agent-name">${esc(r.agent)}</h3></div></div><div class="mission-result ${revealed?'revealed outcome-'+outcome:'waiting'}" aria-live="polite"><div class="mission-chance">Réussite <strong>${chance}</strong>${ACTIONS[r.type]?.safe?' · automatique':''}</div><div class="dice-result"><div class="d20 ${revealed?'settled':'rolling'}" aria-label="Dé à 20 faces${revealed?' : '+esc(r.status):' en mouvement'}"><svg viewBox="0 0 100 110" aria-hidden="true"><path d="M50 3 95 29 95 81 50 107 5 81 5 29Z M50 3 28 39 5 29 M50 3 72 39 95 29 M5 81 28 39 72 39 95 81 50 107 28 39 M72 39 50 107 M5 81 50 76 95 81 M28 39 50 76 72 39"/><text x="50" y="65" text-anchor="middle">${face}</text></svg></div><div>${revealed?`<strong class="mission-outcome"><span class="outcome-icon" aria-hidden="true">${symbol}</span>${esc(r.status)}</strong><p>${r.targetName?'<strong class="result-target">'+esc(r.targetName)+'</strong> ':''}${esc(compactOutcome(r))}</p><div class="outcome-metrics">${outcomeMetrics(r)}</div>${['injured','captured','dead'].includes(r.condition)?'<small class="result-condition">'+({injured:'Agent blessé',captured:'Agent arrêté',dead:'Agent décédé'}[r.condition])+'</small>':''}`:'<strong>Transmission en cours…</strong>'}</div></div></div><div class="reveal-controls">${button(revealed?(index+1===total?'Voir le rapport':'Suivant'):'Révéler maintenant',revealed?'reveal-next':'reveal-now','primary')}${button('Passer au rapport','reveal-skip')}</div></section>`;
+}
+
+export function postponementRevealMarkup(r,index,total){
+ const country=COUNTRY[r.country],origin=COUNTRY[r.origin],relocated=r.origin!==r.country;
+ const reason={flight:'La fuite d’une cible désorganise la cellule.',protection:'La protection du pays perturbe les préparatifs.',relocation:'Fracture a déplacé les préparatifs vers un autre pays.'}[r.reason];
+ return `<section class="mission-reveal attack-reveal postponement-reveal"><div class="mission-art"><div class="mission-placeholder">Image à venir</div><div class="mission-art-caption"><span>DÉBRIEFING / TOUR ${r.turn} · ${index+1} / ${total}</span><h2>Attaque reportée</h2><p>${esc(r.kind)}</p></div></div><div class="mission-result revealed outcome-interrupted"><strong class="mission-outcome">Attaque reportée</strong><p>${esc(reason)}</p><div class="attack-details"><p><span>Pays ciblé</span><strong>${flag(r.country)} ${esc(country.name)}</strong></p><p><span>Attaquant</span><strong>Fracture · ${esc(cellName(r.cell))}</strong></p><p><span>Échéance précédente</span><strong>Fin du tour ${r.oldTurn}</strong></p><p><span>Nouvelle échéance</span><strong>Fin du tour ${r.attackTurn}</strong></p>${relocated?`<p><span>Pays précédent</span><strong>${flag(r.origin)} ${esc(origin.name)}</strong></p>`:''}</div><p>${relocated?'La protection reste dans le pays précédent.':'Vérifiez que votre protection couvre la nouvelle échéance.'}</p></div><div class="reveal-controls">${button(index+1===total?'Voir le rapport':'Suivant','reveal-next','primary')}${button('Passer au rapport','reveal-skip')}</div></section>`;
 }
 
 export function attackRevealMarkup(r,index,total){

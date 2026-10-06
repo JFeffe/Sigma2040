@@ -10,7 +10,7 @@ function fixture(){
  return {s,f,m,t,a:m[1]};
 }
 test('BB1 spends diplomacy on a usable mandate and respects the government cooldown',()=>{
- const {s,f}=fixture();E.planFaction(s,'FR');assert.equal(f.lastFavor.type,'diplomacy');assert.equal(f.lastFavor.country,'DE');assert.equal(f.cooperation.DE,1);assert.equal(f.confidence,20);assert.equal(f.authorized.DE,false);
+ const {s,f}=fixture();E.planFaction(s,'FR');assert.equal(f.lastFavor.type,'diplomacy');assert.equal(f.lastFavor.country,'DE');assert.equal(f.cooperation.DE,1);assert.equal(f.confidence,25);assert.equal(f.authorized.DE,false);
  const saved=structuredClone(f.lastFavor);E.planFaction(s,'FR');assert.deepEqual(f.lastFavor,saved);
 });
 test('BB1 funding unlocks a useful paid intervention instead of filling an unused reserve',()=>{
@@ -21,7 +21,7 @@ test('BB1 funding unlocks a useful paid intervention instead of filling an unuse
 test('BB1 values medical energy without changing already confirmed chances or orders',()=>{
  const {s,f,m}=fixture();f.known={};f.evidence=[];f.confidence=80;
  for(const a of m.slice(1,3)){a.fatigue=60;a.task={type:'collect',remaining:1,target:'s0',chance:47};}
- const tasks=m.slice(1,3).map(a=>structuredClone(a.task));E.planFaction(s,'FR');assert.equal(f.lastFavor.type,'medical');assert.deepEqual(m.slice(1,3).map(a=>a.fatigue),[40,40]);assert.deepEqual(m.slice(1,3).map(a=>a.task),tasks);
+ const tasks=m.slice(1,3).map(a=>structuredClone(a.task));E.planFaction(s,'FR');assert.equal(f.lastFavor.type,'medical');assert.deepEqual(m.slice(1,3).map(a=>a.fatigue),[48,48]);assert.deepEqual(m.slice(1,3).map(a=>a.task),tasks);
 });
 test('BB1 does not spend diplomacy on busy or already capped agents',()=>{
  for(const mode of ['busy','capped']){const {s,f,a}=fixture();f.authorized.DE=true;f.cooperation.DE=3;if(mode==='busy')a.task={type:'rest',remaining:2};else {a.stats=[10,10,10];a.talents=['combat','surveillance'];}E.planFaction(s,'FR');assert.notEqual(f.lastFavor?.type,'diplomacy');assert.equal(f.cooperation.DE,3);}

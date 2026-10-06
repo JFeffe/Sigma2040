@@ -6,7 +6,7 @@ const fresh=()=>E.createGame('FR',['p0','p1','p2','p3'],99);
 test('Twelve talents, three unique specialties each and approved Iris identity',()=>{
  assert.equal(Object.keys(TALENTS).filter(t=>t!=='chef').length,12);
  for(const a of ROSTER){assert.equal(new Set(a.talents).size,3);assert.ok(a.talents.every(t=>TALENTS[t]));}
- assert.deepEqual(ROSTER[0].stats,[7,4,9]);assert.deepEqual(ROSTER[0].nationalities,['GB']);
+ assert.deepEqual(ROSTER[0].stats,[9,4,7]);assert.deepEqual(ROSTER[0].nationalities,['GB']);
 });
 test('Best base talent plus cumulative languages, homeland bonus and cap',()=>{
  const s=fresh(),a=s.agents[0];a.country='GB';a.stats=[5,5,5];a.cover='Clandestine';
@@ -33,7 +33,7 @@ test('Passives reduce exposure and fatigue; field aid does not boost medical ene
 test('Legacy roster migration retains campaign state and orders; new malformed nationalities fail',()=>{
  const s=fresh();delete s.agentRules;s.agents[0].talents=['diplomatie','charisme','polyglotte','analyse'];s.agents[0].stats=[8,4,8];delete s.agents[0].nationalities;
  E.assign(s,'p1','travel','DE');const task=structuredClone(s.agents[1].task),budget=s.factions.FR.budget;
- const migrated=E.validateSave(s);assert.deepEqual(migrated.agents[0].stats,[7,4,9]);assert.deepEqual(migrated.agents[0].nationalities,['GB','FR']);assert.deepEqual(migrated.agents[1].task,task);assert.equal(migrated.factions.FR.budget,budget);
+ const migrated=E.validateSave(s);assert.deepEqual(migrated.agents[0].stats,[9,4,7]);assert.deepEqual(migrated.agents[0].nationalities,['GB','FR']);assert.deepEqual(migrated.agents[1].task,task);assert.equal(migrated.factions.FR.budget,budget);
  assert.deepEqual(E.validateSave(structuredClone(migrated)),migrated);
  migrated.agents[0].nationalities=['GB','GB'];assert.throws(()=>E.validateSave(migrated));
 });
