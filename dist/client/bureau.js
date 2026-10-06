@@ -1,12 +1,13 @@
 // Bureau des enquêtes : portage de la maquette validée (module.js / style.css),
 // branché sur le moteur réel. Même structure et mêmes interactions ; seules la source
 // des données, la palette et les demandes de suivi changent.
-import {COOPERATION} from './cooperation.js?v=179';
-import * as E from './engine.js?v=179';
-import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=179';
-import {proofTitle} from './intelligence.js?v=179';
-import {portraitAsset, icon} from './ui.js?v=179';
-import {suspectPortrait} from './fracture-profiles.js?v=179';
+import {COOPERATION} from './cooperation.js?v=180';
+import * as E from './engine.js?v=180';
+import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=180';
+import {proofTitle} from './intelligence.js?v=180';
+import {actionResources} from './presentation.js?v=180';
+import {portraitAsset, icon} from './ui.js?v=180';
+import {suspectPortrait} from './fracture-profiles.js?v=180';
 
 const asset = p => new URL(p, location.href).href;
 const opened = new Set();
@@ -126,7 +127,7 @@ export async function openBureau(caseId = null) {
   if (!s || !ctx.ready()) return;
   mountBureau();
   try {
-    stylePromise ||= fetch(asset('./bureau.css?v=179')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
+    stylePromise ||= fetch(asset('./bureau.css?v=180')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
     styles = await stylePromise;
   } catch (error) { stylePromise = null; ctx.notify?.(error.message); return; }
   if (!ctx.ready()) return;
@@ -307,7 +308,7 @@ function drawPopover() {
    <header class="tt-head"><span class="tt-kicker">${esc(d.name)}</span><button class="tooltip-close" aria-label="Fermer la fiche">×</button></header>
    <div class="tt-target"><strong>${esc(a.name)} · Énergie ${100-a.fatigue}/100 · Exposition ${a.exposure}</strong><strong>${what}</strong><small>${sub}</small></div>
    ${d.safe ? '<div class="tt-odds high"><b>Auto</b><span>réussite garantie</span></div>' : `<div class="tt-odds ${level}"><b data-count="${o.chance}">${p.shown ?? o.chance}</b><span>%</span><i class="bar"><b style="width:${o.chance}%"></b></i></div>`}
-   <p class="tt-effect">${esc(d.desc)}</p>
+   <p class="tt-effect">${esc(d.desc)}</p>${actionResources(p.type)}
    <ul class="tt-factors">${factors.map(([x, c]) => `<li class="${c}">${esc(x)}</li>`).join('')}</ul>
    <dl class="tt-costs">${costs.map(([ic, k, v, c]) => `<div class="${c}"><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
    ${o.clandestine ? '<p class="tt-warn">Sans mandat : −15 et risque de capture</p>' : ''}

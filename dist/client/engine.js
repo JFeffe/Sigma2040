@@ -1,19 +1,19 @@
-import {planBB1Faction} from './bot-brillant-1.js?v=179';
-import {GAME_MODES,selectParticipants} from './game-setup.js?v=179';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=179';
-import {balanceThreatCountries} from './threat-placement.js?v=179';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=179';
-import {exposurePenalty} from './exposure.js?v=179';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=179';
-import {cellName,namedCells} from './data.js?v=179';
-import {campaignRules} from './campaign-rules.js?v=179';
-import {stopClock} from './campaign-clock.js?v=179';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=179';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=179';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=179';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=179';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=179';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=179';
+import {planBB1Faction} from './bot-brillant-1.js?v=180';
+import {GAME_MODES,selectParticipants} from './game-setup.js?v=180';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=180';
+import {balanceThreatCountries} from './threat-placement.js?v=180';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=180';
+import {exposurePenalty} from './exposure.js?v=180';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=180';
+import {cellName,namedCells} from './data.js?v=180';
+import {campaignRules} from './campaign-rules.js?v=180';
+import {stopClock} from './campaign-clock.js?v=180';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=180';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=180';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=180';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=180';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=180';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=180';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -63,10 +63,10 @@ const baseAgent=(a,f)=>({...structuredClone(a),nationalities:[...new Set([...(a.
 function reveal(s,f,id,source="Origine non consignée"){if(!id)return;const k=s.factions[f].known;k[id]??={identified:false,country:s.suspects.find(t=>t.id===id).country,locationUntil:0,prepared:false,discovery:{turn:s.turn,source}};}
 export const leadResearch=(s,f=s.player)=>s.factions[f].leadResearch||{progress:0,lastTurn:0};
 function discover(s,f,country,source,direct=false,points=1){
- const candidates=s.suspects.filter(t=>!t.arrested&&t.id!=='s6'&&!dossier(s,f,t.id));if(!candidates.length){log(s,'Recherche de nouvelles pistes : tous les dossiers accessibles sont déjà connus. Les autres effets de l’opération restent actifs.','info',f);return;}
- if(!direct){const research=s.factions[f].leadResearch??={progress:0,lastTurn:0};const previous=research.lastTurn===s.turn?(research.turnGain??1):0,gain=Math.max(0,points-previous);research.lastTurn=s.turn;research.turnGain=Math.max(previous,points);if(!gain){log(s,`Recherche : contribution du tour déjà comptée (${research.progress}/3).`,'info',f);return;}research.progress+=gain;log(s,`Recherche de nouvelles pistes : +${gain} progression.`,'clue',f);if(research.progress<3)return;research.progress-=3;source='Trois points de recherche recoupés. Dernière confirmation : '+source;}
+ const candidates=s.suspects.filter(t=>!t.arrested&&t.id!=='s6'&&!dossier(s,f,t.id));if(!candidates.length){log(s,'Recherche : tous les dossiers accessibles sont déjà connus. Les autres effets de l’opération restent actifs.','info',f);return;}
+ if(!direct){const research=s.factions[f].leadResearch??={progress:0,lastTurn:0};research.lastTurn=s.turn;delete research.turnGain;research.progress+=points;log(s,`Recherche : +${points} point(s). Tous les gains se cumulent.`,'clue',f);if(research.progress<3)return;research.progress-=3;source='Trois points de Recherche recoupés. Dernière confirmation : '+source;}
 
- const local=candidates.filter(t=>t.country===country),t=pick(s,local.length?local:candidates);if(t){reveal(s,f,t.id,source);log(s,`Nouvelle piste : ${t.name}, ${COUNTRY[t.country].name}.`,'clue',f);}return t;
+ const local=candidates.filter(t=>t.country===country),t=pick(s,local.length?local:candidates);if(t){reveal(s,f,t.id,source);log(s,`Recherche : dossier découvert — ${t.name}, ${COUNTRY[t.country].name}.`,'clue',f);}return t;
 }
 const npcId=a=>/^[A-Z]{2}-(?:[0-3]|R[0-9]+)$/.test(a.id);
 function npcProfile(s,f,slot=0){
@@ -164,7 +164,7 @@ export function options(s,agentId,type,target,useCredits=false){
  if(['prepare','arrest'].includes(type)&&k&&countProofs(s,a.faction,target)<2&&f.evidence.some(e=>e.contested&&s.proofs.find(p=>p.id===e.id)?.suspect===target))error='Preuve falsifiée écartée : recueillez une nouvelle pièce avant de préparer ou de procéder à une arrestation.';
  if(type==='blackmail'&&k&&!evidenceFor(s,a.faction,target).some(e=>e.verified))error='Une preuve vérifiée sur cette cible est nécessaire.';
  if(type==='rescue'){const victim=s.agents.find(b=>b.id===target);if(!victim||victim.faction!==a.faction||victim.status!=='captured'||victim.country!==a.country)error='Rejoignez le pays où votre coéquipier est détenu.';}
- if(d.tech&&getTechSlots(s,a.faction)>=2)error='Les deux modules de soutien sont occupés.';
+ if(d.tech&&getTechSlots(s,a.faction)>=2)error='Les deux Modules d’opération sont occupés.';
  let duration=d.duration;if(['travel','sneak'].includes(type)&&COUNTRY[target]){duration=travelTurns(a.country,target);}
  if(type==='travel'&&f.tech.some(t=>t.type==='logistics'&&t.until>=s.turn))duration=Math.max(1,duration-1);
  if(type==='surveil'&&f.tech.some(t=>t.type==='relay'&&t.until>=s.turn))duration=1;
@@ -342,7 +342,7 @@ export function cancelCyberSupport(s,country){
 export function cancelTech(s,id){
  if(s.ended)throw Error('La campagne est terminée.');ensureTechnology(s);
  const f=s.factions[s.player],t=f.tech.find(t=>t.id===id&&t.until>=s.turn);
- if(!t)throw Error('Cet appui n’est plus actif ou ne vous appartient pas.');
+ if(!t)throw Error('Ce module n’est plus actif ou ne vous appartient pas.');
  const refund=techRefund(s,t);recordSupport(s,s.player,'operations',t.type,{cancel:true,refund});f.budget+=refund;f.tech=f.tech.filter(x=>x!==t);syncDefense(s,f);
  if(t.type==='ai'&&!f.tech.some(x=>x.type==='ai'&&x.until>=s.turn)){
   for(const a of team(s))if(a.task?.type==='analyze'){if(a.task.chanceInputs){removeAssignedSupport(a.task,'ai');continue;}const bonus=a.task.aiBonus??Math.max(0,Math.min(10,a.task.chance-options(s,a.id,'analyze',a.task.target).chance));a.task.chance=Math.max(10,a.task.chance-bonus);a.task.aiBonus=0;}
@@ -638,7 +638,7 @@ export function validateSave(s){
   if(a.talents.length!==3||new Set(a.talents).size!==3||a.talents.some(t=>!TALENTS[t]))bad();
  }
  for(const f of Object.values(s.factions))for(const k of Object.values(f.known))if(k.discovery&&(!number(k.discovery.turn,1,40)||!textSafe(k.discovery.source)))bad();
- for(const f of Object.values(s.factions)){f.leadResearch??={progress:0,lastTurn:0};if(!number(f.leadResearch.progress,0,2)||!number(f.leadResearch.lastTurn,0,40)||f.leadResearch.lastTurn>s.turn||(f.leadResearch.turnGain!==undefined&&!number(f.leadResearch.turnGain,1,2)))bad();}
+ for(const f of Object.values(s.factions)){f.leadResearch??={progress:0,lastTurn:0};if(!number(f.leadResearch.progress,0,2)||!number(f.leadResearch.lastTurn,0,40)||f.leadResearch.lastTurn>s.turn||(f.leadResearch.turnGain!==undefined&&!number(f.leadResearch.turnGain,1,2)))bad();delete f.leadResearch.turnGain;}
  // Preserve committed missions; updated rules apply to subsequent orders.
  s.agentRules=1;refreshNpcProfiles(s);
  clearDisabledDecisions(s);validateFracture(s);restoreSecondaryCountries(s,log);

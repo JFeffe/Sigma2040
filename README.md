@@ -1,6 +1,12 @@
-# Publication GitHub — build 179
+# Publication GitHub — build 180
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Dans les fenêtres de dossier et de menace, le bouton **Effets de l’action** est aligné à droite ; stat, talent et effets associés sont affichés à gauche. Les détails restent mécaniques. Énergie et exposition sont regroupées sous les agents et distinguent réussite et échec. Le boost **+10% -6cr**, représenté par une fusée au-dessus des pourcentages, se coche ou se retire avant confirmation, avec les raisons d’indisponibilité conservées.
+
+**Recherche** possède une icône de dossier avec loupe et cumule tous les gains réussis : contact, intrusion et première résolution de l’IA +1 ; contre-espionnage +2. Trois points ouvrent un dossier, le surplus reste acquis, y compris après sauvegarde. L’ancien plafond du meilleur gain par tour est retiré.
+
+**Modules d’opération** remplace Appuis technologiques. Les actions drone et protection montrent l’icône **Module · 1 place**. L’onglet reste **Opération**, avec ses places et commandes d’annulation ; les trois textes signalés, la boîte Ordres de l’unité et le nombre d’opérations en cours sont retirés.
 
 Les nouvelles parties réunissent quatre superpuissances choisies parmi six : un humain et trois PNJ en solo ; deux humains et deux PNJ, trois humains et un PNJ, ou quatre humains en multijoueur. Les pays PNJ sont tirés au sort parmi les pays non choisis.
 
@@ -8,9 +14,9 @@ Le menu Mode de jeu, près de la difficulté, propose Régulier par défaut et A
 
 Un passage clandestin réussi remet l’exposition à zéro. La relève en Avancé propose les anciens agents hors des seize du repêchage, avec réservation exclusive pour les humains et les PNJ. Le bouton Renforts & relève a été retiré du menu Agents ; les postes vacants et les annonces de décès permettent toujours de recruter.
 
-Les campagnes déjà commencées conservent leurs participants. Toutes les corrections des builds 177 et 178 restent incluses. Les fichiers `dist/client/` et `dist/server/` publiés sont identiques à ceux du dépôt GitHub pour ce build.
+Les campagnes déjà commencées conservent leurs participants. Toutes les corrections des builds 177, 178 et 179 restent incluses. Les fichiers `dist/client/` et `dist/server/` publiés sont identiques à ceux du dépôt GitHub pour ce build.
 
-Validation du build 179 : `npm test`, 468 tests réussis, dont les parcours solo et multijoueur du repêchage, les quatre formats de participants, les reprises de salon, les remplacements exclusifs et la remise à zéro de l’exposition.
+Validation du build 180 : `npm test -- --test-concurrency=4`, 475 tests réussis, dont le boost activable/désactivable, les raisons d’indisponibilité, les coûts réels après talents, les gains de Recherche simultanés, la migration des sauvegardes et la confidentialité multijoueur. Les parcours du repêchage et toutes les corrections précédentes restent vérifiés.
 
 BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md). La version 176 améliore ses choix gouvernementaux, ses modules et la recherche d’arme.
 

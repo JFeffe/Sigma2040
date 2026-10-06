@@ -1,7 +1,7 @@
-import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=179';
-import {COUNTRIES,COUNTRY,ACTIONS} from './data.js?v=179';
-import {icon,esc} from './ui.js?v=179';
-import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=179';
+import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=180';
+import {COUNTRIES,COUNTRY,ACTIONS} from './data.js?v=180';
+import {icon,esc} from './ui.js?v=180';
+import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=180';
 const fieldOnly=new Set(['contacts','authorize','hide','influence','blackmail','drone','rescue']);
 export function locationActions(a,s=null){const home=a.country===a.faction,local=s?knownTargets(s,a.faction).some(t=>!t.arrested&&t.country===a.country):true;return Object.entries(ACTIONS).filter(([id,d])=>!d.disabled&&(home?!d.field&&!fieldOnly.has(id):!d.home)&&(id!=='rescue'||!!s?.agents.some(b=>b.faction===a.faction&&b.status==='captured'&&b.country===a.country))&&(id!=='findSafehouse'||!!s||!a.safehouses?.includes(a.country))&&(!['collect','surveil','prepare','arrest','hack','intimidate'].includes(id)||local));}
 export function countryOptions(selected,exclude=null,secondaryOnly=false){if(secondaryOnly)return COUNTRIES.filter(c=>!c.power&&c.id!==exclude).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('');return [[true,'Superpuissances'],[false,'Autres pays']].map(([power,label])=>`<optgroup label="${label}">${COUNTRIES.filter(c=>!!c.power===power&&c.id!==exclude).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('')}</optgroup>`).join('');}
@@ -35,9 +35,14 @@ export function actionUnavailable(s,a,type){
 export const ACTION_EFFECTS={
  influence:['Activer un contact : accès local','Coopération +1 niveau'],
  intimidate:['Recueillir une preuve disponible','Localiser jusqu’à la fin du tour suivant','Exposition +20 (16 avec Infiltration)'],
- hack:['Preuve disponible à vérifier · falsification possible','Hack du pays +1 tour · recherche +1','Sans localisation · accès requis'],
+ hack:['Preuve disponible à vérifier · falsification possible','Hack du pays +1 tour · Recherche +1','Sans localisation · accès requis'],
  drone:['Ouvre l’accès local','Découvre et localise tous les suspects du pays','Sauf l’Architecte encore inconnu · aucune preuve','1 tour · 12 énergie · 1 module pendant la mission']
 };
+export function actionResourceBadges(type){
+ const research={contacts:1,hack:1,counter:2}[type]||0,module=ACTIONS[type]?.tech;
+ return `${research?`<span class="research-requirement">${icon('research')} Recherche +${research}</span>`:''}${module?`<span class="module-requirement" title="Une place réservée pendant la mission, libérée à la fin ou à l’annulation">${icon('module')} Module · 1 place</span>`:''}`;
+}
+export function actionResources(type){const badges=actionResourceBadges(type);return badges?`<div class="action-resources" aria-label="Recherche et Module">${badges}</div>`:'';}
 export function actionEffects(type){return ACTION_EFFECTS[type]?`<div class="action-effects" aria-label="Effets clés">${ACTION_EFFECTS[type].map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'';}
 
 export function sortedCaseTargets(s){

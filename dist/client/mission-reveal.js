@@ -1,20 +1,27 @@
-import {cellName,namedCells} from './data.js?v=179';
-import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=179';
-import {recruitmentCandidates,team} from './engine.js?v=179';
-import {ACTIONS,COUNTRY} from './data.js?v=179';
-import {esc,button,portrait,flag,formatScore} from './ui.js?v=179';
+import {cellName,namedCells} from './data.js?v=180';
+import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=180';
+import {recruitmentCandidates,team} from './engine.js?v=180';
+import {ACTIONS,COUNTRY} from './data.js?v=180';
+import {esc,button,portrait,flag,formatScore} from './ui.js?v=180';
 export const MISSION_IMAGES=Object.fromEntries(['travel','drone','arrest','equip','hack','cyberSupport','sneak','contacts','hide','findSafehouse','analyze','rest','surveil','influence','collect','intimidate','authorize','fieldRest','prepare','heal','protect','counter','rescue'].map(k=>[k,`./assets/missions/${k}.webp`]));
 MISSION_IMAGES.fieldRest='./assets/missions/field-rest.webp';
 export function missionCards(s){return [...(s.turnActivities||[]).filter(r=>r.faction===s.player&&['RÉUSSITE','ÉCHEC','INTERROMPUE'].includes(r.status)).flatMap(r=>r.proofRejection?[r,{...r,type:'forgery'}]:r.condition==='dead'?[r,{...r,type:'death'}]:r.newCapture?[r,{...r,type:'capture'}]:r.newInjury?[r,{...r,type:'injury'}]:[r]),...(s.attackDelayReports||[]),...(s.flightReports||[]).filter(r=>r.faction===s.player&&s.factions[s.player].known[r.suspectId]),...(s.cellReports||[]),...(s.attackReports||[]).filter(r=>!s.plots?.some(p=>p.id===r.plotId&&p.cancelled)&&!s.cellReports?.some(c=>c.attacks.some(p=>p.plotId===r.plotId))),...(s.threatReports||[])];}
 export function revealDelay(r){return ['flight','forgery','cell','attack','death','threat','injury','capture','postponement'].includes(r.type)||ACTIONS[r.type]?.safe||r.status==='INTERROMPUE'?0:850;}
+function researchOutcome(notes){
+ // Historical reports keep their original wording; new ones use Recherche.
+ const discovered=notes.some(n=>n.startsWith('Recherche : dossier découvert')||n.startsWith('Nouvelle piste :'));
+ const gain=notes.reduce((total,n)=>total+Number(n.match(/^Recherche : \+(\d+) point/)?.[1]||n.match(/^Recherche de nouvelles pistes : \+(\d+) progression\./)?.[1]||0),0);
+ return `Recherche +${gain}${discovered?' · dossier découvert':''}`;
+}
 export function compactOutcome(r){
  const notes=r.notes||[];
  if(r.status==='INTERROMPUE'){const n=notes.find(n=>/mission close|suspendue|interrompue/i.test(n));return (n||'Conditions de mission devenues invalides.').replace(/^.*? : /,'').split('. ')[0]+'.';}
  if(r.status==='ÉCHEC')return 'Aucune progression.';
- if(r.type==='counter'){const n=notes.filter(n=>n.includes('a repéré')).length;return `Recherche : ${notes.some(n=>n.startsWith('Nouvelle piste :'))?'nouveau dossier découvert':(notes.find(n=>n.includes('progression.'))?.match(/\+[12]/)?.[0]||'0')+' point(s)'} · ${n} agent${n>1?'s':''} repéré${n>1?'s':''}.`;}
+ if(r.type==='counter'){const n=notes.filter(n=>n.includes('a repéré')).length;return `${researchOutcome(notes)} · ${n} agent${n>1?'s':''} repéré${n>1?'s':''}.`;}
  if(r.type==='protect')return `Pays protégé jusqu’à la fin du tour ${r.turn+3}.`;
  if(r.type==='drone'){const count=notes.filter(n=>n.includes('a localisé')).length;return `Accès ouvert · ${count} suspect${count>1?'s':''} localisé${count>1?'s':''} dans le pays.`;}
- if(r.type==='hack'){const proof=notes.some(n=>n.includes('recueillie sur')),research=notes.some(n=>n.startsWith('Nouvelle piste :'))?'nouveau dossier découvert':(notes.find(n=>n.includes('progression.'))?.match(/\+[12]/)?.[0]||'0')+' point(s) de recherche';return `${proof?'Preuve à vérifier':'Aucune preuve supplémentaire'} · hack +1 tour · ${research}.`;}
+ if(r.type==='hack'){const proof=notes.some(n=>n.includes('recueillie sur'));return `${proof?'Preuve à vérifier':'Aucune preuve supplémentaire'} · hack +1 tour · ${researchOutcome(notes)}.`;}
+ if(r.type==='contacts')return `Accès ouvert · ${researchOutcome(notes)}.`;
  if(r.type==='analyze')return notes.some(n=>/falsification|écartée/i.test(n))?'Preuve falsifiée écartée.':'Preuve vérifiée.';
  const labels={collect:'Preuve recueillie.',surveil:'Cible localisée.',prepare:'Arrestation préparée.',arrest:'Cible arrêtée.',drone:'Accès ouvert et reconnaissance terminée.',intimidate:'Renseignements obtenus et cible localisée.',contacts:'Accès ouvert · piste transmise.',authorize:'Mandat obtenu.',influence:'Accès ouvert · coopération mise à jour.',hack:'Renseignements obtenus.',cyberSupport:'Hack d’un pays activé ou prolongé de 3 tours.',findSafehouse:'Planque disponible.',equip:'Arme équipée.',rest:'Repos au QG terminé.',fieldRest:'Repos en planque terminé.',hide:'Discrétion améliorée.',heal:'Blessure soignée.',rescue:'Agent libéré.',travel:'Arrivée à destination.',sneak:'Arrivée clandestine.'};
  return labels[r.type]||'Opération terminée.';

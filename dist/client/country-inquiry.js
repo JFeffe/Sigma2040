@@ -1,12 +1,12 @@
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=179';
-import {threatCoverage} from './threat-status.js?v=179';
-import {ACTIONS,COUNTRY,CELLS} from './data.js?v=179';
-import * as E from './engine.js?v=179';
-import {ACTION_GROUPS} from './presentation.js?v=179';
-import {esc,icon,button,flag,portrait} from './ui.js?v=179';
-import {suspectPortrait} from './fracture-profiles.js?v=179';
-import {countrySignals} from './country-signals.js?v=179';
-import {proofTitle} from './intelligence.js?v=179';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=180';
+import {threatCoverage} from './threat-status.js?v=180';
+import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=180';
+import * as E from './engine.js?v=180';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=180';
+import {esc,icon,button,flag,portrait} from './ui.js?v=180';
+import {suspectPortrait} from './fracture-profiles.js?v=180';
+import {countrySignals} from './country-signals.js?v=180';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=180';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -66,13 +66,27 @@ export function openCountryInquiry(id,threat=false){
 export function refreshCountryInquiry(){if(api?.modal.open&&api.modal.classList.contains('country-inquiry-modal'))paint();}
 function selectionModel(s,current){return current.threat?threatInquiryModel(s,current.id,current.agent,current.boost):inquiryModel(s,current.id,current.type,current.agent,current.proof,current.boost);}
 function readOnly(){return pending?'Confirmation en cours…':api.readOnlyReason()||'';}
+export function inquiryActionInputs(type,candidate){
+ const d=ACTIONS[type],a=candidate?.a,o=candidate?.normal;
+ const stat=`<span title="Stat utilisée">${icon(['scan','case','shield'][d.stat])} ${esc(STAT_NAMES[d.stat])}${a?' '+a.stats[d.stat]:''}</span>`;
+ const talents=d.talents.map(id=>{const applied=o?.talents.includes(id);return `<span class="${a&&!applied?'is-inactive':''}" title="${a?applied?'Talent utilisé : +10 points de réussite':'Talent absent chez cet agent':'Talent donnant +10 points de réussite'}">${esc(TALENTS[id][0])}${a?applied?' +10':' · absent':''}</span>`;}).join('');
+ const effects=type==='hack'?[{icon:'terminal',text:'Hack +1 tour'}]:[];
+ const modifiers=(o?.explanations||[]).filter(x=>x!=='Talents +10');
+ return `<div class="inquiry-action-inputs" aria-label="Stat, talent et effets associés">${stat}${talents}${actionResourceBadges(type)}${effects.map(x=>`<span${x.title?` title="${x.title}"`:''}>${icon(x.icon)} ${esc(x.text)}</span>`).join('')}${modifiers.map(x=>`<span class="inquiry-modifier">${esc(x)}</span>`).join('')}</div>`;
+}
+export function inquiryActionCosts(type,candidate){
+ if(!candidate)return '<p class="inquiry-costs-empty">Choisissez un agent pour voir l’énergie et l’exposition.</p>';
+ const {a,o}=candidate,signed=n=>n>0?'+'+n:n<0?'−'+Math.abs(n):'0';
+ return `<div class="inquiry-costs" aria-label="Énergie et exposition pour ${esc(a.name)}"><div><strong>${icon('bolt')} Énergie</strong><span><b>−${o.fatigue*o.duration}</b> · réussite ou échec</span></div><div><strong>${icon('eye')} Exposition</strong><span class="inquiry-outcomes"><span class="on-success">Réussite <b>${signed(E.missionExposure(a,type,true))}</b></span><span class="on-failure">Échec <b>${signed(E.missionExposure(a,type,false))}</b></span></span></div></div>`;
+}
+function boostUnavailable(candidate,locked){return locked||candidate?.reason||candidate?.normal.error||(!candidate?'Choisissez un agent disponible.':'')||(candidate.normal.boostGain===0?'Chances déjà au plafond de 90 %.':'')||candidate.reinforced.error||'';}
 function paint(open=false){
  if(!selection)return;
  const s=api.state();if(!s)return;
  let m=selectionModel(s,selection);if(!m){if(!open)api.modal.close();return;}
  if(selection.boost&&m.selected?.normal.boostGain===0){selection.boost=false;m=selectionModel(s,selection);}
  const {t,type,rows,selected,proofs,requirements,plot}=m;selection.agent=selected?.a.id||null;selection.proof=selected?.target&&type==='analyze'?selected.target:proofs[0]?.id||null;
- const locked=readOnly(),done=inquiryCompleted(s,t,type),e=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player];
+ const locked=readOnly(),done=inquiryCompleted(s,t,type),e=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player],preview=selected,boostReason=boostUnavailable(selected,locked);
  const progress=plot?null:investigationSteps(s,t),stage=INVESTIGATION_STEPS.find(x=>x.id===selection.step)||INVESTIGATION_STEPS[0];
  const actionKeys=stage.id==='intervention'?INTERVENTION_ACTIONS[selection.substep||'prepare']:stage.actions;
  const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3></div>${stage.id==='intervention'?`<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle. Le mandat est facultatif.</p>${interventionMarkup(s,t,true,selection.substep)}`:''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
@@ -86,15 +100,14 @@ function paint(open=false){
  <div class="inquiry-country-signals">${countrySignals(s,t.country)}</div>
  <div class="inquiry-summary">${plot?`<span>Attaque · fin du tour ${plot.turn}</span><span>${coverage.covered?'Protégée par votre pays':'Menace non couverte'}</span>`:`<span>${e.length}/2 preuves · ${e.filter(p=>p.verified).length} vérifiée(s)</span><span>${t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer'}</span>`}</div>
  <div class="inquiry-body">${actions}
- <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}<details class="inquiry-action-details"><summary>${icon('info')} Effets de l’action</summary><p class="inquiry-description">${esc(ACTIONS[type].desc)}</p></details>
+ <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}<div class="inquiry-action-context">${inquiryActionInputs(type,preview)}${button(`${icon('help')} Effets de l’action ${icon('chevron')}`,'inquiry-effects','inquiry-effects',`id="inquiryEffects" aria-expanded="${!!selection.effectsOpen}" aria-controls="inquiryMechanics"`)}<p id="inquiryMechanics" class="inquiry-mechanics" ${selection.effectsOpen?'':'hidden'}>${esc(OUTCOMES[type])}</p></div>
  ${plot&&selected?`<p class="inquiry-warning">Fin de préparation : T${s.turn+selected.o.duration-1}${s.turn+selected.o.duration-1>plot.turn?' · Trop tard pour cette attaque.':plot.turn>s.turn+selected.o.duration+2?' · Protection expirée avant cette attaque si lancée maintenant.':' · Protection à temps en cas de réussite.'}</p>`:''}
  ${requirements.length?`<div class="inquiry-requirements">${requirements.map(r=>r.done?`<span class="is-met">${icon('check')} ${esc(r.label)}</span>`:button(`${icon('lock')} ${esc(r.label)}`,'inquiry-action','is-missing',`data-id="${r.action}"`)).join('')}</div>`:''}
  ${type==='arrest'&&!f.authorized[t.country]&&!t.arrested?'<p class="inquiry-warning">Sans mandat : arrestation clandestine, risque accru et coopération −1 niveau après la tentative.</p>':''}
  ${type==='analyze'?`<label class="inquiry-proof">Pièce de ce dossier<select id="inquiryProof" ${!proofs.length?'disabled':''}>${proofs.length?proofs.map(p=>`<option value="${p.id}" ${p.id===selection.proof?'selected':''}>${esc(proofTitle(s.proofs.find(x=>x.id===p.id)))}</option>`).join(''):'<option>Aucune pièce disponible</option>'}</select></label>`:''}
- <p class="inquiry-agent-label">Choisir un agent · ${type==='analyze'?'au QG':esc(COUNTRY[t.country].name)}</p>
+ <div class="inquiry-agents-heading"><div><p class="inquiry-agent-label">Choisir un agent · ${type==='analyze'?'au QG':esc(COUNTRY[t.country].name)}</p><small class="inquiry-boost-status" role="status">${esc(boostReason||`${f.budget} crédits disponibles${selected.normal.boostGain<10?' · plafond 90 %':''}`)}</small></div>${button(`${icon('boost')}<span>+10% -6cr</span>`,'inquiry-boost','inquiry-boost',`id="inquiryBoost" aria-label="${selection.boost?'Désactiver':'Activer'} le boost : +10 points, ${E.ECONOMY.boostCost} crédits" aria-pressed="${selection.boost}" title="${esc(locked||(!selection.boost&&boostReason)||'Boost de l’action · plafond de 90 %')}" ${locked||!selection.boost&&boostReason?'disabled':''}`)}</div>
  <div class="inquiry-agents">${rows.length?rows.map(r=>`<div class="inquiry-agent-row ${r.reason?'is-blocked':''}">${button(portrait(r.a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${r.a.id}" aria-label="Ouvrir les actions de ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible'+(r.a.status==='injured'?' · blessé':''))}</small></span><span class="inquiry-agent-numbers">${r.reason?'':`<b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small>`}</span>`,'inquiry-agent',`inquiry-agent ${r.reason?'is-blocked':''}`,`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="inquiry-empty">Aucun agent de votre équipe ${type==='analyze'?'au QG':'présent dans ce pays'}.</p>`}</div>
- ${selected?`<div class="inquiry-costs">Énergie −${selected.o.fatigue*selected.o.duration} au total · ${selected.normal.explanations.map(esc).join(' · ')||'Aucun modificateur'}</div>`:''}
- <label class="inquiry-boost"><input type="checkbox" id="inquiryBoost" ${selection.boost?'checked':''} ${!selected||selected.normal.error||selected.reason&&!selection.boost||selected.normal.boostGain===0||locked||!selection.boost&&selected.reinforced.error?'disabled':''}><span>Boost +10 points · ${E.ECONOMY.boostCost} crédits<small>${f.budget} crédits disponibles${selected&&selected.normal.boostGain<10?' · plafond de 90 %':''}</small></span></label>
+ ${inquiryActionCosts(type,preview)}
  ${missions}</section></div><footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(selection.message||blocked)}</p>${button(`${icon('check')} Confirmer${selected?' · '+esc(selected.a.name):''}`,'inquiry-confirm','primary wide',blocked?'disabled':'')}</footer></section>`;
  const modal=api.modal,scroll=modal.querySelector('.inquiry-body')?.scrollTop||0,focus=document.activeElement?.id;
  if(open)api.showModal(html,'country-inquiry-modal');else {modal.querySelector('.country-inquiry')?.remove();modal.insertAdjacentHTML('beforeend',html);}
@@ -109,6 +122,12 @@ export async function handleInquiryCommand(cmd,id){
  if(cmd==='inquiry-substep'&&!selection.threat&&INTERVENTION_ACTIONS[id]){selection.step='intervention';selection.substep=id;selection.type=INTERVENTION_ACTIONS[id][0];selection.agent=null;selection.boost=false;selection.message='';paint();}
  if(cmd==='inquiry-action'&&!selection.threat&&INQUIRY_ACTIONS.includes(id)){selection.type=id;selection.step=stepForAction(id,selection.step);if(selection.step==='intervention')selection.substep=interventionForAction(id);selection.agent=null;selection.boost=false;selection.message='';paint();}
  if(cmd==='inquiry-agent'){selection.agent=id;selection.message='';paint();}
+ if(cmd==='inquiry-effects'){selection.effectsOpen=!selection.effectsOpen;paint();}
+ if(cmd==='inquiry-boost'){
+  if(readOnly())return;
+  if(!selection.boost){const reason=boostUnavailable(selectionModel(api.state(),selection)?.selected,'');if(reason){api.notify(reason);paint();return;}}
+  selection.boost=!selection.boost;selection.message='';paint();
+ }
  if(cmd==='inquiry-confirm'){
   const current=selection,s=api.state(),m=selectionModel(s,current),r=m?.selected;
   const reason=readOnly()||r?.reason||(!r?'Choisissez un agent disponible.':'');if(reason){api.notify(reason);paint();return;}

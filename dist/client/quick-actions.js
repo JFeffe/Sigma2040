@@ -1,7 +1,7 @@
-import {locationActions} from './presentation.js?v=179';
-import * as E from './engine.js?v=179';
-import {ACTIONS} from './data.js?v=179';
-import {button,esc,icon} from './ui.js?v=179';
+import {locationActions} from './presentation.js?v=180';
+import * as E from './engine.js?v=180';
+import {ACTIONS} from './data.js?v=180';
+import {button,esc,icon} from './ui.js?v=180';
 export function quickAction(s,a){
  if(!a||a.task||['captured','dead','retired'].includes(a.status)||s.ended)return null;
  const candidates=[],add=(type,target,reason)=>candidates.push({type,target,reason});
@@ -14,7 +14,7 @@ export function quickAction(s,a){
  for(const t of local){const proofs=E.evidenceFor(s,a.faction,t.id);if(t.prepared&&t.locationUntil>=s.turn&&f.authorized[a.country])add('arrest',t.id,'Le dossier et la localisation permettent une intervention avec mandat.');if(proofs.length<2)add('collect',t.id,'Complétez les preuves de ce dossier.');if(!t.prepared)add('prepare',t.id,'Transformez les preuves réunies en dossier d’arrestation.');if(!f.authorized[a.country])add('authorize',null,'Obtenez un mandat avant l’intervention.');if(t.locationUntil<s.turn)add('surveil',t.id,'Actualisez la position de la cible.');}
  if(E.visiblePlots(s).some(p=>p.country===a.country&&!p.resolved))add('protect',null,'Une menace est annoncée dans ce pays.');
  if(a.country===a.faction)for(const t of E.knownTargets(s,a.faction).filter(t=>!t.arrested&&t.country!==a.country))add('travel',t.country,'Rejoignez un pays où une piste est connue.');
- add(a.country===a.faction?'counter':'contacts',null,'Développez votre réseau et la recherche de nouvelles pistes.');
+ add(a.country===a.faction?'counter':'contacts',null,'Développez votre réseau et la Recherche.');
  const allowed=new Set(locationActions(a,s).map(([type])=>type));return candidates.find(c=>allowed.has(c.type)&&!E.options(s,a.id,c.type,c.target).error)||null;
 }
 export function quickActionMarkup(s,a){const q=quickAction(s,a);return q?`<div class="quick-action">${button(icon('bolt')+ACTIONS[q.type].name,'suggest-action','primary wide',`data-id="${esc(a.id)}" data-type="${q.type}" data-target="${q.target||''}"`)}</div>`:'';}

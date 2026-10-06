@@ -1,0 +1,68 @@
+{
+  "source": "Build 180: historical Easy/Normal/Expert planners with all successful Research contributions added; complete deterministic campaign state; build 178 fixture retained separately",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "f9cfed842a095ca43825e8ae90694aad941118e815154c43d5e3afbd4735fa89",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "3d912d422ca0cf37f15475fe4b9e60747c520956fc7f9004c4cda60e144c0df9",
+      "outcome": "defeat",
+      "turn": 22
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "1cc4564571d15a623c1b6b4c750dbdc129d51405e0ffdd8adba2467df706ec92",
+      "outcome": "defeat",
+      "turn": 28
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "58b5f0f685819d668588d8187cdb246932f6f1af74be05fea316ceb1b501db1a",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "fb1eb873bd74cdaefe67c8d9b83d27ee77ce569419d432f3b748a2309d796786",
+      "outcome": "defeat",
+      "turn": 16
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "1067d7bc3bba64ffba13e204371459ae643931c5b3fa792b3e8b2e5be106e274",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "8a7a79afd68892643a0f09608c4559dd840914e4d8ace078f08202ec8ce1e41f",
+      "outcome": "victory",
+      "turn": 25
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "79b750070b5be938c0a8f57e92661083d6fc4c09b4618f306fd8aad074dff2a8",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "09aa61367340e5f3505e4a12323042b2a5281068822a9f26196b4365699bc0ae",
+      "outcome": "defeat",
+      "turn": 30
+    }
+  ]
+}
