@@ -1,8 +1,8 @@
-# Publication GitHub — build 175
+# Publication GitHub — build 176
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
-BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md).
+BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md). La version 176 améliore ses choix gouvernementaux, ses modules et la recherche d’arme.
 
 # Sigma 2040 — Ligne de faille
 

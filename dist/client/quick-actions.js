@@ -1,7 +1,7 @@
-import {locationActions} from './presentation.js?v=175';
-import * as E from './engine.js?v=175';
-import {ACTIONS} from './data.js?v=175';
-import {button,esc,icon} from './ui.js?v=175';
+import {locationActions} from './presentation.js?v=176';
+import * as E from './engine.js?v=176';
+import {ACTIONS} from './data.js?v=176';
+import {button,esc,icon} from './ui.js?v=176';
 export function quickAction(s,a){
  if(!a||a.task||['captured','dead','retired'].includes(a.status)||s.ended)return null;
  const candidates=[],add=(type,target,reason)=>candidates.push({type,target,reason});

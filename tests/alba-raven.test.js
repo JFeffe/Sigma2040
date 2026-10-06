@@ -16,7 +16,7 @@ function check(a,expected){
  assert.deepEqual(a.stats,expected.stats);
  assert.deepEqual(a.talents,expected.talents);
  assert.ok(a.nationalities.includes(expected.nationality));
- assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait.webp${expected.id==='p26'?'?v=175':''}`);
+ assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait.webp${expected.id==='p26'?'?v=176':''}`);
  assert.ok(fullBody(a).includes(`${expected.slug}-full.png`));
  assert.ok(nationalityFlags(a).includes(`flags/${expected.nationality.toLowerCase()}.svg`));
 }

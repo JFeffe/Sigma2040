@@ -1,12 +1,12 @@
-import {bureauEnabled} from './mod-settings.js?v=175';
-import {inquiryIndicator} from './inquiry-notifications.js?v=175';
-import {threatStatus} from './threat-status.js?v=175';
-import {campaignRules} from './campaign-rules.js?v=175';
-import {clockMarkup} from './campaign-clock.js?v=175';
-import {newsTicker} from './news.js?v=175';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=175';
-import {COUNTRY,COUNTRIES} from './data.js?v=175';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=175';
+import {bureauEnabled} from './mod-settings.js?v=176';
+import {inquiryIndicator} from './inquiry-notifications.js?v=176';
+import {threatStatus} from './threat-status.js?v=176';
+import {campaignRules} from './campaign-rules.js?v=176';
+import {clockMarkup} from './campaign-clock.js?v=176';
+import {newsTicker} from './news.js?v=176';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=176';
+import {COUNTRY,COUNTRIES} from './data.js?v=176';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=176';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended)return {};
  const count=threatStatus(state).uncovered.length;

@@ -1,18 +1,18 @@
-import {planBB1Faction} from './bot-brillant-1.js?v=175';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=175';
-import {balanceThreatCountries} from './threat-placement.js?v=175';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=175';
-import {exposurePenalty} from './exposure.js?v=175';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=175';
-import {cellName,namedCells} from './data.js?v=175';
-import {campaignRules} from './campaign-rules.js?v=175';
-import {stopClock} from './campaign-clock.js?v=175';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=175';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=175';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=175';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=175';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=175';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=175';
+import {planBB1Faction} from './bot-brillant-1.js?v=176';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=176';
+import {balanceThreatCountries} from './threat-placement.js?v=176';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=176';
+import {exposurePenalty} from './exposure.js?v=176';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=176';
+import {cellName,namedCells} from './data.js?v=176';
+import {campaignRules} from './campaign-rules.js?v=176';
+import {stopClock} from './campaign-clock.js?v=176';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=176';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=176';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=176';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=176';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=176';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=176';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -27,7 +27,7 @@ export function governmentOptions(s,type,country=null,f=s.player){
  const agents=team(s,f).filter(a=>a.fatigue>0),gain=Math.max(0,Math.min(5,ECONOMY.cap-x.budget));
  const cost=type==='diplomacy'?([20,20,15,10][x.cooperation[country]]??null):d?.cost;
  const error=!d?'Faveur inconnue.':s.ended?'Campagne terminée.':type==='medical'&&medicalUses(s,f)>=3?'Les 3 soutiens médicaux de cette partie ont été utilisés.':s.turn<nextTurn?`Disponible au tour ${nextTurn}.`:cost!==null&&x.confidence<cost?`Il faut ${cost} confiance.`:type==='funding'&&!gain?'Réserve pleine.':type==='diplomacy'&&(!COUNTRY[country]||COUNTRY[country].power)?'Choisissez un pays secondaire.':type==='diplomacy'&&x.cooperation[country]>=4?'Coopération déjà maximale.':type==='medical'&&!agents.length?'Aucun agent à revigorer.':null;
- return {cost,nextTurn,error,gain,medicalRemaining:Math.max(0,3-medicalUses(s,f)),agents:agents.map(a=>a.id)};
+ return {cost,nextTurn,error,gain,energy:type==='medical'?20:0,medicalRemaining:Math.max(0,3-medicalUses(s,f)),agents:agents.map(a=>a.id)};
 }
 export function requestGovernmentFavor(s,type,country=null,f=s.player){
  const o=governmentOptions(s,type,country,f);if(o.error)throw Error(o.error);const x=s.factions[f],d=GOVERNMENT_FAVORS[type];
@@ -35,10 +35,10 @@ export function requestGovernmentFavor(s,type,country=null,f=s.player){
  if(type==='funding')x.budget+=o.gain;
  if(type==='diplomacy')shiftCooperation(s,f,country,1,'démarche diplomatique');
  if(type==='medical')x.medicalUses=medicalUses(s,f)+1;
- if(type==='medical')for(const a of s.agents.filter(a=>o.agents.includes(a.id)))a.fatigue=Math.max(0,a.fatigue-20);
+ if(type==='medical')for(const a of s.agents.filter(a=>o.agents.includes(a.id)))a.fatigue=Math.max(0,a.fatigue-o.energy);
  recordSupport(s,f,'government',type,{cost:o.cost,currency:'confidence'});
  x.lastFavor={type,turn:s.turn,...(type==='diplomacy'?{country}:{}),...(type==='funding'?{gain:o.gain}:{})};
- log(s,`${COUNTRY[f].name} : ${d.name}, −${o.cost} confiance${type==='funding'?`, +${o.gain} crédits`:type==='medical'?`, +20 énergie au maximum pour ${o.agents.length} agent(s) de votre équipe`:`, ${COUNTRY[country].name}`} ; prochaine faveur T${s.turn+2}.`,'success',f);
+ log(s,`${COUNTRY[f].name} : ${d.name}, −${o.cost} confiance${type==='funding'?`, +${o.gain} crédits`:type==='medical'?`, +${o.energy} énergie au maximum pour ${o.agents.length} agent(s) de votre équipe`:`, ${COUNTRY[country].name}`} ; prochaine faveur T${s.turn+2}.`,'success',f);
 }
 
 function intelSnapshot(s,from,to){s.factions[to].foreignIntel[from]={turn:s.turn,source:'exchange',cases:knownTargets(s,from).map(t=>({id:t.id,country:t.country,identified:!!t.identified,raw:evidenceFor(s,from,t.id).filter(e=>!e.verified).length,verified:evidenceFor(s,from,t.id).filter(e=>e.verified).length,prepared:!!t.prepared,locationUntil:t.locationUntil,arrested:!!t.arrested}))};}
