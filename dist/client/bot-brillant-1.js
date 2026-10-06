@@ -1,11 +1,11 @@
-import {TECH,COUNTRY} from './data.js?v=178';
-import {campaignRules} from './campaign-rules.js?v=178';
+import {TECH,COUNTRY} from './data.js?v=179';
+import {campaignRules} from './campaign-rules.js?v=179';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
 export function planBB1Faction(s,id,E){
  const f=s.factions[id],members=E.team(s,id),agents=members.filter(a=>a.status!=='captured');
- if(members.length+s.recruitments.filter(r=>r.faction===id).length<4)s.recruitments.push({id:`${id}-R${s.nextAgent++}`,remaining:2,faction:id});
+ if(members.length+s.recruitments.filter(r=>r.faction===id).length<4)E.queueNpcRecruitment(s,id);
  const targets=E.knownTargets(s,id).filter(t=>!t.arrested).map(t=>({id:t.id,cell:t.cell,country:t.country,prepared:!!t.prepared,locationUntil:t.locationUntil,flightUntil:t.flightUntil,intimidated:!!t.intimidated}));
  const threats=E.visiblePlots(s),queue=()=>E.evidenceQueue(s,id),proofs=t=>E.evidenceFor(s,id,t.id);
  const memory=f.bb1?.version===2&&f.bb1.plans&&f.bb1.delayed?f.bb1:{version:2,plans:{},delayed:{}};

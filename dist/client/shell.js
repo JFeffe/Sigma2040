@@ -1,12 +1,12 @@
-import {bureauEnabled} from './mod-settings.js?v=178';
-import {inquiryIndicator} from './inquiry-notifications.js?v=178';
-import {threatStatus} from './threat-status.js?v=178';
-import {campaignRules} from './campaign-rules.js?v=178';
-import {clockMarkup} from './campaign-clock.js?v=178';
-import {newsTicker} from './news.js?v=178';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=178';
-import {COUNTRY,COUNTRIES} from './data.js?v=178';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=178';
+import {bureauEnabled} from './mod-settings.js?v=179';
+import {inquiryIndicator} from './inquiry-notifications.js?v=179';
+import {threatStatus} from './threat-status.js?v=179';
+import {campaignRules} from './campaign-rules.js?v=179';
+import {clockMarkup} from './campaign-clock.js?v=179';
+import {newsTicker} from './news.js?v=179';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=179';
+import {COUNTRY,COUNTRIES} from './data.js?v=179';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=179';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended)return {};
  const count=threatStatus(state).uncovered.length;
@@ -38,7 +38,7 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
     <main class="deck-main view-${view}">
      ${state.ended?`<div class="campaign-banner ${state.ended}">${icon(state.ended==='victory'?'seal':'shield')} Campagne terminée · ${state.ended==='victory'?'Victoire collective':'Fracture l’emporte'} ${button('Consulter le bilan','ending','small')}</div>`:''}
      ${saveWarning?'<div class="notice warning">Sauvegarde locale indisponible. Exportez votre campagne dans Règles & sauvegarde.</div>':''}
-     ${view==='agents'?`<div class="personnel-toolbar">${button(icon('plus')+' Renforts & relève','recruit','small')}${button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"')}</div>`:view!=='world'?button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"'):''}${content}
+     ${view==='agents'?`<div class="personnel-toolbar">${button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"')}</div>`:view!=='world'?button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"'):''}${content}
     </main>
    </div>
   </div>

@@ -1,12 +1,16 @@
-# Publication GitHub — build 178
+# Publication GitHub — build 179
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
-La version 178 ouvre directement le menu d’un agent par double-clic même hors du centre, annonce les reports d’attaque avec « Image à venir », rembourse le renfort d’un ordre annulé avant son début et interrompt immédiatement collecte et intrusion lorsque leur cible quitte le pays. La démarche diplomatique coûte 15 / 15 / 10 / 5 confiance ; le soutien médical restaure +12 énergie.
+Les nouvelles parties réunissent quatre superpuissances choisies parmi six : un humain et trois PNJ en solo ; deux humains et deux PNJ, trois humains et un PNJ, ou quatre humains en multijoueur. Les pays PNJ sont tirés au sort parmi les pays non choisis.
 
-Les corrections de la version 177 sont incluses : confirmation multijoueur mise en avant, étapes d’enquête sans numéros, dossiers accessibles depuis l’agent sélectionné, opérations à 0 / 0 dans le bilan et Iris à Analyse 9, Habileté 4, Sang-froid 7. Les fichiers `dist/client/` et `dist/server/` publiés sont identiques à ceux du dépôt GitHub pour ce build.
+Le menu Mode de jeu, près de la difficulté, propose Régulier par défaut et Avancé. En Avancé, confirmez d’abord votre pays, puis choisissez les seize agents exclusifs lors d’un repêchage aléatoire en serpentin (1–4, 4–1, 1–4, 4–1). Après le repêchage, réorganisez vos quatre agents, désignez le premier comme Chef et confirmez l’équipe. L’hôte attend toutes les confirmations avant de lancer la partie. Le repêchage multijoueur et les équipes sont conservés après export, déconnexion et reprise du salon.
 
-Validation du build 178 : `npm test`, 448 tests réussis, dont les scénarios solo et multijoueur de remboursement, départ de cible, annonces et double-clic.
+Un passage clandestin réussi remet l’exposition à zéro. La relève en Avancé propose les anciens agents hors des seize du repêchage, avec réservation exclusive pour les humains et les PNJ. Le bouton Renforts & relève a été retiré du menu Agents ; les postes vacants et les annonces de décès permettent toujours de recruter.
+
+Les campagnes déjà commencées conservent leurs participants. Toutes les corrections des builds 177 et 178 restent incluses. Les fichiers `dist/client/` et `dist/server/` publiés sont identiques à ceux du dépôt GitHub pour ce build.
+
+Validation du build 179 : `npm test`, 468 tests réussis, dont les parcours solo et multijoueur du repêchage, les quatre formats de participants, les reprises de salon, les remplacements exclusifs et la remise à zéro de l’exposition.
 
 BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md). La version 176 améliore ses choix gouvernementaux, ses modules et la recherche d’arme.
 
@@ -16,11 +20,11 @@ Prototype de jeu de stratégie solo et multijoueur bêta, en français. Site ave
 
 ## Jouer
 
-Sélectionner une puissance et quatre agents. Parcourir Monde / Enquête pour localiser les premières pistes. Déployer des agents, ouvrir un accès par contact, collecter deux preuves et garder un analyste au QG pour les vérifier. Préparer le dossier, localiser la cible puis intervenir. Le manuel intégré détaille les règles et l’export de sauvegarde.
+Sélectionner une puissance, la difficulté et le mode de jeu. En Régulier, choisir librement quatre agents ; en Avancé, confirmer le pays, terminer le repêchage puis désigner le Chef et confirmer l’équipe. Parcourir Monde / Enquête pour localiser les premières pistes. Déployer des agents, ouvrir un accès par contact, collecter deux preuves et garder un analyste au QG pour les vérifier. Préparer le dossier, localiser la cible puis intervenir. Le manuel intégré détaille les règles et l’export de sauvegarde.
 
 ## Règles implémentées
 
-- Six puissances actives avec chacune quatre agents, six territoires secondaires.
+- Quatre puissances actives parmi six au choix, avec chacune quatre agents ; les six territoires secondaires restent sur la carte.
 - Analyse, Habileté, Sang-froid (1–10), vingt talents, fatigue, exposition, blessure, capture, décès et relève.
 - Vingt ordres au tour par tour ; déplacements légaux publics et passages clandestins.
 - Sept suspects en trois cellules et une direction, preuves avec provenance, fausses traces, localisation temporaire, arrestations avec prérequis.

@@ -103,7 +103,7 @@ test('Already departed targets free all their collecting agents before another t
 });
 
 test('Multiplayer interruptions reach both private reports without disclosing another player’s operation',()=>{
- const r=room(),s=r.game,t=s.suspects.find(t=>t.id==='s0');s.humanFactions=COUNTRIES.filter(c=>c.power).map(c=>c.id);t.country='DE';
+ const r=room(),s=r.game,t=s.suspects.find(t=>t.id==='s0');s.humanFactions=Object.keys(s.factions);t.country='DE';
  const ids=[];for(const m of r.members){const a=E.team(s,m.country)[1];ids.push(a.id);a.country='DE';s.factions[m.country].known[t.id]={country:'DE',identified:true,locationUntil:4};s.factions[m.country].access.DE=true;E.assign(s,a.id,'collect',t.id);}
  s.fracture.flights=[{id:t.id,to:'TR',turn:1}];E.advance(s);
  for(const m of r.members){const view=playerView(r,m.country);assert.equal(view.agents.find(a=>a.id===ids[r.members.indexOf(m)]).task,null);assert.equal(view.turnActivities.filter(a=>a.status==='INTERROMPUE').length,1);assert.ok(view.turnActivities.every(a=>a.faction===m.country));}

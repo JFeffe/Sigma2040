@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {EventEmitter} from 'node:events';
 import {Multiplayer} from '../dist/client/multiplayer.js';
+import {draftCountry,availableDraftAgents} from '../dist/client/game-setup.js';
 // An in-memory, asynchronous transport exercises the exact browser controller without claiming a WebRTC integration test.
 class Link extends EventEmitter{
  constructor(){super();this.open=false;}
@@ -15,6 +16,20 @@ class Peer extends EventEmitter{
  destroy(){this.destroyed=true;this.open=false;for(const c of this.connections)c.close();Peer.peers.delete(this.id);}
 }
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
+test('Three controllers share the exclusive snake draft, resume in place and start only after all ordered teams confirm',async()=>{
+ const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};globalThis.sessionStorage={...globalThis.localStorage};globalThis.document={querySelector:()=>null,querySelectorAll:()=>[]};globalThis.location={href:'https://example.test/',hash:''};globalThis.Peer=Peer;
+ const hooks=()=>({modal(){},toast(){},render(){},close(){},state(){},leave(){}}),h=new Multiplayer(hooks()),a=new Multiplayer(hooks()),b=new Multiplayer(hooks());let resumed;
+ try{
+  await h.create('Hôte','FR');await settle();await a.connect(null,h.details,'Alice');await settle();storage.delete('sigma-seat-'+h.details.id);await b.connect(null,h.details,'Benoît');await settle();
+  await h.command('game-mode',{mode:'advanced'});for(const c of [h,a,b])await c.command('confirm-country');await assert.rejects(a.command('begin-draft'),/confirmer/);await h.command('begin-draft');await settle();
+  const next=[h,a,b].find(c=>c.snapshot.country===draftCountry(h.room.draft));await next.command('draft-pick',{id:availableDraftAgents(h.room.draft)[0].id});await settle();
+  assert.deepEqual(a.snapshot.draft,b.snapshot.draft);assert.equal(a.snapshot.draft.rng,undefined);assert.equal(a.snapshot.draft.seed,undefined);
+  const saved=structuredClone(h.room),picks=structuredClone(saved.draft.picks);h.leave();await settle();resumed=new Multiplayer(hooks());await resumed.resume(saved);await settle();a.connectGuest();b.connectGuest();await settle();assert.deepEqual(resumed.room.draft.picks,picks);
+  while(resumed.room.phase==='draft'){const c=[resumed,a,b].find(c=>c.snapshot.country===draftCountry(resumed.room.draft));assert.ok(c);await c.command('draft-pick',{id:availableDraftAgents(resumed.room.draft)[0].id});await settle();}
+  await assert.rejects(resumed.command('start'),/confirmer/);for(const c of [resumed,a,b])await c.command('team',{agents:[...c.me.agents].reverse()});await resumed.command('start');await settle();
+  assert.equal(resumed.room.game.agents.length,16);assert.equal(resumed.room.game.humanFactions.length,3);assert.equal(new Set(resumed.room.game.agents.map(a=>a.templateId||a.id)).size,16);for(const c of [a,b]){assert.equal(c.snapshot.game.gameMode,'advanced');assert.equal(c.snapshot.game.agents.length,4);assert.equal(c.snapshot.game.agents.find(a=>a.chief).templateId,c.me.agents[0]);assert.equal(c.snapshot.game.rng,undefined);}
+ }finally{for(const c of [h,a,b,resumed].filter(Boolean)){c.leave();clearInterval(c.timer);}for(const name of ['Peer','document','location','localStorage','sessionStorage'])delete globalThis[name];}
+});
 test('Host and guest controllers exchange commands, private snapshots, acknowledgements and resume',async()=>{
  const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};globalThis.sessionStorage={...globalThis.localStorage};globalThis.document={querySelector:()=>null,querySelectorAll:()=>[]};globalThis.location={href:'https://example.test/',hash:''};globalThis.Peer=Peer;
  const hooks=()=>({modal(){},toast(){},render(){},close(){},state(){},leave(){}});
