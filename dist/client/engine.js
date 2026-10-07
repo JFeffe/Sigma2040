@@ -1,19 +1,19 @@
-import {planBB1Faction} from './bot-brillant-1.js?v=180';
-import {GAME_MODES,selectParticipants} from './game-setup.js?v=180';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=180';
-import {balanceThreatCountries} from './threat-placement.js?v=180';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=180';
-import {exposurePenalty} from './exposure.js?v=180';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=180';
-import {cellName,namedCells} from './data.js?v=180';
-import {campaignRules} from './campaign-rules.js?v=180';
-import {stopClock} from './campaign-clock.js?v=180';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=180';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=180';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=180';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=180';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=180';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=180';
+import {planBB1Faction} from './bot-brillant-1.js?v=181';
+import {GAME_MODES,selectParticipants} from './game-setup.js?v=181';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=181';
+import {balanceThreatCountries} from './threat-placement.js?v=181';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=181';
+import {exposurePenalty} from './exposure.js?v=181';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=181';
+import {cellName,namedCells} from './data.js?v=181';
+import {campaignRules} from './campaign-rules.js?v=181';
+import {stopClock} from './campaign-clock.js?v=181';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=181';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=181';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=181';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=181';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=181';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=181';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -631,6 +631,7 @@ export function validateSave(s){
   }
   if((a.templateId||a.id)==='p0'&&a.stats.join(',')==='7,4,9')a.stats=[9,4,7];
   if((a.templateId||a.id)==='p14'&&a.stats.join(',')==='4,9,7')a.stats=[4,7,9];
+  if((a.templateId||a.id)==='p16'&&a.stats.join(',')==='8,6,7')a.stats=[6,7,7];
   if((a.templateId||a.id)==='p20'&&a.stats.join(',')==='4,8,8')a.stats=[7,9,4];
   if(a.task&&a.task.energyRules!==2){a.task.fatigue=missionFatigue(a,a.task.type);a.task.energyRules=2;}
   normalizePassportBonus(a,a.task);

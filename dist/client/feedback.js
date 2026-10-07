@@ -1,6 +1,6 @@
-import {playCue} from './experience.js?v=180';
-import {COUNTRY,ACTIONS} from './data.js?v=180';
-import {esc,portrait} from './ui.js?v=180';
+import {playCue} from './experience.js?v=181';
+import {COUNTRY,ACTIONS} from './data.js?v=181';
+import {esc,portrait} from './ui.js?v=181';
 let signals=[];
 export function clearSignals(){signals=[];}
 export function stageSignal(a){signals=[{country:a.country,agentId:a.id,kind:'order',label:`${a.name} · ordre planifié`,until:Date.now()+6500}];}

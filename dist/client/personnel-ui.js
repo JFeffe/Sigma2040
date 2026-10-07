@@ -1,10 +1,10 @@
-import {sortedTalents} from './ui.js?v=180';
-import * as E from './engine.js?v=180';
-import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=180';
-import {fullBody} from './visuals.js?v=180';
-import {availability} from './presentation.js?v=180';
-import {quickActionMarkup} from './quick-actions.js?v=180';
-import {heading,esc,icon,button,portrait,nationalities,nationalityFlags,talentIcon} from './ui.js?v=180';
+import {sortedTalents} from './ui.js?v=181';
+import * as E from './engine.js?v=181';
+import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=181';
+import {fullBody} from './visuals.js?v=181';
+import {availability} from './presentation.js?v=181';
+import {quickActionMarkup} from './quick-actions.js?v=181';
+import {heading,esc,icon,button,portrait,nationalities,nationalityFlags,talentIcon} from './ui.js?v=181';
 export function personnelPanel(s,selectedId){
  const agents=E.team(s),pending=s.recruitments.filter(r=>r.faction===s.player),a=agents.find(a=>a.id===selectedId)||agents[0],free=agents.filter(a=>!a.task&&a.status!=='captured').length;
  const roster=`<nav class="personnel-roster" aria-label="Choisir un agent"><div class="personnel-roster-heading"><span>VOTRE UNITÉ</span><strong>${agents.length}<small> / 4</small></strong></div>${agents.map((b,i)=>{const state=availability(b);return `<button class="personnel-member ${b.id===a?.id?'selected':''}" data-cmd="select-agent" data-id="${esc(b.id)}" aria-pressed="${b.id===a?.id}"><span class="personnel-member-number">0${i+1}</span>${portrait(b)}<span class="personnel-member-copy"><strong>${esc(b.name)}</strong><small>${esc(COUNTRY[b.country].city)}</small><span class="personnel-member-state ${state.kind}">${b.task?b.task.remaining+' tour(s) · '+(b.task.queued?'planifié':'en mission'):b.status==='captured'?'En détention':b.status==='injured'?'Blessé':'Disponible'}</span></span></button>`;}).join('')}${pending.map(r=>`<div class="personnel-pending">${icon('clock')}<strong>${esc(ROSTER.find(a=>a.id===(r.templateId||r.id))?.name||r.id)}</strong><small>Arrivée dans ${r.remaining} tour(s)</small></div>`).join('')}${agents.length+pending.length<4?button(icon('plus')+' Recruter','recruit','wide personnel-recruit'):''}</nav>`;

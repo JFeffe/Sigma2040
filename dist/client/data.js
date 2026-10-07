@@ -50,7 +50,7 @@ const cast=[
  ['AMBER','L’Entrepreneuse',[5,7,8],['contacts','informatique','drones'],'Des biens du quotidien aux équipements sensibles, ses réseaux livrent là où les autres renoncent.'],
  ['LEI','Le Prédateur',[4,7,9],['combat','endurance','infiltration'],'Il attend sans bruit. Quand il intervient, chaque mouvement compte.'],
  ['APÉRO','Le Hacker',[9,8,3],['surveillance','informatique','enquete'],'Génie de la tech, il préfère les connexions à distance aux relations humaines.'],
- ['MIRA','La Vigie',[8,6,7],['secours','langues','surveillance'],'Elle veille sur les autres sans jamais perdre de vue ce qui se passe autour d’elle.'],
+ ['MIRA','La Vigie',[6,7,7],['secours','langues','surveillance'],'Elle veille sur les autres sans jamais perdre de vue ce qui se passe autour d’elle.'],
  ['MIDNIGHT','Le Coordinateur',[8,7,5],['drones','tactique','surveillance'],'Ancien coordinateur de recherche et de secours, il organise les opérations avec méthode et un humour sec. Il veut parfois trop préparer avant d’agir.'],
  ['MERCER','L’Intermédiaire',[7,6,7],['contacts','combat','infiltration'],'Ancien agent sous couverture dans les réseaux de corruption et de courtage international, il ouvre les portes avec un sourire. Difficile de savoir quand il abandonne son personnage.'],
  ['MARLOWE','La Convoyeuse',[4,8,8],['contacts','drones','endurance'],'Ancienne logisticienne humanitaire devenue intermédiaire pour les missions sensibles, elle trouve toujours un passage et un contact fiable. Directe et débrouillarde, elle ne promet jamais une livraison impossible.'],

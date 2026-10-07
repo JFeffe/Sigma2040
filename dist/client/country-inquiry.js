@@ -1,12 +1,12 @@
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=180';
-import {threatCoverage} from './threat-status.js?v=180';
-import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=180';
-import * as E from './engine.js?v=180';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=180';
-import {esc,icon,button,flag,portrait} from './ui.js?v=180';
-import {suspectPortrait} from './fracture-profiles.js?v=180';
-import {countrySignals} from './country-signals.js?v=180';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=180';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=181';
+import {threatCoverage} from './threat-status.js?v=181';
+import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=181';
+import * as E from './engine.js?v=181';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=181';
+import {esc,icon,button,flag,portrait} from './ui.js?v=181';
+import {suspectPortrait} from './fracture-profiles.js?v=181';
+import {countrySignals} from './country-signals.js?v=181';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=181';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -84,7 +84,7 @@ function paint(open=false){
  if(!selection)return;
  const s=api.state();if(!s)return;
  let m=selectionModel(s,selection);if(!m){if(!open)api.modal.close();return;}
- if(selection.boost&&m.selected?.normal.boostGain===0){selection.boost=false;m=selectionModel(s,selection);}
+ if(selection.boost&&(s.factions[s.player].budget<E.ECONOMY.boostCost||m.selected?.normal.boostGain===0)){selection.boost=false;m=selectionModel(s,selection);}
  const {t,type,rows,selected,proofs,requirements,plot}=m;selection.agent=selected?.a.id||null;selection.proof=selected?.target&&type==='analyze'?selected.target:proofs[0]?.id||null;
  const locked=readOnly(),done=inquiryCompleted(s,t,type),e=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player],preview=selected,boostReason=boostUnavailable(selected,locked);
  const progress=plot?null:investigationSteps(s,t),stage=INVESTIGATION_STEPS.find(x=>x.id===selection.step)||INVESTIGATION_STEPS[0];
@@ -105,7 +105,7 @@ function paint(open=false){
  ${requirements.length?`<div class="inquiry-requirements">${requirements.map(r=>r.done?`<span class="is-met">${icon('check')} ${esc(r.label)}</span>`:button(`${icon('lock')} ${esc(r.label)}`,'inquiry-action','is-missing',`data-id="${r.action}"`)).join('')}</div>`:''}
  ${type==='arrest'&&!f.authorized[t.country]&&!t.arrested?'<p class="inquiry-warning">Sans mandat : arrestation clandestine, risque accru et coopération −1 niveau après la tentative.</p>':''}
  ${type==='analyze'?`<label class="inquiry-proof">Pièce de ce dossier<select id="inquiryProof" ${!proofs.length?'disabled':''}>${proofs.length?proofs.map(p=>`<option value="${p.id}" ${p.id===selection.proof?'selected':''}>${esc(proofTitle(s.proofs.find(x=>x.id===p.id)))}</option>`).join(''):'<option>Aucune pièce disponible</option>'}</select></label>`:''}
- <div class="inquiry-agents-heading"><div><p class="inquiry-agent-label">Choisir un agent · ${type==='analyze'?'au QG':esc(COUNTRY[t.country].name)}</p><small class="inquiry-boost-status" role="status">${esc(boostReason||`${f.budget} crédits disponibles${selected.normal.boostGain<10?' · plafond 90 %':''}`)}</small></div>${button(`${icon('boost')}<span>+10% -6cr</span>`,'inquiry-boost','inquiry-boost',`id="inquiryBoost" aria-label="${selection.boost?'Désactiver':'Activer'} le boost : +10 points, ${E.ECONOMY.boostCost} crédits" aria-pressed="${selection.boost}" title="${esc(locked||(!selection.boost&&boostReason)||'Boost de l’action · plafond de 90 %')}" ${locked||!selection.boost&&boostReason?'disabled':''}`)}</div>
+ <div class="inquiry-agents-heading"><div><p class="inquiry-agent-label">Choisir un agent · ${type==='analyze'?'au QG':esc(COUNTRY[t.country].name)}</p><small class="inquiry-boost-status" role="status">${esc(boostReason||(selected?.normal.boostGain<10?'Plafond 90 %':''))}</small></div>${button(`${icon('boost')}<span>+10% -6cr/<b class="inquiry-boost-balance ${f.budget<E.ECONOMY.boostCost?'is-insufficient':''}">${f.budget}</b></span>`,'inquiry-boost','inquiry-boost',`id="inquiryBoost" aria-label="${selection.boost?'Désactiver':'Activer'} le boost : +10 points, ${E.ECONOMY.boostCost} crédits" aria-pressed="${selection.boost}" title="${esc(locked||(!selection.boost&&boostReason)||'Boost de l’action · plafond de 90 %')}" ${locked||f.budget<E.ECONOMY.boostCost||!selection.boost&&boostReason?'disabled':''}`)}</div>
  <div class="inquiry-agents">${rows.length?rows.map(r=>`<div class="inquiry-agent-row ${r.reason?'is-blocked':''}">${button(portrait(r.a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${r.a.id}" aria-label="Ouvrir les actions de ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible'+(r.a.status==='injured'?' · blessé':''))}</small></span><span class="inquiry-agent-numbers">${r.reason?'':`<b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small>`}</span>`,'inquiry-agent',`inquiry-agent ${r.reason?'is-blocked':''}`,`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="inquiry-empty">Aucun agent de votre équipe ${type==='analyze'?'au QG':'présent dans ce pays'}.</p>`}</div>
  ${inquiryActionCosts(type,preview)}
  ${missions}</section></div><footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(selection.message||blocked)}</p>${button(`${icon('check')} Confirmer${selected?' · '+esc(selected.a.name):''}`,'inquiry-confirm','primary wide',blocked?'disabled':'')}</footer></section>`;
@@ -125,6 +125,7 @@ export async function handleInquiryCommand(cmd,id){
  if(cmd==='inquiry-effects'){selection.effectsOpen=!selection.effectsOpen;paint();}
  if(cmd==='inquiry-boost'){
   if(readOnly())return;
+  const s=api.state();if(s.factions[s.player].budget<E.ECONOMY.boostCost){selection.boost=false;api.notify('Budget insuffisant pour le boost.');paint();return;}
   if(!selection.boost){const reason=boostUnavailable(selectionModel(api.state(),selection)?.selected,'');if(reason){api.notify(reason);paint();return;}}
   selection.boost=!selection.boost;selection.message='';paint();
  }

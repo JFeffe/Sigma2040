@@ -1,8 +1,8 @@
-import {COUNTRY,DISPLAY_ROSTER} from './data.js?v=180';
-import {GAME_MODES,draftCountry} from './game-setup.js?v=180';
-import {brand,button,flag,esc,icon,portrait} from './ui.js?v=180';
-import {recruitCard,recruitControls,visibleRecruits} from './recruit-selection.js?v=180';
-import {teamBalanceMarkup} from './team-balance.js?v=180';
+import {COUNTRY,DISPLAY_ROSTER} from './data.js?v=181';
+import {GAME_MODES,draftCountry} from './game-setup.js?v=181';
+import {brand,button,flag,esc,icon,portrait} from './ui.js?v=181';
+import {recruitCard,recruitControls,visibleRecruits} from './recruit-selection.js?v=181';
+import {teamBalanceMarkup} from './team-balance.js?v=181';
 
 export function gameModeControl(mode='regular',multi=false,enabled=true){return `<label class="game-mode-control">Mode de jeu<select id="${multi?'mpGameMode':'gameMode'}" ${enabled?'':'disabled'}>${Object.entries(GAME_MODES).map(([id,label])=>`<option value="${id}" ${mode===id?'selected':''}>${label}</option>`).join('')}</select></label>`;}
 export function orderedTeamMarkup(ids,{multi=false,editable=true}={}){

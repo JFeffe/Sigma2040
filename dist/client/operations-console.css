@@ -89,3 +89,14 @@ dialog.order-modal .order-form{animation:none}
 /* Shared Research and Module symbols; the operation page starts with its slots. */
 .action-resources{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;font-size:14px}.action-resources>span,.console-card-cost .module-requirement{display:inline-flex;align-items:center;gap:5px;line-height:1.4}.action-resources>span{padding:6px 9px;background:#203f60;border:1px solid #4b789f;border-radius:5px;color:#d5edff}.action-resources .icon,.console-card-cost .module-requirement .icon{width:17px;height:17px}
 .operation-console .console-slot-heading>span{display:inline-flex;align-items:center;gap:6px;font-size:14px}.operation-console .console-slot-heading .icon{width:17px;height:17px}.operation-console .console-card-cost .module-requirement{font-size:14px}.operation-console .console-independent>span{display:inline-flex;align-items:center;gap:5px;font-size:14px}
+
+/* Module starts higher; one capacity status serves every activation card. */
+.immersive-deck .deck-main.view-operations{padding-top:10px}
+.immersive-deck .ops-layout.technology-layout{gap:12px}
+.command-deck .deck-main.view-operations>.page-heading{padding-top:0;margin-bottom:8px}
+.view-operations>.page-heading .eyebrow:empty{display:none}.view-operations>.page-heading h1{margin-top:0;margin-bottom:4px}
+.immersive-deck .technology-layout>.operation-console{padding:8px 12px}
+.operation-console .console-capacity{font-size:14px;line-height:1.4}
+.operation-console .console-capacity.is-available{background:#1d3a2b;border-color:#467e60;color:#b0e5c7}
+.operation-console .console-capacity.is-full{background:#48232d;border-color:#9f5364;color:#f1b8c4}
+.operation-console .console-slots{margin-top:4px;margin-bottom:8px}

@@ -1,12 +1,12 @@
-import {bureauEnabled} from './mod-settings.js?v=180';
-import {inquiryIndicator} from './inquiry-notifications.js?v=180';
-import {threatStatus} from './threat-status.js?v=180';
-import {campaignRules} from './campaign-rules.js?v=180';
-import {clockMarkup} from './campaign-clock.js?v=180';
-import {newsTicker} from './news.js?v=180';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=180';
-import {COUNTRY,COUNTRIES} from './data.js?v=180';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=180';
+import {bureauEnabled} from './mod-settings.js?v=181';
+import {inquiryIndicator} from './inquiry-notifications.js?v=181';
+import {threatStatus} from './threat-status.js?v=181';
+import {campaignRules} from './campaign-rules.js?v=181';
+import {clockMarkup} from './campaign-clock.js?v=181';
+import {newsTicker} from './news.js?v=181';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=181';
+import {COUNTRY,COUNTRIES} from './data.js?v=181';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=181';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended)return {};
  const count=threatStatus(state).uncovered.length;
@@ -17,7 +17,7 @@ export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
 }
 export function gameShell(state,view,content,saveWarning,background='',unreadInquiry=false,dismissed={}){
  const danger=crisisAlert(state);
- const availability=navigationAvailability(state,unreadInquiry,dismissed),f=state.factions[state.player],tabs=[['world','world','Monde'],...(bureauEnabled()?[['bureau','file','Bureau des enquêtes']]:[]),['inquiry','file','Enquête'],['operations','target','Opérations'],['threats','shield','Menaces'],['government','shield','Gouvernement'],['diplomacy','seal','Diplomatie'],['agents','people','Agents'],['journal','clock','Journal']];
+ const availability=navigationAvailability(state,unreadInquiry,dismissed),f=state.factions[state.player],tabs=[['world','world','Monde'],...(bureauEnabled()?[['bureau','file','Bureau des enquêtes']]:[]),['inquiry','file','Enquête'],['operations','module','Module'],['threats','shield','Menaces'],['government','shield','Gouvernement'],['diplomacy','seal','Diplomatie'],['agents','people','Agents'],['journal','clock','Journal']];
  return `<div class="command-deck obsidian-deck immersive-deck ${danger?'crisis-emergency':''} ${view==='world'?'world-active':'menu-active'}">${background?`<div class="world-backdrop">${background}</div>`:''}
   <header class="deck-header">
    <div class="deck-brand">${brand()}<span class="division-flag" title="${COUNTRY[state.player].name}">${flag(state.player)}</span></div>

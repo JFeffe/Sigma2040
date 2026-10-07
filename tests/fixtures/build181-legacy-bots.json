@@ -1,0 +1,68 @@
+{
+  "source": "Build 181: historical Easy/Normal/Expert planners with cumulative Research and Mira A6 H7 SF7; complete deterministic campaign state; each build 180 baseline verified with the former Mira stats and retained separately",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "327a1be9af831bbe8e4dbe2a3d645da06f309e343d063f68b50f53268390b071",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "2f8be00cfebfbe590fa01faaa1e0f9322f9c9baea09841ce3a8787611a9576a2",
+      "outcome": "victory",
+      "turn": 28
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "d44f2bb61cde8f8e2857fd3945b73aac5ccd5a816204a586e6c84a8333346fdc",
+      "outcome": "defeat",
+      "turn": 30
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "ac119778635ba5b545a34747cd85a28d60d1c4da6d88f752106a42445232c152",
+      "outcome": "defeat",
+      "turn": 28
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "dfc60a286eb9b4634fe6026d6c25999399f36c0c0751329a3367d34814acba70",
+      "outcome": "defeat",
+      "turn": 16
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "fcfda9c7e17285104ebc7c936cdc65df87a1be93574e6271964eeb08cbbf46ab",
+      "outcome": "defeat",
+      "turn": 19
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "f593958beaefa2654fd12dc00b613c22ec366b59e582e576e6b38ce6f4b2a878",
+      "outcome": "victory",
+      "turn": 25
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "a92e458b944e05040c28a2484ff06a31c7d35b54a468ed932e258b0db74f7629",
+      "outcome": "defeat",
+      "turn": 22
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "f9847d6613db2360f7d88073f1a09b05f1fcca3b1518202481c48c1312b5ac9a",
+      "outcome": "defeat",
+      "turn": 30
+    }
+  ]
+}
