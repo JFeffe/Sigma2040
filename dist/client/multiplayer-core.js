@@ -1,10 +1,10 @@
-import {threatAnnounced} from './fracture.js?v=182';
-import {AI_LEVELS} from './ai-difficulty.js?v=182';
-import {GAME_MODES,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=182';
-import {recordAgentCondition} from './campaign-stats.js?v=182';
-import {startClock} from './campaign-clock.js?v=182';
-import * as E from './engine.js?v=182';
-import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=182';
+import {threatAnnounced} from './fracture.js?v=183';
+import {AI_LEVELS} from './ai-difficulty.js?v=183';
+import {GAME_MODES,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=183';
+import {recordAgentCondition} from './campaign-stats.js?v=183';
+import {startClock} from './campaign-clock.js?v=183';
+import * as E from './engine.js?v=183';
+import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=183';
 export const PROTOCOL=17;
 export const playingMembers=room=>room.members.filter(m=>!m.observer);
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);

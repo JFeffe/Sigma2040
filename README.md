@@ -1,4 +1,12 @@
-# Publication GitHub — build 181
+# Publication GitHub — build 183
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Le fond plein pied fourni est affiché derrière Link, Monroe, Tara et Viktor. Le décor et le personnage transparent restent deux images distinctes superposées dans le navigateur ; les huit fichiers des personnages n’ont pas été modifiés. Les portraits et les règles du jeu restent ceux du build 182.
+
+Les fichiers de jeu de ce build doivent être vérifiés par leur empreinte Git contre GitHub avant publication du Site.
+
+# Historique — build 181
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

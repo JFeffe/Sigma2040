@@ -1,10 +1,10 @@
-import {unreadPatchCount} from './patch-notes.js?v=182';
-import {AI_LEVELS} from './ai-difficulty.js?v=182';
-import {BUILD_VERSION} from './build-version.js?v=182';
-import {campaignRules} from './campaign-rules.js?v=182';
-import {renderRatio} from './graphics.js?v=182';
-import {brand,button,esc} from './ui.js?v=182';
-import {COUNTRY} from './data.js?v=182';
+import {unreadPatchCount} from './patch-notes.js?v=183';
+import {AI_LEVELS} from './ai-difficulty.js?v=183';
+import {BUILD_VERSION} from './build-version.js?v=183';
+import {campaignRules} from './campaign-rules.js?v=183';
+import {renderRatio} from './graphics.js?v=183';
+import {brand,button,esc} from './ui.js?v=183';
+import {COUNTRY} from './data.js?v=183';
 export function mainMenu(s){return `<main class="main-menu"><span class="menu-build">BUILD ${BUILD_VERSION}</span><canvas class="menu-particles" aria-hidden="true"></canvas><div class="menu-earth" aria-hidden="true"><canvas id="menuEarth" width="1024" height="1024"></canvas><canvas id="menuOrbits"></canvas></div><section class="menu-panel"><div class="menu-brand">${brand()}</div><p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1><nav aria-label="Menu principal">${button(`<span>${s?.ended?'Consulter la campagne':'Continuer'}</span><small class="continue-details">${s?`${esc(COUNTRY[s.player].name)} · IA ${AI_LEVELS[s.aiDifficulty||'normal']} · Tour ${s.turn} / ${campaignRules(s).maxTurns}${s.ended?' · Campagne terminée':''}`:'Aucune campagne enregistrée'}</small>`,'continue-game','primary continue-button',s?'':'disabled')}${button('Nouvelle partie','new','')}${button('Multijoueur','mp-entry','')}${button('Patch notes'+(unreadPatchCount()?' · '+unreadPatchCount()+' non lues':''),'patch-notes',unreadPatchCount()?'patch-unread':'')}${button('Mods','mods','')}${button('Paramètres','settings','')}${button('Règles et sauvegarde','help','menu-help')}</nav></section><footer>SIGMA NETWORK / 2040 <span>La musique démarre à votre première interaction.</span></footer></main>`;}
 
 // GPU sphere and separate orbital/particle layers: no flattened background image.
