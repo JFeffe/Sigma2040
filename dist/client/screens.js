@@ -1,28 +1,28 @@
-import {gameModeControl} from './draft-ui.js?v=181';
-import {countryTargetButtons} from './country-inquiry.js?v=181';
-import {recruitCard,selectedRecruitSlots,recruitControls,visibleRecruits} from './recruit-selection.js?v=181';
-import {aiDifficultyControl} from './ai-difficulty.js?v=181';
-import {threatPanel} from './threats-ui.js?v=181';
-import {personnelPanel} from './personnel-ui.js?v=181';
-import {quickActionMarkup} from './quick-actions.js?v=181';
-import {teamBalanceMarkup} from './team-balance.js?v=181';
-import {COOPERATION,cooperationRules} from './cooperation.js?v=181';
-import {technologyPanel} from './technology-ui.js?v=181';
-import {prestigeHistory} from './prestige.js?v=181';
-import {countrySignals} from './country-signals.js?v=181';
-import {suspectPortrait,SUSPECT_PROFILES,identityKnown} from './fracture-profiles.js?v=181';
-import {plotStage} from './fracture.js?v=181';
-import {activityRows,techUnavailable} from './experience.js?v=181';
-import {exposureBar,evidenceSummary,evidenceRegister,nationalPanel,foreignProgress} from './command-ui.js?v=181';
-import {internationalActivity} from './operations-ui.js?v=181';
-import {proofTitle} from './intelligence.js?v=181';
-import {countryOptions,statusBadge,availability,progressMarkup,sortedCaseTargets} from './presentation.js?v=181';
-import {renderMap} from './map.js?v=181';
-import {cityArt,fullBody} from './visuals.js?v=181';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,TALENTS,STAT_NAMES,ACTIONS,CELLS,EVIDENCE_NAMES,TECH} from './data.js?v=181';
-import * as E from './engine.js?v=181';
-import {esc,icon,button,flag,nationalities,nationalityFlags,talentIcon,portrait,statlines,talents,fatigue,brand,heading,formatScore} from './ui.js?v=181';
-export function setupScreen(country,agents,hasSave,mp=null,aiDifficulty='normal',gameMode='regular'){return `<div class="setup-shell"><header>${brand()}<div class="classified">ACCÈS RESTREINT <span>● CONNEXION SÉCURISÉE</span></div></header><main class="setup-main">${mp?.header||''}${heading('','Opération Ligne de faille','')}<div class="setup-columns"><div class="setup-selection"><section class="setup-country"><div class="section-title"><h2><span>01</span> Choisir votre pays</h2></div><div class="country-grid">${COUNTRIES.filter(c=>c.power).map(c=>`<button class="nation ${c.id===country?'selected':''}" data-cmd="${mp?'mp-country':'country'}" data-id="${c.id}" ${mp?.taken?.includes(c.id)?'disabled':''} aria-pressed="${c.id===country}">${flag(c.id)}<div><strong>${c.name}</strong></div>${c.id===country?icon('check'):''}</button>`).join('')}</div></section>${gameMode==='advanced'?'<p class="notice">Confirmez votre pays pour passer au repêchage des seize agents. Les PNJ complèteront les quatre pays participants.</p>':`<div class="section-title"><h2><span>02</span> Composer votre unité</h2><span class="count">${agents.length} / 4 agents sélectionnés</span></div>${selectedRecruitSlots(agents,mp?'multi':'solo')}${recruitControls(mp?'multi':'solo')}<div class="recruit-grid">${visibleRecruits(mp?'multi':'solo').map(a=>recruitCard(a,agents,mp?'multi':'solo')).join('')}</div>`}</div><aside class="briefing panel">${gameMode==='advanced'?'<h2>Quatre pays, seize agents</h2><p>Choix exclusifs en serpentin. Après le repêchage, réorganisez votre équipe et désignez son chef.</p>':teamBalanceMarkup(agents)}${mp?'':`<div class="setup-game-options">${gameModeControl(gameMode)}${aiDifficultyControl(aiDifficulty)}</div>`}${mp?'':gameMode==='advanced'?button('Confirmer mon pays','solo-confirm-country','primary setup-launch'):button('Lancer l’opération','start','primary setup-launch',agents.length!==4?'disabled':'')}</aside></div></main><footer>PROGRAMME SIGMA / DIVISION RENSEIGNEMENT <span>2040 · LIGNE DE FAILLE</span></footer></div>`;}
+import {gameModeControl} from './draft-ui.js?v=182';
+import {countryTargetButtons} from './country-inquiry.js?v=182';
+import {recruitCard,selectedRecruitSlots,recruitControls,visibleRecruits} from './recruit-selection.js?v=182';
+import {aiDifficultyControl} from './ai-difficulty.js?v=182';
+import {threatPanel} from './threats-ui.js?v=182';
+import {personnelPanel} from './personnel-ui.js?v=182';
+import {quickActionMarkup} from './quick-actions.js?v=182';
+import {teamBalanceMarkup} from './team-balance.js?v=182';
+import {COOPERATION,cooperationRules} from './cooperation.js?v=182';
+import {technologyPanel} from './technology-ui.js?v=182';
+import {prestigeHistory} from './prestige.js?v=182';
+import {countrySignals} from './country-signals.js?v=182';
+import {suspectPortrait,SUSPECT_PROFILES,identityKnown} from './fracture-profiles.js?v=182';
+import {plotStage} from './fracture.js?v=182';
+import {activityRows,techUnavailable} from './experience.js?v=182';
+import {exposureBar,evidenceSummary,evidenceRegister,nationalPanel,foreignProgress} from './command-ui.js?v=182';
+import {internationalActivity} from './operations-ui.js?v=182';
+import {proofTitle} from './intelligence.js?v=182';
+import {countryOptions,statusBadge,availability,progressMarkup,sortedCaseTargets} from './presentation.js?v=182';
+import {renderMap} from './map.js?v=182';
+import {cityArt,fullBody} from './visuals.js?v=182';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,TALENTS,STAT_NAMES,ACTIONS,CELLS,EVIDENCE_NAMES,TECH} from './data.js?v=182';
+import * as E from './engine.js?v=182';
+import {esc,icon,button,flag,nationalities,nationalityFlags,talentIcon,portrait,statlines,talents,fatigue,brand,heading,formatScore} from './ui.js?v=182';
+export function setupScreen(country,agents,hasSave,mp=null,aiDifficulty='normal',gameMode='regular'){return `<div class="setup-shell"><header>${brand()}<div class="classified">ACCÈS RESTREINT <span>● CONNEXION SÉCURISÉE</span></div></header><main class="setup-main">${mp?.header||''}${heading('','Opération Ligne de faille','')}<div class="setup-columns"><div class="setup-selection"><section class="setup-country"><div class="section-title"><h2><span>01</span> Choisir votre pays</h2></div><div class="country-grid">${COUNTRIES.filter(c=>c.power).map(c=>`<button class="nation ${c.id===country?'selected':''}" data-cmd="${mp?'mp-country':'country'}" data-id="${c.id}" ${mp?.taken?.includes(c.id)?'disabled':''} aria-pressed="${c.id===country}">${flag(c.id)}<div><strong>${c.name}</strong></div>${c.id===country?icon('check'):''}</button>`).join('')}</div></section>${gameMode==='advanced'?'<p class="notice">Confirmez votre pays pour choisir seize agents parmi les vingt disponibles. Les PNJ complèteront les quatre pays participants.</p>':`<div class="section-title"><h2><span>02</span> Composer votre unité</h2><span class="count">${agents.length} / 4 agents sélectionnés</span></div>${selectedRecruitSlots(agents,mp?'multi':'solo')}${recruitControls(mp?'multi':'solo')}<div class="recruit-grid">${visibleRecruits(mp?'multi':'solo').map(a=>recruitCard(a,agents,mp?'multi':'solo')).join('')}</div>`}</div><aside class="briefing panel">${gameMode==='advanced'?'<h2>Quatre pays, seize agents</h2><p>Choix exclusifs en serpentin. Après le repêchage, réorganisez votre équipe et désignez son chef.</p>':teamBalanceMarkup(agents)}${mp?'':`<div class="setup-game-options">${gameModeControl(gameMode)}${aiDifficultyControl(aiDifficulty)}</div>`}${mp?'':gameMode==='advanced'?button('Confirmer mon pays','solo-confirm-country','primary setup-launch'):button('Lancer l’opération','start','primary setup-launch',agents.length!==4?'disabled':'')}</aside></div></main><footer>PROGRAMME SIGMA / DIVISION RENSEIGNEMENT <span>2040 · LIGNE DE FAILLE</span></footer></div>`;}
 export function makeScreens(state,selectedCountry,selectedAgent,world,camera){
 const f=state.factions[state.player];
 function agentStatus(a){return a.status==='captured'?'En détention':a.status==='injured'?'Blessé':a.task?`${a.task.queued?'Ordre planifié':'En opération'} · ${a.task.remaining} t`:'Disponible';}

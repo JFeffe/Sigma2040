@@ -22,7 +22,7 @@ function check(a,expected){
  assert.ok(nationalityFlags(a).includes(`flags/${expected.nationality.toLowerCase()}.svg`));
 }
 test('Alba and Raven follow Rocket and retain their profiles through recruitment and save loading',()=>{
- assert.deepEqual(DISPLAY_ROSTER.slice(-3).map(a=>a.id),['p24','p25','p26']);
+ assert.deepEqual(DISPLAY_ROSTER.slice(DISPLAY_ROSTER.findIndex(a=>a.id==='p24'),DISPLAY_ROSTER.findIndex(a=>a.id==='p24')+3).map(a=>a.id),['p24','p25','p26']);
  for(const expected of agents){
   const s=E.createGame('FR',DEFAULT_TEAM_IDS,11);
   E.recruit(s,expected.id,'p13');E.advance(s);E.advance(s);

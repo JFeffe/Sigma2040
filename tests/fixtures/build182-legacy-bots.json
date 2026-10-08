@@ -1,0 +1,51 @@
+{
+  "source": "Build 182: twenty-agent roster ordered Link, Monroe, Tara, Viktor with unchanged Easy/Normal/Expert rules and Mira A6 H7 SF7; complete deterministic campaign state; previous published baselines retained separately",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "a00def8a0b8856aa402bf792656daf10c4b1d31137f01a57490ef8fa525895b4"
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "7f033a2f802de2133defdc7bdaa27614af3243b10d65ca285173ab6975ec6141"
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "953c3cd7503f1e4dfa9f16361544c59afa9b5977957b3f6042e23f6da8b0181f"
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "6738a5f7172fc2ff32677c849a7205678d7969f0805188de186c84c0fd0959dd"
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "5a69639140159783def98ff35baf448014791263e6ff7763323adf0087c79347"
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "f1a7769e484ae49fc3bf62353391026c5414d6f2d8f5ecf67c780ecc3bc84694"
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "923e0754ae214429cbae8653991c4dc2248e1bde74a92f8224538c4b9cbf4862"
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "40894d3466903742cfba2d45991683b9510529fda54f140833bf6a6765c9a0c2"
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "fd0d69c8dc4faf52ff6d51fa6b13184e872cc891c3cec14bf99f3ed928f74a67"
+    }
+  ],
+  "build": 182
+}

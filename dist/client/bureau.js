@@ -1,13 +1,13 @@
 // Bureau des enquêtes : portage de la maquette validée (module.js / style.css),
 // branché sur le moteur réel. Même structure et mêmes interactions ; seules la source
 // des données, la palette et les demandes de suivi changent.
-import {COOPERATION} from './cooperation.js?v=181';
-import * as E from './engine.js?v=181';
-import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=181';
-import {proofTitle} from './intelligence.js?v=181';
-import {actionResources} from './presentation.js?v=181';
-import {portraitAsset, icon} from './ui.js?v=181';
-import {suspectPortrait} from './fracture-profiles.js?v=181';
+import {COOPERATION} from './cooperation.js?v=182';
+import * as E from './engine.js?v=182';
+import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=182';
+import {proofTitle} from './intelligence.js?v=182';
+import {actionResources} from './presentation.js?v=182';
+import {portraitAsset, portraitBackgroundAsset, icon} from './ui.js?v=182';
+import {suspectPortrait} from './fracture-profiles.js?v=182';
 
 const asset = p => new URL(p, location.href).href;
 const opened = new Set();
@@ -24,7 +24,7 @@ const country = c => COUNTRY[c]?.name || c;
 const flag = c => COUNTRY[c] ? `<img class="flag" src="${asset(`./assets/flags/${c.toLowerCase()}.svg`)}" alt="" width="18" height="13">` : '';
 const place = c => `${flag(c)}${country(c)}`;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-const portrait = a => { const src = portraitAsset(a); return `<span class="agent-portrait" role="img" aria-label="Portrait de ${esc(a.name)}" style="${src ? `background-image:url('${asset(src)}')` : ''}">${src ? '' : esc(a.name.slice(0, 2))}</span>`; };
+const portrait = a => { const src = portraitAsset(a), background = portraitBackgroundAsset(a); return `<span class="agent-portrait" role="img" aria-label="Portrait de ${esc(a.name)}" style="${src ? `background-image:url('${asset(src)}')${background?`,url('${asset(background)}')`:''}` : ''}">${src ? '' : esc(a.name.slice(0, 2))}</span>`; };
 
 // Vue d'un dossier pour le joueur : ce que la maquette appelait « target ».
 export function caseOf(s, id) {
@@ -127,7 +127,7 @@ export async function openBureau(caseId = null) {
   if (!s || !ctx.ready()) return;
   mountBureau();
   try {
-    stylePromise ||= fetch(asset('./bureau.css?v=181')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
+    stylePromise ||= fetch(asset('./bureau.css?v=182')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
     styles = await stylePromise;
   } catch (error) { stylePromise = null; ctx.notify?.(error.message); return; }
   if (!ctx.ready()) return;

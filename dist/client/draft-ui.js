@@ -1,8 +1,8 @@
-import {COUNTRY,DISPLAY_ROSTER} from './data.js?v=181';
-import {GAME_MODES,draftCountry} from './game-setup.js?v=181';
-import {brand,button,flag,esc,icon,portrait} from './ui.js?v=181';
-import {recruitCard,recruitControls,visibleRecruits} from './recruit-selection.js?v=181';
-import {teamBalanceMarkup} from './team-balance.js?v=181';
+import {COUNTRY,DISPLAY_ROSTER} from './data.js?v=182';
+import {GAME_MODES,draftCountry} from './game-setup.js?v=182';
+import {brand,button,flag,esc,icon,portrait} from './ui.js?v=182';
+import {recruitCard,recruitControls,visibleRecruits} from './recruit-selection.js?v=182';
+import {teamBalanceMarkup} from './team-balance.js?v=182';
 
 export function gameModeControl(mode='regular',multi=false,enabled=true){return `<label class="game-mode-control">Mode de jeu<select id="${multi?'mpGameMode':'gameMode'}" ${enabled?'':'disabled'}>${Object.entries(GAME_MODES).map(([id,label])=>`<option value="${id}" ${mode===id?'selected':''}>${label}</option>`).join('')}</select></label>`;}
 export function orderedTeamMarkup(ids,{multi=false,editable=true}={}){
@@ -14,5 +14,5 @@ export function draftScreen(d,country,{multi=false,header='',agents=d.teams[coun
  const status=finished?'Repêchage terminé · choisissez votre chef':`Tour de ${COUNTRY[current].name} · ronde ${Math.floor(d.picks.length/4)+1}/4 · choix ${d.picks.length+1}/16`;
  const countries=`<section class="draft-countries" aria-label="Ordre du repêchage">${d.order.map((c,i)=>`<article class="panel draft-country ${c===current?'current':''} ${c===country?'own':''}"><header><span class="draft-position">${i+1}</span>${flag(c)}<div><strong>${COUNTRY[c].name}</strong><small>${d.humans.includes(c)?'Joueur':'PNJ'}${c===country?' · Vous':''}</small></div></header><ul>${d.teams[c].map(id=>`<li>${esc(DISPLAY_ROSTER.find(a=>a.id===id).name)}</li>`).join('')}${Array.from({length:4-d.teams[c].length},()=>'<li class="muted">À choisir</li>').join('')}</ul></article>`).join('')}</section>`;
  const content=finished?(country?`<div class="draft-final-team"><section class="panel"><h2>Votre équipe · ${COUNTRY[country].name}</h2><p>Le premier agent est votre chef. Réorganisez vos agents, puis confirmez votre équipe.</p>${orderedTeamMarkup(agents,{multi,editable})}${button(confirmed?'Équipe confirmée ✓':'Confirmer mon équipe',multi?'mp-team':'solo-confirm-team','primary wide',confirmed||!editable?'disabled':'')}${!multi?button('Lancer l’opération','start','primary wide',!confirmed?'disabled':''):''}</section>${teamBalanceMarkup(agents)}</div>`:'<p class="notice">Les joueurs choisissent leur chef et confirment leur équipe.</p>'):`<p class="notice draft-turn" role="status">${canPick?'À vous de choisir un agent.':'En attente du choix de '+COUNTRY[current].name+'.'}</p>${recruitControls(mode)}<div class="recruit-grid draft-recruits">${visibleRecruits(mode).map(a=>`<div class="draft-candidate ${owners.has(a.id)?'taken':''}">${recruitCard(a,d.teams[country]||[],mode,{cmd:multi?'mp-draft-pick':'solo-draft-pick',disabled:!canPick||owners.has(a.id)})}${owners.has(a.id)?`<span class="draft-owner">${flag(owners.get(a.id))} ${COUNTRY[owners.get(a.id)].name}</span>`:''}</div>`).join('')}</div>`;
- return `<div class="setup-shell draft-shell"><header>${brand()}<div class="classified">MODE AVANCÉ</div></header><main class="setup-main">${header}<div class="draft-heading"><div><span class="eyebrow">REPÊCHAGE EN SERPENTIN · ${d.picks.length}/16 AGENTS</span><h1>${status}</h1><p>Ordre des rondes : 1 → 4, 4 → 1, 1 → 4, 4 → 1. Chaque agent appartient à un seul pays.</p></div>${controls}</div>${countries}${content}</main></div>`;
+ return `<div class="setup-shell draft-shell"><header>${brand()}<div class="classified">MODE AVANCÉ</div></header><main class="setup-main">${header}<div class="draft-heading"><div><span class="eyebrow">REPÊCHAGE EN SERPENTIN · ${d.picks.length}/16 AGENTS</span><h1>${status}</h1><p>Ordre des rondes : 1 → 4, 4 → 1, 1 → 4, 4 → 1. Vingt agents disponibles, seize retenus. Chaque agent appartient à un seul pays.</p></div>${controls}</div>${countries}${content}</main></div>`;
 }

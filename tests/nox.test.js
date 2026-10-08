@@ -29,6 +29,6 @@ test('Nox follows Marlowe and survives recruitment, save and multiplayer identit
  assert.match(agentMapMarkers(view),/nox-portrait.webp/);
 });
 
-test('Only jointly created agents appear in setup and recruitment',()=>{assert.deepEqual(DISPLAY_ROSTER.map(a=>a.name),['IRIS','BISHOP','AMBER','LEI','APÉRO','MIRA','MIDNIGHT','MERCER','MARLOWE','NOX','ADLER','DANTE','SELIN','ROCKET','ALBA','RAVEN']);});
+test('Only jointly created agents appear in setup and recruitment',()=>{assert.deepEqual(DISPLAY_ROSTER.map(a=>a.name),['IRIS','BISHOP','AMBER','LEI','APÉRO','MIRA','MIDNIGHT','MERCER','MARLOWE','NOX','ADLER','DANTE','SELIN','ROCKET','ALBA','RAVEN','LINK','MONROE','TARA','VIKTOR']);});
 
 test('Nox legacy stats update on solo and multiplayer save load',()=>{for(const multiplayer of [false,true]){const s=E.createGame('FR',['p0','p12','p19','p20'],11);const a=s.agents.find(a=>a.id==='p20');a.stats=[4,8,8];if(multiplayer){a.templateId='p20';a.id='FR:p20';}const restored=E.validateSave(structuredClone(s));assert.deepEqual(restored.agents.find(a=>(a.templateId||a.id)==='p20').stats,[7,9,4]);assert.deepEqual(restored.agents.find(a=>a.id==='p19').stats,[4,8,8]);}});
