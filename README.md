@@ -1,4 +1,16 @@
-# Publication GitHub — build 188
+# Publication GitHub — build 189
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Apéro, Mira, Midnight et Mercer** : silhouettes plein pied sur fond transparent, superposées au décor commun comme les douze autres agents détourés.
+- **Contours neutres** : reflets rouges et bleus retirés sur Mira, Midnight et Mercer.
+- **Cadrage commun** : le décor reste fixe et identique pour les seize silhouettes ; chaque personnage est centré individuellement dans la sélection d’équipe, le repêchage, les dossiers et l’onglet Agents, en solo et en multijoueur.
+
+Validation : `npm test`, **499 tests réussis**. Transparence et contours inspectés sur fond clair et sur le décor commun ; silhouettes entières et centrées ; égalité des seize décors vérifiée pixel par pixel à trois dimensions. Rendus solo, multijoueur, dossiers et onglet Agents vérifiés. Vérification de l’interface dans un navigateur indisponible dans cet environnement.
+
+[Visuels et consignes de retouche](docs/artwork/build189.json)
+
+# Historique — build 188
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

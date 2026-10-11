@@ -1,7 +1,7 @@
 /* Transparent portraits share the supplied background and a centered frame. */
-.portrait.portrait-cutout{background-image:url('./assets/agent-portrait-background.webp?v=188')!important;background-size:cover;background-position:center;overflow:hidden}
+.portrait.portrait-cutout{background-image:url('./assets/agent-portrait-background.webp?v=189')!important;background-size:cover;background-position:center;overflow:hidden}
 .portrait.portrait-cutout>img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
 .full-body.agent-cutout{object-fit:contain;object-position:center;display:block}
 
-.recruit-back>.recruit-select>.portrait.portrait-cutout{background-image:url('./assets/agent-portrait-background.webp?v=188')!important;background-size:cover;background-position:center}
+.recruit-back>.recruit-select>.portrait.portrait-cutout{background-image:url('./assets/agent-portrait-background.webp?v=189')!important;background-size:cover;background-position:center}
 .recruit-back>.recruit-select>.portrait.portrait-cutout>img{object-fit:contain;object-position:center}

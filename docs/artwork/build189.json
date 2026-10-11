@@ -1,0 +1,43 @@
+{
+  "build": "189",
+  "method": "Built-in image_gen edit, one call per character",
+  "source_commit": "efd2069f6bb501d54fa966f848b6719305026017",
+  "format": {
+    "width": 1024,
+    "height": 1536,
+    "output": "WebP, quality 92, alpha quality 100",
+    "background": "Transparent"
+  },
+  "shared_background": "dist/client/assets/agent-full-background.png",
+  "shared_viewBox": "187 0 650 1536",
+  "edits": [
+    {
+      "agent": "APÉRO",
+      "input": "dist/client/assets/apero-full.png",
+      "output": "dist/client/assets/apero-full-transparent.webp",
+      "remove_colored_rim_light": false,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied APÉRO image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and every accessory on a genuinely transparent alpha background.\nPreserve the original natural neutral lighting and remove any background contamination along the silhouette.\nKeep the man's messy dark hair, mustache and goatee, ear piercing, black worn denim jacket with all small badges, hoodie, pixel graphic black tee, headphones around his neck, closed laptop under his arm, hand in pocket, dark jeans and black canvas sneakers unchanged.\nKeep the original illustration style, face, expression, anatomy, exact pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nThe entire character from hair to shoe soles must remain visible, with original margins. Do not crop, zoom, reposition or redesign. Preserve loose hairs, braid or scarf fringes and all accessories.\nAll empty space, including gaps between limbs and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only. No halo, neon contour, haze, background fragments, floor, floor reflection, cast shadow, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve the clothing and hair's true colors; remove only colored light contamination."
+    },
+    {
+      "agent": "MIRA",
+      "input": "dist/client/assets/mira-full-clean.png",
+      "output": "dist/client/assets/mira-full-transparent.webp",
+      "remove_colored_rim_light": true,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied MIRA image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and every accessory on a genuinely transparent alpha background.\nAlso remove ALL red/orange rim light on the left contour and electric blue/purple rim light on the right contour. Neutralize these luminous colored outlines on the hair, shoulders, jacket, limbs and footwear. Restore local material colors using soft neutral studio illumination. No colored rim lighting or glow.\nKeep the woman's long dark braid, face and expression, burgundy tunic's natural red fabric, patterned scarf with tassels, dark jacket, dark cargo trousers, hands and black lace-up boots unchanged. Preserve the scarf pattern and the complete braid.\nKeep the original illustration style, face, expression, anatomy, exact pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nThe entire character from hair to shoe soles must remain visible, with original margins. Do not crop, zoom, reposition or redesign. Preserve loose hairs, braid or scarf fringes and all accessories.\nAll empty space, including gaps between limbs and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only. No halo, neon contour, haze, background fragments, floor, floor reflection, cast shadow, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve the clothing and hair's true colors; remove only colored light contamination."
+    },
+    {
+      "agent": "MIDNIGHT",
+      "input": "dist/client/assets/midnight-full.png",
+      "output": "dist/client/assets/midnight-full-transparent.webp",
+      "remove_colored_rim_light": true,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied MIDNIGHT image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and every accessory on a genuinely transparent alpha background.\nAlso remove ALL red/orange rim light on the left contour and electric blue/purple rim light on the right contour. Neutralize these luminous colored outlines on the hair, shoulders, jacket, limbs and footwear. Restore local material colors using soft neutral studio illumination. No colored rim lighting or glow.\nKeep the Asian man's swept salt-and-pepper hair, eyeglasses, serious expression, dark navy zip jacket with standing collar, black tee, dark cargo trousers, hands in pockets and black tactical shoes unchanged. Preserve the natural navy color of the jacket.\nKeep the original illustration style, face, expression, anatomy, exact pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nThe entire character from hair to shoe soles must remain visible, with original margins. Do not crop, zoom, reposition or redesign. Preserve loose hairs, braid or scarf fringes and all accessories.\nAll empty space, including gaps between limbs and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only. No halo, neon contour, haze, background fragments, floor, floor reflection, cast shadow, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve the clothing and hair's true colors; remove only colored light contamination."
+    },
+    {
+      "agent": "MERCER",
+      "input": "dist/client/assets/mercer-full.png",
+      "output": "dist/client/assets/mercer-full-transparent.webp",
+      "remove_colored_rim_light": true,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied MERCER image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and every accessory on a genuinely transparent alpha background.\nAlso remove ALL red/orange rim light on the left contour and electric blue/purple rim light on the right contour. Neutralize these luminous colored outlines on the hair, shoulders, jacket, limbs and footwear. Restore local material colors using soft neutral studio illumination. No colored rim lighting or glow.\nKeep the man's wavy blond hair, face and expression, brown blazer, off-white open-collar shirt, belt, dark trousers, hands in pockets and brown leather dress shoes unchanged. Preserve all natural material colors.\nKeep the original illustration style, face, expression, anatomy, exact pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nThe entire character from hair to shoe soles must remain visible, with original margins. Do not crop, zoom, reposition or redesign. Preserve loose hairs, braid or scarf fringes and all accessories.\nAll empty space, including gaps between limbs and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only. No halo, neon contour, haze, background fragments, floor, floor reflection, cast shadow, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve the clothing and hair's true colors; remove only colored light contamination."
+    }
+  ]
+}

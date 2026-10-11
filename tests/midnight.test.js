@@ -17,7 +17,7 @@ test('Midnight follows Mira and survives recruitment, save and multiplayer ident
  assert.deepEqual(a.talents,['drones','tactique','surveillance']);
  assert.ok(a.nationalities.includes('CN'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),'./assets/midnight-portrait.webp');
- assert.match(fullBody(a),/midnight-full.png/);
+ assert.match(fullBody(a),/midnight-full-transparent.webp/);
  assert.match(agentMapMarkers(s),/midnight-portrait.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-midnight-0000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-midnight-000000000',name:'Invité'});
@@ -25,6 +25,6 @@ test('Midnight follows Mira and survives recruitment, save and multiplayer ident
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p17');
  assert.ok(m);assert.equal(portraitAsset(m),'./assets/midnight-portrait.webp');
- assert.match(fullBody(m),/midnight-full.png/);
+ assert.match(fullBody(m),/midnight-full-transparent.webp/);
  assert.match(agentMapMarkers(view),/midnight-portrait.webp/);
 });

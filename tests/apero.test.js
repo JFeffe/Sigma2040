@@ -18,7 +18,7 @@ test('Apéro is selectable after Lei and retains his identity through recruitmen
  const a=E.team(s).find(a=>a.id==='p15');assert.ok(a);
  assert.deepEqual(a.stats,[9,8,3]);assert.deepEqual(a.talents,['surveillance','informatique','enquete']);assert.equal(a.age,28);
  assert.deepEqual(a.nationalities,['FR']);assert.match(nationalities(a),/fr.svg/);
- assert.match(portrait(a),/apero-portrait.webp/);assert.match(fullBody(a),/apero-full.png/);
+ assert.match(portrait(a),/apero-portrait.webp/);assert.match(fullBody(a),/apero-full-transparent.webp/);
  assert.match(agentMapMarkers(s),/apero-portrait.webp/);
  assert.deepEqual(E.validateSave(structuredClone(s)).agents.find(a=>a.id==='p15'),a);
  const local=E.options(s,a.id,'contacts').chance;a.nationalities=[];
