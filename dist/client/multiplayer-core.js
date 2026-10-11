@@ -1,11 +1,12 @@
-import {threatAnnounced} from './fracture.js?v=183';
-import {AI_LEVELS} from './ai-difficulty.js?v=183';
-import {GAME_MODES,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=183';
-import {recordAgentCondition} from './campaign-stats.js?v=183';
-import {startClock} from './campaign-clock.js?v=183';
-import * as E from './engine.js?v=183';
-import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=183';
-export const PROTOCOL=17;
+import {threatAnnounced} from './fracture.js?v=184';
+import {AI_LEVELS} from './ai-difficulty.js?v=184';
+import {GAME_MODES,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=184';
+import {recordAgentCondition} from './campaign-stats.js?v=184';
+import {assignDeployment} from './deployment.js?v=184';
+import {startClock} from './campaign-clock.js?v=184';
+import * as E from './engine.js?v=184';
+import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=184';
+export const PROTOCOL=18;
 export const playingMembers=room=>room.members.filter(m=>!m.observer);
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);
 const copy=x=>structuredClone(x);
@@ -75,6 +76,7 @@ export function execute(room,token,message){
     if(['assign','cancel'].includes(kind)&&!g.agents.some(a=>a.id===p.id&&a.faction===m.country))fail('Cet agent ne vous appartient pas.');
     switch(kind){
      case 'assign':if(typeof p.type!=='string'||!Object.hasOwn(ACTIONS,p.type)||(p.target!=null&&typeof p.target!=='string')||(p.useCredits!==undefined&&typeof p.useCredits!=='boolean'))fail('Ordre invalide.');E.assign(g,p.id,p.type,p.target||null,!!p.useCredits);break;
+     case 'deploy':assignDeployment(g,p.ids,p.type,p.target);break;
      case 'cancel':E.cancel(g,p.id);break;
      case 'cancel-cyber':if(typeof p.country!=='string')fail('Soutien invalide.');E.cancelCyberSupport(g,p.country);break;
      case 'cancel-tech':if(typeof p.id!=='string')fail('Soutien invalide.');E.cancelTech(g,p.id);break;
@@ -109,7 +111,7 @@ export function playerView(room,country){
   prestigeLedger:copy((s.prestigeLedger||[]).filter(e=>s.ended||e.faction===country)),plots:copy(s.plots.filter(p=>p.resolved||threatAnnounced(s,p))),logs:copy(s.logs.filter(l=>!l.faction||l.faction===country)),
   event:copy(s.eventsByFaction?.[country]||null),requests:copy(s.requestsByFaction?.[country]||[]),
   recruitments:copy(s.recruitments.filter(r=>r.faction===country)),operationReports:copy((s.operationReports||[]).filter(r=>r.faction===country||!r.faction&&ownIds.has(r.agentId))),
-  multiplayer:{offers:[]},
+  multiplayer:{offers:[],players:(room.members||[]).filter(m=>!m.observer).map(({country,name})=>({country,name}))},
   unavailableRecruits:[...s.agents.filter(a=>s.gameMode==='advanced'||!/^([A-Z]{2})-(?:[0-3]|R[0-9]+)$/.test(a.id)).map(a=>a.templateId||a.id),...s.recruitments.map(r=>r.templateId||r.id)]
  };
 }
@@ -120,12 +122,12 @@ export function observerView(room,country){
  if(!selected)fail('Aucun joueur à observer.');
  const view=playerView(room,selected);
  view.agents=copy(room.game.agents.filter(a=>players.some(m=>m.country===a.faction)));
- view.multiplayer={observer:true,humanFactions:players.map(m=>m.country),offers:[]};
+ view.multiplayer={...view.multiplayer,observer:true,humanFactions:players.map(m=>m.country),offers:[]};
  return view;
 }
 export function roomView(room,token,observedCountry=null){const m=room.members.find(x=>x.token===token);if(!m)fail('Place non réservée.');return {protocol:PROTOCOL,id:room.id,revision:room.revision,phase:room.phase,participantRules:room.participantRules,gameMode:room.gameMode||'regular',draft:publicDraft(room.draft),aiDifficulty:room.aiDifficulty||'normal',country:m.country,observer:!!m.observer,lastSeq:m.lastSeq,members:room.members.map(({country,name,host,observer,connected,ready,confirmed,countryConfirmed,agents})=>({country,name,host,observer:!!observer,connected,ready,confirmed:!!confirmed,countryConfirmed:!!countryConfirmed,agents:copy(agents)})),game:m.host&&m.observer?observerView(room,observedCountry):playerView(room,m.country)};}
 export function restoreRoom(raw){
- if(!raw||![1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,PROTOCOL].includes(raw.protocol)||!['lobby','draft','teams','playing'].includes(raw.phase)||!Array.isArray(raw.members)||raw.members.length<1||raw.members.length>7||raw.members.filter(m=>m.observer).length>1||raw.members.some(m=>m.observer&&(!m.host||m.country!==null||m.agents?.length))||raw.members.filter(m=>m.host).length!==1||new Set(raw.members.map(m=>m.country)).size!==raw.members.length||new Set(raw.members.map(m=>m.token)).size!==raw.members.length)fail('Sauvegarde multijoueur incompatible.');
+ if(!raw||![1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,PROTOCOL].includes(raw.protocol)||!['lobby','draft','teams','playing'].includes(raw.phase)||!Array.isArray(raw.members)||raw.members.length<1||raw.members.length>7||raw.members.filter(m=>m.observer).length>1||raw.members.some(m=>m.observer&&(!m.host||m.country!==null||m.agents?.length))||raw.members.filter(m=>m.host).length!==1||new Set(raw.members.map(m=>m.country)).size!==raw.members.length||new Set(raw.members.map(m=>m.token)).size!==raw.members.length)fail('Sauvegarde multijoueur incompatible.');
  for(const key of ['id','invite'])if(typeof raw[key]!=='string'||!/^[a-zA-Z0-9-]{20,80}$/.test(raw[key]))fail('Identifiant de partie invalide.');
  if(raw.participantRules!==undefined&&raw.participantRules!==1||raw.participantRules===1&&playingMembers(raw).length>4||raw.gameMode!==undefined&&!Object.hasOwn(GAME_MODES,raw.gameMode))fail('Configuration de salon invalide.');
  if(raw.aiDifficulty!==undefined&&!Object.hasOwn(AI_LEVELS,raw.aiDifficulty))fail('Niveau IA invalide.');const room=copy(raw);room.aiDifficulty??='normal';room.gameMode??='regular';room.protocol=PROTOCOL;room.revision=Number.isSafeInteger(room.revision)?room.revision+1:1;room.offers=[];

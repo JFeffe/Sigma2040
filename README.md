@@ -1,4 +1,15 @@
-# Publication GitHub — build 183
+# Publication GitHub — build 184
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Repêchage** : composition de votre équipe, totaux Analyse / Habileté / Sang-froid et talents repêchés visibles pendant la sélection, en solo et en multijoueur. Les talents répétés affichent leur nombre.
+- **Patch notes d’équilibrage** : tableaux Avant / Après, flèches vertes pour les buffs et rouges pour les nerfs. Valeurs historiques d’Iris, Mira, du soutien médical, de la diplomatie, du drone et de la crise ajoutées sans réécrire les anciens textes.
+- **Déploiement groupé** : cochez plusieurs agents dans Choisir un agent et envoyez-les vers la même destination en une confirmation. Le groupe est validé avant toute affectation ; chaque agent conserve sa durée et ses coûts. L’hôte valide une seule commande en multijoueur.
+- **Diplomatie multijoueur** : nom du joueur à côté de son pays, conservé après reprise et visible par l’observateur. Un pays confié au PNJ ne conserve pas l’ancien nom.
+
+Validation : `npm test`, **499 tests réussis**, dont dix tests sur le récapitulatif du repêchage, les affectations groupées, les contrôles de propriété et de disponibilité, les noms de joueurs et les valeurs avant/après. Vérification visuelle dans un navigateur indisponible dans cet environnement. Les sauvegardes multijoueurs de protocole 17 restent compatibles avec le protocole 18.
+
+# Historique — build 183
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

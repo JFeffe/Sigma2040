@@ -1,6 +1,6 @@
-import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=183';
-import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=183';
-import {fullBody} from './visuals.js?v=183';
+import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=184';
+import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=184';
+import {fullBody} from './visuals.js?v=184';
 const faces={solo:new Set(),multi:new Set()};
 const slots={solo:[null,null,null,null],multi:[null,null,null,null]};
 const filters={solo:{sort:'default',talent:''},multi:{sort:'default',talent:''}};
@@ -11,7 +11,7 @@ export function recruitControls(mode='solo'){const f=filters[mode];return `<div 
 export function statActions(index){return Object.values(ACTIONS).filter(a=>!a.disabled&&!a.safe&&a.stat===index).map(a=>a.name);}
 export function statHelp(index){return `${STAT_NAMES[index]} :\n${statActions(index).map(n=>'• '+n).join('\n')}`;}
 const recruitPortraits={"p25":["alba","200 0 650 1536"],"p26":["raven","200 0 650 1536"],"p0": ["iris", "23.7 2.6 665.6 1512.8"], "p12": ["bishop", "6.4 9.2 657.2 1493.6"], "p13": ["amber", "3.6 4.3 669.8 1522.3"], "p14": ["lei", "0 4.4 668.4 1519.1"], "p15": ["apero", "140.1 0 663.7 1508.5"], "p16": ["mira", "18.8 12.3 655.3 1489.4"], "p17": ["midnight", "190.0 22.6 637.1 1447.9"], "p18": ["mercer", "148.3 0 668.4 1519.1"], "p19": ["marlowe", "154.8 0 662.3 1505.3"], "p20": ["nox", "221.9 0 663.3 1507.4"], "p21": ["adler", "190.4 1.3 670.3 1523.4"], "p22": ["dante", "203.4 2.7 650.2 1477.7"], "p23": ["selin", "244.6 5.7 649.7 1476.6"], "p24": ["rocket", "212.3 3.9 632.4 1437.2"]};
-export function recruitPortrait(a){const p=recruitPortraits[a.templateId||a.id];if(!p)return fullBody(a);return `<svg class="full-body recruit-portrait" viewBox="${p[1]}" role="img" aria-label="${esc(a.name)}, personnage debout" preserveAspectRatio="xMidYMax meet"><image href="./assets/${p[0]}-${p[0]==='mira'?'full-clean':'full'}.png${p[0]==='raven'?'?v=183':''}" width="1024" height="1536"/></svg>`;}
+export function recruitPortrait(a){const p=recruitPortraits[a.templateId||a.id];if(!p)return fullBody(a);return `<svg class="full-body recruit-portrait" viewBox="${p[1]}" role="img" aria-label="${esc(a.name)}, personnage debout" preserveAspectRatio="xMidYMax meet"><image href="./assets/${p[0]}-${p[0]==='mira'?'full-clean':'full'}.png${p[0]==='raven'?'?v=184':''}" width="1024" height="1536"/></svg>`;}
 export function recruitProfile(a){return `<div class="recruit-body">${recruitPortrait(a)}</div><div class="recruit-info"><div class="recruit-name"><h3>${esc(a.name)}</h3><div class="recruit-role"><span>${esc(a.role)}</span>${nationalityFlags(a)}</div></div><div class="recruit-stat-tiles">${a.stats.map((n,i)=>`<span class="recruit-stat stat-${i}" data-rich-tooltip><span class="recruit-stat-label">${icon(['scan','target','shield'][i])}<span>${STAT_NAMES[i]}</span></span><strong>${n}</strong><template><strong>${STAT_NAMES[i]}</strong><ul>${statActions(i).map(name=>`<li>${esc(name)}</li>`).join('')}</ul>${i===2?'<p>Départage les arrestations simultanées à chances égales sur une même cible.</p>':''}</template></span>`).join('')}</div><div class="recruit-talent-grid">${sortedTalents(a).map(t=>`<span data-rich-tooltip>${talentIcon(t)}<span>${esc(TALENTS[t][0])}</span><template><strong>${esc(TALENTS[t][0])}</strong><p>${esc(TALENTS[t][1])}</p></template></span>`).join('')}</div></div>`;}
 
 export function recruitSlots(ids,mode='solo'){

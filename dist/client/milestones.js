@@ -1,9 +1,9 @@
-import {caseFor} from './intelligence.js?v=183';
-import {SUSPECT_PROFILES,suspectPortrait,discoveryMarkup,identityKnown} from './fracture-profiles.js?v=183';
-import * as E from './engine.js?v=183';
-import {COUNTRY,CELLS} from './data.js?v=183';
-import {esc,portrait,button} from './ui.js?v=183';
-import {cityArt} from './visuals.js?v=183';
+import {caseFor} from './intelligence.js?v=184';
+import {SUSPECT_PROFILES,suspectPortrait,discoveryMarkup,identityKnown} from './fracture-profiles.js?v=184';
+import * as E from './engine.js?v=184';
+import {COUNTRY,CELLS} from './data.js?v=184';
+import {esc,portrait,button} from './ui.js?v=184';
+import {cityArt} from './visuals.js?v=184';
 const stages={verified:['Preuve vérifiée','Une pièce a été vérifiée et peut étayer le dossier.'],evidence:['Preuves réunies','Deux preuves sont disponibles, dont au moins une vérifiée.'],located:['Cible localisée','Une position précise est confirmée pour une durée limitée.'],prepared:['Intervention préparée','Le dossier et la préparation opérationnelle sont prêts.'],arrested:['Cible arrêtée','La cible est en détention. Son rôle dans le réseau est neutralisé.']};
 export function investigationSnapshot(s){return {turn:s.turn,campaign:s.seed+':'+s.player,log:s.logId,targets:Object.fromEntries(E.knownTargets(s).map(t=>{const e=E.evidenceFor(s,s.player,t.id),verified=e.filter(x=>x.verified).length;return [t.id,{identity:!!t.identified,verified:verified>0,evidence:e.length>=2&&verified>0,located:t.locationUntil>0,prepared:!!t.prepared,arrested:!!t.arrested}];})),cells:E.cellsDone(s)};}
 export function investigationHighlights(before,s){
