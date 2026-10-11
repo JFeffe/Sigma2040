@@ -21,12 +21,17 @@ const originalHashes={
   "viktor-portrait.webp": "fa5a1de800257d45bb73df82223c0f5b2d81974f0a0db0cabc5f6a3d1c395f42",
   "agent-full-background.png": "b379eaabba6c0cb73c46582944f556fac6c68c89f17349c1944821ee6d936a10"
 };
-test('Eight full bodies layer the common background before the transparent character',()=>{
+test('Eight full bodies keep an identical background frame behind each centered character',()=>{
+ const reference=fullBody(DISPLAY_ROSTER.find(a=>a.id===layered[0][0]));
+ const commonFrame=reference.match(/viewBox="([^"]+)"/)[1];
+ const commonBackground=reference.match(/<image\b[^>]*>/)[0];
  for(const [id,slug] of layered){
   const agent=DISPLAY_ROSTER.find(a=>a.id===id);
   for(const a of [agent,{...agent,id:`FR:${id}`,templateId:id}]){
    const markup=fullBody(a),images=[...markup.matchAll(/<image\b[^>]*>/g)].map(m=>m[0]);
    assert.equal(images.length,2);
+   assert.equal(markup.match(/viewBox="([^"]+)"/)[1],commonFrame,a.name);
+   assert.equal(images[0],commonBackground,a.name);
    assert.match(images[0],new RegExp(`agent-full-background.png\\?v=${BUILD_VERSION}`));
    assert.match(images[1],new RegExp(`${slug}-full${updates.some(([key])=>key===id)?'-transparent':''}.webp\\?v=${BUILD_VERSION}`));
    for(const image of images)assert.match(image,/width="1024" height="1536"/);

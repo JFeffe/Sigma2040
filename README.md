@@ -1,4 +1,12 @@
-# Publication GitHub — build 186
+# Publication GitHub — build 187
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Les huit agents avec une silhouette transparente utilisent désormais exactement le même cadrage du décor plein pied fourni. Les textures et les lumières ne se déplacent plus selon l’agent. Seul le personnage est décalé pour conserver son centrage, dans la sélection d’équipe, le repêchage, les dossiers et l’onglet Agents, en solo et en multijoueur.
+
+Validation : `npm test`, **499 tests réussis**. Les huit décors ont été comparés pixel par pixel à plusieurs dimensions ; le cadrage de chaque silhouette reste identique à la version précédente. Vérification de l’interface dans un navigateur indisponible dans cet environnement.
+
+# Historique — build 186
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
