@@ -8,7 +8,7 @@ import {recruitCard,recruitDetails} from '../dist/client/recruit-selection.js';
 import {BUILD_VERSION} from '../dist/client/build-version.js';
 
 const additions=[['p27','link'],['p29','monroe'],['p30','tara'],['p28','viktor']];
-const updates=[['p15','apero'],['p16','mira'],['p17','midnight'],['p18','mercer'],['p19','marlowe'],['p20','nox'],['p21','adler'],['p22','dante'],['p23','selin'],['p24','rocket'],['p25','alba'],['p26','raven']];
+const updates=[['p0','iris'],['p12','bishop'],['p13','amber'],['p14','lei'],['p15','apero'],['p16','mira'],['p17','midnight'],['p18','mercer'],['p19','marlowe'],['p20','nox'],['p21','adler'],['p22','dante'],['p23','selin'],['p24','rocket'],['p25','alba'],['p26','raven']];
 const layered=[...additions,...updates];
 const originalHashes={
   "link-full.webp": "6eb57fe308fdfcb59138b372e47eac7bd2e2a70382b0daf677c92b149e129499",
@@ -21,7 +21,7 @@ const originalHashes={
   "viktor-portrait.webp": "fa5a1de800257d45bb73df82223c0f5b2d81974f0a0db0cabc5f6a3d1c395f42",
   "agent-full-background.png": "b379eaabba6c0cb73c46582944f556fac6c68c89f17349c1944821ee6d936a10"
 };
-test('Sixteen full bodies keep an identical background frame behind each centered character',()=>{
+test('Twenty full bodies keep an identical background frame behind each centered character',()=>{
  const reference=fullBody(DISPLAY_ROSTER.find(a=>a.id===layered[0][0]));
  const commonFrame=reference.match(/viewBox="([^"]+)"/)[1];
  const commonBackground=reference.match(/<image\b[^>]*>/)[0];
@@ -47,8 +47,11 @@ test('The supplied background and all eight original character images remain byt
   assert.equal(createHash('sha256').update(bytes).digest('hex'),hash,filename);
  }
 });
-test('Earlier full-body artwork does not gain the new background layer',()=>{
- for(const agent of DISPLAY_ROSTER.filter(a=>!layered.some(([id])=>a.id===id)))assert.doesNotMatch(fullBody(agent),/agent-full-background/);
+test('Legacy artwork outside the current roster retains its fallback rendering',()=>{
+ const markup=fullBody({id:'legacy-agent',name:'Agent historique',portrait:0});
+ assert.doesNotMatch(markup,/agent-full-background/);
+ assert.match(markup,/agent-bodies.png/);
+ assert.equal([...markup.matchAll(/<image\b/g)].length,1);
 });
 test('The current cache version is used throughout the updated runtime module graph',()=>{
  const dir=new URL('../dist/client/',import.meta.url);

@@ -1,4 +1,16 @@
-# Publication GitHub — build 189
+# Publication GitHub — build 190
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Iris, Bishop, Amber et Lei** : silhouettes plein pied détourées sur fond transparent et superposées au décor commun.
+- **Iris** : reflets rouges et bleus retirés de ses contours.
+- **Vingt agents** : même décor et même cadrage du fond pour tous les agents sélectionnables. Chaque silhouette est centrée individuellement dans la sélection d’équipe, le repêchage, les dossiers et l’onglet Agents, en solo et en multijoueur.
+
+Validation : `npm test`, **499 tests réussis**. Transparence, contours et silhouettes entières inspectés sur fond clair et sur le décor commun ; égalité des vingt décors vérifiée pixel par pixel à trois dimensions. Rendus solo, multijoueur, dossiers et onglet Agents vérifiés. Vérification de l’interface dans un navigateur indisponible dans cet environnement.
+
+[Visuels et consignes de retouche](docs/artwork/build190.json)
+
+# Historique — build 189
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

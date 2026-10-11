@@ -10,7 +10,7 @@ test('Lei follows Amber with his approved identity in roster, cards and map',()=
  assert.deepEqual(DISPLAY_ROSTER.slice(0,4).map(a=>a.name),['IRIS','BISHOP','AMBER','LEI']);
  const a=ROSTER.find(a=>a.id==='p14');
  assert.deepEqual(a.stats,[4,7,9]);assert.deepEqual(a.talents,['combat','endurance','infiltration']);assert.deepEqual(a.nationalities,['CN']);
- assert.match(portrait(a),/lei-portrait.webp/);assert.match(fullBody(a),/lei-full.png/);assert.match(nationalities(a),/cn.svg/);
+ assert.match(portrait(a),/lei-portrait.webp/);assert.match(fullBody(a),/lei-full-transparent.webp/);assert.match(nationalities(a),/cn.svg/);
  const s=E.createGame('FR',['p0','p12','p13','p14'],77);
  assert.match(agentMapMarkers(s),/lei-portrait.webp/);
  assert.deepEqual(E.validateSave(structuredClone(s)),s);

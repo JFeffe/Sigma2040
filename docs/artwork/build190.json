@@ -1,0 +1,43 @@
+{
+  "build": "190",
+  "method": "Built-in image_gen edit, one call per character",
+  "source_commit": "b3eac1fd9ebe4dbd25678ef544b61673fe6fe6d3",
+  "format": {
+    "width": 1024,
+    "height": 1536,
+    "output": "WebP, quality 92, alpha quality 100",
+    "background": "Transparent"
+  },
+  "shared_background": "dist/client/assets/agent-full-background.png",
+  "shared_viewBox": "187 0 650 1536",
+  "edits": [
+    {
+      "agent": "IRIS",
+      "input": "dist/client/assets/iris-full.png",
+      "output": "dist/client/assets/iris-full-transparent.webp",
+      "remove_colored_rim_light": true,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied IRIS image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and all accessories on a genuinely transparent alpha background.\nAlso REMOVE ALL red/orange rim lighting on the left contour and electric blue/purple rim lighting on the right contour. Neutralize luminous colored edges on hair, shoulders, clothes, arms, legs and footwear. Restore the local material colors with soft neutral studio illumination. No colored rim light or glow.\nKeep the mature woman's silver bob haircut, serious face and expression, small gold earrings, beige long blazer with its triangular gold lapel pin, black blouse and scarf, dark wide-leg trousers, one hand in pocket, lowered other hand and black high-heeled pumps unchanged. Preserve the natural beige fabric and silver hair colors.\nKeep the original illustration style, exact facial identity, expression, anatomy, pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nPreserve the whole figure, from hair to shoe soles, and all original margins. Do not crop, zoom, reposition, redesign or add elements.\nAll empty space, including gaps between limbs, skirt slit, loose hair and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only; no halo, neon outline, haze, floor reflection, ground, cast shadow, background fragments, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve clothing and hair colors; remove only background and colored light contamination."
+    },
+    {
+      "agent": "BISHOP",
+      "input": "dist/client/assets/bishop-full.png",
+      "output": "dist/client/assets/bishop-full-transparent.webp",
+      "remove_colored_rim_light": false,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied BISHOP image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and all accessories on a genuinely transparent alpha background.\nPreserve existing neutral character lighting; remove colored background contamination only at the silhouette boundary. Do not add any colored lighting or glow.\nKeep the Black man's short salt-and-pepper curls, serious face, navy blue suit, open-collar charcoal shirt, black belt, one hand in pocket, lowered other hand and black leather dress shoes unchanged. Preserve the original navy suit colors and existing neutral lighting.\nKeep the original illustration style, exact facial identity, expression, anatomy, pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nPreserve the whole figure, from hair to shoe soles, and all original margins. Do not crop, zoom, reposition, redesign or add elements.\nAll empty space, including gaps between limbs, skirt slit, loose hair and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only; no halo, neon outline, haze, floor reflection, ground, cast shadow, background fragments, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve clothing and hair colors; remove only background and colored light contamination."
+    },
+    {
+      "agent": "AMBER",
+      "input": "dist/client/assets/amber-full.png",
+      "output": "dist/client/assets/amber-full-transparent.webp",
+      "remove_colored_rim_light": false,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied AMBER image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and all accessories on a genuinely transparent alpha background.\nPreserve existing neutral character lighting; remove colored background contamination only at the silhouette boundary. Do not add any colored lighting or glow.\nKeep the woman's long straight blonde hair, face and expression, small gold earrings, burgundy blazer and matching long skirt with side slit, black high-neck blouse, one hand in pocket, lowered other hand and black high-heeled pumps unchanged. Preserve the burgundy fabric's natural red color and the existing neutral lighting.\nKeep the original illustration style, exact facial identity, expression, anatomy, pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nPreserve the whole figure, from hair to shoe soles, and all original margins. Do not crop, zoom, reposition, redesign or add elements.\nAll empty space, including gaps between limbs, skirt slit, loose hair and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only; no halo, neon outline, haze, floor reflection, ground, cast shadow, background fragments, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve clothing and hair colors; remove only background and colored light contamination."
+    },
+    {
+      "agent": "LEI",
+      "input": "dist/client/assets/lei-full.png",
+      "output": "dist/client/assets/lei-full-transparent.webp",
+      "remove_colored_rim_light": false,
+      "prompt": "Use case: background-extraction with identity-preserving lighting cleanup.\nAsset type: full-body game character cutout for SIGMA 2040.\nInput image: the only edit target is the supplied LEI image. Preserve this specific character exactly.\nPrimary request: remove the entire textured background and floor, leaving only the character and all accessories on a genuinely transparent alpha background.\nPreserve existing neutral character lighting; remove colored background contamination only at the silhouette boundary. Do not add any colored lighting or glow.\nKeep the Asian man's swept short dark hair, serious face and expression, olive green overshirt with rolled sleeves, black tee, dark cargo trousers, black belt, hands in pockets and black lace-up combat boots unchanged. Preserve the original green fabric colors and existing neutral lighting.\nKeep the original illustration style, exact facial identity, expression, anatomy, pose and proportions. Keep the character at the original position and scale on a 1024 x 1536 portrait canvas.\nPreserve the whole figure, from hair to shoe soles, and all original margins. Do not crop, zoom, reposition, redesign or add elements.\nAll empty space, including gaps between limbs, skirt slit, loose hair and beneath footwear, must have zero alpha. Clean anti-aliased silhouette only; no halo, neon outline, haze, floor reflection, ground, cast shadow, background fragments, checkerboard graphic, text or watermark.\nOutput only the edited transparent character, no scenic background. Preserve clothing and hair colors; remove only background and colored light contamination."
+    }
+  ]
+}

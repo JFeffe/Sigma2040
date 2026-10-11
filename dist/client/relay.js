@@ -1,4 +1,4 @@
-import {relayPackets,RelayAssembler} from './relay-packets.js?v=189';
+import {relayPackets,RelayAssembler} from './relay-packets.js?v=190';
 // Same-origin HTTP relay. Each browser polls only its own addressed messages.
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const uid=()=>crypto.randomUUID();
