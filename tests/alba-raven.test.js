@@ -18,7 +18,7 @@ function check(a,expected){
  assert.deepEqual(a.talents,expected.talents);
  assert.ok(a.nationalities.includes(expected.nationality));
  assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait.webp${expected.id==='p26'?'?v='+BUILD_VERSION:''}`);
- assert.ok(fullBody(a).includes(`${expected.slug}-full.png`));
+ assert.ok(fullBody(a).includes(`${expected.slug}-full-transparent.webp`));
  assert.ok(nationalityFlags(a).includes(`flags/${expected.nationality.toLowerCase()}.svg`));
 }
 test('Alba and Raven follow Rocket and retain their profiles through recruitment and save loading',()=>{

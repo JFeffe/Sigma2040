@@ -8,6 +8,8 @@ import {recruitCard,recruitDetails} from '../dist/client/recruit-selection.js';
 import {BUILD_VERSION} from '../dist/client/build-version.js';
 
 const additions=[['p27','link'],['p29','monroe'],['p30','tara'],['p28','viktor']];
+const updates=[['p23','selin'],['p24','rocket'],['p25','alba'],['p26','raven']];
+const layered=[...additions,...updates];
 const originalHashes={
   "link-full.webp": "6eb57fe308fdfcb59138b372e47eac7bd2e2a70382b0daf677c92b149e129499",
   "link-portrait.webp": "6001004c8d0b9046878577afb6785e6aac9931f834518bfc948cfc34495a888c",
@@ -19,14 +21,14 @@ const originalHashes={
   "viktor-portrait.webp": "fa5a1de800257d45bb73df82223c0f5b2d81974f0a0db0cabc5f6a3d1c395f42",
   "agent-full-background.png": "b379eaabba6c0cb73c46582944f556fac6c68c89f17349c1944821ee6d936a10"
 };
-test('Four full bodies layer the supplied background before the unchanged transparent character',()=>{
- for(const [id,slug] of additions){
+test('Eight full bodies layer the common background before the transparent character',()=>{
+ for(const [id,slug] of layered){
   const agent=DISPLAY_ROSTER.find(a=>a.id===id);
   for(const a of [agent,{...agent,id:`FR:${id}`,templateId:id}]){
    const markup=fullBody(a),images=[...markup.matchAll(/<image\b[^>]*>/g)].map(m=>m[0]);
    assert.equal(images.length,2);
    assert.match(images[0],new RegExp(`agent-full-background.png\\?v=${BUILD_VERSION}`));
-   assert.match(images[1],new RegExp(`${slug}-full.webp\\?v=${BUILD_VERSION}`));
+   assert.match(images[1],new RegExp(`${slug}-full${updates.some(([key])=>key===id)?'-transparent':''}.webp\\?v=${BUILD_VERSION}`));
    for(const image of images)assert.match(image,/width="1024" height="1536"/);
    assert.match(markup,/preserveAspectRatio="xMidYMid meet"/);
   }
@@ -41,7 +43,7 @@ test('The supplied background and all eight original character images remain byt
  }
 });
 test('Earlier full-body artwork does not gain the new background layer',()=>{
- for(const agent of DISPLAY_ROSTER.filter(a=>!additions.some(([id])=>a.id===id)))assert.doesNotMatch(fullBody(agent),/agent-full-background/);
+ for(const agent of DISPLAY_ROSTER.filter(a=>!layered.some(([id])=>a.id===id)))assert.doesNotMatch(fullBody(agent),/agent-full-background/);
 });
 test('The current cache version is used throughout the updated runtime module graph',()=>{
  const dir=new URL('../dist/client/',import.meta.url);

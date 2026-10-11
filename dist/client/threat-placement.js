@@ -1,4 +1,4 @@
-import {COUNTRIES} from './data.js?v=185';
+import {COUNTRIES} from './data.js?v=186';
 export const PLANNED_THREAT_GAP=6;
 export const LIVE_THREAT_GAP=4;
 // All cells, including the Architect, share one country quota and timeline.

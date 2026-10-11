@@ -1,4 +1,14 @@
-# Publication GitHub — build 185
+# Publication GitHub — build 186
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Selin, Rocket, Alba et Raven** : silhouettes plein pied sur fond transparent, avec leurs tenues, poses et accessoires conservés.
+- **Décor commun** : même fond que Link, Monroe, Tara et Viktor, superposé derrière chaque personnage en deux couches séparées.
+- **Cadrage** : silhouettes centrées de la tête aux pieds dans les cartes de sélection, le repêchage, les dossiers et l’onglet Agents. Affichage commun en solo et en multijoueur, y compris après reprise.
+
+Validation : `npm test`, **499 tests réussis**. Transparence et cadrage des quatre assets vérifiés ; rendu SVG des huit silhouettes inspecté. Les rendus de sélection solo/multijoueur, de dossier et de l’onglet Agents utilisent bien les couches communes. Vérification de l’interface dans un navigateur indisponible dans cet environnement.
+
+# Historique — build 185
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
