@@ -1,5 +1,5 @@
-import {TECH,COUNTRY} from './data.js?v=184';
-import {campaignRules} from './campaign-rules.js?v=184';
+import {TECH,COUNTRY} from './data.js?v=185';
+import {campaignRules} from './campaign-rules.js?v=185';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.

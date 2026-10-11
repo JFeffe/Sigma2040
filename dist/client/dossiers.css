@@ -32,3 +32,22 @@
 .view-inquiry .suspect-card.resolved .suspect-identity,.view-inquiry .suspect-card.resolved .suspect-country,.view-inquiry .suspect-card.resolved .case-progress{filter:grayscale(1);opacity:.64;}
 .view-inquiry .suspect-card.resolved .suspect-top .tag{background:#41454a;color:#f1f1f1;border-color:#8b9095;font-weight:800;letter-spacing:.05em;}
 .view-inquiry .suspect-card.resolved .suspect-meta{color:#e3e4e6;font-weight:700;}
+
+/* Prestige standings stay in the left column; territories use two columns. */
+.view-diplomacy .diplomacy-layout{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,2fr);align-items:start;gap:18px;margin:16px 0}
+.view-diplomacy .diplomacy-layout>.relations-section{margin:0;min-width:0}
+.view-diplomacy .diplomacy-layout .relations-section>h2{font-size:19px;margin:0 0 12px}
+.view-diplomacy .diplomacy-layout .relations-section>h2 small{display:block;margin:4px 0 0;font-size:12px}
+.view-diplomacy .diplomacy-layout .relations-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.view-diplomacy .diplomacy-powers .relations-grid{grid-template-columns:minmax(0,1fr)}
+.view-diplomacy .diplomacy-countries .relation-banner{height:72px}
+.view-diplomacy .diplomacy-countries .relation-banner header{inset:auto 10px 8px;gap:7px}
+.view-diplomacy .diplomacy-countries .compact-relation h3{font-size:16px}
+.view-diplomacy .diplomacy-countries .relation-overview{padding:8px 10px 6px;font-size:12px;gap:6px}
+.view-diplomacy .diplomacy-countries .relation-overview strong{font-size:16px}
+.view-diplomacy .diplomacy-countries .relation-signals{padding:0 10px 8px;gap:4px}
+.view-diplomacy .diplomacy-countries .relation-signals>span{font-size:11px;padding:4px 5px}
+.view-diplomacy .diplomacy-countries .relation-signals b{font-size:11px}
+.view-diplomacy .diplomacy-countries .relation-details>summary{padding:8px 10px;font-size:12px}
+@media(max-width:800px){.view-diplomacy .diplomacy-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:520px){.view-diplomacy .diplomacy-countries .relations-grid{grid-template-columns:minmax(0,1fr)}}

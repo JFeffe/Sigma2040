@@ -1,4 +1,14 @@
-# Publication GitHub — build 184
+# Publication GitHub — build 185
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Déploiement** : quatre lignes compactes avec portraits de 40 × 48 px, cases à cocher et mention Voyage avec passeport.
+- **Panneau agent sur le globe** : identité remontée, énergie et exposition à droite sans jauges ; couleurs selon les seuils demandés et boutons plus petits.
+- **Diplomatie** : puissances empilées à gauche par prestige ; autres pays dans une grille de deux colonnes à droite, avec des cartes plus compactes. Les noms des joueurs restent affichés.
+
+Validation : `npm test`, **499 tests réussis**. Les seuils d’énergie et d’exposition, les quatre choix de déploiement, les libellés de voyage et le classement diplomatique ont aussi été vérifiés sur les rendus réels. Vérification visuelle dans un navigateur indisponible dans cet environnement.
+
+# Historique — build 184
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
