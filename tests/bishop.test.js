@@ -6,7 +6,7 @@ import {portrait,nationalities} from '../dist/client/ui.js';
 import {fullBody} from '../dist/client/visuals.js';
 const fresh=()=>E.createGame('FR',['p0','p12','p1','p3'],77);
 test('Bishop is a thirteenth unique recruit with matching standalone assets',()=>{
- assert.ok(ROSTER.length>=13);const b=ROSTER.find(a=>a.id==='p12');assert.deepEqual(b.stats,[9,6,5]);assert.deepEqual(b.talents,['enquete','infiltration','tactique']);assert.deepEqual(b.nationalities,['US']);assert.ok(portrait(b).includes('bishop-portrait.webp'));assert.ok(fullBody(b).includes('bishop-full-transparent.webp'));assert.ok(nationalities(b).includes('us.svg'));
+ assert.ok(ROSTER.length>=13);const b=ROSTER.find(a=>a.id==='p12');assert.deepEqual(b.stats,[9,6,5]);assert.deepEqual(b.talents,['enquete','infiltration','tactique']);assert.deepEqual(b.nationalities,['US']);assert.ok(portrait(b).includes('bishop-portrait-transparent.webp'));assert.ok(fullBody(b).includes('bishop-full-transparent.webp'));assert.ok(nationalities(b).includes('us.svg'));
  const s=fresh();assert.deepEqual(E.validateSave(structuredClone(s)),s);
 });
 test('Bishop is strong at investigation with weaker social and intervention success',()=>{

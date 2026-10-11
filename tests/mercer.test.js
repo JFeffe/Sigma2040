@@ -1,3 +1,4 @@
+import {BUILD_VERSION} from '../dist/client/build-version.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
@@ -16,15 +17,15 @@ test('Mercer follows Midnight and survives recruitment, save and multiplayer ide
  assert.ok(a);assert.deepEqual(a.stats,[7,6,7]);
  assert.deepEqual(a.talents,['contacts','combat','infiltration']);
  assert.ok(a.nationalities.includes('US'));assert.equal(a.age,undefined);
- assert.equal(portraitAsset(a),'./assets/mercer-portrait.webp');
+ assert.equal(portraitAsset(a),`./assets/mercer-portrait-transparent.webp?v=${BUILD_VERSION}`);
  assert.match(fullBody(a),/mercer-full-transparent.webp/);
- assert.match(agentMapMarkers(s),/mercer-portrait.webp/);
+ assert.match(agentMapMarkers(s),/mercer-portrait-transparent.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-mercer-0000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-mercer-000000000',name:'Invité'});
  r.members[0].agents=['p0','p12','p16','p18'];r.members.forEach(m=>{if(!m.agents.length)m.agents=['p0','p12','p13','p14'];m.confirmed=true;});startRoom(r,11);
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p18');
- assert.ok(m);assert.equal(portraitAsset(m),'./assets/mercer-portrait.webp');
+ assert.ok(m);assert.equal(portraitAsset(m),`./assets/mercer-portrait-transparent.webp?v=${BUILD_VERSION}`);
  assert.match(fullBody(m),/mercer-full-transparent.webp/);
- assert.match(agentMapMarkers(view),/mercer-portrait.webp/);
+ assert.match(agentMapMarkers(view),/mercer-portrait-transparent.webp/);
 });

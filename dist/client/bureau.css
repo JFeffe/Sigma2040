@@ -423,3 +423,6 @@ select{font:inherit;color:inherit;background:#241f24;border:1px solid #4c434c;bo
 @media(max-width:950px){.bureau-roster{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.agent-tooltip .tt{grid-template-columns:1fr}.bureau-roster{grid-template-columns:1fr 1fr}.bureau-roster .agent-portrait{display:none}}
 
 .app{display:flex;flex-direction:column;overflow:hidden}.app>.top{flex:none}.app>.layout{flex:1;min-height:0;overflow:auto}.app>.bureau-team{position:relative;bottom:auto;flex:none;margin:8px 14px}.app>.empty{flex:1}
+
+/* Match the foreground and shared background framing outside the shadow root. */
+.agent-portrait.portrait-cutout{background-size:contain,cover;background-position:center;background-repeat:no-repeat}

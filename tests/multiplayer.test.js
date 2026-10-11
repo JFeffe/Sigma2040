@@ -1,3 +1,4 @@
+import {BUILD_VERSION} from '../dist/client/build-version.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {newRoom,joinRoom,startRoom,execute,disconnect,playerView,roomView,restoreRoom,PROTOCOL} from '../dist/client/multiplayer-core.js';
@@ -30,7 +31,7 @@ test('Export and restore preserve deterministic state, slots, events and queued 
  const r=room();cmd(r,host,'assign',{id:E.team(r.game)[0].id,type:'travel',target:'JP'});readyAll(r);const restored=restoreRoom(JSON.parse(JSON.stringify(r)));assert.equal(restored.members[1].connected,false);assert.equal(restored.game.rng,r.game.rng);assert.deepEqual(restored.game.agents,r.game.agents);joinRoom(restored,{invite,token:guest});readyAll(r);readyAll(restored);assert.deepEqual(restored.game,r.game);
 });
 test('Full campaign keeps all country views renderable and saves valid',()=>{
- const r=room();for(let i=0;i<40&&!r.game.ended;i++){for(const m of r.members){const v=playerView(r,m.country);const screens=makeScreens(v,m.country,null,[],{});for(const view of ['agents','inquiry','operations','diplomacy','government','journal'])assert.equal(typeof screens[view](),'string');}readyAll(r);restoreRoom(JSON.parse(JSON.stringify(r)));}assert.ok(r.game.ended);assert.equal(portraitAsset(playerView(r,'FR').agents[0]),'./assets/iris-portrait.webp');
+ const r=room();for(let i=0;i<40&&!r.game.ended;i++){for(const m of r.members){const v=playerView(r,m.country);const screens=makeScreens(v,m.country,null,[],{});for(const view of ['agents','inquiry','operations','diplomacy','government','journal'])assert.equal(typeof screens[view](),'string');}readyAll(r);restoreRoom(JSON.parse(JSON.stringify(r)));}assert.ok(r.game.ended);assert.equal(portraitAsset(playerView(r,'FR').agents[0]),`./assets/iris-portrait-transparent.webp?v=${BUILD_VERSION}`);
 });
 test('Host can replace a departed player, but cannot silently skip an active human',()=>{
  const r=room(),country=r.members[1].country;assert.throws(()=>cmd(r,guest,'replace',{country:'FR'}));disconnect(r,guest);cmd(r,host,'replace',{country});assert.deepEqual(r.game.humanFactions,['FR']);assert.equal(r.game.turn,1);cmd(r,host,'ready',{ready:true});assert.equal(r.game.turn,2);assert.throws(()=>joinRoom(r,{invite,token:guest}));

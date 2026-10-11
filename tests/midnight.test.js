@@ -1,3 +1,4 @@
+import {BUILD_VERSION} from '../dist/client/build-version.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
@@ -16,15 +17,15 @@ test('Midnight follows Mira and survives recruitment, save and multiplayer ident
  assert.ok(a);assert.deepEqual(a.stats,[8,7,5]);
  assert.deepEqual(a.talents,['drones','tactique','surveillance']);
  assert.ok(a.nationalities.includes('CN'));assert.equal(a.age,undefined);
- assert.equal(portraitAsset(a),'./assets/midnight-portrait.webp');
+ assert.equal(portraitAsset(a),`./assets/midnight-portrait-transparent.webp?v=${BUILD_VERSION}`);
  assert.match(fullBody(a),/midnight-full-transparent.webp/);
- assert.match(agentMapMarkers(s),/midnight-portrait.webp/);
+ assert.match(agentMapMarkers(s),/midnight-portrait-transparent.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-midnight-0000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-midnight-000000000',name:'Invité'});
  r.members[0].agents=['p0','p12','p16','p17'];r.members.forEach(m=>{if(!m.agents.length)m.agents=['p0','p12','p13','p14'];m.confirmed=true;});startRoom(r,11);
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p17');
- assert.ok(m);assert.equal(portraitAsset(m),'./assets/midnight-portrait.webp');
+ assert.ok(m);assert.equal(portraitAsset(m),`./assets/midnight-portrait-transparent.webp?v=${BUILD_VERSION}`);
  assert.match(fullBody(m),/midnight-full-transparent.webp/);
- assert.match(agentMapMarkers(view),/midnight-portrait.webp/);
+ assert.match(agentMapMarkers(view),/midnight-portrait-transparent.webp/);
 });

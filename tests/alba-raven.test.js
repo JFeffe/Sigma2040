@@ -17,7 +17,7 @@ function check(a,expected){
  assert.deepEqual(a.stats,expected.stats);
  assert.deepEqual(a.talents,expected.talents);
  assert.ok(a.nationalities.includes(expected.nationality));
- assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait.webp${expected.id==='p26'?'?v='+BUILD_VERSION:''}`);
+ assert.equal(portraitAsset(a),`./assets/${expected.slug}-portrait-transparent.webp?v=${BUILD_VERSION}`);
  assert.ok(fullBody(a).includes(`${expected.slug}-full-transparent.webp`));
  assert.ok(nationalityFlags(a).includes(`flags/${expected.nationality.toLowerCase()}.svg`));
 }
@@ -28,7 +28,7 @@ test('Alba and Raven follow Rocket and retain their profiles through recruitment
   E.recruit(s,expected.id,'p13');E.advance(s);E.advance(s);
   const restored=E.validateSave(structuredClone(s));
   check(E.team(restored).find(a=>a.id===expected.id),expected);
-  assert.ok(agentMapMarkers(restored).includes(`${expected.slug}-portrait.webp`));
+  assert.ok(agentMapMarkers(restored).includes(`${expected.slug}-portrait-transparent.webp`));
  }
 });
 test('Both new agents can be selected together in multiplayer and keep their artwork after restore',()=>{
@@ -40,7 +40,7 @@ test('Both new agents can be selected together in multiplayer and keep their art
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  for(const expected of agents){
   check(view.agents.find(a=>a.templateId===expected.id),expected);
-  assert.ok(agentMapMarkers(view).includes(`${expected.slug}-portrait.webp`));
+  assert.ok(agentMapMarkers(view).includes(`${expected.slug}-portrait-transparent.webp`));
  }
 });
 

@@ -1,4 +1,16 @@
-# Publication GitHub — build 190
+# Publication GitHub — build 191
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Seize nouveaux portraits détourés** : Iris, Bishop, Amber, Lei, Apéro, Mira, Midnight, Mercer, Marlowe, Nox, Adler, Dante, Selin, Rocket, Alba et Raven sur fond transparent, avec leurs visages, tenues et accessoires conservés.
+- **Contours neutres** : halos et reflets rouges et bleus retirés lorsqu’ils étaient présents, notamment sur Mira, Midnight, Mercer et Raven.
+- **Vingt portraits cohérents** : même fond bleu nuit et cramoisi en couche séparée que Link, Monroe, Tara et Viktor ; cadrage centré commun aux cartes, miniatures, dossiers et au bureau d’enquête, en solo et en multijoueur.
+
+Validation : `npm test`, **499 tests réussis**. Les seize nouvelles images sont en 1254 × 1254 px, avec leur alpha conservé lors de la conversion WebP. Visages, accessoires et contours inspectés sur fond clair et sur le décor commun. Les couches de fond des vingt portraits sont identiques à trois dimensions ; 60 rendus SVG et 60 rendus HTML des vues de sélection, agents, déploiement, carte, positions étrangères et bureau d’enquête vérifiés, en solo et en multijoueur après reprise. Vérification de l’interface dans un navigateur indisponible dans cet environnement.
+
+[Visuels et consignes de retouche](docs/artwork/build191.json)
+
+# Historique — build 190
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
