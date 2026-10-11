@@ -1,5 +1,5 @@
-import * as E from './engine.js?v=187';
-import {esc,icon,button} from './ui.js?v=187';
+import * as E from './engine.js?v=188';
+import {esc,icon,button} from './ui.js?v=188';
 export const INVESTIGATION_STEPS=[
  {id:'access',short:'Accès local',label:'Établir un accès local',actions:['contacts','influence','drone']},
  {id:'proofs',short:'2 preuves',label:'Recueillir deux preuves',actions:['collect','intimidate','hack']},

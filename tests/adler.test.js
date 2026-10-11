@@ -17,7 +17,7 @@ test('Adler follows Nox and survives recruitment, save and multiplayer identity 
  assert.deepEqual(a.talents,['diplomatie','contacts','tactique']);
  assert.ok(a.nationalities.includes('DE'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),'./assets/adler-portrait.webp');
- assert.match(fullBody(a),/adler-full.png/);
+ assert.match(fullBody(a),/adler-full-transparent.webp/);
  assert.match(agentMapMarkers(s),/adler-portrait.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-adler-0000000000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-adler-0000000000000000',name:'Invité'});
@@ -25,7 +25,7 @@ test('Adler follows Nox and survives recruitment, save and multiplayer identity 
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p21');
  assert.ok(m);assert.equal(portraitAsset(m),'./assets/adler-portrait.webp');
- assert.match(fullBody(m),/adler-full.png/);
+ assert.match(fullBody(m),/adler-full-transparent.webp/);
  assert.match(agentMapMarkers(view),/adler-portrait.webp/);
 });
 

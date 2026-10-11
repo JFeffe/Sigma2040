@@ -1,4 +1,16 @@
-# Publication GitHub — build 187
+# Publication GitHub — build 188
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Selin, Rocket, Alba et Raven** : éclairage des contours retouché pour retirer les halos rouges et bleus des silhouettes plein pied.
+- **Marlowe, Nox, Adler et Dante** : silhouettes plein pied détourées sur fond transparent ; halos rouges et bleus retirés sur Adler et Dante.
+- **Douze agents** : même décor fourni et même cadrage du fond, dans les cartes de sélection, le repêchage, les dossiers et l’onglet Agents. Le décor et le personnage restent deux couches distinctes, avec un centrage individuel de la silhouette.
+
+Validation : `npm test`, **499 tests réussis**. Transparence, contours et silhouettes entières inspectés sur fond clair et sur le décor commun ; égalité des douze décors vérifiée pixel par pixel à trois dimensions. Rendus solo et multijoueur, dossiers et onglet Agents vérifiés. Vérification de l’interface dans un navigateur indisponible dans cet environnement.
+
+[Visuels et consignes de retouche](docs/artwork/build188.json)
+
+# Historique — build 187
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

@@ -1,12 +1,12 @@
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=187';
-import {threatCoverage} from './threat-status.js?v=187';
-import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=187';
-import * as E from './engine.js?v=187';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=187';
-import {esc,icon,button,flag,portrait} from './ui.js?v=187';
-import {suspectPortrait} from './fracture-profiles.js?v=187';
-import {countrySignals} from './country-signals.js?v=187';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=187';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=188';
+import {threatCoverage} from './threat-status.js?v=188';
+import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=188';
+import * as E from './engine.js?v=188';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=188';
+import {esc,icon,button,flag,portrait} from './ui.js?v=188';
+import {suspectPortrait} from './fracture-profiles.js?v=188';
+import {countrySignals} from './country-signals.js?v=188';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=188';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.

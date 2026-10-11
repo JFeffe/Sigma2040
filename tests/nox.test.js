@@ -17,7 +17,7 @@ test('Nox follows Marlowe and survives recruitment, save and multiplayer identit
  assert.deepEqual(a.talents,['informatique','surveillance','drones']);
  assert.ok(a.nationalities.includes('JP'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),'./assets/nox-portrait.webp');
- assert.match(fullBody(a),/nox-full.png/);
+ assert.match(fullBody(a),/nox-full-transparent.webp/);
  assert.match(agentMapMarkers(s),/nox-portrait.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-nox-0000000000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-nox-0000000000000000',name:'Invité'});
@@ -25,7 +25,7 @@ test('Nox follows Marlowe and survives recruitment, save and multiplayer identit
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p20');
  assert.ok(m);assert.equal(portraitAsset(m),'./assets/nox-portrait.webp');
- assert.match(fullBody(m),/nox-full.png/);
+ assert.match(fullBody(m),/nox-full-transparent.webp/);
  assert.match(agentMapMarkers(view),/nox-portrait.webp/);
 });
 

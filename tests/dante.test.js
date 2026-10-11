@@ -17,7 +17,7 @@ test('Dante follows Adler and survives recruitment, save and multiplayer identit
  assert.deepEqual(a.talents,['enquete','combat','endurance']);
  assert.ok(a.nationalities.includes('BR'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),'./assets/dante-portrait.webp');
- assert.match(fullBody(a),/dante-full.png/);
+ assert.match(fullBody(a),/dante-full-transparent.webp/);
  assert.match(agentMapMarkers(s),/dante-portrait.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-dante-0000000000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-dante-0000000000000000',name:'Invité'});
@@ -25,7 +25,7 @@ test('Dante follows Adler and survives recruitment, save and multiplayer identit
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p22');
  assert.ok(m);assert.equal(portraitAsset(m),'./assets/dante-portrait.webp');
- assert.match(fullBody(m),/dante-full.png/);
+ assert.match(fullBody(m),/dante-full-transparent.webp/);
  assert.match(agentMapMarkers(view),/dante-portrait.webp/);
 });
 

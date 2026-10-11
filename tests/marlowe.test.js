@@ -17,7 +17,7 @@ test('Marlowe follows Mercer and survives recruitment, save and multiplayer iden
  assert.deepEqual(a.talents,['contacts','drones','endurance']);
  assert.ok(a.nationalities.includes('ZA'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),'./assets/marlowe-portrait.webp');
- assert.match(fullBody(a),/marlowe-full.png/);
+ assert.match(fullBody(a),/marlowe-full-transparent.webp/);
  assert.match(agentMapMarkers(s),/marlowe-portrait.webp/);
  const r=newRoom('dddddddd-dddd-dddd-dddd-dddddddddddd','cccccccc-cccc-cccc-cccc-cccccccccccc','host-marlowe-0000000000','Hôte');
  joinRoom(r,{invite:r.invite,token:'guest-marlowe-000000000',name:'Invité'});
@@ -25,6 +25,6 @@ test('Marlowe follows Mercer and survives recruitment, save and multiplayer iden
  const view=playerView(restoreRoom(structuredClone(r)),'FR');
  const m=view.agents.find(a=>a.templateId==='p19');
  assert.ok(m);assert.equal(portraitAsset(m),'./assets/marlowe-portrait.webp');
- assert.match(fullBody(m),/marlowe-full.png/);
+ assert.match(fullBody(m),/marlowe-full-transparent.webp/);
  assert.match(agentMapMarkers(view),/marlowe-portrait.webp/);
 });
