@@ -1,4 +1,14 @@
-# Publication GitHub — build 191
+# Publication GitHub — build 192
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- **Votre unité à gauche** : quatre fiches horizontales avec portraits, noms, surnoms, drapeaux, statistiques alignées et talents visibles ; sélection conservée.
+- **Dossier complet à droite** : plein pied sur le fond commun, énergie et exposition en chiffres colorés, situation opérationnelle, mission, talents et parcours en blocs compacts.
+- **Présentation cohérente** : icônes, couleurs des statistiques et infobulles reprises des cartes de sélection ; seuils d’énergie et d’exposition identiques au globe. Commandes et règles existantes conservées, en solo et en multijoueur.
+
+Validation : `npm test`, **499 tests réussis**. Contrôles supplémentaires sur 88 rendus de sélection, les 16 seuils d’énergie/exposition et la reprise multijoueur ; rendu sans mutation des données de campagne. Vérification visuelle dans un navigateur indisponible dans cet environnement.
+
+# Historique — build 191
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
