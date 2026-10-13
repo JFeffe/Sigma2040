@@ -31,3 +31,20 @@
 @media(max-width:1200px){.draft-shell .draft-selection .recruit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:950px){.draft-selection{grid-template-columns:minmax(0,1fr)}.draft-selection .draft-summary{position:static;grid-row:1}.draft-summary-agents{grid-template-columns:repeat(4,minmax(0,1fr))}.draft-summary .team-balance{margin-bottom:14px}.draft-summary-agent{min-height:105px}.draft-summary .balance-row{grid-template-columns:90px minmax(0,1fr) auto}.draft-summary .balance-row small{grid-column:2/-1}}
 @media(max-width:500px){.draft-shell .draft-selection .recruit-grid{grid-template-columns:minmax(0,1fr)}.draft-summary-agents{grid-template-columns:repeat(2,minmax(0,1fr))}.draft-summary{padding:14px}}
+
+/* An unconfirmed candidate occupies only the local preview slot. */
+.draft-summary-agent.is-preview{border:1px dashed #a5a9b0;background:#363a42;color:#e0e1e5}
+.draft-summary-agent.is-preview .portrait{filter:grayscale(1);opacity:.65}
+.draft-summary-agent.is-preview small,.draft-country-preview{color:#bfc3ca}
+.draft-country-preview{background:#363a42;border-radius:4px;padding-inline:8px!important}
+.draft-confirm-candidate{margin:0 0 16px;padding:10px;border:1px solid #68717f;border-radius:6px;background:#202936}
+.draft-confirm-candidate p{margin:0 0 9px;font-size:12px;line-height:1.4}
+.draft-confirm-candidate .btn{min-height:40px;font-size:14px;padding:8px 10px}
+.balance-before{color:#9aaec7;font-weight:400;font-size:12px}
+.balance-gain{color:#a8d9ef}
+.draft-team-agent{display:grid;grid-template-columns:64px minmax(0,1fr) auto}
+.draft-team-agent>div:not(.portrait){min-width:0}
+.draft-team-agent strong,.draft-team-agent small{overflow-wrap:anywhere}
+.draft-team-agent .portrait{aspect-ratio:auto;border-radius:4px}
+.draft-order-actions{flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:850px){.draft-team-agent{grid-template-columns:48px minmax(0,1fr)}.draft-order-actions{grid-column:2;justify-content:flex-start;margin-left:0}}

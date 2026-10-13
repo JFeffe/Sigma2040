@@ -1,4 +1,4 @@
-import {COUNTRIES,COUNTRY} from './data.js?v=192';
+import {COUNTRIES,COUNTRY} from './data.js?v=193';
 // Geographic distance on a sphere, including routes across the date line.
 const distance=(a,b)=>{const rad=Math.PI/180,p=a.pos[1]*rad,q=b.pos[1]*rad;return Math.acos(Math.max(-1,Math.min(1,Math.sin(p)*Math.sin(q)+Math.cos(p)*Math.cos(q)*Math.cos((a.pos[0]-b.pos[0])*rad))));};
 export function placeSuspects(s,random){

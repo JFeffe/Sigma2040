@@ -1,19 +1,19 @@
-import {resetRecruitFilters,toggleRecruitSelection} from './recruit-selection.js?v=192';
-import {reorderTeam} from './game-setup.js?v=192';
-import {draftScreen,gameModeControl} from './draft-ui.js?v=192';
-import {aiDifficultyControl} from './ai-difficulty.js?v=192';
-import {OBSERVER_COLORS} from './map-markers.js?v=192';
-import {setupScreen} from './screens.js?v=192';
-import {PROTOCOL,playingMembers,newRoom,joinRoom,disconnect,execute,roomView,restoreRoom} from './multiplayer-core.js?v=192';
-import {RelayPeer} from './relay.js?v=192';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from './data.js?v=192';
-import {esc,button,flag,portrait,statlines,talents,nationalities} from './ui.js?v=192';
+import {resetRecruitFilters,toggleRecruitSelection} from './recruit-selection.js?v=193';
+import {reorderTeam} from './game-setup.js?v=193';
+import {draftScreen,gameModeControl,draftCandidate} from './draft-ui.js?v=193';
+import {aiDifficultyControl} from './ai-difficulty.js?v=193';
+import {OBSERVER_COLORS} from './map-markers.js?v=193';
+import {setupScreen} from './screens.js?v=193';
+import {PROTOCOL,playingMembers,newRoom,joinRoom,disconnect,execute,roomView,restoreRoom} from './multiplayer-core.js?v=193';
+import {RelayPeer} from './relay.js?v=193';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from './data.js?v=193';
+import {esc,button,flag,portrait,statlines,talents,nationalities} from './ui.js?v=193';
 const ACTIVE='sigma-active-multiplayer';
 const SAVE='sigma2040-multiplayer-v1',BACKUP='sigma2040-multiplayer-before-free-actions-v82';
 const uid=()=>crypto.randomUUID?crypto.randomUUID():Array.from(crypto.getRandomValues(new Uint8Array(24)),b=>b.toString(16).padStart(2,'0')).join('');
 const powers=COUNTRIES.filter(c=>c.power);
 export class Multiplayer{
- constructor(hooks){this.hooks=hooks;this.active=false;this.snapshot=null;this.peer=null;this.links=new Map();this.pending=null;this.status='';this.savedError=false;this.epoch=0;this.seq=0;this.timer=setInterval(()=>this.tick(),3000);}
+ constructor(hooks){this.hooks=hooks;this.active=false;this.snapshot=null;this.peer=null;this.links=new Map();this.pending=null;this.status='';this.savedError=false;this.epoch=0;this.seq=0;this.draftCandidate=null;this.timer=setInterval(()=>this.tick(),3000);}
  get observer(){return !!this.snapshot?.observer;}
  observe(country){if(!this.host||!this.observer)return;this.observedCountry=country;this.hooks.close();this.receive(roomView(this.room,this.token,country));}
  get host(){return !!this.room;}
@@ -60,7 +60,7 @@ export class Multiplayer{
  });conn.on('close',()=>{if(epoch===this.epoch&&token&&this.links.get(token)?.conn===conn){this.links.delete(token);disconnect(this.room,token);this.publish();}});conn.on('error',()=>{});setTimeout(()=>{if(!token&&epoch===this.epoch)conn.close();},35000).unref?.();}
  persist(){if(!this.room)return;try{localStorage.setItem(SAVE,JSON.stringify(this.room));this.savedError=false;}catch{this.savedError=true;this.hooks.toast('Sauvegarde multijoueur indisponible. Exportez la partie depuis le salon.');}}
  publish(){if(!this.room)return;this.persist();this.receive(roomView(this.room,this.token,this.observedCountry));for(const [token,link] of this.links){if(!this.room.members.some(m=>m.token===token)){link.conn.send({kind:'removed'});link.conn.close();this.links.delete(token);continue;}if(link.conn.open)link.conn.send({kind:'snapshot',value:roomView(this.room,token)});}if(document.querySelector('dialog[open] #mpLobby'))this.panel();}
- receive(snapshot){if(!snapshot||snapshot.protocol!==PROTOCOL)return;if(this.snapshot&&snapshot.revision<this.snapshot.revision)return;const previous=this.snapshot;this.snapshot=snapshot;this.seq=Math.max(this.seq,snapshot.lastSeq);if(snapshot.game&&previous&&previous.phase!=='playing')this.hooks.close();if(snapshot.game)this.hooks.state(snapshot.game,previous?.game);else if(snapshot.phase==='playing')this.hooks.render();if(snapshot.phase!=='playing'||document.querySelector('dialog[open] #mpLobby'))this.panel();}
+ receive(snapshot){if(!snapshot||snapshot.protocol!==PROTOCOL)return;if(this.snapshot&&snapshot.revision<this.snapshot.revision)return;const previous=this.snapshot;if(previous?.draft?.picks.length!==snapshot.draft?.picks.length||previous?.phase!==snapshot.phase||previous?.country!==snapshot.country)this.draftCandidate=null;this.snapshot=snapshot;this.seq=Math.max(this.seq,snapshot.lastSeq);if(snapshot.game&&previous&&previous.phase!=='playing')this.hooks.close();if(snapshot.game)this.hooks.state(snapshot.game,previous?.game);else if(snapshot.phase==='playing')this.hooks.render();if(snapshot.phase!=='playing'||document.querySelector('dialog[open] #mpLobby'))this.panel();}
  command(kind,payload={}){if(!this.active||!this.snapshot)return Promise.reject(Error('Attendez la connexion au salon.'));if(this.pending)return Promise.reject(Error('Un ordre attend encore la confirmation de l’hôte.'));if(this.observer&&!['observer','start','replace','ai-difficulty','game-mode','begin-draft'].includes(kind))return Promise.reject(Error('Observateur : consultation uniquement.'));const message={protocol:PROTOCOL,seq:++this.seq,turn:this.snapshot.game?.turn,kind,payload};if(this.host){try{const result=execute(this.room,this.token,message);this.publish();return Promise.resolve(result);}catch(e){return Promise.reject(e);}}
   if(!this.connection?.open||this.status)return Promise.reject(Error('La connexion avec l’hôte est interrompue.'));
   return new Promise((resolve,reject)=>{this.pending={message,resolve,reject,sent:Date.now()};this.connection.send(message);this.hooks.render();});
@@ -83,7 +83,7 @@ export class Multiplayer{
   const startPhase=!advanced&&lobby||advanced&&s?.phase==='teams',beginReady=players.length>=2&&s?.members.every(m=>m.connected)&&players.every(m=>m.countryConfirmed),startReady=players.length>=(advanced?1:2)&&s?.members.every(m=>m.connected)&&players.every(m=>m.confirmed);
   const top=`<section class="mp-lobby-header panel" id="mpLobby">${confirmation}<span class="eyebrow">${pregame?'PRÉPARATION MULTIJOUEUR':'SALON · '+(me?.observer?'OBSERVATEUR':COUNTRY[me?.country]?.name)}</span><h2>${lobby?(me?.observer?'Hôte observateur':advanced?'Choisissez votre pays':'Composez votre équipe'):s?.phase==='draft'?'Repêchage des agents':s?.phase==='teams'?'Confirmez votre équipe':'Joueurs et invitation'}</h2>${observer?`<p class="notice mp-observer-notice">${esc(observer.name)} · Hôte observateur — accès à toutes les informations des joueurs. Aucune équipe ni place occupée.</p>`:''}${this.host&&lobby?`<div class="mp-role"><strong>Votre rôle</strong>${button('Hôte joueur','mp-role-player',me?.observer?'':'primary')}${button('Hôte observateur','mp-role-observer',me?.observer?'primary':'')}</div>`:''}${this.status?`<p role="status" class="notice warning">${esc(this.status)}</p>${!this.host?button('Réessayer','mp-reconnect','wide'):''}`:''}${this.pending?'<p role="status">Confirmation de l’hôte…</p>':''}${this.savedError?'<p class="notice warning">Exportez la sauvegarde : la sauvegarde automatique a échoué.</p>':''}<div class="setup-game-options">${gameModeControl(s?.gameMode||'regular',true,this.host&&lobby&&s?.participantRules===1&&editable)}${aiDifficultyControl(s?.game?.aiDifficulty||s?.aiDifficulty||'normal',true,this.host&&lobby&&editable)}</div><label>Lien d’invitation<input readonly id="mpLink" value="${esc(url.href)}"></label>${button('Copier le lien','mp-copy','small')}<div class="mp-lobby-actions">${this.host&&lobby&&advanced?button('Commencer le repêchage','mp-begin-draft','primary',!beginReady||!editable?'disabled title="Tous les joueurs doivent confirmer leur pays et être connectés."':''):''}${this.host&&startPhase?button('Lancer la partie','mp-start','primary',!startReady||!editable?'disabled title="Tous les joueurs doivent être connectés et avoir confirmé leur équipe."':''):''}${!pregame?button('Retour au commandement','mp-play','primary'):''}${this.host?button('Exporter la sauvegarde','mp-export')+button('Exporter la copie avant changement','mp-export-backup'):''}${button('Quitter la session','mp-leave')}</div><p role="status">${lobby&&advanced?players.filter(m=>m.countryConfirmed).length+'/'+players.length+' pays confirmés · '+Math.max(0,4-players.length)+' PNJ compléteront les quatre pays':pregame?players.filter(m=>m.confirmed).length+'/'+players.length+' équipes confirmées':'Le bouton Salon reste accessible depuis le commandement.'}</p>${members}</section>`;
   let html;
-  if(s?.draft&&['draft','teams'].includes(s.phase))html=draftScreen(s.draft,me?.observer?null:me?.country,{multi:true,header:top,agents:selected,confirmed:me?.confirmed,editable:!!me&&!me.observer&&editable});
+  if(s?.draft&&['draft','teams'].includes(s.phase))html=draftScreen(s.draft,me?.observer?null:me?.country,{multi:true,header:top,agents:selected,confirmed:me?.confirmed,editable:!!me&&!me.observer&&editable,candidate:this.draftCandidate});
   else if(lobby&&me&&!me.observer)html=setupScreen(me.country,selected,false,{header:top,taken:s.members.filter(m=>m.country!==me.country).map(m=>m.country)},s.aiDifficulty,s.gameMode);
   else if(pregame)html=`<main class="mp-observer-lobby">${top}</main>`;
   if(html){if(this.hooks.lobby)this.hooks.lobby(html);else this.hooks.modal(html);return;}
@@ -104,7 +104,8 @@ export class Multiplayer{
   case 'mp-entry-host':this.entry('host');break;
   case 'mp-confirm-country':await this.command('confirm-country');break;
   case 'mp-begin-draft':await this.command('begin-draft');break;
-  case 'mp-draft-pick':await this.command('draft-pick',{id});break;
+  case 'mp-draft-preview':if(!this.pending&&draftCandidate(this.snapshot?.draft,this.me?.country,id)){this.draftCandidate=id;this.panel();}break;
+  case 'mp-draft-confirm':if(!this.pending&&draftCandidate(this.snapshot?.draft,this.me?.country,this.draftCandidate)){await this.command('draft-pick',{id:this.draftCandidate});this.draftCandidate=null;}break;
   case 'mp-draft-chief':case 'mp-draft-before':case 'mp-draft-after':if(this.snapshot?.phase==='teams'&&!this.observer){if(this.me.confirmed)await this.command('unconfirm');this.draft=reorderTeam(this.draft,id,cmd.split('-').at(-1));this.panel();}break;
   case 'mp-country':await this.command('country',{country:id});break;
   case 'mp-select':{if(this.snapshot?.gameMode==='advanced')break;if(this.draft.includes(id)||this.draft.length<4)this.draft=toggleRecruitSelection(this.draft,id,'multi');else{this.hooks.toast('Désélectionnez un agent avant d’en choisir un autre.');break;}if(this.me.confirmed)await this.command('unconfirm');this.panel();break;}

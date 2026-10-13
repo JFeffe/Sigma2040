@@ -1,6 +1,6 @@
-import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=192';
-import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=192';
-import {fullBody} from './visuals.js?v=192';
+import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=193';
+import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=193';
+import {fullBody} from './visuals.js?v=193';
 const faces={solo:new Set(),multi:new Set()};
 const slots={solo:[null,null,null,null],multi:[null,null,null,null]};
 const filters={solo:{sort:'default',talent:''},multi:{sort:'default',talent:''}};
@@ -36,7 +36,7 @@ function flipControl(a,mode,back){return `<button class="recruit-flip" data-cmd=
 function portraitProfile(a){return `${portrait(a)}<div class="recruit-portrait-heading"><h3>${esc(a.name)}</h3>${nationalityFlags(a)}</div><div class="recruit-portrait-footer"><div class="portrait-stats">${a.stats.map((n,i)=>`<span class="stat-${i}" data-rich-tooltip aria-label="${STAT_NAMES[i]} : ${n}">${icon(['scan','target','shield'][i])}<strong>${n}</strong><template><strong>${STAT_NAMES[i]}</strong><ul>${statActions(i).map(name=>`<li>${esc(name)}</li>`).join('')}</ul></template></span>`).join('')}</div><div class="portrait-talents">${sortedTalents(a).map(t=>`<span data-rich-tooltip aria-label="${esc(TALENTS[t][0])}">${talentIcon(t)}<template><strong>${esc(TALENTS[t][0])}</strong><p>${esc(TALENTS[t][1])}</p></template></span>`).join('')}</div></div>`;}
 export function recruitCard(a,ids,mode='solo',options={}){
  const back=isRecruitPortrait(a.id,mode),selected=ids.includes(a.id),cmd=options.cmd||(mode==='multi'?'mp-select':'select-recruit');
- return `<article class="recruit-card ${selected?'selected':''} ${back?'is-portrait':''}" data-recruit-id="${a.id}" data-recruit-mode="${mode}"><div class="recruit-card-inner"><div class="recruit-face recruit-front" ${back?'inert aria-hidden="true"':''}><button class="recruit-select" ${options.disabled?'disabled':''} data-cmd="${cmd}" data-id="${a.id}" aria-label="${selected?'Désélectionner':'Sélectionner'} ${esc(a.name)}" aria-pressed="${selected}">${recruitProfile(a)}</button>${flipControl(a,mode,false)}</div><div class="recruit-face recruit-back" ${back?'':'inert aria-hidden="true"'}><button class="recruit-select" ${options.disabled?'disabled':''} data-cmd="${cmd}" data-id="${a.id}" aria-label="${selected?'Désélectionner':'Sélectionner'} ${esc(a.name)}" aria-pressed="${selected}">${portraitProfile(a)}</button>${flipControl(a,mode,true)}</div></div></article>`;
+ return `<article class="recruit-card ${selected?'selected':''} ${back?'is-portrait':''}" data-recruit-id="${a.id}" data-recruit-mode="${mode}"><div class="recruit-card-inner"><div class="recruit-face recruit-front" ${back?'inert aria-hidden="true"':''}><button class="recruit-select" ${options.disabled?'disabled':''} data-cmd="${cmd}" data-id="${a.id}" aria-label="${options.preview?'Prévisualiser':selected?'Désélectionner':'Sélectionner'} ${esc(a.name)}" aria-pressed="${selected}">${recruitProfile(a)}</button>${flipControl(a,mode,false)}</div><div class="recruit-face recruit-back" ${back?'':'inert aria-hidden="true"'}><button class="recruit-select" ${options.disabled?'disabled':''} data-cmd="${cmd}" data-id="${a.id}" aria-label="${options.preview?'Prévisualiser':selected?'Désélectionner':'Sélectionner'} ${esc(a.name)}" aria-pressed="${selected}">${portraitProfile(a)}</button>${flipControl(a,mode,true)}</div></div></article>`;
 }
 // Update only the flip state so the CSS transition survives and selection is untouched.
 export function updateRecruitFaces(root,mode,id,portraitView){

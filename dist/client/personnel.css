@@ -19,7 +19,7 @@
 .command-deck .personnel-member:hover{border-color:#d5aac2}
 .command-deck .personnel-member:focus-visible{outline:2px solid #f6e4f2;outline-offset:2px}
 .command-deck .personnel-member>.portrait{grid-column:1;grid-row:1/3;width:76px;height:86px;margin:0;flex:none;border:1px solid #635063;border-radius:6px}
-.command-deck .personnel-member>.portrait img{width:100%;height:100%;object-fit:contain}
+.command-deck .personnel-member>.portrait img{width:100%;height:100%;object-fit:cover;object-position:center top}
 .personnel-member-copy{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:3px;min-width:0}
 .personnel-member-copy>strong{display:flex;align-items:center;gap:7px;font:600 21px/1.05 var(--display);letter-spacing:.03em}
 .personnel-member-role{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0;font-size:12px;line-height:1.2;color:#c1b1c7}
