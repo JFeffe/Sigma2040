@@ -1,13 +1,13 @@
-import {COUNTRY,DISPLAY_ROSTER,TALENTS} from './data.js?v=194';
-import {GAME_MODES,draftCountry} from './game-setup.js?v=194';
-import {brand,button,flag,esc,icon,portrait,talentIcon} from './ui.js?v=194';
-import {recruitCard,recruitControls,visibleRecruits} from './recruit-selection.js?v=194';
-import {teamBalanceMarkup} from './team-balance.js?v=194';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=195';
+import {GAME_MODES,draftCountry} from './game-setup.js?v=195';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=195';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=195';
+import {teamBalanceMarkup} from './team-balance.js?v=195';
 
 export function gameModeControl(mode='regular',multi=false,enabled=true){return `<label class="game-mode-control">Mode de jeu<select id="${multi?'mpGameMode':'gameMode'}" ${enabled?'':'disabled'}>${Object.entries(GAME_MODES).map(([id,label])=>`<option value="${id}" ${mode===id?'selected':''}>${label}</option>`).join('')}</select></label>`;}
 export function orderedTeamMarkup(ids,{multi=false,editable=true}={}){
  const prefix=multi?'mp-draft':'solo-draft';
- return `<div class="draft-team-order" aria-label="Ordre de votre équipe ; premier agent chef">${ids.map((id,i)=>{const a=DISPLAY_ROSTER.find(a=>a.id===id);return `<article class="draft-team-agent">${portrait(a)}<div><strong>${esc(a.name)}</strong><small>${i===0?'Chef · Coordination +5':'Agent '+(i+1)}</small></div><div class="draft-order-actions">${button(icon('crown'),prefix+'-chief','small',`data-id="${id}" aria-label="Désigner ${esc(a.name)} chef" ${!editable||i===0?'disabled':''}`)}${button('↑',prefix+'-before','small',`data-id="${id}" aria-label="Avancer ${esc(a.name)}" ${!editable||i===0?'disabled':''}`)}${button('↓',prefix+'-after','small',`data-id="${id}" aria-label="Reculer ${esc(a.name)}" ${!editable||i===3?'disabled':''}`)}</div></article>`;}).join('')}</div>`;
+ return `<div class="draft-team-order" aria-label="Ordre de votre équipe ; premier agent chef">${ids.map((id,i)=>{const a=DISPLAY_ROSTER.find(a=>a.id===id);return `<article class="draft-team-agent">${portrait(a)}<div class="draft-agent-info"><strong>${esc(a.name)}</strong><small>${i===0?'Chef · Coordination +5':'Agent '+(i+1)}</small><dl class="draft-agent-stats" aria-label="Statistiques de ${esc(a.name)}">${a.stats.map((n,j)=>`<div class="stat-${j}" title="${esc(statHelp(j))}"><dt>${icon(['scan','target','shield'][j])}${STAT_NAMES[j]}</dt><dd>${n}<span>/10</span></dd></div>`).join('')}</dl><div class="draft-agent-talents" aria-label="Talents de ${esc(a.name)}">${sortedTalents(a).map(t=>`<span data-rich-tooltip tabindex="0" title="${esc(TALENTS[t][1])}">${talentIcon(t)}<span>${esc(TALENTS[t][0])}</span><template><strong>${esc(TALENTS[t][0])}</strong><p>${esc(TALENTS[t][1])}</p></template></span>`).join('')}</div></div><div class="draft-order-actions">${button(icon('crown'),prefix+'-chief','small',`data-id="${id}" aria-label="Désigner ${esc(a.name)} chef" ${!editable||i===0?'disabled':''}`)}${button('↑',prefix+'-before','small',`data-id="${id}" aria-label="Avancer ${esc(a.name)}" ${!editable||i===0?'disabled':''}`)}${button('↓',prefix+'-after','small',`data-id="${id}" aria-label="Reculer ${esc(a.name)}" ${!editable||i===3?'disabled':''}`)}</div></article>`;}).join('')}</div>`;
 }
 export function draftCandidate(d,country,id){return d&&country&&draftCountry(d)===country&&!d.picks.some(p=>p.id===id)?DISPLAY_ROSTER.find(a=>a.id===id)||null:null;}
 export function draftTeamSummary(ids,country,{previewId=null,multi=false,canConfirm=true}={}){

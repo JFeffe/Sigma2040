@@ -1,4 +1,13 @@
-# Publication GitHub — build 194
+# Publication GitHub — build 195
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- Confirmation de l’équipe après le repêchage : statistiques individuelles sur 10 et talents avec icônes et descriptions, à côté de chaque portrait.
+- Affichage adapté aux petits écrans, commandes de choix du chef et de réorganisation conservées, en solo et en multijoueur.
+
+Validation : `npm test`. Vérification visuelle dans un navigateur indisponible dans cet environnement.
+
+# Historique — build 194
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

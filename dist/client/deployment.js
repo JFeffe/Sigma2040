@@ -1,6 +1,6 @@
-import {COUNTRY} from './data.js?v=194';
-import * as E from './engine.js?v=194';
-import {button,esc,portrait} from './ui.js?v=194';
+import {COUNTRY} from './data.js?v=195';
+import * as E from './engine.js?v=195';
+import {button,esc,portrait} from './ui.js?v=195';
 
 export function deploymentOptions(s,type,target){
  return E.team(s).filter(a=>!['dead','retired'].includes(a.status)).map(a=>({agent:a,...E.options(s,a.id,type,target)}));
