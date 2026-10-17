@@ -1,9 +1,11 @@
-import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=193';
-import {COUNTRIES,COUNTRY,ACTIONS} from './data.js?v=193';
-import {icon,esc} from './ui.js?v=193';
-import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=193';
+import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=194';
+import {COUNTRIES,COUNTRY,ACTIONS} from './data.js?v=194';
+import {icon,esc} from './ui.js?v=194';
+import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=194';
 const fieldOnly=new Set(['contacts','authorize','hide','influence','blackmail','drone','rescue']);
 export function locationActions(a,s=null){const home=a.country===a.faction,local=s?knownTargets(s,a.faction).some(t=>!t.arrested&&t.country===a.country):true;return Object.entries(ACTIONS).filter(([id,d])=>!d.disabled&&(home?!d.field&&!fieldOnly.has(id):!d.home)&&(id!=='rescue'||!!s?.agents.some(b=>b.faction===a.faction&&b.status==='captured'&&b.country===a.country))&&(id!=='findSafehouse'||!!s||!a.safehouses?.includes(a.country))&&(!['collect','surveil','prepare','arrest','hack','intimidate'].includes(id)||local));}
+export const CONTEXT_ACTIONS=new Set(['collect','surveil','prepare','arrest','hack','intimidate','protect']);
+export const agentMenuActions=(a,s)=>locationActions(a,s).filter(([id])=>!CONTEXT_ACTIONS.has(id));
 export function countryOptions(selected,exclude=null,secondaryOnly=false){if(secondaryOnly)return COUNTRIES.filter(c=>!c.power&&c.id!==exclude).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('');return [[true,'Superpuissances'],[false,'Autres pays']].map(([power,label])=>`<optgroup label="${label}">${COUNTRIES.filter(c=>!!c.power===power&&c.id!==exclude).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('')}</optgroup>`).join('');}
 export function availability(a){
  if(a.status==='captured')return {kind:'detained',label:'EN DÉTENTION',icon:'lock'};

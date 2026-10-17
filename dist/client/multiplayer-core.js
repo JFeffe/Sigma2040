@@ -1,11 +1,11 @@
-import {threatAnnounced} from './fracture.js?v=193';
-import {AI_LEVELS} from './ai-difficulty.js?v=193';
-import {GAME_MODES,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=193';
-import {recordAgentCondition} from './campaign-stats.js?v=193';
-import {assignDeployment} from './deployment.js?v=193';
-import {startClock} from './campaign-clock.js?v=193';
-import * as E from './engine.js?v=193';
-import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=193';
+import {threatAnnounced} from './fracture.js?v=194';
+import {AI_LEVELS} from './ai-difficulty.js?v=194';
+import {GAME_MODES,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=194';
+import {recordAgentCondition} from './campaign-stats.js?v=194';
+import {assignDeployment} from './deployment.js?v=194';
+import {startClock} from './campaign-clock.js?v=194';
+import * as E from './engine.js?v=194';
+import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=194';
 export const PROTOCOL=18;
 export const playingMembers=room=>room.members.filter(m=>!m.observer);
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);
@@ -103,7 +103,7 @@ export function execute(room,token,message){
 export function playerView(room,country){
  const s=room.game;if(!s)return null;const f=s.factions[country];if(!f)fail('Pays invalide.');
  const ownIds=new Set(s.agents.filter(a=>a.faction===country).map(a=>a.id));
- return {...(s.participantRules===1?{participantRules:1,gameMode:s.gameMode||'regular'}:{}),...(s.pressureRules===1?{pressureRules:1}:{}),flightReports:copy((s.flightReports||[]).filter(r=>r.faction===country)),attackDelayReports:copy(s.attackDelayReports||[]),cellReports:copy(s.cellReports||[]),threatReports:copy(s.threatReports||[]),attackReports:copy(s.attackReports||[]),campaignClock:copy(s.campaignClock||null),campaignStats:{events:copy((s.campaignStats?.events||[]).filter(e=>s.ended||e.faction===country)),detailsPartial:!!s.campaignStats?.detailsPartial,agents:copy(Object.fromEntries(Object.entries(s.campaignStats?.agents||{}).filter(([f])=>s.ended||f===country))),support:copy(Object.fromEntries(Object.entries(s.campaignStats?.support||{}).filter(([f])=>s.ended||f===country))),highlights:copy((s.campaignStats?.highlights||[]).filter(e=>s.ended||e.faction===country)),partial:!!s.campaignStats?.partial,factions:s.ended?copy(s.campaignStats?.factions||{}):{[country]:copy(s.campaignStats?.factions?.[country]||{})}},turnActivities:copy((s.turnActivities||[]).filter(r=>r.faction===country)),aiDifficulty:s.aiDifficulty||'normal',version:s.version,turn:s.turn,player:country,crisis:s.crisis,ended:s.ended,logId:s.logId,
+ return {...(s.participantRules===1?{participantRules:1,gameMode:s.gameMode||'regular'}:{}),...(s.pressureRules===1?{pressureRules:1}:{}),flightReports:copy((s.flightReports||[]).filter(r=>r.faction===country)),attackDelayReports:copy(s.attackDelayReports||[]),cellReports:copy(s.cellReports||[]),threatReports:copy(s.threatReports||[]),attackReports:copy(s.attackReports||[]),campaignClock:copy(s.campaignClock||null),campaignStats:{travel:copy(Object.fromEntries(Object.entries(s.campaignStats?.travel||{}).filter(([f])=>s.ended||f===country))),events:copy((s.campaignStats?.events||[]).filter(e=>s.ended||e.faction===country)),detailsPartial:!!s.campaignStats?.detailsPartial,agents:copy(Object.fromEntries(Object.entries(s.campaignStats?.agents||{}).filter(([f])=>s.ended||f===country))),support:copy(Object.fromEntries(Object.entries(s.campaignStats?.support||{}).filter(([f])=>s.ended||f===country))),highlights:copy((s.campaignStats?.highlights||[]).filter(e=>s.ended||e.faction===country)),partial:!!s.campaignStats?.partial,factions:s.ended?copy(s.campaignStats?.factions||{}):{[country]:copy(s.campaignStats?.factions?.[country]||{})}},turnActivities:copy((s.turnActivities||[]).filter(r=>r.faction===country)),aiDifficulty:s.aiDifficulty||'normal',version:s.version,turn:s.turn,player:country,crisis:s.crisis,ended:s.ended,logId:s.logId,
   factions:Object.fromEntries(Object.values(s.factions).map(x=>[x.id,(s.ended||x.id===country)?copy(x):{id:x.id,score:x.score,defense:copy(x.defense),budget:(s.requestsByFaction?.[country]||[]).some(r=>r.from===x.id&&r.status==='pending')?Math.min(x.budget,3):0,known:{},evidence:[],tech:[],publicAgents:{},access:{},authorized:{},cooperation:{},foreignIntel:{}}])),
   agents:copy([...s.agents.filter(a=>a.faction===country),...(s.ended?s.agents.filter(a=>a.faction!==country):[])]),
   suspects:s.suspects.map(t=>{const k=f.known[t.id];return {id:t.id,...(t.templateId?{templateId:t.templateId}:{}),cell:t.cell,name:t.name,role:t.role,arrested:t.arrested,arrestedBy:t.arrestedBy||null,country:k?.country||null};}),

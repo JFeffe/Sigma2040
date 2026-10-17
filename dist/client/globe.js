@@ -1,11 +1,11 @@
-import {renderRatio,terrainLimit} from './graphics.js?v=193';
-import {COOPERATION} from './cooperation.js?v=193';
-import {paintSignals,signalSnapshot} from './feedback.js?v=193';
-import {domeRaw,limitDome} from './dome-projection.js?v=193';
-import {COUNTRIES,COUNTRY} from './data.js?v=193';
-import {team,knownTargets,visiblePlots,cyberStatus,hasSafehouse} from './engine.js?v=193';
-import {icon,esc} from './ui.js?v=193';
-import {agentMapMarkers,mapAgents,OBSERVER_COLORS} from './map-markers.js?v=193';
+import {renderRatio,terrainLimit} from './graphics.js?v=194';
+import {COOPERATION} from './cooperation.js?v=194';
+import {paintSignals,signalSnapshot} from './feedback.js?v=194';
+import {domeRaw,limitDome} from './dome-projection.js?v=194';
+import {COUNTRIES,COUNTRY} from './data.js?v=194';
+import {team,knownTargets,visiblePlots,cyberStatus,hasSafehouse} from './engine.js?v=194';
+import {icon,esc} from './ui.js?v=194';
+import {agentMapMarkers,mapAgents,OBSERVER_COLORS} from './map-markers.js?v=194';
 export const createCamera=()=>{let mode='globe',foreign=true;try{if(localStorage.getItem('sigma-map-mode')==='dome')mode='dome';}catch{}return {lon:25,lat:18,k:1,mode,yaw:0,pitch:0,panX:0,panY:0,expanded:false,routes:true,intel:true,foreign};};
 export function constrain(c){c.k=Math.max(1,Math.min(3,c.k));c.lat=Math.max(-80,Math.min(80,c.lat));c.lon=((c.lon+180)%360+360)%360-180;limitDome(c);return c;}
 export function zoomAt(c,k){c.k=k;if(c.k<=1){c.panX=0;c.panY=0;}return constrain(c);}
@@ -18,7 +18,7 @@ const COUNTRY_LABEL_POS={FR:[2,46],US:[-102,39],CN:[103,34],IN:[78,22],RU:[78,59
 const labelSize=width=>width<700?[146,67]:[156,69];
 const mapGlyph=id=>icon(id).replace('<svg class="icon"','<svg x="-7" y="-7" width="14" height="14" class="icon"');
 export function countryPin(s,c,plots,targets){
- const f=s.factions[s.player],hack=cyberStatus(s,s.player,c.id),protectedNow=Object.values(s.factions).some(ff=>(ff.defense[c.id]||0)>=s.turn);
+ const f=s.factions[s.player],hack=cyberStatus(s,s.player,c.id),protectionRemaining=Math.max(0,...Object.values(s.factions).map(ff=>(ff.defense[c.id]||0)-s.turn+1)),protectedNow=protectionRemaining>0;
  const items=[
   ['access','eye','Accès',!!f.access[c.id]],
   ['mandate','seal','Mandat',!!f.authorized[c.id]],
@@ -26,7 +26,7 @@ export function countryPin(s,c,plots,targets){
   ['hack','terminal','Hack',hack.active],
   ['protection','shield','Protection',protectedNow]
  ].filter(([key])=>!c.power||key==='protection');
- const status=items.map(([key,glyph,label,active],i)=>`<g class="map-status ${key} ${active?'is-active':'is-inactive'}" transform="translate(${(i-(items.length-1)/2)*22} ${c.power?11:27})"><title>${label} : ${active?'actif':'inactif'}${key==='hack'&&active?' · '+hack.remaining+' tour(s) restant(s)':''}</title><circle r="9"/>${mapGlyph(glyph)}${key==='hack'&&active?`<g class="hack-count" aria-hidden="true"><circle cx="8" cy="-8" r="8"/><text x="8" y="-5" text-anchor="middle">${hack.remaining}</text></g>`:''}</g>`).join('');
+ const status=items.map(([key,glyph,label,active],i)=>`<g class="map-status ${key} ${active?'is-active':'is-inactive'}" transform="translate(${(i-(items.length-1)/2)*22} ${c.power?11:27})"><title>${label} : ${active?'actif':'inactif'}${['hack','protection'].includes(key)&&active?' · '+(key==='hack'?hack.remaining:protectionRemaining)+' tour(s) restant(s)':''}</title><circle r="9"/>${mapGlyph(glyph)}${['hack','protection'].includes(key)&&active?`<g class="hack-count" aria-hidden="true"><circle cx="8" cy="-8" r="8"/><text x="8" y="-5" text-anchor="middle">${key==='hack'?hack.remaining:protectionRemaining}</text></g>`:''}</g>`).join('');
  const level=f.cooperation[c.id],relation=c.power?null:COOPERATION[level];
  const cooperation=relation?`<g class="pin-cooperation cooperation-${level}" transform="translate(4 5) scale(.624)"><title>Coopération avec votre équipe : ${relation.name} · ${level+1}/5</title><text x="-6" y="3" text-anchor="end">${relation.name}</text>${Array.from({length:5},(_,i)=>`<rect class="cooperation-bar ${i<=level?'filled':'empty'}" x="${2+i*11}" y="-7" width="8" height="11" rx="1.5"/>`).join('')}</g>`:'';
  const accessible=`${c.name}, ${c.city}. ${relation?'Coopération avec votre équipe : '+relation.name+', '+(level+1)+' sur 5. ':''} ${items.map(([, ,label,active])=>`${label} ${active?'actif':'inactif'}`).join(', ')}`;

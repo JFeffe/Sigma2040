@@ -1,7 +1,7 @@
-import * as E from './engine.js?v=193';
-import {COUNTRY,TECH,ACTIONS} from './data.js?v=193';
-import {icon,button,esc,portrait} from './ui.js?v=193';
-import {countryOptions} from './presentation.js?v=193';
+import * as E from './engine.js?v=194';
+import {COUNTRY,TECH,ACTIONS} from './data.js?v=194';
+import {icon,button,esc,portrait} from './ui.js?v=194';
+import {countryOptions} from './presentation.js?v=194';
 let selected=null,scope='';
 export function selectTechnology(type){selected=['ai','guard','drone'].includes(type)?type:null;}
 const modules={...TECH,protect:{name:'Protection d’infrastructure',icon:'shield',duration:2},drone:{name:'Reconnaissance par drone',icon:'drone',duration:1}};
@@ -17,4 +17,9 @@ export function technologyPanel(s,selectedCountry){
 
  const hacks=Object.entries(f.cyberSupport||{}).filter(([,v])=>v.until>=s.turn);
  return `<section class="panel technology-hub operation-console"><div class="section-title"><h2>${icon('module')} Modules d’opération</h2><span id="moduleCapacity" class="console-capacity ${used>=2?'is-full':'is-available'}" role="status" aria-label="Capacité des Modules : ${used} / 2">${used>=2?'Les deux places sont occupées.':`${2-used} place${used===0?'s':''} disponible${used===0?'s':''}.`}</span></div><p class="console-intro">Deux places partagées entre vos modules et les missions de drone ou de protection.</p><div class="console-slots">${slots}</div><div class="console-tech-cards console-direct-cards">${cards}</div>${hacks.length?`<div class="console-independent"><div><h3>${icon('terminal')} Hack d’un pays</h3>${hacks.map(([c,v])=>`<p><b>${COUNTRY[c].name}</b> · +10 points aux opérations admissibles · ${s.turn<v.from?'dès T'+v.from+' · ':''}jusqu’à T${v.until} inclus ${button('Annuler','cancel-cyber','small',`data-id="${c}" ${s.ended?'disabled':''}`)}</p>`).join('')}</div><span>${icon('module')} Aucun Module requis</span></div>`:''}</section>`;
+}
+export function technologyCancellationMarkup(s,t){
+ const affected=E.logisticsCancellationAgents(s,t),sameTurn=(t.activatedTurn??t.until-TECH[t.type].duration+1)===s.turn;
+ const effect=t.type==='logistics'?`${affected.length?`<p>La désactivation annulera le voyage accéléré de ${affected.length} agent(s) :</p><ul class="cancel-travel-list">${affected.map(a=>`<li><strong>${esc(a.name)}</strong> · ${esc(COUNTRY[a.task.origin].name)} → ${esc(COUNTRY[a.task.target].name)}</li>`).join('')}</ul><p>Ces agents resteront dans leur pays de départ et seront disponibles pour un nouvel ordre.</p>`:'<p>Aucun voyage planifié ne dépend de ce module.</p>'}<p>Les nouveaux voyages ne recevront plus le bonus. Un voyage accéléré encore en cours retrouve sa durée normale.</p>`:t.type==='relay'?'<p>Les prolongations de position accordées par ce relais seront retirées. Localiser une cible reste une action de 1 tour.</p>':t.type==='guard'?'<p>La protection de cette sentinelle sera retirée. Les autres sources de protection resteront actives.</p>':'<p>Le bonus IA sera retiré des vérifications encore en cours, qui continueront sans ce bonus. La recherche non encore résolue est annulée.</p>';
+ return `<div class="simple-modal"><span class="eyebrow">ANNULER LE MODULE</span><h2>Arrêter ${esc(TECH[t.type].name)} ?</h2>${effect}<p><b>${E.techRefund(s,t)} crédit(s) seront remboursés.</b> ${sameTurn?'Annulation le tour d’activation.':'Le tour d’activation est passé.'} Le module sera immédiatement libéré.</p><div class="suspect-actions">${button('Conserver le module','close')}${button(affected.length?'Confirmer et annuler les voyages':'Arrêter le module','confirm-cancel-tech','primary','data-id="'+esc(t.id)+'"')}</div></div>`;
 }

@@ -1,0 +1,50 @@
+{
+  "source": "Build 194: weapon +10, forged verification +2, one-turn localization, reversible modules and travel/chief statistics; historical fixtures preserved",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "1b539ba02f2e4e9019eef77f6e97082358939e16f70437b3904f52831f855cba"
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "8f2ab0fff52f4b4acc8cb6ca46dd82ea3d190810e7b9eb832b4f57e68b6f1052"
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "8f3a153bfadd844d209c3825ccc69610b999d05ebaf59d184e26398e0fa35516"
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "be4baa77986c549210bbd08e3866b7c7f3a9bc6ccf1533e5fafff56377549094"
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "16ba7876325697833f61648de7578c877e4e807dbb6af12e7b22c27f3e7875c6"
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "75d8bdfa8d1bc23390454635949af55b6266641edf99e33790f346e83490bdeb"
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "edec8bbcbe69b268d994ed1961fd50b532add9c19fe924e2ae0fc8a52d333d1c"
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "e8596d8afff21efbf986336c1fbb85c5954fb4b8baefb75e0bd5feee4874b120"
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "850acfe7c96558b62039f76a6e7acca16321451888d97458e64a490ed82da79e"
+    }
+  ]
+}

@@ -1,4 +1,16 @@
-# Publication GitHub — build 192
+# Publication GitHub — build 194
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- Arme : +10 en arrestation ; vérification d’une falsification : +2 prestige ; localisation : 1 tour. Le relais conserve ses +2 tours de validité.
+- Annulation de module : remboursement le tour d’activation et retrait des effets. Confirmation nominative avant l’annulation des voyages accélérés par la logistique.
+- Bilans : distance de 1 ou 2 cases et usage effectif de la logistique, soutiens du chef ; données suivies dès cette version, sans inventer les anciens tours.
+- Protection : compte à rebours sur les boucliers, autres pays couvrant l’attaque visibles dans les menaces et leur fenêtre.
+- Finale dédiée avec vainqueurs, ex æquo, prestige et graphique animés, puis accès au bilan. Menus génériques d’agents allégés ; actions contextuelles conservées dans les dossiers et menaces.
+
+Validation : `npm test`, **511 tests réussis**, et régressions ciblées sur remboursements, sauvegardes, statistiques, confidentialité multijoueur et menus. Vérification visuelle dans un navigateur indisponible dans cet environnement.
+
+# Historique — build 192
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
