@@ -1,4 +1,16 @@
-# Publication GitHub — build 197
+# Publication GitHub — build 198
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Les trois missions Filigrane se jouent sur le globe et dans les vrais écrans du jeu : déploiement, dossier de Vesper, collecte, validation et intervention. Le joueur confirme les ordres et termine les tours avec les commandes habituelles.
+
+- Guide repliable et commandes indiquées selon l’objectif ; progression liée aux résultats réels.
+- Débriefings habituels, aucun joueur PNJ, reprise des exercices existants et sauvegarde de campagne conservée séparément.
+- Actions hors scénario indisponibles ; départ annoncé à la fin du tour 6 conservé dans la dernière mission.
+
+Validation : `npm test`, parcours de formation et compatibilité des sauvegardes ; vérification des commandes réelles dans le navigateur.
+
+# Historique — build 197
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

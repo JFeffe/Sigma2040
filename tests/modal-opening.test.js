@@ -35,7 +35,7 @@ test('Dossier popup opens through the application dialog, then its portrait open
  }finally{globalThis.document=previous;}
 });
 
-test('Training opens the same dialog with honest guaranteed odds and only the current teaching action',()=>{
+test('Training opens the same dialog with honest guaranteed odds and the regular action menu',()=>{
  const {context,modal}=applicationDialog();vm.runInContext("state=createTutorialGame('contact');",context);context.openAgent('p0');
- assert.equal(modal.open,true);assert.equal(modal.className,'order-modal');assert.match(modal.innerHTML,/Formation scénarisée/);assert.match(modal.innerHTML,/Chances de réussite : 100 %/);assert.doesNotMatch(modal.innerHTML,/id="orderCredits"/);assert.match(modal.innerHTML,/<option value="travel"/);assert.doesNotMatch(modal.innerHTML,/<option value="counter"/);
+ assert.equal(modal.open,true);assert.equal(modal.className,'order-modal');assert.match(modal.innerHTML,/Formation scénarisée/);assert.match(modal.innerHTML,/Chances de réussite : 100 %/);assert.doesNotMatch(modal.innerHTML,/id="orderCredits"/);assert.match(modal.innerHTML,/<option value="travel"/);assert.match(modal.innerHTML,/<option value="counter"/);
 });

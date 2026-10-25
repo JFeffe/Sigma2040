@@ -35,3 +35,17 @@ export function tutorialOrderError(s,id,type,target,useCredits=false){
  if(!objective.orders.some(o=>o.agentId===id&&o.type===type&&(o.target===null||o.target===target||type==='analyze'&&target===null)))return 'Suivez l’objectif de cet exercice. Les autres opérations seront disponibles en campagne.';
  return null;
 }
+
+export function tutorialHint(s){
+ const o=tutorialObjective(s);if(!o)return '';if(o.done||o.failed)return o.text;
+ const free=o.orders.filter(x=>!s.agents.find(a=>a.id===x.agentId)?.task);
+ if(!free.length&&s.agents.some(a=>a.task))return 'Les ordres sont affectés. Fermez le dossier si nécessaire, puis utilisez « Terminer le tour » en haut à droite. Une mission de deux tours continue au tour suivant ; son résultat apparaît dans le débriefing habituel.';
+ const types=free.map(x=>x.type);
+ if(types.includes('travel'))return 'Sur le globe, sélectionnez l’Allemagne (Berlin). Dans le panneau du pays, cliquez « Déployer un agent », cochez IRIS et confirmez. Vous pouvez aussi sélectionner IRIS et lui affecter un voyage sous passeport vers l’Allemagne.';
+ if(types.includes('contacts'))return 'À Berlin, ouvrez le dossier Vesper dans le panneau du pays : « Accès local » → « Activer un contact », choisissez IRIS et confirmez. Vous pouvez aussi passer par les actions d’IRIS.';
+ if(types.includes('collect'))return `${o.step===4?'La falsification a été écartée : recueillez une pièce de remplacement. ':''}Sur le globe, sélectionnez Berlin puis Vesper (ou ouvrez l’onglet Enquête). Dans le dossier : « 2 preuves » → « Recueillir une preuve », choisissez BISHOP et confirmez. La collecte prend deux tours.`;
+ if(types.includes('analyze'))return 'Ouvrez le dossier Vesper depuis Berlin ou l’onglet Enquête. Choisissez « Validation » → « Vérifier une preuve », gardez la première pièce encore en attente et choisissez APÉRO, au QG de Paris, puis confirmez. Les preuves sont transmises au QG automatiquement.';
+ if(types.includes('prepare')||types.includes('authorize'))return 'Ouvrez Vesper depuis Berlin ou Enquête, puis « Intervention ». Utilisez « Préparer une arrestation » avec BISHOP et « Obtenir un mandat » avec IRIS. Affectez les deux ordres avant de terminer le même tour.';
+ if(types.includes('surveil'))return 'Dans le dossier Vesper : « Intervention » → « Localiser la cible » → « Localiser une cible », sélectionnez BISHOP et confirmez. Coopération neutre : 1 tour d’action, puis 3 tours de validité. Vesper part à la fin de T6.';
+ return `Dans le dossier Vesper, choisissez « Arrestation » → « Procéder à l’arrestation », sélectionnez LEI et confirmez. Position valide jusqu’à fin T${s.factions.FR.known.s0.locationUntil} ; départ à la fin de T6. Terminez le tour pour intervenir.`;
+}

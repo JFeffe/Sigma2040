@@ -1,12 +1,13 @@
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=197';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=197';
-import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=197';
-import * as E from './engine.js?v=197';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=197';
-import {esc,icon,button,flag,portrait} from './ui.js?v=197';
-import {suspectPortrait} from './fracture-profiles.js?v=197';
-import {countrySignals} from './country-signals.js?v=197';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=197';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=198';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=198';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=198';
+import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=198';
+import * as E from './engine.js?v=198';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=198';
+import {esc,icon,button,flag,portrait} from './ui.js?v=198';
+import {suspectPortrait} from './fracture-profiles.js?v=198';
+import {countrySignals} from './country-signals.js?v=198';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=198';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -79,7 +80,7 @@ export function inquiryActionCosts(type,candidate){
  const {a,o}=candidate,signed=n=>n>0?'+'+n:n<0?'−'+Math.abs(n):'0';
  return `<div class="inquiry-costs" aria-label="Énergie et exposition pour ${esc(a.name)}"><div><strong>${icon('bolt')} Énergie</strong><span><b>−${o.fatigue*o.duration}</b> · réussite ou échec</span></div><div><strong>${icon('eye')} Exposition</strong><span class="inquiry-outcomes"><span class="on-success">Réussite <b>${signed(E.missionExposure(a,type,true))}</b></span><span class="on-failure">Échec <b>${signed(E.missionExposure(a,type,false))}</b></span></span></div></div>`;
 }
-function boostUnavailable(candidate,locked){return locked||candidate?.reason||candidate?.normal.error||(!candidate?'Choisissez un agent disponible.':'')||(candidate.normal.boostGain===0?'Chances déjà au plafond de 90 %.':'')||candidate.reinforced.error||'';}
+function boostUnavailable(candidate,locked){return locked||candidate?.reason||candidate?.normal.error||(!candidate?'Choisissez un agent disponible.':'')||(candidate.normal.chance===100?'Formation : réussite garantie, sans boost.':candidate.normal.boostGain===0?'Chances déjà au plafond de 90 %.':'')||candidate.reinforced.error||'';}
 function paint(open=false){
  if(!selection)return;
  const s=api.state();if(!s)return;
@@ -100,7 +101,7 @@ function paint(open=false){
  const html=`<section class="country-inquiry"><header class="inquiry-heading">${plot?'<span class="inquiry-threat-icon">'+icon('shield')+'</span>':suspectPortrait(t)}<div><span class="eyebrow">${esc(CELLS[t.cell]||'DIRECTION')} · ${plot?'MENACE':'DOSSIER'}</span><h2>${esc(t.name)}</h2><span>${flag(t.country)} ${esc(COUNTRY[t.country].name)}</span></div></header>
  <div class="inquiry-country-signals">${countrySignals(s,t.country)}</div>
  <div class="inquiry-summary">${plot?`<span>Attaque · fin du tour ${plot.turn}</span><span>${esc(protection.current)}</span>${protection.planned?`<span>${esc(protection.planned)}</span>`:''}<span>${esc(protection.attack)}</span><span>${coverage.covered?'Protégée par votre pays':otherCoverage.length?'Couverte par une autre équipe':'Menace non couverte'}</span>${otherCoverage.length?`<span class="other-coverage">${icon('shield')} Déjà couverte par ${otherCoverage.map(f=>`${esc(COUNTRY[f.id].name)} · jusqu’à T${f.defense[plot.country]}`).join(' ; ')}</span>`:''}`:`<span>${e.length}/2 preuves · ${e.filter(p=>p.verified).length} vérifiée(s)</span><span>${t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer'}</span>`}</div>
- <div class="inquiry-body">${actions}
+ <div class="inquiry-body">${isTutorial(s)?`<p class="tutorial-inquiry-note"><strong>FILIGRANE · Réussite garantie</strong><br>${esc(tutorialHint(s))}</p>`:''}${actions}
  <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}<div class="inquiry-action-context">${inquiryActionInputs(type,preview)}${button(`${icon('help')} Effets de l’action ${icon('chevron')}`,'inquiry-effects','inquiry-effects',`id="inquiryEffects" aria-expanded="${!!selection.effectsOpen}" aria-controls="inquiryMechanics"`)}<p id="inquiryMechanics" class="inquiry-mechanics" ${selection.effectsOpen?'':'hidden'}>${esc(OUTCOMES[type])}${type==='surveil'&&preview?' '+esc(E.operationForecast(s,preview.a.id,type,preview.target).warnings[0]):''}</p></div>
  ${plot&&selected?`<p class="inquiry-warning">Fin de préparation : T${s.turn+selected.o.duration-1}${s.turn+selected.o.duration-1>plot.turn?' · Trop tard pour cette attaque.':plot.turn>s.turn+selected.o.duration+2?' · Protection expirée avant cette attaque si lancée maintenant.':' · Protection à temps en cas de réussite.'}</p>`:''}
  ${requirements.length?`<div class="inquiry-requirements">${requirements.map(r=>r.done?`<span class="is-met">${icon('check')} ${esc(r.label)}</span>`:button(`${icon('lock')} ${esc(r.label)}`,'inquiry-action','is-missing',`data-id="${r.action}"`)).join('')}</div>`:''}

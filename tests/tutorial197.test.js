@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import * as E from '../dist/client/engine.js';
 import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_KEY,TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
-import {tutorialMenu,tutorialScreen} from '../dist/client/tutorial-ui.js';
+import {tutorialMenu,tutorialGuide} from '../dist/client/tutorial-ui.js';
 import {campaignRules} from '../dist/client/campaign-rules.js';
 import {CAMPAIGN_KEY} from '../dist/client/save-compat.js';
 const storage=()=>{const data=new Map();return {data,getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};};
@@ -27,7 +27,7 @@ test('Only the current teaching actions are accepted; invalid targets and credit
 test('Evidence lesson conceals authenticity until verification and requires replacement of the rejected document',()=>{
  const s=createTutorialGame('evidence');
  for(let i=0;i<2;i++){E.assign(s,'p12','collect','s0');E.advance(s);assert.equal(s.agents.find(a=>a.id==='p12').task.remaining,1);E.advance(s);}
- assert.equal(s.factions.FR.evidence.length,2);assert.ok(s.factions.FR.evidence.every(e=>!e.verified&&!e.contested));assert.doesNotMatch(tutorialScreen(s),/Falsification écartée/);
+ assert.equal(s.factions.FR.evidence.length,2);assert.ok(s.factions.FR.evidence.every(e=>!e.verified&&!e.contested));assert.doesNotMatch(tutorialGuide(s),/Falsification écartée/);
  E.assign(s,'p15','analyze','s0-e0');E.advance(s);E.assign(s,'p15','analyze','s0-e1');E.advance(s);
  assert.equal(s.factions.FR.evidence.find(e=>e.id==='s0-e1').contested,true);assert.equal(E.evidenceFor(s,'FR','s0').length,1);assert.equal(tutorialObjective(s).step,4);
  const done=play(s);assert.equal(done.factions.FR.evidence.filter(e=>e.verified).length,2);assert.equal(done.factions.FR.evidence.filter(e=>e.contested).length,1);
@@ -42,7 +42,7 @@ test('Arrest succeeds on the last inclusive flight turn with a valid location; e
  const expired=createTutorialGame('arrest');E.assign(expired,'p0','authorize');E.assign(expired,'p12','prepare','s0');E.advance(expired);E.assign(expired,'p12','surveil','s0');E.advance(expired);while(expired.turn<6)E.advance(expired);assert.equal(expired.factions.FR.known.s0.locationUntil,5);assert.ok(E.options(expired,'p14','arrest','s0').error);assert.equal(tutorialObjective(expired).orders[0].type,'surveil');
 });
 test('The scripted flight produces a recoverable lesson failure and never changes the next attempt',()=>{
- const s=createTutorialGame('arrest');for(let i=0;i<6;i++)E.advance(s);assert.equal(s.suspects[0].country,'TR');assert.equal(tutorialObjective(s).failed,true);assert.throws(()=>E.advance(s),/Exercice terminé/);assert.match(tutorialScreen(s),/Réessayer cette mission/);const retry=createTutorialGame('arrest');assert.equal(retry.turn,1);assert.equal(retry.suspects[0].country,'DE');assert.equal(tutorialObjective(play(retry)).done,true);
+ const s=createTutorialGame('arrest');for(let i=0;i<6;i++)E.advance(s);assert.equal(s.suspects[0].country,'TR');assert.equal(tutorialObjective(s).failed,true);assert.throws(()=>E.advance(s),/Exercice terminé/);assert.match(tutorialGuide(s),/Réessayer cette mission/);const retry=createTutorialGame('arrest');assert.equal(retry.turn,1);assert.equal(retry.suspects[0].country,'DE');assert.equal(tutorialObjective(play(retry)).done,true);
 });
 test('Each mission saves separately; completing, replaying and resuming never modifies campaign bytes',()=>{
  const store=storage(),campaign=JSON.stringify(E.createConfiguredGame('FR',['p0','p12','p14','p15'],42));store.setItem(CAMPAIGN_KEY,campaign);

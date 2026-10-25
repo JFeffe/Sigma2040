@@ -1,14 +1,15 @@
-import {bureauEnabled} from './mod-settings.js?v=197';
-import {inquiryIndicator} from './inquiry-notifications.js?v=197';
-import {threatStatus} from './threat-status.js?v=197';
-import {campaignRules} from './campaign-rules.js?v=197';
-import {clockMarkup} from './campaign-clock.js?v=197';
-import {newsTicker} from './news.js?v=197';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=197';
-import {COUNTRY,COUNTRIES} from './data.js?v=197';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=197';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=198';
+import {bureauEnabled} from './mod-settings.js?v=198';
+import {inquiryIndicator} from './inquiry-notifications.js?v=198';
+import {threatStatus} from './threat-status.js?v=198';
+import {campaignRules} from './campaign-rules.js?v=198';
+import {clockMarkup} from './campaign-clock.js?v=198';
+import {newsTicker} from './news.js?v=198';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=198';
+import {COUNTRY,COUNTRIES} from './data.js?v=198';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=198';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
- if(state.ended)return {};
+ if(state.ended||isTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
  const free=Math.max(0,2-getTechSlots(state,state.player));
  const government=!governmentOptions(state,'funding').error||!governmentOptions(state,'medical').error||COUNTRIES.some(c=>!c.power&&!governmentOptions(state,'diplomacy',c.id).error);
@@ -18,7 +19,7 @@ export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
 export function gameShell(state,view,content,saveWarning,background='',unreadInquiry=false,dismissed={}){
  const danger=crisisAlert(state);
  const availability=navigationAvailability(state,unreadInquiry,dismissed),f=state.factions[state.player],tabs=[['world','world','Monde'],...(bureauEnabled()?[['bureau','file','Bureau des enquêtes']]:[]),['inquiry','file','Enquête'],['operations','module','Module'],['threats','shield','Menaces'],['government','shield','Gouvernement'],['diplomacy','seal','Diplomatie'],['agents','people','Agents'],['journal','clock','Journal']];
- return `<div class="command-deck obsidian-deck immersive-deck ${danger?'crisis-emergency':''} ${view==='world'?'world-active':'menu-active'}">${background?`<div class="world-backdrop">${background}</div>`:''}
+ return `<div style="${isTutorial(state)?'--training-agents:'+state.agents.length:''}" class="command-deck obsidian-deck immersive-deck ${isTutorial(state)?'tutorial-deck':''} ${danger?'crisis-emergency':''} ${view==='world'?'world-active':'menu-active'}">${background?`<div class="world-backdrop">${background}</div>`:''}
   <header class="deck-header">
    <div class="deck-brand">${brand()}<span class="division-flag" title="${COUNTRY[state.player].name}">${flag(state.player)}</span></div>
    <div class="deck-status" aria-label="Situation de la campagne">
@@ -26,9 +27,9 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
     <button class="resource government-button" data-resource="confidence" data-cmd="nav" data-id="government" title="Confiance du gouvernement"><span>CONFIANCE</span><strong>${f.confidence}<small>/100</small></strong></button>
     <div class="resource prestige-resource" data-resource="score"><span>PRESTIGE</span><strong>${formatScore(f.score)}<small> pts</small></strong></div>
     <div class="crisis-block ${danger?'crisis-critical':''}" data-resource="crisis"><span>CRISE MONDIALE · +${campaignRules(state).crisisPerTurn}/TOUR <strong>${state.crisis}%</strong></span><i><b style="width:${state.crisis}%"></b></i></div>
-    <div class="turn-block"><span>TOUR</span><strong>${String(state.turn).padStart(2,'0')}<small> / ${campaignRules(state).maxTurns}</small></strong></div>
+    <div class="turn-block"><span>TOUR</span><strong>${String(state.turn).padStart(2,'0')}<small>${isTutorial(state)?state.tutorial.mission==='arrest'?' / 6':'':' / '+campaignRules(state).maxTurns}</small></strong></div>
    </div>
-   ${clockMarkup(state)}<div class="deck-system">${button(state.ended?'Voir le bilan':state.event?'Communication':`Terminer le tour ${icon('arrow')}`,'advance','primary')}${button(icon('help'),'open-wiki','system-button','aria-label="Wiki opérationnel" title="Wiki opérationnel · Ctrl + Espace"')}${button(icon('settings'),'settings','system-button','aria-label="Paramètres" title="Paramètres"')}${button('Menu','main-menu','new-game-button','aria-label="Menu principal"')}</div>
+   ${clockMarkup(state)}<div class="deck-system">${button(state.ended?'Voir le bilan':state.event?'Communication':`Terminer le tour ${icon('arrow')}`,'advance','primary',isTutorial(state)&&(tutorialObjective(state).done||tutorialObjective(state).failed)?'disabled':'')}${button(icon('help'),'open-wiki','system-button','aria-label="Wiki opérationnel" title="Wiki opérationnel · Ctrl + Espace"')}${button(icon('settings'),'settings','system-button','aria-label="Paramètres" title="Paramètres"')}${button('Menu','main-menu','new-game-button','aria-label="Menu principal"')}</div>
    ${newsTicker(state)}${danger?`<section class="crisis-alert" role="alert"><span>${icon('shield')} <strong>ALERTE ROUGE · ${state.crisis} %</strong><span>${danger}</span></span>${button('Voir les menaces','nav','small','data-id="threats"')}</section>`:''}
   </header>
   <div class="deck-workspace">
@@ -37,7 +38,7 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
     ${state.event?`<div class="pending-communication"><span>${icon('people')}<strong>Communication en attente</strong><span>${esc(state.event.title)}</span></span>${button('Reprendre la communication','communication','primary small')}</div>`:''}
     <main class="deck-main view-${view}">
      ${state.ended?`<div class="campaign-banner ${state.ended}">${icon(state.ended==='victory'?'seal':'shield')} Campagne terminée · ${state.ended==='victory'?'Victoire collective':'Fracture l’emporte'} ${button('Consulter le bilan','ending','small')}</div>`:''}
-     ${saveWarning?'<div class="notice warning">Sauvegarde locale indisponible. Exportez votre campagne dans Règles & sauvegarde.</div>':''}
+     ${saveWarning&&isTutorial(state)?'<div class="notice warning">Progression de formation non enregistrée. Gardez cette page ouverte.</div>':saveWarning?'<div class="notice warning">Sauvegarde locale indisponible. Exportez votre campagne dans Règles & sauvegarde.</div>':''}
      ${view==='agents'?`<div class="personnel-toolbar">${button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"')}</div>`:view!=='world'?button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"'):''}${content}
     </main>
    </div>

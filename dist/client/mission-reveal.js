@@ -1,8 +1,8 @@
-import {cellName,namedCells} from './data.js?v=197';
-import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=197';
-import {recruitmentCandidates,team} from './engine.js?v=197';
-import {ACTIONS,COUNTRY} from './data.js?v=197';
-import {esc,button,portrait,flag,formatScore} from './ui.js?v=197';
+import {cellName,namedCells} from './data.js?v=198';
+import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=198';
+import {recruitmentCandidates,team} from './engine.js?v=198';
+import {ACTIONS,COUNTRY} from './data.js?v=198';
+import {esc,button,portrait,flag,formatScore} from './ui.js?v=198';
 export const MISSION_IMAGES=Object.fromEntries(['travel','drone','arrest','equip','hack','cyberSupport','sneak','contacts','hide','findSafehouse','analyze','rest','surveil','influence','collect','intimidate','authorize','fieldRest','prepare','heal','protect','counter','rescue'].map(k=>[k,`./assets/missions/${k}.webp`]));
 MISSION_IMAGES.fieldRest='./assets/missions/field-rest.webp';
 export function missionCards(s){return groupAutomaticReports([...(s.turnActivities||[]).filter(r=>r.faction===s.player&&['RÉUSSITE','ÉCHEC','INTERROMPUE'].includes(r.status)).flatMap(r=>r.proofRejection?[r,{...r,type:'forgery'}]:r.condition==='dead'?[r,{...r,type:'death'}]:r.newCapture?[r,{...r,type:'capture'}]:r.newInjury?[r,{...r,type:'injury'}]:[r]),...(s.attackDelayReports||[]),...(s.flightReports||[]).filter(r=>r.faction===s.player&&s.factions[s.player].known[r.suspectId]),...(s.cellReports||[]),...(s.attackReports||[]).filter(r=>!s.plots?.some(p=>p.id===r.plotId&&p.cancelled)&&!s.cellReports?.some(c=>c.attacks.some(p=>p.plotId===r.plotId))),...(s.threatReports||[])]);}

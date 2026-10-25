@@ -1,6 +1,6 @@
-import * as E from './engine.js?v=197';
-import {SUSPECTS} from './data.js?v=197';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=197';
+import * as E from './engine.js?v=198';
+import {SUSPECTS} from './data.js?v=198';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=198';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const TUTORIAL_MISSIONS=Object.freeze([
@@ -13,8 +13,8 @@ export function createTutorialGame(id){
  if(!TUTORIAL_IDS.includes(id))throw Error('Mission de formation inconnue.');
  const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],197,'normal');
  s.tutorial={version:1,mission:id};
- // Keep inert faction records for the regular engine/save schema, but no NPC agents.
- s.humanFactions=Object.keys(s.factions);
+ // Only the player's service participates; the world map keeps all twelve countries.
+ s.factions={FR:s.factions.FR};s.humanFactions=['FR'];
  const agents=id==='contact'?['p0']:id==='evidence'?['p12','p15']:['p12','p0','p14'];
  s.agents=s.agents.filter(a=>a.faction==='FR'&&agents.includes(a.id));
  for(const a of s.agents){a.country=id==='contact'||a.id==='p15'?'FR':'DE';a.chief=a.id===agents[0];a.weapon=a.country==='FR';}
@@ -39,6 +39,8 @@ export function validateTutorialGame(value){
  if(!isTutorial(s)||s.player!=='FR'||s.seed!==197)throw Error('Exercice incompatible.');
  const expected=createTutorialGame(s.tutorial.mission);
  if(s.agents?.length!==expected.agents.length||s.agents.some(a=>a.faction!=='FR'||!expected.agents.some(b=>b.id===a.id))||s.plots?.length||s.recruitments?.length||s.humanFactions?.length!==Object.keys(s.factions||{}).length||s.humanFactions.some(f=>!s.factions[f])||Object.values(s.factions).some(f=>f.tech?.length))throw Error('Exercice incompatible.');
+ // Build 197 stored inert foreign records. Discard them without changing the exercise.
+ s.factions={FR:s.factions.FR};s.humanFactions=['FR'];
  E.validateSave(s,{allowTutorial:true});
  return s;
 }
