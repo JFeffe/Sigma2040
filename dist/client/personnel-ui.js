@@ -1,11 +1,11 @@
-import * as E from './engine.js?v=198';
-import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=198';
-import {fullBody} from './visuals.js?v=198';
-import {availability} from './presentation.js?v=198';
-import {quickActionMarkup} from './quick-actions.js?v=198';
-import {statActions} from './recruit-selection.js?v=198';
-import {proofTitle} from './intelligence.js?v=198';
-import {heading,esc,icon,button,portrait,nationalityFlags,talentIcon,sortedTalents} from './ui.js?v=198';
+import * as E from './engine.js?v=199';
+import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=199';
+import {fullBody} from './visuals.js?v=199';
+import {availability} from './presentation.js?v=199';
+import {quickActionMarkup} from './quick-actions.js?v=199';
+import {statActions} from './recruit-selection.js?v=199';
+import {proofTitle} from './intelligence.js?v=199';
+import {heading,esc,icon,button,portrait,nationalityFlags,talentIcon,sortedTalents} from './ui.js?v=199';
 
 const statSymbols=['scan','target','shield'],statShort=['A','H','SF'];
 

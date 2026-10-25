@@ -1,4 +1,4 @@
-import {visiblePlots,visibleLogs} from './engine.js?v=198';
-import {COUNTRY} from './data.js?v=198';
-import {esc} from './ui.js?v=198';
+import {visiblePlots,visibleLogs} from './engine.js?v=199';
+import {COUNTRY} from './data.js?v=199';
+import {esc} from './ui.js?v=199';
 export function newsTicker(s){const alerts=visiblePlots(s).map(p=>`<button class="news-item news-alert" data-cmd="nav" data-id="threats"><b>ALERTE · ${esc(COUNTRY[p.country].name)}</b> ${esc(p.kind)} · attaque à la fin du tour ${p.turn} · ${Math.max(0,p.turn-s.turn+1)} tour(s) pour agir${p.adapted?' · Plan modifié':''}</button>`),logs=visibleLogs(s).slice(0,10).map(l=>`<button class="news-item ${l.type==='score'?'news-score':''}" data-cmd="nav" data-id="journal"><b>T${l.turn}</b> ${esc(l.text)}</button>`),items=[...alerts,...logs];if(!items.length)items.push('<span class="news-item">Aucune alerte. Surveillance du réseau en cours.</span>');const content=items.join('');return `<section class="news-ticker" aria-label="Bulletin de renseignements et alertes"><span class="news-brand">SIGMA <b>INFO</b></span><div class="news-window" tabindex="0" aria-label="Actualités défilantes. Survoler ou sélectionner pour suspendre."><div class="news-track" style="--news-duration:${Math.max(35,items.join('').replace(/<[^>]*>/g,'').length/9)}s"><div class="news-group">${content}</div><div class="news-group" aria-hidden="true" inert>${content}</div></div></div><button class="news-journal" data-cmd="nav" data-id="journal" title="Lire toutes les actualités">Journal</button></section>`;}

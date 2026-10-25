@@ -1,4 +1,17 @@
-# Publication GitHub — build 198
+# Publication GitHub — build 199
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Le tutoriel enseigne la coordination simultanée sur le globe et dans les vrais dossiers.
+
+- APÉRO vérifie la première preuve pendant que BISHOP collecte la deuxième.
+- BISHOP prépare, IRIS obtient le mandat et LEI localise au même tour avant l’arrestation.
+- Suivi individuel des ordres et rappel avant de terminer un tour avec des actions parallèles disponibles.
+- Planque et récupération proposées pendant les temps d’attente, sans obligation ni action artificielle quand aucun travail utile n’est disponible.
+
+Validation : `npm test`, tests des ordres parallèles dans les deux sens, annulation/reprise, sauvegardes et durées ; contrôle des vrais dossiers dans le navigateur.
+
+# Historique — build 198
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
