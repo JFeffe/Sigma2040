@@ -3,7 +3,7 @@ import {readPreference,writePreference} from './browser-preferences.js?v=202';
 import {button,esc,portraitAsset,portraitBackgroundAsset} from './ui.js?v=202';
 // Append new releases at the top; published entries are historical records.
 const RELEASE_202={version:'202',date:'2026-10-25',title:'Tutoriel compact · Corrections et trois nouveaux exercices',changes:[
- 'Le guide vert prend moins de place : objectif court et ordres des agents. Boutons Minimiser / Agrandir toujours accessibles, préférence conservée entre missions et après rechargement. Les instructions détaillées sont disponibles à la demande.',
+ 'Le guide vert prend moins de place : objectif court et ordres des agents. Boutons Minimiser / Agrandir toujours accessibles, préférence conservée entre missions et après rechargement. Les instructions détaillées sont disponibles à la demande ; l’aide verte dans les dossiers est également repliée par défaut et dépliable.',
  'Mission 5 : récupération proposée lorsqu’un agent est épuisé et meilleure gestion des ordres déjà affectés. Annulation des modules et reprise de sauvegarde vérifiées.',
  'Mission 6 : une preuve vérifiée parmi les deux suffit, conformément aux règles du jeu. L’arrestation ne bloque plus la fin de l’exercice ; les anciennes sauvegardes terminées sont reconnues. Le guide suit les échanges de rôles et ramène l’analyste au QG si nécessaire.',
  'Mission 7 — Effacer les traces : passage clandestin, exposition, planque, repos et profil bas, avec intervention parallèle.',

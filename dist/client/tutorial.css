@@ -27,3 +27,5 @@ dialog:has(.training-order-note){width:min(850px,94vw)}dialog:has(.training-orde
 .tutorial-agent-plan li>span{margin:0;line-height:1.3}
 .tutorial-guide.is-collapsed{padding:4px 10px}
 @media(max-width:760px){.tutorial-guide{padding:5px 8px}.tutorial-guide-heading{flex-wrap:wrap;gap:4px}.tutorial-guide-heading>strong{flex:1}.tutorial-guide-controls{width:100%;justify-content:flex-end}.tutorial-guide #tutorialDirections{max-height:100px}.tutorial-agent-plan{gap:4px}.tutorial-agent-plan li{flex-basis:140px}.tutorial-guide.is-collapsed .tutorial-guide-heading>.eyebrow,.tutorial-guide.is-collapsed .tutorial-guide-heading>strong{display:none}.tutorial-guide.is-collapsed .tutorial-guide-controls{width:auto;margin-left:auto}}
+
+.tutorial-inquiry-note{padding:7px 10px}.tutorial-inquiry-note summary{cursor:pointer;color:#a6dbb7;font-weight:600}.tutorial-inquiry-note p{margin:8px 0 0}.tutorial-inquiry-note[open]{max-height:180px;overflow:auto}
