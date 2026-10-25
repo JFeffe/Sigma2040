@@ -1,21 +1,22 @@
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=200';
-import {PROTECTION_PRESTIGE} from './balance-rules.js?v=200';
-import {planBB1Faction} from './bot-brillant-1.js?v=200';
-import {GAME_MODES,selectParticipants} from './game-setup.js?v=200';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=200';
-import {balanceThreatCountries} from './threat-placement.js?v=200';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=200';
-import {exposurePenalty} from './exposure.js?v=200';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=200';
-import {cellName,namedCells} from './data.js?v=200';
-import {campaignRules} from './campaign-rules.js?v=200';
-import {stopClock} from './campaign-clock.js?v=200';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=200';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=200';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=200';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=200';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=200';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=200';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=201';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=201';
+import {PROTECTION_PRESTIGE} from './balance-rules.js?v=201';
+import {planBB1Faction} from './bot-brillant-1.js?v=201';
+import {GAME_MODES,selectParticipants} from './game-setup.js?v=201';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=201';
+import {balanceThreatCountries} from './threat-placement.js?v=201';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=201';
+import {exposurePenalty} from './exposure.js?v=201';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=201';
+import {cellName,namedCells} from './data.js?v=201';
+import {campaignRules} from './campaign-rules.js?v=201';
+import {stopClock} from './campaign-clock.js?v=201';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=201';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=201';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=201';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=201';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=201';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=201';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -29,7 +30,7 @@ export function governmentOptions(s,type,country=null,f=s.player){
  const x=s.factions[f],d=Object.hasOwn(GOVERNMENT_FAVORS,type)?GOVERNMENT_FAVORS[type]:null,nextTurn=x.lastFavor?x.lastFavor.turn+2:1;
  const agents=team(s,f).filter(a=>a.fatigue>0),gain=Math.max(0,Math.min(5,ECONOMY.cap-x.budget));
  const cost=type==='diplomacy'?([15,15,10,5][x.cooperation[country]]??null):d?.cost;
- const error=isTutorial(s)?'Les faveurs gouvernementales sont hors de cet exercice.':!d?'Faveur inconnue.':s.ended?'Campagne terminée.':type==='medical'&&medicalUses(s,f)>=3?'Les 3 soutiens médicaux de cette partie ont été utilisés.':s.turn<nextTurn?`Disponible au tour ${nextTurn}.`:cost!==null&&x.confidence<cost?`Il faut ${cost} confiance.`:type==='funding'&&!gain?'Réserve pleine.':type==='diplomacy'&&(!COUNTRY[country]||COUNTRY[country].power)?'Choisissez un pays secondaire.':type==='diplomacy'&&x.cooperation[country]>=4?'Coopération déjà maximale.':type==='medical'&&!agents.length?'Aucun agent à revigorer.':null;
+ const error=isTutorial(s)&&(!tutorialGovernmentAllowed(s,type,country)||tutorialObjective(s).done||tutorialObjective(s).failed)?'Les faveurs gouvernementales sont hors de cet exercice.':!d?'Faveur inconnue.':s.ended?'Campagne terminée.':type==='medical'&&medicalUses(s,f)>=3?'Les 3 soutiens médicaux de cette partie ont été utilisés.':s.turn<nextTurn?`Disponible au tour ${nextTurn}.`:cost!==null&&x.confidence<cost?`Il faut ${cost} confiance.`:type==='funding'&&!gain?'Réserve pleine.':type==='diplomacy'&&(!COUNTRY[country]||COUNTRY[country].power)?'Choisissez un pays secondaire.':type==='diplomacy'&&x.cooperation[country]>=4?'Coopération déjà maximale.':type==='medical'&&!agents.length?'Aucun agent à revigorer.':null;
  return {cost,nextTurn,error,gain,energy:type==='medical'?12:0,medicalRemaining:Math.max(0,3-medicalUses(s,f)),agents:agents.map(a=>a.id)};
 }
 export function requestGovernmentFavor(s,type,country=null,f=s.player){
@@ -297,7 +298,7 @@ function ensureTechnology(s){
 }
 function setDefense(s,f,country,until){ensureTechnology(s);f.defenseBase[country]=Math.max(f.defenseBase[country]||0,until);syncDefense(s,f);}
 export function activateTech(s,type,country=s.player){
- if(isTutorial(s))throw Error('Les modules sont hors de cet exercice.');
+ if(isTutorial(s)&&(!tutorialTechAllowed(s,type)||tutorialObjective(s).done||tutorialObjective(s).failed))throw Error('Les modules sont hors de cet exercice.');
  const f=s.factions[s.player],d=Object.hasOwn(TECH,type)&&TECH[type];
  if(!d||!Object.hasOwn(COUNTRY,country)||s.ended)throw Error('Soutien indisponible.');
  if(type!=='guard'&&f.tech.some(t=>t.type===type&&t.until>=s.turn))throw Error('Ce module est déjà actif.');
@@ -542,7 +543,7 @@ export function applyFieldAid(s){
  }
 }
 export function advance(s){
- if(isTutorial(s)){const objective=tutorialObjective(s);if(objective.done||objective.failed)throw Error('Exercice terminé.');if(s.tutorial.mission!=='arrest'&&!s.agents.some(a=>a.task))throw Error('Affectez l’ordre indiqué avant de terminer le tour.');}
+ if(isTutorial(s)){const objective=tutorialObjective(s);if(objective.done||objective.failed)throw Error('Exercice terminé.');if(!tutorialCanWait(s)&&!s.agents.some(a=>a.task))throw Error('Affectez l’ordre indiqué avant de terminer le tour.');}
  if(s.ended)throw Error('Campagne terminée.');recordAgentCondition(s,s.turn-1,true);clearDisabledDecisions(s);
  const completedCells=new Set(cellsDone(s)),knownThreats=new Set(visiblePlots(s).map(p=>p.id));s.threatReports=[];s.cellReports=[];s.flightReports=[];s.attackDelayReports=[];
  ensureTechnology(s);

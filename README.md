@@ -584,3 +584,7 @@ Validation : 415 tests réussis, dont les tests BB1, sauvegardes et multijoueur.
 BB1 compare désormais le voyage sous passeport au passage clandestin pour ses enquêtes. Le choix tient compte de l’arme conservée, de l’exposition, de l’énergie, du risque d’échec, du prix du renfort et du raccourcissement réservé à la logistique du passeport. Les passages en cours comptent dans les affectations à destination.
 
 Validation : 421 tests réussis et 1 200 paires de parties à six BB1, avec les mêmes départs avant et après correction. 170 passages choisis contre zéro ; 1 109 victoires contre 1 113. L’écart ne démontre pas une amélioration du taux de victoire. [Méthode et résultats](docs/bots/BB1.md#correction-du-passage-clandestin--version-175).
+
+### Build 201 — Filigrane : six missions
+
+Les missions 4 à 6 ajoutent protection à échéance, logistique et relais, puis coopération et soutien gouvernemental. Elles utilisent le globe et les contrôles de la campagne, sans joueurs PNJ. La mission 6 autorise plusieurs répartitions des rôles. Les sauvegardes de chaque mission et de la campagne restent indépendantes.
