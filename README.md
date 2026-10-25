@@ -1,4 +1,12 @@
-# Publication GitHub — build 199
+# Publication GitHub — build 200
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Navigation du tutoriel alignée avec le haut du guide sur ordinateur, sans déplacement quand les instructions changent ou se replient. Les panneaux de jeu restent sous le guide ; la navigation mobile reste en bas.
+
+Validation : `npm test` et contrôle visuel du guide développé/replié avec les positions de navigation.
+
+# Historique — build 199
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

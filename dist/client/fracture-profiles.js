@@ -1,4 +1,4 @@
-import {esc} from './ui.js?v=199';
+import {esc} from './ui.js?v=200';
 export const CELL_PROFILES=[
  {name:'JANUS',motto:'Tout a un prix. Rien ne porte notre nom.',description:'Des comptes aux cargaisons : JANUS donne une façade civile aux moyens de Fracture. Son identité repose sur la discrétion et les intermédiaires.'},
  {name:'PRISME',motto:'Ce que vous voyez a déjà été modifié.',description:'Systèmes autonomes et intrusions : PRISME brouille la frontière entre incident technique et attaque organisée. Ses membres privilégient la précision et les traces trompeuses.'},

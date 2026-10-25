@@ -1,6 +1,6 @@
-import * as E from './engine.js?v=199';
-import {SUSPECTS} from './data.js?v=199';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=199';
+import * as E from './engine.js?v=200';
+import {SUSPECTS} from './data.js?v=200';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=200';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const TUTORIAL_MISSIONS=Object.freeze([

@@ -10,3 +10,6 @@ dialog:has(.training-order-note){width:min(850px,94vw)}dialog:has(.training-orde
 @media(max-width:760px){.tutorial-guide{left:8px;right:8px;padding:8px 10px;max-height:28dvh}.tutorial-guide-heading{gap:6px 10px}.tutorial-guide-heading>strong{font-size:12px}.tutorial-guide-controls{gap:4px}.tutorial-guide .btn{font-size:10px;padding:3px 6px}.tutorial-mode-note{display:none}.tutorial-guide p{font-size:12px}.tutorial-deck .field-team{width:auto}.tutorial-deck .field-team .team-grid{grid-template-columns:repeat(var(--training-agents),175px)}.tutorial-deck .map-dossier{max-height:max(100px,calc(100dvh - var(--hud-top) - 226px))}}
 
 .tutorial-agent-plan{display:flex;flex-wrap:wrap;gap:6px 16px;padding:0;margin:10px 0 0;list-style:none}.tutorial-agent-plan li{flex:1 1 180px;border-top:1px solid #456653;padding-top:5px;font-size:11px;line-height:1.4}.tutorial-agent-plan li>span{margin-left:8px;color:#b7d5bf}.tutorial-agent-plan small{display:block;color:#d0dfd4;font-size:11px}
+
+/* Keep desktop navigation level with the guide, independent of its height. */
+@media(min-width:761px){.immersive-deck.tutorial-deck .deck-nav{top:var(--mp-top,140px);max-height:calc(100dvh - var(--mp-top,140px) - 24px)}}
