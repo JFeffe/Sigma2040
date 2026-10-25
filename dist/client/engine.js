@@ -1,20 +1,21 @@
-import {PROTECTION_PRESTIGE} from './balance-rules.js?v=196';
-import {planBB1Faction} from './bot-brillant-1.js?v=196';
-import {GAME_MODES,selectParticipants} from './game-setup.js?v=196';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=196';
-import {balanceThreatCountries} from './threat-placement.js?v=196';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=196';
-import {exposurePenalty} from './exposure.js?v=196';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=196';
-import {cellName,namedCells} from './data.js?v=196';
-import {campaignRules} from './campaign-rules.js?v=196';
-import {stopClock} from './campaign-clock.js?v=196';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=196';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=196';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=196';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=196';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=196';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=196';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=197';
+import {PROTECTION_PRESTIGE} from './balance-rules.js?v=197';
+import {planBB1Faction} from './bot-brillant-1.js?v=197';
+import {GAME_MODES,selectParticipants} from './game-setup.js?v=197';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=197';
+import {balanceThreatCountries} from './threat-placement.js?v=197';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=197';
+import {exposurePenalty} from './exposure.js?v=197';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=197';
+import {cellName,namedCells} from './data.js?v=197';
+import {campaignRules} from './campaign-rules.js?v=197';
+import {stopClock} from './campaign-clock.js?v=197';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=197';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=197';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=197';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=197';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=197';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=197';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -188,6 +189,7 @@ export function options(s,agentId,type,target,useCredits=false){
  if(useCredits&&!d.safe&&boostGain===0&&!error)error='Chances déjà au plafond : aucun renfort nécessaire.';
  const chance=d.safe?100:boostedChance(rawChance,useCredits),aiApplied=explanations.includes('IA +10'),cyberApplied=explanations.includes('Hack d’un pays +10'),aiBonus=aiApplied?chance-boostedChance(rawChance-10,useCredits):0,cyberBonus=cyberApplied?chance-boostedChance(rawChance-10,useCredits):0;
  if(useCredits&&!d.safe)explanations.push(`Renfort de l’opération · ${ECONOMY.boostCost} crédits : +${boostGain} points${boostGain<10?' (plafond 90 %)':''}`);
+ if(isTutorial(s)){error=error||tutorialOrderError(s,agentId,type,target,useCredits);return {error,duration,cost:0,chance:100,tacticalBonus:tactical?5:0,coordination:chief?5:0,coordinationChief:chief?.id||null,baseChance:100,boostGain:0,rawChance,aiApplied:false,cyberApplied:false,aiBonus:0,cyberBonus:0,stat:d.stat,talents:used,explanations:[...explanations,`Formation scénarisée : réussite garantie (campagne : ${baseChance} % dans ces conditions).`],fatigue:missionFatigue(a,type),clandestine:false};}
  return {error,duration,cost,chance,tacticalBonus:tactical?5:0,coordination:chief?5:0,coordinationChief:chief?.id||null,baseChance,boostGain,rawChance,aiApplied,cyberApplied,aiBonus,cyberBonus,stat:d.stat,talents:used,explanations,fatigue:missionFatigue(a,type),clandestine:type==='arrest'&&!f.authorized[a.country]};
 }
 export function assign(s,id,type,target=null,useCredits=false){const o=options(s,id,type,target,useCredits);if(o.error)throw Error(o.error);const a=s.agents.find(a=>a.id===id);if(type==='analyze'&&!target)target=evidenceQueue(s,a.faction).find(e=>!analysisAgent(s,a.faction,e.id))?.id;s.factions[a.faction].budget-=o.cost;for(const t of s.factions[a.faction].tech.filter(t=>t.until>=s.turn)){if(type==='travel'&&t.type==='logistics'&&o.duration<travelTurns(a.country,target)||type==='analyze'&&t.type==='ai'&&o.aiBonus>0)t.used=true;}const distance=['travel','sneak'].includes(type)?travelTurns(a.country,target):null,logistics=type==='travel'&&o.duration<distance?s.factions[a.faction].tech.find(t=>t.type==='logistics'&&t.until>=s.turn):null;a.task={...(distance?{travelDistance:distance,logisticsApplied:!!logistics,logisticsModuleId:logistics?.id||null}:{}),nationalityRules:1,type,target,remaining:o.duration,total:o.duration,cost:o.cost,chance:o.chance,tacticalBonus:o.tacticalBonus,energyRules:2,coordination:o.coordination,coordinationChief:o.coordinationChief,aiBonus:o.aiBonus||0,cyberBonus:o.cyberBonus||0,fatigue:o.fatigue,queued:true,clandestine:o.clandestine,origin:a.country,bonusCredits:useCredits?ECONOMY.boostCost:0,...(!ACTIONS[type].safe?{chanceInputs:{raw:o.rawChance,boost:!!useCredits,ai:o.aiApplied,cyber:o.cyberApplied}}:{})};return a.task;}
@@ -539,6 +541,7 @@ export function applyFieldAid(s){
  }
 }
 export function advance(s){
+ if(isTutorial(s)){const objective=tutorialObjective(s);if(objective.done||objective.failed)throw Error('Exercice terminé.');}
  if(s.ended)throw Error('Campagne terminée.');recordAgentCondition(s,s.turn-1,true);clearDisabledDecisions(s);
  const completedCells=new Set(cellsDone(s)),knownThreats=new Set(visiblePlots(s).map(p=>p.id));s.threatReports=[];s.cellReports=[];s.flightReports=[];s.attackDelayReports=[];
  ensureTechnology(s);
@@ -546,7 +549,7 @@ export function advance(s){
   if(t.pendingLead){t.used=true;t.pendingLead=false;discover(s,f.id,t.country,"Assistance IA : recoupement des renseignements disponibles.");}
   if(t.pendingObservation){t.used=true;t.pendingObservation=false;observeProtection(s,t.country,t.until);}
  }
- for(const f of Object.keys(s.factions))if(!(s.humanFactions||[s.player]).includes(f))planFaction(s,f);
+ for(const f of Object.keys(s.factions))if(!isTutorial(s)&&!(s.humanFactions||[s.player]).includes(f))planFaction(s,f);
  const resolutionAgents=s.humanFactions?[...s.agents].sort((a,b)=>a.id.localeCompare(b.id)):[...s.agents];
  if(s.humanFactions)for(let i=resolutionAgents.length-1;i>0;i--){const j=Math.floor(random(s)*(i+1));[resolutionAgents[i],resolutionAgents[j]]=[resolutionAgents[j],resolutionAgents[i]];}
  // Freeze final arrest chances before resolving any operation. Reorder only
@@ -568,8 +571,9 @@ export function advance(s){
  s.turn++;for(const f of Object.values(s.factions))syncDefense(s,f);collectTurnAlerts(s,knownThreats);return s;
 }
 export function publicState(s){return {turn:s.turn,country:s.player,crisis:s.crisis,budget:s.factions[s.player].budget,confidence:s.factions[s.player].confidence,government:{lastFavor:s.factions[s.player].lastFavor||null,nextTurn:governmentOptions(s,'funding').nextTurn},funding:funding(s.factions[s.player]),foreignIntel:s.factions[s.player].foreignIntel,agents:team(s).map(a=>({id:a.id,name:a.name,country:a.country,nationalities:a.nationalities||[],status:a.status,fatigue:fatigueName(a.fatigue),energy:100-a.fatigue,exposure:a.exposure,task:a.task,weapon:a.weapon,safehouse:!!hasSafehouse(s,a.faction,a.country)})),targets:knownTargets(s).map(({id,name,country,arrested,identified,locationUntil,prepared})=>({id,name,country,arrested,identified,locationUntil,prepared})),evidence:s.factions[s.player].evidence,ended:s.ended};}
-export function validateSave(s){
+export function validateSave(s,{allowTutorial=false}={}){
  const bad=()=>{throw Error('Sauvegarde incompatible ou endommagée.');},number=(v,a,b)=>Number.isFinite(v)&&v>=a&&v<=b;
+ if(s?.tutorial&&(!allowTutorial||!isTutorial(s)))bad();
  if(!s||s.version!==VERSION||!COUNTRY[s.player]?.power||!Number.isInteger(s.turn)||!number(s.turn,1,40)||!number(s.rng,0,4294967295)||!number(s.crisis,0,100)||!['victory','defeat',null].includes(s.ended))bad();
  if(s.aiDifficulty!==undefined&&!Object.hasOwn(AI_LEVELS,s.aiDifficulty))bad();s.aiDifficulty??='normal';
  if(s.pressureRules!==undefined&&s.pressureRules!==1)bad();
@@ -692,7 +696,7 @@ export function nextOperation(s,t){
 export function operationForecast(s,id,type,target){const a=s.agents.find(a=>a.id===id),o=options(s,id,type,target),end=s.turn+o.duration-1,t=knownTargets(s,a.faction).find(t=>t.id===target);
  const dangerous=['arrest','sneak','rescue'].includes(type);
  const incidentExposure=missionExposure(a,type,false);
- const risk=type==='intimidate'?`Réussite ou échec : exposition +${incidentExposure}. En cas d’échec : aucun renseignement, nouvelle tentative possible.`:ACTIONS[type].safe?'Aucun jet d’échec.':dangerous?`En cas d’échec : exposition +${incidentExposure}, blessure, capture ou décès possibles.`:`En cas d’échec : aucune progression et exposition +${incidentExposure}.`;
+ const risk=isTutorial(s)?'Exercice scénarisé : réussite garantie. La position doit rester valide et la cible présente à la résolution.':type==='intimidate'?`Réussite ou échec : exposition +${incidentExposure}. En cas d’échec : aucun renseignement, nouvelle tentative possible.`:ACTIONS[type].safe?'Aucun jet d’échec.':dangerous?`En cas d’échec : exposition +${incidentExposure}, blessure, capture ou décès possibles.`:`En cas d’échec : aucune progression et exposition +${incidentExposure}.`;
  const warnings=[];if(o.tacticalBonus)warnings.push('Planification tactique : +5 réservé à cet ordre à sa confirmation, consommé seulement lors du jet. Annulation ou interruption avant le jet : bonus conservé.');
  if(type==='surveil'){const relation=cooperationInfo(s,a.faction,a.country),relay=s.factions[a.faction].tech.some(x=>x.type==='relay'&&x.until>=end),duration=relation.location+(relay?2:0);warnings.push(`Position valide ${duration} tours après résolution, jusqu’à fin T${end+duration} : ${relation.name} (${relation.location})${relay?' + relais satellite (2)':''}. Prévision si la coopération reste identique à la réussite ; une fuite invalide la position.`);}
  if(type==='arrest'&&o.clandestine)warnings.push('Tentative sans mandat : coopération des autorités −1 niveau, réussite ou échec.');

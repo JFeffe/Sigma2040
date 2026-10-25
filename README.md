@@ -1,4 +1,18 @@
-# Publication GitHub — build 196
+# Publication GitHub — build 197
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+**Apprendre à jouer · Opération Filigrane** : trois mini-missions indépendantes depuis le menu principal, sans joueur PNJ.
+
+- Premier contact : IRIS voyage à Berlin et ouvre un accès local.
+- La pièce suspecte : BISHOP collecte, APÉRO vérifie au QG ; une falsification doit être écartée et remplacée.
+- La fenêtre d’intervention : préparer le dossier et le mandat en parallèle, localiser Vesper puis l’arrêter avant son départ annoncé à la fin du tour 6.
+- Même moteur et même fenêtre d’ordres que la campagne. Réussites à 100 % annoncées dans ces exercices ; durées, prérequis, énergie et expiration des positions conservés.
+- Sauvegarde distincte par mission, reprise après rechargement, bilan et redémarrage indépendants. La sauvegarde de campagne normale n’est jamais remplacée par une formation.
+
+Validation : `npm test` ; tests des trois parcours avec rechargement après chaque ordre, falsification, ordres parallèles, expiration, arrestation au dernier tour, échec récupérable et isolation des sauvegardes. Les trois missions ont été jouées jusqu’à leur réussite dans le navigateur.
+
+# Historique — build 196
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

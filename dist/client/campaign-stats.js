@@ -1,7 +1,7 @@
-import {locationExpiry} from './engine.js?v=196';
-import {dataTable} from './data-tables.js?v=196';
-import {ACTIONS,STAT_NAMES,COUNTRY,TECH} from './data.js?v=196';
-import {esc,formatScore,portrait} from './ui.js?v=196';
+import {locationExpiry} from './engine.js?v=197';
+import {dataTable} from './data-tables.js?v=197';
+import {ACTIONS,STAT_NAMES,COUNTRY,TECH} from './data.js?v=197';
+import {esc,formatScore,portrait} from './ui.js?v=197';
 const emptyRow=()=>({count:0,success:0,failed:0,stopped:0,cost:0,fatigue:0,exposure:0,chance:0,rolls:0,prestige:0});
 function addResult(v,r){v.count++;v.success+=+(r.status==='RÉUSSITE');v.failed+=+(r.status==='ÉCHEC');v.stopped+=+(r.status==='INTERROMPUE');for(const key of ['cost','fatigue','exposure','prestige'])v[key]=(v[key]||0)+(r[key]||0);if(!ACTIONS[r.type].safe&&r.status!=='INTERROMPUE'&&Number.isFinite(r.chance)){v.rolls++;v.chance+=r.chance;}}
 export function recordOperation(s,r){
