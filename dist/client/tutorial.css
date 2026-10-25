@@ -13,3 +13,17 @@ dialog:has(.training-order-note){width:min(850px,94vw)}dialog:has(.training-orde
 
 /* Keep desktop navigation level with the guide, independent of its height. */
 @media(min-width:761px){.immersive-deck.tutorial-deck .deck-nav{top:var(--mp-top,140px);max-height:calc(100dvh - var(--mp-top,140px) - 24px)}}
+
+/* Compact guide: controls remain visible; detailed directions live in Instructions. */
+.tutorial-guide{padding:6px 10px;max-height:none;overflow:visible}
+.tutorial-guide-heading{flex-wrap:nowrap;gap:8px;min-height:28px}
+.tutorial-guide-heading>strong{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tutorial-guide-controls{flex-shrink:0}
+.tutorial-guide-controls .btn{min-height:28px}
+.tutorial-guide #tutorialDirections{max-height:130px;overflow:auto}
+.tutorial-guide .tutorial-reminder{font-size:12px;margin-top:4px;line-height:1.35}
+.tutorial-agent-plan{gap:4px 14px;margin-top:5px}
+.tutorial-agent-plan li{flex:1 1 180px;display:flex;align-items:baseline;gap:6px;font-size:11px;padding-top:4px}
+.tutorial-agent-plan li>span{margin:0;line-height:1.3}
+.tutorial-guide.is-collapsed{padding:4px 10px}
+@media(max-width:760px){.tutorial-guide{padding:5px 8px}.tutorial-guide-heading{flex-wrap:wrap;gap:4px}.tutorial-guide-heading>strong{flex:1}.tutorial-guide-controls{width:100%;justify-content:flex-end}.tutorial-guide #tutorialDirections{max-height:100px}.tutorial-agent-plan{gap:4px}.tutorial-agent-plan li{flex-basis:140px}.tutorial-guide.is-collapsed .tutorial-guide-heading>.eyebrow,.tutorial-guide.is-collapsed .tutorial-guide-heading>strong{display:none}.tutorial-guide.is-collapsed .tutorial-guide-controls{width:auto;margin-left:auto}}

@@ -1,7 +1,7 @@
-import {availability} from './presentation.js?v=201';
-import {COUNTRY} from './data.js?v=201';
-import {team,travelInProgress,activeSightings} from './engine.js?v=201';
-import {esc,portraitSvg} from './ui.js?v=201';
+import {availability} from './presentation.js?v=202';
+import {COUNTRY} from './data.js?v=202';
+import {team,travelInProgress,activeSightings} from './engine.js?v=202';
+import {esc,portraitSvg} from './ui.js?v=202';
 export const OBSERVER_COLORS={FR:'#74b9ff',US:'#ffca70',CN:'#ff858d',IN:'#c7a0ff',RU:'#7cdec4',GB:'#f49dd6'};
 export const mapAgents=s=>s.multiplayer?.observer?s.agents.filter(a=>s.multiplayer.humanFactions.includes(a.faction)):team(s);
 const project=([lon,lat])=>[lon,lat];

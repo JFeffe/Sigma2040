@@ -588,3 +588,7 @@ Validation : 421 tests réussis et 1 200 paires de parties à six BB1, avec les 
 ### Build 201 — Filigrane : six missions
 
 Les missions 4 à 6 ajoutent protection à échéance, logistique et relais, puis coopération et soutien gouvernemental. Elles utilisent le globe et les contrôles de la campagne, sans joueurs PNJ. La mission 6 autorise plusieurs répartitions des rôles. Les sauvegardes de chaque mission et de la campagne restent indépendantes.
+
+### Build 202 — Guide compact et neuf tutoriels
+
+Le guide se minimise et conserve ce choix ; les explications complètes restent dans Instructions. Les missions 5 et 6 gèrent l’épuisement, le changement de rôles, le retour de l’analyste et l’arrestation avec une seule preuve vérifiée. Les sauvegardes existantes restent compatibles. Missions 7–9 : discrétion et récupération, renseignement numérique, puis coordination d’une protection et d’une arrestation sur deux fronts.

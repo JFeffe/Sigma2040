@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 import * as E from '../dist/client/engine.js';
+import {readPreference} from '../dist/client/browser-preferences.js';
 import * as tutorial from '../dist/client/tutorial.js';
 import * as ui from '../dist/client/ui.js';
 import * as data from '../dist/client/data.js';
@@ -15,7 +16,7 @@ import {initCountryInquiry,openCountryInquiry,handleInquiryCommand} from '../dis
 const source=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8');
 function applicationDialog(){
  const modal={open:false,dataset:{},className:'',innerHTML:'',classList:{contains:c=>modal.className===c},showModal(){this.open=true;},close(){this.open=false;},querySelector(q){return q==='.inquiry-body'?{scrollTop:0}:null;}};
- const context=vm.createContext({...ui,...data,...presentation,...operations,...tutorial,inquiryStorage:null,E,energyHelp,exposureMarkup,selectOrderTarget,patchOrderDialog,modal,closeBureau(){},render(){},multiplayer:{observer:false}});
+ const context=vm.createContext({...ui,...data,...presentation,...operations,...tutorial,inquiryStorage:null,readPreference,E,energyHelp,exposureMarkup,selectOrderTarget,patchOrderDialog,modal,closeBureau(){},render(){},multiplayer:{observer:false}});
  // Execute the actual top-level state declarations and dialog functions from the application.
  vm.runInContext(source.match(/^let [^;\n]*;/gm).join('\n')+'\n'+source.match(/^function showModal[^\n]*/m)[0]+'\n'+source.slice(source.indexOf('function agentPager('),source.indexOf('let lastAgentClick=')),context);
  vm.runInContext("state=E.createGame('FR',['p0','p12','p13','p14'],42);",context);

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
 import {createTutorialGame,validateTutorialGame,tutorialObjective} from '../dist/client/tutorial.js';
 import {inquiryModel} from '../dist/client/country-inquiry.js';
+import {tutorialHint} from '../dist/client/tutorial-rules.js';
 import {tutorialGuide} from '../dist/client/tutorial-ui.js';
 import {evidenceRegister} from '../dist/client/command-ui.js';
 
@@ -22,7 +23,7 @@ test('Every scripted investigation order is available in the real dossier and re
   for(let turn=0;turn<20&&!tutorialObjective(s).done;turn++){
    for(const order of tutorialObjective(s).orders){
     if(s.agents.find(a=>a.id===order.agentId).task)continue;
-    if(order.type==='travel')E.assign(s,order.agentId,order.type,order.target);
+    if(['travel','rest','fieldRest','findSafehouse'].includes(order.type))E.assign(s,order.agentId,order.type,order.target);
     else {
      const model=inquiryModel(s,'s0',order.type,order.agentId,order.type==='analyze'?order.target:null);
      assert.ok(model?.selected,`${id}: ${order.type}`);assert.equal(model.selected.reason,'');assert.equal(model.selected.o.chance,100);
@@ -40,5 +41,5 @@ test('Actual evidence register keeps authenticity secret before verification',()
  E.assign(s,'p15','analyze','s0-e0');E.advance(s);E.assign(s,'p15','analyze','s0-e1');E.advance(s);html=evidenceRegister(s);assert.match(html,/>ÉCARTÉE</);assert.match(html,/>VÉRIFIÉE</);
 });
 test('Guide explains the real controls and contains no substitute order button',()=>{
- const s=createTutorialGame('contact'),html=tutorialGuide(s);assert.match(html,/Sur le globe/);assert.match(html,/Déployer un agent/);assert.doesNotMatch(html,/data-cmd="(?:assign|tutorial-agent|advance)"/);assert.match(tutorialGuide(s,true),/id="tutorialDirections" hidden/);
+ const s=createTutorialGame('contact'),html=tutorialGuide(s);assert.match(tutorialHint(s),/Sur le globe/);assert.match(html,/Instructions/);assert.match(tutorialHint(s),/Déployer un agent/);assert.doesNotMatch(html,/data-cmd="(?:assign|tutorial-agent|advance)"/);assert.match(tutorialGuide(s,true),/id="tutorialDirections" hidden/);
 });
