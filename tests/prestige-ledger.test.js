@@ -9,7 +9,7 @@ import {COUNTRIES} from '../dist/client/data.js';
 const fresh=()=>E.createGame('FR',['p0','p1','p2','p3'],17);
 test('Shared defense awards survive log truncation and save reload, without double credit',()=>{
  const s=fresh();s.plots=[{id:'test',country:'DE',turn:1,cell:0,kind:'test',resolved:false}];s.factions.FR.defense.DE=4;s.factions.US.defense.DE=4;E.advance(s);
- const entries=s.prestigeLedger.filter(e=>e.key.startsWith('test:'));assert.equal(entries.length,2);assert.ok(entries.every(e=>e.points===3&&e.turn===1&&e.reason.includes('Allemagne')));
+ const entries=s.prestigeLedger.filter(e=>e.key.startsWith('test:'));assert.equal(entries.length,2);assert.ok(entries.every(e=>e.points===2&&e.turn===1&&e.reason.includes('Allemagne')));
  for(let i=0;i<410;i++)E.log(s,'Archive secondaire');const copy=E.validateSave(structuredClone(s));assert.deepEqual(copy.prestigeLedger,s.prestigeLedger);E.advance(copy);assert.equal(copy.prestigeLedger.filter(e=>e.key.startsWith('test:')).length,2);
  const view=playerView({game:s,offers:[]},'FR');assert.ok(view.prestigeLedger.every(e=>e.faction==='FR'));s.ended='defeat';assert.deepEqual(playerView({game:s,offers:[]},'FR').prestigeLedger,s.prestigeLedger);
 });

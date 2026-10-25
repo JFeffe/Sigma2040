@@ -1,19 +1,20 @@
-import {planBB1Faction} from './bot-brillant-1.js?v=195';
-import {GAME_MODES,selectParticipants} from './game-setup.js?v=195';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=195';
-import {balanceThreatCountries} from './threat-placement.js?v=195';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=195';
-import {exposurePenalty} from './exposure.js?v=195';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=195';
-import {cellName,namedCells} from './data.js?v=195';
-import {campaignRules} from './campaign-rules.js?v=195';
-import {stopClock} from './campaign-clock.js?v=195';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=195';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=195';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=195';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=195';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=195';
-import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=195';
+import {PROTECTION_PRESTIGE} from './balance-rules.js?v=196';
+import {planBB1Faction} from './bot-brillant-1.js?v=196';
+import {GAME_MODES,selectParticipants} from './game-setup.js?v=196';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=196';
+import {balanceThreatCountries} from './threat-placement.js?v=196';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=196';
+import {exposurePenalty} from './exposure.js?v=196';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=196';
+import {cellName,namedCells} from './data.js?v=196';
+import {campaignRules} from './campaign-rules.js?v=196';
+import {stopClock} from './campaign-clock.js?v=196';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=196';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=196';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=196';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=196';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=196';
+import {COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=196';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -230,7 +231,7 @@ function resolve(s,a,task){
  else if(type==='intimidate'){collect(s,a,t);locate(s,a,t,1);dossier(s,a.faction,t.id).intimidated=true;a.exposure=clamp(a.exposure+missionExposure(a,type,true),0,100);}
  else if(type==='collect')collect(s,a,t);
  else if(type==='hack'){if(countProofs(s,a.faction,t.id)<2)collect(s,a,t);else log(s,`${a.name} : deux preuves recevables déjà réunies ; hack et recherche maintenus.`,'info',a.faction);extendCountryHack(s,a,a.country,1);discover(s,a.faction,a.country,`${a.name} — Intrusion numérique.`,false,1);}
- else if(type==='surveil')locate(s,a,t,f.cooperation[a.country]===4?5:4);
+ else if(type==='surveil')locate(s,a,t,cooperationInfo(s,a.faction,a.country).location);
  else if(type==='drone'){f.access[a.country]=true;const local=s.suspects.filter(x=>x.country===a.country&&!x.arrested&&(x.id!=='s6'||f.known.s6));if(exposedAtResolution)for(const cell of new Set(local.map(x=>x.cell))){observeFracture(s,cell,1);log(s,`${a.name} : forte exposition, pression +1 sur ${cellName(cell)}.`,'warning',a.faction);}for(const candidate of local){reveal(s,a.faction,candidate.id,`${a.name} — Reconnaissance par drone à ${COUNTRY[a.country].city}. Suspect repéré lors du balayage du pays.`);locate(s,a,candidate);}log(s,`${a.name} : accès ouvert ; ${local.length} suspect(s) localisé(s) dans le pays. Aucune preuve recueillie.`,'clue',a.faction);a.exposure=clamp(a.exposure+missionExposure(a,type,true),0,100);}
  else if(type==='analyze'){
   const e=f.evidence.find(e=>(!task.target||e.id===task.target)&&!e.verified&&!e.contested);if(e){const p=s.proofs.find(p=>p.id===e.id),ss=s.suspects.find(t=>t.id===p.suspect);e.verified=p.authentic;e.contested=!p.authentic;e.verifiedBy=a.faction;
@@ -310,7 +311,7 @@ export function techRefund(s,t){
  if((t.activatedTurn??t.until-TECH[t.type].duration+1)!==s.turn)return 0;
  if(Number.isFinite(t.cost))return t.cost;
  const audit=t.type==='ai'&&(s.logs||[]).some(l=>l.faction===s.player&&l.text.includes('Financer l’audit')&&l.text.includes(`T${t.until} inclus`));
- return audit?(t.refundRules===1?2:3):TECH[t.type].cost;
+ return audit?(t.refundRules===1?2:3):t.type==='relay'?3:TECH[t.type].cost;
 }
 export function cyberSupportRefund(support){return support.cost??Math.max(0,Math.round((support.until-support.from+1)/3))*2;}
 function normalizePassportBonus(a,task){
@@ -510,9 +511,9 @@ function plotResolution(s){for(const p of s.plots.filter(p=>!p.resolved&&!p.canc
  p.resolved=true;if(cellsDone(s).includes(p.cell)||p.cell===3&&s.suspects.find(t=>t.id==='s6').arrested){log(s,`Projet d’attaque abandonné : ${cellName(p.cell)} démantelée.`,'success');continue;}
  const defenders=Object.values(s.factions).filter(f=>f.defense[p.country]>=s.turn);
  const crisisBefore=s.crisis;
- if(defenders.length){const sharePoints=6/defenders.length;for(const f of defenders){award(s,p.id+':'+f.id,f.id,sharePoints,'attentat déjoué : '+COUNTRY[p.country].name);shiftCooperation(s,f.id,p.country,1,'attaque déjouée');}s.crisis=Math.max(0,s.crisis-5);log(s,`Attaque déjouée à ${COUNTRY[p.country].city}. La coopération a protégé l’infrastructure.`,'success');}
+ if(defenders.length){const sharePoints=PROTECTION_PRESTIGE/defenders.length;for(const f of defenders){award(s,p.id+':'+f.id,f.id,sharePoints,'attentat déjoué : '+COUNTRY[p.country].name);shiftCooperation(s,f.id,p.country,1,'attaque déjouée');}s.crisis=Math.max(0,s.crisis-5);log(s,`Attaque déjouée à ${COUNTRY[p.country].city}. La coopération a protégé l’infrastructure.`,'success');}
  else{s.crisis=clamp(s.crisis+30,0,100);log(s,`Fracture frappe ${COUNTRY[p.country].city} : ${p.kind.toLowerCase()}. Crise mondiale +30.`,'danger');}
- s.attackReports.push({type:'attack',plotId:p.id,turn:s.turn,country:p.country,cell:p.cell,kind:p.kind,status:defenders.length?'INTERCEPTÉE':'RÉUSSIE',participants:defenders.map(f=>f.id),crisisDelta:s.crisis-crisisBefore});
+ s.attackReports.push({type:'attack',plotId:p.id,turn:s.turn,country:p.country,cell:p.cell,kind:p.kind,status:defenders.length?'INTERCEPTÉE':'RÉUSSIE',participants:defenders.map(f=>f.id),prestigeTotal:defenders.length?PROTECTION_PRESTIGE:0,crisisDelta:s.crisis-crisisBefore});
  }}
 export const EVENTS=[
  {id:'witness',turn:4,title:'Une voix dans le silence',speaker:'Contact anonyme',text:'« J’ai vu leurs livraisons. Je parlerai si vous garantissez ma protection. »',choices:[{label:'Organiser la protection',detail:'3 crédits · nouvelle piste si disponible et déposition brute à vérifier au QG. Une déposition peut être falsifiée. Aucun agent ni module mobilisé ; aucun renseignement si les sources sont épuisées, mais les 3 crédits restent dépensés.',effect:'witness'},{label:'Conserver le contact',detail:'Gratuit · aucun renseignement reçu, aucune protection ni récompense différée.',effect:'none'}]},
@@ -597,7 +598,7 @@ export function validateSave(s){
  if(s.flightReports!==undefined&&(!Array.isArray(s.flightReports)||s.flightReports.length>42||s.flightReports.some(r=>!r||r.type!=='flight'||!powers.includes(r.faction)||!suspectIds.includes(r.suspectId)||!s.factions[r.faction].known[r.suspectId]||!COUNTRY[r.origin]||!COUNTRY[r.country]||r.origin===r.country||!Number.isInteger(r.turn)||!number(r.turn,1,40))))bad();
  if(s.attackDelayReports!==undefined&&(!Array.isArray(s.attackDelayReports)||s.attackDelayReports.length>s.plots.length*2||s.attackDelayReports.some(r=>!r||r.type!=='postponement'||!s.plots.some(p=>p.id===r.plotId&&p.cell===r.cell&&p.kind===r.kind)||!COUNTRY[r.origin]||!COUNTRY[r.country]||!['flight','protection','relocation'].includes(r.reason)||(r.reason==='relocation')!==(r.origin!==r.country)||!Number.isInteger(r.turn)||!number(r.turn,1,40)||!Number.isInteger(r.oldTurn)||!number(r.oldTurn,r.turn+1,39)||!Number.isInteger(r.attackTurn)||!number(r.attackTurn,r.oldTurn+1,Math.min(40,r.oldTurn+2)))))bad();
  if(s.threatReports!==undefined&&(!Array.isArray(s.threatReports)||s.threatReports.length>s.plots.length||s.threatReports.some(r=>r.type!=='threat'||!s.plots.some(p=>p.id===r.plotId)||!COUNTRY[r.country]||!number(r.turn,1,40)||!number(r.attackTurn,1,40)||!number(r.cell,0,3)||!textSafe(r.kind))))bad();
- if(s.attackReports!==undefined&&(!Array.isArray(s.attackReports)||s.attackReports.length>s.plots.length||s.attackReports.some(r=>r.type!=='attack'||!textSafe(r.plotId)||!number(r.turn,1,40)||!COUNTRY[r.country]||!number(r.cell,0,3)||!textSafe(r.kind)||!['INTERCEPTÉE','RÉUSSIE'].includes(r.status)||!Array.isArray(r.participants)||r.participants.length>6||r.participants.some(f=>!powers.includes(f))||!number(r.crisisDelta,-5,30))))bad();
+ if(s.attackReports!==undefined&&(!Array.isArray(s.attackReports)||s.attackReports.length>s.plots.length||s.attackReports.some(r=>r.type!=='attack'||!textSafe(r.plotId)||!number(r.turn,1,40)||!COUNTRY[r.country]||!number(r.cell,0,3)||!textSafe(r.kind)||!['INTERCEPTÉE','RÉUSSIE'].includes(r.status)||!Array.isArray(r.participants)||r.participants.length>6||r.participants.some(f=>!powers.includes(f))||(r.prestigeTotal!==undefined&&![0,4,6].includes(r.prestigeTotal))||!number(r.crisisDelta,-5,30))))bad();
  for(const a of s.agents){if(!powers.includes(a.faction)||!COUNTRY[a.country]||!textSafe(a.id)||!textSafe(a.name)||!textSafe(a.role)||!textSafe(a.bio)||!['Légale','Clandestine'].includes(a.cover)||!Array.isArray(a.stats)||a.stats.length!==3||a.stats.some(n=>!number(n,1,10))||!Array.isArray(a.talents)||a.talents.some(t=>!TALENTS_FOR_SAVE.has(t))||!number(a.fatigue,0,100)||!number(a.exposure,0,150)||!['ready','injured','captured','dead','retired'].includes(a.status)||(a.portrait!==null&&!number(a.portrait,0,11)))bad();if(a.task){const t=a.task;if(t.travelDistance!==undefined&&(!['travel','sneak'].includes(t.type)||![1,2].includes(t.travelDistance)))bad();if(t.logisticsApplied!==undefined&&typeof t.logisticsApplied!=='boolean')bad();if(t.logisticsModuleId!==undefined&&t.logisticsModuleId!==null&&!textSafe(t.logisticsModuleId))bad();if(t.tacticalBonus!==undefined&&(![0,5].includes(t.tacticalBonus)||t.tacticalBonus===5&&t.type!=='arrest'))bad();if(!ACTIONS[t.type]||!number(t.remaining,1,4)||!number(t.total,1,4)||!number(t.cost,0,12)||!number(t.chance,10,100)||!number(t.fatigue,0,18)||!COUNTRY[t.origin])bad();if(['travel','sneak'].includes(t.type)&&!COUNTRY[t.target])bad();if(['collect','surveil','hack','prepare','arrest','blackmail','intimidate'].includes(t.type)&&!suspectIds.includes(t.target))bad();if(t.type==='drone'&&t.target!==null&&!suspectIds.includes(t.target))bad();if(t.type==='cyberSupport'&&!COUNTRY[t.target])bad();if(t.type==='analyze'&&t.target!==null&&!proofIds.has(t.target))bad();if(t.bonusCredits!==undefined&&(![0,2,6].includes(t.bonusCredits)||t.bonusCredits===2&&(!['authorize','influence'].includes(t.type)||t.cost<2)))bad();if(t.bonusCredits===6&&(ACTIONS[t.type].safe||t.cost!==6))bad();if(t.chanceInputs){const c=t.chanceInputs;if((c.drone!==undefined&&typeof c.drone!=='boolean')||!number(c.raw,-200,300)||['boost','ai','cyber'].some(k=>typeof c[k]!=='boolean')||ACTIONS[t.type].safe||c.boost!==(t.bonusCredits===6))bad();}if(t.influenceSpent!==undefined){if(![0,1].includes(t.influenceSpent))bad();delete t.influenceSpent;}}}
  if(new Set(s.agents.map(a=>a.id)).size!==s.agents.length)bad();
  const drawn=s.suspects.filter(t=>t.templateId!==undefined);
@@ -656,7 +657,7 @@ export function validateSave(s){
  for(const f of Object.values(s.factions)){
   if(f.defenseBase!==undefined&&(!f.defenseBase||typeof f.defenseBase!=='object'||Array.isArray(f.defenseBase)||Object.entries(f.defenseBase).some(([c,n])=>!Object.hasOwn(COUNTRY,c)||!Number.isInteger(n)||n<0||n>50)))bad();
   if(f.techSerial!==undefined&&(!Number.isSafeInteger(f.techSerial)||f.techSerial<0))bad();
-  if(f.tech.some(t=>(t.cost!==undefined&&(!Number.isInteger(t.cost)||![TECH[t.type].cost,...(t.type==='ai'?[3,4]:[])].includes(t.cost)))||(t.id!==undefined&&(typeof t.id!=='string'||!/^([A-Z]{2})-tech-[1-9][0-9]*$/.test(t.id)||!t.id.startsWith(f.id+'-tech-')))||['pendingLead','pendingObservation','used'].some(k=>t[k]!==undefined&&typeof t[k]!=='boolean')))bad();
+  if(f.tech.some(t=>(t.cost!==undefined&&(!Number.isInteger(t.cost)||![TECH[t.type].cost,...(t.type==='ai'?[3,4]:t.type==='relay'?[3]:[])].includes(t.cost)))||(t.id!==undefined&&(typeof t.id!=='string'||!/^([A-Z]{2})-tech-[1-9][0-9]*$/.test(t.id)||!t.id.startsWith(f.id+'-tech-')))||['pendingLead','pendingObservation','used'].some(k=>t[k]!==undefined&&typeof t[k]!=='boolean')))bad();
   if(new Set(f.tech.filter(t=>t.id).map(t=>t.id)).size!==f.tech.filter(t=>t.id).length)bad();
   if(f.tech.some(t=>t.id&&Number(t.id.split('-').at(-1))>(f.techSerial||0)))bad();
  }
@@ -693,7 +694,7 @@ export function operationForecast(s,id,type,target){const a=s.agents.find(a=>a.i
  const incidentExposure=missionExposure(a,type,false);
  const risk=type==='intimidate'?`Réussite ou échec : exposition +${incidentExposure}. En cas d’échec : aucun renseignement, nouvelle tentative possible.`:ACTIONS[type].safe?'Aucun jet d’échec.':dangerous?`En cas d’échec : exposition +${incidentExposure}, blessure, capture ou décès possibles.`:`En cas d’échec : aucune progression et exposition +${incidentExposure}.`;
  const warnings=[];if(o.tacticalBonus)warnings.push('Planification tactique : +5 réservé à cet ordre à sa confirmation, consommé seulement lors du jet. Annulation ou interruption avant le jet : bonus conservé.');
- if(type==='surveil'&&s.factions[a.faction].cooperation[a.country]===4)warnings.push('Soutien total : localisation prolongée d’un tour si ce niveau est maintenu à la réussite.');
+ if(type==='surveil'){const relation=cooperationInfo(s,a.faction,a.country),relay=s.factions[a.faction].tech.some(x=>x.type==='relay'&&x.until>=end),duration=relation.location+(relay?2:0);warnings.push(`Position valide ${duration} tours après résolution, jusqu’à fin T${end+duration} : ${relation.name} (${relation.location})${relay?' + relais satellite (2)':''}. Prévision si la coopération reste identique à la réussite ; une fuite invalide la position.`);}
  if(type==='arrest'&&o.clandestine)warnings.push('Tentative sans mandat : coopération des autorités −1 niveau, réussite ou échec.');
  if(t&&type==='arrest'&&t.locationUntil<end)warnings.push('La position expirera avant la résolution. Actualisez-la d’abord.');
  if(type==='analyze'){const e=s.factions[a.faction].evidence.find(e=>(!target||e.id===target)&&!e.verified&&!e.contested);if(e)warnings.push('Pièce examinée : '+proofTitle(s.proofs.find(p=>p.id===e.id))+'.');}

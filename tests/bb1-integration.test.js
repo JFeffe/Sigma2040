@@ -15,9 +15,9 @@ test('BB1 is an additional explicit option; Normal remains the default',()=>{
  const s=E.createGame('FR',ids,55);delete s.aiDifficulty;assert.equal(E.validateSave(s).aiDifficulty,'normal');
 });
 test('Easy, Normal and Expert remain deterministic with the expanded twenty-agent roster and current rules',()=>{
- const {results}=JSON.parse(readFileSync(new URL('./fixtures/build194-legacy-bots.json',import.meta.url)));
- // Historical fixtures stay intact. Build 194 changes weapon, verification and localization rules,
- // and adds durable statistics, so this release has its own deterministic baseline.
+ const {results}=JSON.parse(readFileSync(new URL('./fixtures/build196-legacy-bots.json',import.meta.url)));
+ // Historical fixtures stay intact. Build 196 changes protection prestige, relay cost
+ // and localization validity, so this release has its own deterministic baseline.
  for(const {level,seed,hash} of results){const s=E.createGame('FR',ids,seed,level);s.humanFactions=[];while(!s.ended)E.advance(s);assert.equal(createHash('sha256').update(JSON.stringify(s)).digest('hex'),hash,level+' '+seed);assert.ok(Object.values(s.factions).every(f=>!f.bb1));}
 });
 test('Only the multiplayer host selects BB1, the room propagates it and humans stay manual',()=>{

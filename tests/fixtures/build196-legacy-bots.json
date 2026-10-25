@@ -1,0 +1,50 @@
+{
+  "source": "Build 196: protection 4, relay 2, cooperation localization 2/2/3/3/4. Historical fixtures preserved.",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "b9421fa11568a8ddbf19d7bf773ad69003a954c76b2541f1be6b549bea53ed99"
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "a59270da97dbd5a21c0a618055ab866659ebb76b7790c05da94031fb525205e8"
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "9bb6af5ebc1d46dacfe7b7845829625bc26890abdc94aea00b8967bbe0e86fa6"
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "cd443c56e3c1584de7105222f4487d792fed40ed85b3c5be8969940ed32db275"
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "cd725dd39bee607d73a76cdae6aaa9e88f3de75f8748a5b6e5cb4ee7bb1b2ee8"
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "4bba859a2bdf08c9296c71fb18eb3c41b75e00f4549e7e97701cc87b79907329"
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "3bf453b335018d108828e4af3c97f73c0e2c183fbc4c5a8d21a278aa7a17bb32"
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "6881ee93911314ff1e4ad161fa8fbb358b45579db85209604656949a9b953d0e"
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "445a80e51eed4c96daded38c01ebaba007ee12419c017c55ee0c7c792725f10c"
+    }
+  ]
+}

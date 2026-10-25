@@ -7,7 +7,7 @@ test('Localization always takes one turn; relay only prolongs valid positions',(
  const s=fresh(),agents=E.team(s),t=s.suspects[0];for(const a of agents)a.country=t.country;s.factions.FR.access[t.country]=true;
  E.assign(s,agents[0].id,'surveil',t.id);const relay=E.activateTech(s,'relay');assert.equal(relay.until,2);assert.equal(agents[0].task.total,1);
  for(const a of agents.slice(1,3)){assert.equal(E.options(s,a.id,'surveil',t.id).duration,1);E.assign(s,a.id,'surveil',t.id);assert.equal(a.task.total,1);}
- assert.equal(E.options(s,agents[3].id,'hack',t.id).duration,2);assert.equal(E.options(s,agents[3].id,'drone',t.id).duration,1);assert.equal(E.techRefund(s,relay),3);
+ assert.equal(E.options(s,agents[3].id,'hack',t.id).duration,2);assert.equal(E.options(s,agents[3].id,'drone',t.id).duration,1);assert.equal(E.techRefund(s,relay),2);
  const loaded=E.validateSave(structuredClone(s));assert.equal(loaded.agents.find(a=>a.id===agents[1].id).task.total,1);assert.equal(playerView({game:s,offers:[]},'US').factions.FR.tech.length,0);
  E.cancelTech(s,relay.id);assert.equal(agents[1].task.total,1);assert.equal(E.options(s,agents[3].id,'surveil',t.id).duration,1);assert.equal(s.factions.FR.budget,18);
 });

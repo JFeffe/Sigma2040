@@ -31,7 +31,7 @@ test('Normal uses relay for one-turn localization of a prepared case with an exp
  const {s,f,a,t}=fixture();s.plots=[];f.budget=3;
  f.evidence=s.proofs.filter(p=>p.suspect===t.id&&p.authentic).map(p=>({id:p.id,verified:true,contested:false}));
  f.known[t.id].prepared=true;f.known[t.id].locationUntil=0;
- E.planFaction(s,'US');assert.equal(a.task.type,'surveil');assert.equal(a.task.total,1);assert.equal(f.budget,0);
+ E.planFaction(s,'US');assert.equal(a.task.type,'surveil');assert.equal(a.task.total,1);assert.equal(f.budget,1);
 });
 test('Continuity uses observed progress only, with unchanged chances and no extra money',()=>{
  const {s,a,t}=fixture(),other=structuredClone(s),before=E.options(s,a.id,'hack',t.id);

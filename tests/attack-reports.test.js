@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {formatScore} from '../dist/client/ui.js';
 import {existsSync} from 'node:fs';
 import * as E from '../dist/client/engine.js';
 import {missionCards,missionRevealMarkup,revealDelay} from '../dist/client/mission-reveal.js';
@@ -19,4 +20,4 @@ test('Dismantled cells produce no false attack report; old saves and invalid rep
  const s=fresh();s.suspects.filter(t=>t.cell===0).forEach(t=>t.arrested=true);E.advance(s);assert.deepEqual(s.attackReports,[]);delete s.attackReports;E.validateSave(structuredClone(s));s.attackReports=[{type:'attack',participants:['bad']}];assert.throws(()=>E.validateSave(s));
 });
 
-test('Interception displays actual prestige share for one to six countries',()=>{for(let n=1;n<=6;n++){const s=fresh();Object.values(s.factions).slice(0,n).forEach(f=>f.defense.DE=1);E.advance(s);const r=s.attackReports[0],html=missionRevealMarkup(r,0,1);assert.equal(r.participants.length,n);assert.ok(html.includes('+'+String(6/n)+' point'));for(const f of r.participants)assert.equal(s.prestigeLedger.find(e=>e.faction===f).points,6/n);}});
+test('Interception displays actual prestige share for one to six countries',()=>{for(let n=1;n<=6;n++){const s=fresh();Object.values(s.factions).slice(0,n).forEach(f=>f.defense.DE=1);E.advance(s);const r=s.attackReports[0],html=missionRevealMarkup(r,0,1);assert.equal(r.participants.length,n);assert.ok(html.includes('+'+formatScore(4/n)+' point'));for(const f of r.participants)assert.equal(s.prestigeLedger.find(e=>e.faction===f).points,4/n);}});

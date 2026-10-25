@@ -1,2 +1,2 @@
-export {syncCameraTurn,createCamera,constrain,zoomAt,focusCountry,renderMap,mountMap} from './globe.js?v=195';
-export {agentMapMarkers} from './map-markers.js?v=195';
+export {syncCameraTurn,createCamera,constrain,zoomAt,focusCountry,renderMap,mountMap} from './globe.js?v=196';
+export {agentMapMarkers} from './map-markers.js?v=196';

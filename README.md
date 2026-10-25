@@ -1,4 +1,17 @@
-# Publication GitHub — build 195
+# Publication GitHub — build 196
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+- Un résumé commun par tour pour les actions automatiques réussies, avec les résultats de chaque agent.
+- Menaces : hauteur adaptée au texte ; protection active, protection en préparation et couverture au tour prévu affichées séparément, sans garantir une mission non résolue.
+- Localisation : action de 1 tour ; validité après résolution de 2 / 2 / 3 / 3 / 4 tours en Hostile / Réticente / Neutre / Favorable / Soutien total. Relais : +2 tours. Drone et intimidation conservent leurs durées.
+- Protection : 4 points partagés entre défenseurs. Relais satellite : 2 crédits. Gains historiques et coût réellement payé des anciens modules conservés.
+- Finale : fermeture des fenêtres en passant au bilan complet ; points de protection par pays et détail par attaque, participants et part reçue.
+- Indicateur de relations entre agents retiré du périmètre à la demande du joueur.
+
+Validation : `npm test` ; régressions sur les cinq niveaux de coopération, les sauvegardes, les remboursements, les frontières de couverture, les parts de prestige et la confidentialité multijoueur. Contrôle visuel du jeu et des cartes de menace avec plusieurs missions et cinq pays alliés, sans chevauchement du texte et des boutons.
+
+# Historique — build 195
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 

@@ -1,12 +1,12 @@
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=195';
-import {threatCoverage,coveringFactions} from './threat-status.js?v=195';
-import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=195';
-import * as E from './engine.js?v=195';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=195';
-import {esc,icon,button,flag,portrait} from './ui.js?v=195';
-import {suspectPortrait} from './fracture-profiles.js?v=195';
-import {countrySignals} from './country-signals.js?v=195';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=195';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=196';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=196';
+import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=196';
+import * as E from './engine.js?v=196';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=196';
+import {esc,icon,button,flag,portrait} from './ui.js?v=196';
+import {suspectPortrait} from './fracture-profiles.js?v=196';
+import {countrySignals} from './country-signals.js?v=196';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=196';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -93,14 +93,15 @@ function paint(open=false){
  const running=E.team(s).filter(a=>a.task&&(a.task.target===t.id||a.task.type==='analyze'&&s.proofs.find(p=>p.id===a.task.target)?.suspect===t.id||a.country===t.country&&['contacts','influence','authorize','drone',...(plot?['protect']:[])].includes(a.task.type)));
  const missions=running.length?`<section class="inquiry-running"><h3>Missions affectées · ${running.length}</h3>${running.map(a=>`<div>${button(portrait(a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${a.id}" aria-label="Ouvrir les actions de ${esc(a.name)}"`)}<span><strong>${esc(a.name)}</strong><small>${esc(ACTIONS[a.task.type].name)} · ${a.task.remaining} tour(s)${a.task.queued?' · planifiée':''}</small></span></div>`).join('')}</section>`:'';
 
+ const protection=plot?threatProtectionText(s,plot):null;
  const coverage=plot?threatCoverage(s,plot):null,otherCoverage=plot?coveringFactions(s,plot).filter(f=>f.id!==s.player):[];
 
  const blocked=locked||done||selected?.reason||(!selected?'Aucun agent disponible pour cette action.':'');
  const html=`<section class="country-inquiry"><header class="inquiry-heading">${plot?'<span class="inquiry-threat-icon">'+icon('shield')+'</span>':suspectPortrait(t)}<div><span class="eyebrow">${esc(CELLS[t.cell]||'DIRECTION')} · ${plot?'MENACE':'DOSSIER'}</span><h2>${esc(t.name)}</h2><span>${flag(t.country)} ${esc(COUNTRY[t.country].name)}</span></div></header>
  <div class="inquiry-country-signals">${countrySignals(s,t.country)}</div>
- <div class="inquiry-summary">${plot?`<span>Attaque · fin du tour ${plot.turn}</span><span>${coverage.covered?'Protégée par votre pays':otherCoverage.length?'Couverte par une autre équipe':'Menace non couverte'}</span>${otherCoverage.length?`<span class="other-coverage">${icon('shield')} Déjà couverte par ${otherCoverage.map(f=>`${esc(COUNTRY[f.id].name)} · jusqu’à T${f.defense[plot.country]}`).join(' ; ')}</span>`:''}`:`<span>${e.length}/2 preuves · ${e.filter(p=>p.verified).length} vérifiée(s)</span><span>${t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer'}</span>`}</div>
+ <div class="inquiry-summary">${plot?`<span>Attaque · fin du tour ${plot.turn}</span><span>${esc(protection.current)}</span>${protection.planned?`<span>${esc(protection.planned)}</span>`:''}<span>${esc(protection.attack)}</span><span>${coverage.covered?'Protégée par votre pays':otherCoverage.length?'Couverte par une autre équipe':'Menace non couverte'}</span>${otherCoverage.length?`<span class="other-coverage">${icon('shield')} Déjà couverte par ${otherCoverage.map(f=>`${esc(COUNTRY[f.id].name)} · jusqu’à T${f.defense[plot.country]}`).join(' ; ')}</span>`:''}`:`<span>${e.length}/2 preuves · ${e.filter(p=>p.verified).length} vérifiée(s)</span><span>${t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer'}</span>`}</div>
  <div class="inquiry-body">${actions}
- <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}<div class="inquiry-action-context">${inquiryActionInputs(type,preview)}${button(`${icon('help')} Effets de l’action ${icon('chevron')}`,'inquiry-effects','inquiry-effects',`id="inquiryEffects" aria-expanded="${!!selection.effectsOpen}" aria-controls="inquiryMechanics"`)}<p id="inquiryMechanics" class="inquiry-mechanics" ${selection.effectsOpen?'':'hidden'}>${esc(OUTCOMES[type])}</p></div>
+ <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}<div class="inquiry-action-context">${inquiryActionInputs(type,preview)}${button(`${icon('help')} Effets de l’action ${icon('chevron')}`,'inquiry-effects','inquiry-effects',`id="inquiryEffects" aria-expanded="${!!selection.effectsOpen}" aria-controls="inquiryMechanics"`)}<p id="inquiryMechanics" class="inquiry-mechanics" ${selection.effectsOpen?'':'hidden'}>${esc(OUTCOMES[type])}${type==='surveil'&&preview?' '+esc(E.operationForecast(s,preview.a.id,type,preview.target).warnings[0]):''}</p></div>
  ${plot&&selected?`<p class="inquiry-warning">Fin de préparation : T${s.turn+selected.o.duration-1}${s.turn+selected.o.duration-1>plot.turn?' · Trop tard pour cette attaque.':plot.turn>s.turn+selected.o.duration+2?' · Protection expirée avant cette attaque si lancée maintenant.':' · Protection à temps en cas de réussite.'}</p>`:''}
  ${requirements.length?`<div class="inquiry-requirements">${requirements.map(r=>r.done?`<span class="is-met">${icon('check')} ${esc(r.label)}</span>`:button(`${icon('lock')} ${esc(r.label)}`,'inquiry-action','is-missing',`data-id="${r.action}"`)).join('')}</div>`:''}
  ${type==='arrest'&&!f.authorized[t.country]&&!t.arrested?'<p class="inquiry-warning">Sans mandat : arrestation clandestine, risque accru et coopération −1 niveau après la tentative.</p>':''}

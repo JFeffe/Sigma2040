@@ -1,9 +1,9 @@
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=195';
-import {musicMarkup} from './music.js?v=195';
-import * as E from './engine.js?v=195';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=195';
-import {proofTitle} from './intelligence.js?v=195';
-import {esc,button,portrait,icon} from './ui.js?v=195';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=196';
+import {musicMarkup} from './music.js?v=196';
+import * as E from './engine.js?v=196';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=196';
+import {proofTitle} from './intelligence.js?v=196';
+import {esc,button,portrait,icon} from './ui.js?v=196';
 const PREF='sigma2040-feedback-settings';
 let prefs={sound:false,volume:25,motion:'system'};
 try{const saved=JSON.parse(localStorage.getItem(PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system'};}catch{}

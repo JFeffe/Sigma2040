@@ -1,0 +1,1 @@
+export const PROTECTION_PRESTIGE=4;

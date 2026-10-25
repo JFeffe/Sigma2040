@@ -33,7 +33,7 @@ test('Threat indicator counts only attacks not covered by our country at their s
 test('Threat cards show countdown, smaller attack turn and own coverage with no support action',()=>{
  const s=fresh();s.plots=[{id:'a',cell:0,country:'DE',turn:3,kind:'Attaque',announced:true}];s.factions.FR.defense.DE=3;
  const html=threatPanel(s);assert.match(html,/0 menace\(s\) · 1 couverte\(s\)/);assert.match(html,/threat-covered/);assert.match(html,/<strong>Attaque à la fin du tour 3<\/strong><small>3 tours pour agir/);assert.match(html,/T3 inclus/);assert.doesNotMatch(html,/Préparer un soutien|data-cmd="protect/);
- s.factions.FR.defense.DE=2;assert.match(threatPanel(s),/expire à T2, avant/);
+ s.factions.FR.defense.DE=2;assert.match(threatPanel(s),/fin T2 inclus/);assert.match(threatPanel(s),/À l’attaque T3 : non couverte/);
  s.plots[0].resolved=true;assert.match(threatPanel(s),/Aucune menace annoncée/);
 });
 test('Personnel prominently renders every supplied full-body image and targets the selected co-located agent',()=>{

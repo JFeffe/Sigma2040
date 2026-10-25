@@ -27,7 +27,7 @@ test('Captured agents occupy a slot; rescue can liberate and death is permanent'
  const s=fresh();s.agents[0].status='captured';s.agents[0].country='DE';assert.equal(E.team(s).length,4);assert.throws(()=>E.recruit(s,'p4','p0'));s.agents[1].country='DE';E.assign(s,'p1','rescue','p0');s.agents[1].task.chance=100;advance(s);advance(s);assert.equal(s.agents[0].status,'injured');s.agents[0].status='dead';assert.equal(E.team(s).length,3);assert.ok(E.options(s,'p0','rest').error);E.recruit(s,'p4');assert.equal(s.recruitments.length,1);
 });
 test('Protection prevents the announced attack and points are awarded once',()=>{
- const s=fresh();s.plots=[{id:'test',country:'DE',turn:1,cell:0,kind:'test',resolved:false}];E.activateTech(s,'guard','DE');advance(s);assert.equal(s.plots[0].resolved,true);assert.equal(s.factions.FR.score,6);advance(s);assert.equal(s.factions.FR.score,6);assert.equal(s.crisis,13);
+ const s=fresh();s.plots=[{id:'test',country:'DE',turn:1,cell:0,kind:'test',resolved:false}];E.activateTech(s,'guard','DE');advance(s);assert.equal(s.plots[0].resolved,true);assert.equal(s.factions.FR.score,4);advance(s);assert.equal(s.factions.FR.score,4);assert.equal(s.crisis,13);
 });
 test('National prestige alone cannot win; success requires mastermind and two complete cells',()=>{
  const s=fresh();s.turn=40;s.factions.FR.score=1000;advance(s);assert.equal(s.ended,'defeat');const v=fresh();for(const t of v.suspects)if(t.cell<2||t.cell===3)t.arrested=true;advance(v);assert.equal(v.ended,'victory');assert.throws(()=>E.advance(v));

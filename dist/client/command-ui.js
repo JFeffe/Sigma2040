@@ -1,9 +1,9 @@
-import {COOPERATION} from './cooperation.js?v=195';
-import {evidenceFreshness} from './experience.js?v=195';
-import * as E from './engine.js?v=195';
-import {COUNTRY,COUNTRIES} from './data.js?v=195';
-import {proofTitle} from './intelligence.js?v=195';
-import {esc,flag,button,icon} from './ui.js?v=195';
+import {COOPERATION} from './cooperation.js?v=196';
+import {evidenceFreshness} from './experience.js?v=196';
+import * as E from './engine.js?v=196';
+import {COUNTRY,COUNTRIES} from './data.js?v=196';
+import {proofTitle} from './intelligence.js?v=196';
+import {esc,flag,button,icon} from './ui.js?v=196';
 const nation=id=>COUNTRY[id]?`${flag(id)} ${COUNTRY[id].name}`:'Non consigné';
 export function exposureMarkup(a){const penalty=E.exposurePenalty(a);return `<div class="exposure-block"><div class="exposure-segments" role="meter" aria-label="Exposition" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.min(100,a.exposure)}" aria-valuetext="${a.exposure}/100 ; ${penalty?'pénalité de '+penalty+' points sur les actions sensibles':'aucune pénalité'}">${[0,20,40,60,80].map(n=>`<i class="${a.exposure>n?'filled':''} ${a.exposure>=60?'high':a.exposure>=40?'medium':'low'}"></i>`).join('')}</div><details class="exposure-card"><summary>Exposition <strong>${a.exposure}/100</strong> · ${E.exposureLabel(a)}${penalty?` · −${penalty} pts sur les actions sensibles`:''}</summary><meter min="0" max="100" value="${a.exposure}" aria-label="Exposition de l’agent"></meter><p>Traces et attention laissées par l’agent, distinctes de sa fatigue. 0–19 Discret · 20–39 Repérable au contre-espionnage mondial · 40–59 Surveillé : −6 aux actions sensibles · 60–79 Compromis : −9 sensibles / −5 enquête · 80–100 Très exposé : −12 sensibles / −10 enquête et +1 pression sur une réussite contre une cible (arrestation : +3, sans cumul). Sensibles : passage clandestin, arrestation, extraction. Enquête : collecte, localisation, préparation, intrusion. Aucune capture automatique.</p><p>Passeport +10 · acquisition d’arme +10 · drone +10 · échec +18. Réduire : profil bas −35, repos au QG −20, planque −15.</p></details></div>`;}
 export function evidenceSummary(s){const f=s.factions[s.player],raw=E.evidenceQueue(s,s.player),running=raw.filter(e=>E.analysisAgent(s,s.player,e.id)).length;return `<div class="evidence-counts"><span class="good">${f.evidence.filter(e=>e.verified).length} vérifiée(s)</span><span class="pending">${raw.length-running} en attente</span><span>${running} en vérification</span><span>${f.evidence.filter(e=>e.contested).length} écartée(s)</span></div>`;}
