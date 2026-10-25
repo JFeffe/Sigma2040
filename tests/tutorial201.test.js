@@ -18,8 +18,8 @@ function play(s,{favor='medical',swap=false}={}){
  }
  throw Error('Exercise never completed');
 }
-test('Six independent tutorials; all advanced missions finish with normal actions and reload after every order',()=>{
- assert.equal(TUTORIAL_MISSIONS.length,9);
+test('Independent tutorials; all advanced missions finish with normal actions and reload after every order',()=>{
+ assert.equal(TUTORIAL_MISSIONS.length,12);
  for(const id of ['countdown','longrange','hostile']){
   const s=play(createTutorialGame(id));assert.equal(tutorialObjective(s).done,true);assert.equal(s.ended,null);assert.deepEqual(Object.keys(s.factions),['FR']);assert.equal(s.turn,{countdown:5,longrange:4,hostile:6}[id]);
   assert.ok(s.operationReports.every(r=>r.chance===100&&r.status==='RÉUSSITE'&&!r.withoutObject));assert.throws(()=>E.advance(s),/Exercice terminé/);assert.throws(()=>E.validateSave(s),/incompatible/);

@@ -17,11 +17,11 @@ function play(value,{skipAnalysis=false,skipInfluence=false}={}){
  throw Error('Training did not finish');
 }
 test('Three new lessons resolve on the real engine with isolated saves and parallel opening orders',()=>{
- assert.equal(TUTORIAL_MISSIONS.length,9);
- const openings={stealth:['sneak','authorize','findSafehouse'],digital:['drone','cyberSupport','findSafehouse'],finale:['protect','collect','authorize','analyze']};
+ assert.equal(TUTORIAL_MISSIONS.length,12);
+ const openings={stealth:['sneak','authorize','findSafehouse','cyberSupport'],digital:['drone','cyberSupport','findSafehouse'],finale:['protect','collect','authorize','analyze']};
  for(const id of Object.keys(openings)){
   const s=createTutorialGame(id);assert.deepEqual(tutorialObjective(s).orders.map(o=>o.type),openings[id]);const done=play(s);
-  assert.equal(tutorialObjective(done).done,true);assert.equal(done.turn,{stealth:4,digital:6,finale:5}[id]);assert.deepEqual(Object.keys(done.factions),['FR']);assert.ok(done.operationReports.every(r=>r.status==='RÉUSSITE'&&r.chance===100&&!r.withoutObject));assert.throws(()=>E.validateSave(done),/incompatible/);
+  assert.equal(tutorialObjective(done).done,true);assert.equal(done.turn,{stealth:6,digital:6,finale:5}[id]);assert.deepEqual(Object.keys(done.factions),['FR']);assert.ok(done.operationReports.every(r=>r.status==='RÉUSSITE'&&r.chance===100&&!r.withoutObject));assert.throws(()=>E.validateSave(done),/incompatible/);
  }
 });
 test('Stealth keeps the weapon and removes exposure while safehouse work advances separately',()=>{
@@ -59,8 +59,8 @@ test('The compact guide can minimize an active or finished lesson and retains de
  for(const s of [createTutorialGame('longrange'),play(createTutorialGame('stealth'))]){const html=tutorialGuide(s,true);assert.match(html,/is-collapsed/);assert.match(html,/id="tutorialDirections" hidden/);assert.match(html,/aria-label="Agrandir le guide" aria-expanded="false"/);assert.match(html,/Instructions/);}
  const html=tutorialGuide(createTutorialGame('longrange'));assert.match(html,/Minimiser le guide/);assert.match(html,/Logistique prioritaire · 3 cr/);assert.doesNotMatch(html,/Au même tour : IRIS et LEI/);
 });
-test('All nine progress slots survive save/reload independently',()=>{
+test('All twelve progress slots survive save/reload independently',()=>{
  const data=new Map(),storage={getItem:k=>data.get(k)||null,setItem:(k,v)=>data.set(k,v)};let p=readTutorialProgress(storage);
  for(const m of TUTORIAL_MISSIONS)p=saveTutorialProgress(storage,createTutorialGame(m.id),p);
- const loaded=readTutorialProgress(storage);assert.equal(loaded.warning,false);assert.equal(Object.keys(loaded.sessions).length,9);
+ const loaded=readTutorialProgress(storage);assert.equal(loaded.warning,false);assert.equal(Object.keys(loaded.sessions).length,12);
 });

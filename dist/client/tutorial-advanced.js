@@ -1,8 +1,10 @@
+import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=203';
 // Later lessons derive their progress from real game state and operation reports.
-import {ACTIONS,COUNTRY} from './data.js?v=202';
-export const ADVANCED_TUTORIALS=['countdown','longrange','hostile','stealth','digital','finale'];
-export const tutorialTechAllowed=(s,type)=>s?.tutorial?.mission==='longrange'&&['logistics','relay'].includes(type);
+import {ACTIONS,COUNTRY} from './data.js?v=203';
+export const ADVANCED_TUTORIALS=['countdown','longrange','hostile','stealth','digital','finale',...AUTONOMY_TUTORIALS];
+export const tutorialTechAllowed=(s,type)=>['longrange','resources','autonomy'].includes(s?.tutorial?.mission)&&['logistics','relay'].includes(type);
 export const tutorialGovernmentAllowed=(s,type,country)=>{
+ if(AUTONOMY_TUTORIALS.includes(s?.tutorial?.mission))return ['funding','medical'].includes(type)||type==='diplomacy'&&['TR','JP'].includes(country);
  if(!['hostile','finale'].includes(s?.tutorial?.mission))return false;
  if(['funding','medical'].includes(type))return true;
  const g=s.campaignStats?.support?.FR?.government||{},used=(g.funding?.count||0)+(g.medical?.count||0)>0;
@@ -12,6 +14,7 @@ export const tutorialGovernmentAllowed=(s,type,country)=>{
 export const tutorialCanWait=s=>['arrest',...ADVANCED_TUTORIALS].includes(s?.tutorial?.mission);
 const active=(s,type)=>s.factions.FR.tech.some(t=>t.type===type&&t.until>=s.turn);
 export function advancedObjective(s){
+ const autonomous=autonomyObjective(s);if(autonomous)return autonomous;
  const mission=s.tutorial.mission;if(!ADVANCED_TUTORIALS.includes(mission))return null;
  const f=s.factions.FR,k=f.known.s0,target=s.suspects.find(t=>t.id==='s0');
  const reports=s.operationReports||[],orders=[],tech=[];
@@ -53,22 +56,35 @@ export function advancedObjective(s){
  }
  const succeeded=(type,id=null)=>reports.some(r=>r.type===type&&(!id||r.agentId===id)&&r.status==='RÉUSSITE'&&!r.withoutObject);
  if(mission==='stealth'){
-  if(target.arrested&&succeeded('sneak','p14')&&succeeded('fieldRest','p12')&&succeeded('hide','p12'))return result('Disparaître puis intervenir','Le passage clandestin réussi a remis l’exposition à zéro et conservé l’arme de LEI. Planque, repos et profil bas ont permis à BISHOP de récupérer en parallèle.',{done:true});
+  const cobalt=s.suspects.find(t=>t.id==='s1'),ck=f.known.s1;
+  const ce=f.evidence.filter(e=>!e.contested&&s.proofs.find(p=>p.id===e.id)?.suspect==='s1');
+  if(target.arrested&&cobalt.arrested&&succeeded('sneak','p14')&&succeeded('fieldRest','p12')&&succeeded('hide','p12'))return result('Deux dossiers, une équipe discrète','Vesper et Cobalt sont arrêtés. Les preuves, la préparation et la localisation ont été gérées séparément dans le même pays. Le passage clandestin a effacé l’exposition de LEI ; BISHOP a récupéré en parallèle.',{done:true});
   const lei=s.agents.find(a=>a.id==='p14');
   if(lei.country!=='TR')add('p14','sneak','TR');
-  else if(!target.arrested&&k.locationUntil>=s.turn&&f.authorized.TR)add('p14','arrest','s0');
-  if(!target.arrested){if(!f.authorized.TR)add('p0','authorize');else if(k.locationUntil<s.turn)add('p0','surveil','s0');}
+  else if(!cobalt.arrested){
+   if(ce.length<2)add('p14','collect','s1');
+   else if(ck.prepared&&ck.locationUntil>=s.turn&&f.authorized.TR)add('p14','arrest','s1');
+  }
+  if(!target.arrested){
+   if(!f.authorized.TR)add('p0','authorize');
+   else if(k.locationUntil<s.turn)add('p0','surveil','s0');
+   else add('p0','arrest','s0');
+  }else if(!cobalt.arrested&&ck.locationUntil<s.turn)add('p0','surveil','s1');
   if(!f.safehouses.includes('TR'))add('p12','findSafehouse');
   else if(!succeeded('fieldRest','p12'))add('p12','fieldRest');
   else if(!succeeded('hide','p12'))add('p12','hide');
+  else if(!cobalt.arrested&&!ck.prepared&&ce.length>=2&&ce.some(e=>e.verified))add('p12','prepare','s1');
+  const piece=ce.find(e=>!e.verified);
+  if(piece&&!cobalt.arrested&&lei.country==='TR')add('p15','analyze',piece.id);else if(!cobalt.arrested||!target.arrested)add('p15','cyberSupport','TR');
   recovery();
-  return result('Effacer les traces',"LEI rejoint Ankara en passage clandestin. Pendant ce temps, IRIS obtient le mandat puis localise ; BISHOP trouve une planque, s’y repose et fait profil bas. Une réussite clandestine efface l’exposition ; le profil bas et le repos ont des effets différents.");
+  return result('Vesper et Cobalt · Deux dossiers à Ankara',"Dans le panneau d’Ankara, choisissez la cible avant d’affecter l’action. IRIS intervient sur Vesper pendant que LEI recueille une seconde preuve sur Cobalt et qu’APÉRO vérifie sa première pièce au QG. BISHOP trouve une planque, récupère puis prépare Cobalt. Le mandat couvre le pays, mais chaque cible conserve ses propres preuves et sa localisation.");
  }
  if(mission==='digital'){
   if(target.arrested&&verified>=2&&succeeded('drone')&&succeeded('cyberSupport')&&succeeded('hack'))return result('Réseau compromis','Le drone a ouvert l’accès et localisé sans fournir de preuve. L’intrusion a obtenu une pièce pendant la vérification au QG. Le hack du pays a soutenu les opérations ; ces trois effets sont distincts.',{done:true});
   if(!succeeded('drone'))add('p14','drone','s0');
   if(!succeeded('cyberSupport'))add('p15','cyberSupport','TR');
   else if(raw)add('p15','analyze',raw.id);
+  else if(!target.arrested)add('p15','cyberSupport','TR');
   if(!f.access.TR&&!f.safehouses.includes('TR'))add('p12','findSafehouse');
   else if(f.access.TR&&!succeeded('hack'))add('p12','hack','s0');
   else if(!k.prepared&&evidence.length>=2&&verified>=1)add('p12','prepare','s0');
@@ -79,12 +95,12 @@ export function advancedObjective(s){
    else if(!s.agents.find(a=>a.id==='p14').weapon)add('p14','equip');
   }
   recovery();
-  return result('Drone, intrusion et vérification',"Au T1 : drone sur le terrain, hack du pays depuis le QG et planque en parallèle. Puis BISHOP mène l’intrusion pendant qu’APÉRO vérifie la première preuve. Le bonus de hack est réel, mais les chances restent fixées à 100 % dans cet exercice.");
+  return result('Drone, intrusion et vérification',"Au T1 : drone sur le terrain, hack du pays depuis le QG et planque en parallèle. Puis BISHOP mène l’intrusion pendant qu’APÉRO vérifie la première preuve. Entre deux pièces, APÉRO prolonge le hack du pays : +3 tours à chaque réussite, bonus maintenu à +10. Le bonus de hack est réel, mais les chances restent fixées à 100 % dans cet exercice.");
  }
  if(mission==='finale'){
   const plot=s.plots[0],blocked=!!s.credited[plot.id+':FR'];
   if(plot.resolved&&!blocked||!target.arrested&&target.country!=='TR')return result('Une échéance a été manquée','Protégez Berlin avant l’attaque T4 et arrêtez Vesper à Ankara avant son départ à la fin de T6. Les deux opérations doivent avancer ensemble.',{failed:true});
-  if(blocked&&target.arrested&&verified>=2)return result('Opération Filigrane accomplie','Attaque interceptée, preuves vérifiées et cible arrêtée avant son départ. Vous avez coordonné deux fronts avec quatre agents. Les neuf exercices restent rejouables séparément.',{done:true});
+  if(blocked&&target.arrested&&verified>=2)return result('Opération Filigrane accomplie','Attaque interceptée, preuves vérifiées et cible arrêtée avant son départ. Vous avez coordonné deux fronts avec quatre agents. Les exercices restent rejouables séparément ; poursuivez avec les choix de ressources.',{done:true});
   const iris=s.agents.find(a=>a.id==='p0');
   if(!plot.resolved&&(f.defense.DE||0)<plot.turn){if(iris.country!=='DE')add('p0','travel','DE');else add('p0','protect');}
   if(!target.arrested){
@@ -124,6 +140,7 @@ export function advancedObjective(s){
  return result('Choisir les moyens, coordonner l’équipe',`Objectifs : deux preuves (${target.arrested?2:evidence.length}/2), au moins une vérifiée (${verified}/1), coopération au moins Réticente (${f.cooperation.TR>=1?'acquise':'à améliorer'}), récupération (${recovered?'faite':'à faire'}), financement OU soutien médical (${favor?'choisi':'à choisir dans Gouvernement'}), puis arrestation. Les ordres sont des suggestions : échangez les rôles si utile et occupez les agents disponibles en parallèle.`,{freeChoice:true});
 }
 export function advancedOrderError(s,id,type,target){
+ const autonomous=autonomyOrderError(s,id,type,target);if(autonomous!==undefined)return autonomous;
  if(s.tutorial.mission==='hostile'){
   const allowed=['contacts','influence','authorize','findSafehouse','fieldRest','rest','hide','equip','collect','analyze','prepare','surveil','arrest'];
   if(type==='travel'&&['FR','TR'].includes(target))return null;
@@ -136,15 +153,17 @@ export function advancedOrderError(s,id,type,target){
  return undefined;
 }
 export function advancedHint(s,o,free){
- const tech=o.tech?.length?'À activer dans Modules d’opération : '+o.tech.map(t=>t==='relay'?'Relais satellite (2 crédits)':'Logistique prioritaire (3 crédits)').join(' et ')+'. ':'';
+ const tech=o.tech?.length?(o.freeChoice?'Suggestion facultative dans Modules d’opération : ':'À activer dans Modules d’opération : ')+o.tech.map(t=>t==='relay'?'Relais satellite (2 crédits)':'Logistique prioritaire (3 crédits)').join(' et ')+'. ':'';
  const directions=free.map(x=>{
   const name=s.agents.find(a=>a.id===x.agentId).name;
-  if(x.type==='cyberSupport')return `${name} : double-cliquez sur son portrait → Hack d’un pays → Turquie.`;
+  if(x.type==='cyberSupport')return `${name} : double-cliquez sur son portrait → Hack d’un pays → ${COUNTRY[x.target].name}.`;
   if(x.type==='sneak')return `${name} : double-cliquez sur son portrait → Passage clandestin → Turquie.`;
   if(x.type==='travel')return `${name} : sur le globe, ${COUNTRY[x.target].name} → Déployer un agent.`;
   if(x.type==='protect')return `${name} : menace de Berlin → Protéger la région (2 tours).`;
   if(['findSafehouse','fieldRest','rest','equip','hide','influence'].includes(x.type))return `${name} : double-cliquez sur son portrait → ${ACTIONS[x.type].name}.`;
-  return `${name} : dossier Vesper → ${ACTIONS[x.type].name}.`;
+  const target=x.type==='analyze'?s.proofs.find(p=>p.id===x.target)?.suspect:x.target;
+  const label=s.suspects.find(t=>t.id===target)?.name||'du pays de l’agent';
+  return `${name} : dossier ${label} → ${ACTIONS[x.type].name}.`;
  }).join(' ');
  return tech+o.text+' '+directions+(!free.length&&s.agents.some(a=>a.task)?' Les ordres sont affectés : terminez le tour.':'');
 }

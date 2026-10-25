@@ -1,4 +1,4 @@
-import {visiblePlots} from './engine.js?v=202';
+import {visiblePlots} from './engine.js?v=203';
 export function threatCoverage(s,p,f=s.player){const until=s.factions[f]?.defense?.[p.country]||0;return {covered:until>=p.turn&&until>=s.turn,until};}
 export function threatProtection(s,p,f=s.player){
  const current=threatCoverage(s,p,f),active=current.until>=s.turn;
