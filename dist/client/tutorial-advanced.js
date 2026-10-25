@@ -1,9 +1,12 @@
-import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=203';
+import {NPC_TUTORIALS,isNpcTutorial} from './tutorial-mode.js?v=204';
+import {npcTutorialObjective} from './tutorial-npc.js?v=204';
+import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=204';
 // Later lessons derive their progress from real game state and operation reports.
-import {ACTIONS,COUNTRY} from './data.js?v=203';
-export const ADVANCED_TUTORIALS=['countdown','longrange','hostile','stealth','digital','finale',...AUTONOMY_TUTORIALS];
-export const tutorialTechAllowed=(s,type)=>['longrange','resources','autonomy'].includes(s?.tutorial?.mission)&&['logistics','relay'].includes(type);
+import {ACTIONS,COUNTRY} from './data.js?v=204';
+export const ADVANCED_TUTORIALS=['countdown','longrange','hostile','stealth','digital','finale',...AUTONOMY_TUTORIALS,...NPC_TUTORIALS];
+export const tutorialTechAllowed=(s,type)=>isNpcTutorial(s)||['longrange','resources','autonomy'].includes(s?.tutorial?.mission)&&['logistics','relay'].includes(type);
 export const tutorialGovernmentAllowed=(s,type,country)=>{
+ if(isNpcTutorial(s))return true;
  if(AUTONOMY_TUTORIALS.includes(s?.tutorial?.mission))return ['funding','medical'].includes(type)||type==='diplomacy'&&['TR','JP'].includes(country);
  if(!['hostile','finale'].includes(s?.tutorial?.mission))return false;
  if(['funding','medical'].includes(type))return true;
@@ -14,6 +17,7 @@ export const tutorialGovernmentAllowed=(s,type,country)=>{
 export const tutorialCanWait=s=>['arrest',...ADVANCED_TUTORIALS].includes(s?.tutorial?.mission);
 const active=(s,type)=>s.factions.FR.tech.some(t=>t.type===type&&t.until>=s.turn);
 export function advancedObjective(s){
+ const npc=npcTutorialObjective(s);if(npc)return npc;
  const autonomous=autonomyObjective(s);if(autonomous)return autonomous;
  const mission=s.tutorial.mission;if(!ADVANCED_TUTORIALS.includes(mission))return null;
  const f=s.factions.FR,k=f.known.s0,target=s.suspects.find(t=>t.id==='s0');
@@ -140,6 +144,7 @@ export function advancedObjective(s){
  return result('Choisir les moyens, coordonner l’équipe',`Objectifs : deux preuves (${target.arrested?2:evidence.length}/2), au moins une vérifiée (${verified}/1), coopération au moins Réticente (${f.cooperation.TR>=1?'acquise':'à améliorer'}), récupération (${recovered?'faite':'à faire'}), financement OU soutien médical (${favor?'choisi':'à choisir dans Gouvernement'}), puis arrestation. Les ordres sont des suggestions : échangez les rôles si utile et occupez les agents disponibles en parallèle.`,{freeChoice:true});
 }
 export function advancedOrderError(s,id,type,target){
+ if(isNpcTutorial(s))return null;
  const autonomous=autonomyOrderError(s,id,type,target);if(autonomous!==undefined)return autonomous;
  if(s.tutorial.mission==='hostile'){
   const allowed=['contacts','influence','authorize','findSafehouse','fieldRest','rest','hide','equip','collect','analyze','prepare','surveil','arrest'];
@@ -159,8 +164,9 @@ export function advancedHint(s,o,free){
   if(x.type==='cyberSupport')return `${name} : double-cliquez sur son portrait → Hack d’un pays → ${COUNTRY[x.target].name}.`;
   if(x.type==='sneak')return `${name} : double-cliquez sur son portrait → Passage clandestin → Turquie.`;
   if(x.type==='travel')return `${name} : sur le globe, ${COUNTRY[x.target].name} → Déployer un agent.`;
-  if(x.type==='protect')return `${name} : menace de Berlin → Protéger la région (2 tours).`;
-  if(['findSafehouse','fieldRest','rest','equip','hide','influence'].includes(x.type))return `${name} : double-cliquez sur son portrait → ${ACTIONS[x.type].name}.`;
+  if(x.type==='protect')return `${name} : menace en ${COUNTRY[s.agents.find(a=>a.id===x.agentId).country].name} → Protéger la région (2 tours).`;
+  if(['findSafehouse','fieldRest','rest','equip','hide','influence','heal'].includes(x.type))return `${name} : double-cliquez sur son portrait → ${ACTIONS[x.type].name}.`;
+  if(x.type==='rescue')return `${name} : double-cliquez sur son portrait → Extraire un agent capturé → ${s.agents.find(a=>a.id===x.target)?.name||'coéquipier'}.`;
   const target=x.type==='analyze'?s.proofs.find(p=>p.id===x.target)?.suspect:x.target;
   const label=s.suspects.find(t=>t.id===target)?.name||'du pays de l’agent';
   return `${name} : dossier ${label} → ${ACTIONS[x.type].name}.`;

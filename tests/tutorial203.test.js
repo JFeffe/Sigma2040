@@ -5,7 +5,7 @@ import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialPr
 import {tutorialHint} from '../dist/client/tutorial-rules.js';
 import {tutorialGuide,tutorialMenu,markTutorialControls} from '../dist/client/tutorial-ui.js';
 import {inquiryModel,countryTargetButtons} from '../dist/client/country-inquiry.js';
-import {TUTORIAL_ROADMAP} from '../dist/client/tutorial-autonomy.js';
+import {NPC_MISSIONS} from '../dist/client/tutorial-npc.js';
 function turn(s,{modules=true,reverse=false,swap=false}={}){
  const o=tutorialObjective(s);
  if(modules)for(const type of o.tech||[])E.activateTech(s,type);
@@ -74,10 +74,10 @@ test('Autonomous chapter shows goals, leaves roles free and validates real attac
  const escape=createTutorialGame('autonomy');E.advance(escape);E.assign(escape,'p0','protect');for(let i=0;i<11;i++)E.advance(escape);assert.equal(tutorialObjective(escape).failed,true);
  const done=finish(s);assert.equal(done.credited['filigrane-autonomy:FR'],'FR');assert.equal(done.prestigeLedger.find(e=>e.key==='filigrane-autonomy:FR').points,4);
 });
-test('Twelve playable chapters are saved separately; 13–15 remain an explicit NPC roadmap',()=>{
- assert.equal(TUTORIAL_MISSIONS.length,12);assert.deepEqual(TUTORIAL_ROADMAP.map(m=>m.number),['13','14','15']);
+test('Fifteen playable chapters are saved separately, including the NPC campaign scenarios',()=>{
+ assert.equal(TUTORIAL_MISSIONS.length,15);assert.deepEqual(NPC_MISSIONS.map(m=>m.number),['13','14','15']);
  const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};let p=readTutorialProgress(storage);
  for(const m of TUTORIAL_MISSIONS)p=saveTutorialProgress(storage,createTutorialGame(m.id),p);
- assert.ok(data.has(TUTORIAL_KEY));assert.equal(readTutorialProgress(storage).warning,false);assert.equal(Object.keys(readTutorialProgress(storage).sessions).length,12);
- const menu=tutorialMenu(p);assert.match(menu,/Douze missions/);assert.match(menu,/ne sont pas encore jouables/);assert.equal((menu.match(/data-cmd="tutorial-start"/g)||[]).length,12);
+ assert.ok(data.has(TUTORIAL_KEY));assert.equal(readTutorialProgress(storage).warning,false);assert.equal(Object.keys(readTutorialProgress(storage).sessions).length,15);
+ const menu=tutorialMenu(p);assert.match(menu,/Quinze chapitres/);assert.doesNotMatch(menu,/ne sont pas encore jouables/);assert.equal((menu.match(/data-cmd="tutorial-start"/g)||[]).length,15);
 });

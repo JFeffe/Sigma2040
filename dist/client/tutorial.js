@@ -1,7 +1,9 @@
-import * as E from './engine.js?v=203';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=203';
-import {SUSPECTS} from './data.js?v=203';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=203';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=204';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=204';
+import * as E from './engine.js?v=204';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=204';
+import {SUSPECTS} from './data.js?v=204';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=204';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const TUTORIAL_MISSIONS=Object.freeze([
@@ -16,12 +18,15 @@ export const TUTORIAL_MISSIONS=Object.freeze([
  {id:'finale',number:'09',title:'Deux fronts',place:'Berlin / Ankara / Paris',duration:'6–9 min',agents:4,skills:'Protection · Enquête · Délais · Coordination',brief:'Filigrane prépare une attaque à Berlin à la fin du T4 ; Vesper quittera Ankara à la fin du T6. IRIS est à Berlin, BISHOP et LEI à Ankara, APÉRO au QG. Une preuve attend sa vérification. Menez protection et enquête en parallèle.',goals:['Protéger Berlin pour T4','Collecter et vérifier ensemble','Préparer, mandater et localiser','Arrêter Vesper avant le départ T6'],lesson:'Une mission de protection et une enquête peuvent avancer au même tour. Réservez un agent à chaque front, vérifiez les dates de couverture et de localisation, et utilisez les temps d’attente pour récupérer.',next:'La suite demande de choisir les moyens et d’adapter le plan.'},
  {id:'resources',number:'10',title:'Des moyens limités',place:'Paris → Tokyo',duration:'7–10 min',agents:4,skills:'Budget · Choix de modules · Soutien gouvernemental',brief:'La branche de Tokyo dispose d’une courte avance. Vous avez 3 crédits : assez pour la logistique ou le relais, mais pas les deux. BISHOP collecte sur place pendant qu’APÉRO vérifie au QG ; IRIS et LEI doivent rejoindre l’équipe. Choisissez vos dépenses et menez l’arrestation.',goals:['Comparer coût et utilité des modules','Répartir les quatre agents','Collecter et vérifier en parallèle','Arrêter Vesper à Tokyo'],lesson:'Un module doit servir le plan du tour. La logistique accélère les nouveaux voyages, le relais prolonge les positions. Les deux ne sont pas obligatoires. Un financement échange de la confiance contre des crédits ; vous pouvez aussi conserver cette confiance et voyager sans accélération.',next:'Filigrane a repéré la surveillance : préparez-vous à réaffecter l’équipe.'},
  {id:'reroute',number:'11',title:'Changement de plan',place:'Ankara → Tokyo / Paris',duration:'8–12 min',agents:4,skills:'Départ d’une cible · Réaffectation · Deux dossiers',brief:'Vesper et Cobalt sont à Ankara. Les preuves et la préparation de Vesper sont acquises ; le dossier de Cobalt reste à compléter. Commencez les deux interventions en parallèle. Un mouvement du réseau vous obligera à revoir la répartition des agents.',goals:['Lire l’avis de départ','Réaffecter des agents vers Tokyo','Poursuivre Cobalt à Ankara','Arrêter les deux cibles'],lesson:'Un départ invalide la localisation, mais conserve les preuves et le dossier préparé. Le mandat concerne le pays : il faut en obtenir un à destination. Ne déplacez pas toute l’équipe si une autre enquête peut continuer sur place.',next:'Vous êtes prêt à choisir vous-même les priorités.'},
- {id:'autonomy',number:'12',title:'À vous de jouer',place:'Berlin / Ankara / Tokyo / Paris',duration:'10–15 min',agents:4,skills:'Priorités · Deux enquêtes · Protection · Autonomie',brief:'Une attaque vise Berlin à la fin du T6. Vesper se trouve à Ankara et Cobalt à Tokyo : arrêtez les deux avant leur départ à la fin du T12. Chaque dossier possède une pièce brute. Vous disposez de quatre agents et de 6 crédits. Organisez vos tours ; les suggestions sont disponibles dans Instructions.',goals:['Couvrir Berlin au T6','Mener les deux enquêtes','Vérifier pendant les collectes','Arrêter Vesper et Cobalt avant le départ T12'],lesson:'Commencez par les échéances et les prérequis. Les opérations indépendantes avancent ensemble. Consultez les rapports et les dates réelles ; les rôles suggérés dans Instructions sont facultatifs. Cette mission conclut l’entraînement sans joueurs PNJ.',next:'À venir : chapitres 13 à 15 avec des joueurs PNJ, jusqu’à une partie presque complète.'}
+ {id:'autonomy',number:'12',title:'À vous de jouer',place:'Berlin / Ankara / Tokyo / Paris',duration:'10–15 min',agents:4,skills:'Priorités · Deux enquêtes · Protection · Autonomie',brief:'Une attaque vise Berlin à la fin du T6. Vesper se trouve à Ankara et Cobalt à Tokyo : arrêtez les deux avant leur départ à la fin du T12. Chaque dossier possède une pièce brute. Vous disposez de quatre agents et de 6 crédits. Organisez vos tours ; les suggestions sont disponibles dans Instructions.',goals:['Couvrir Berlin au T6','Mener les deux enquêtes','Vérifier pendant les collectes','Arrêter Vesper et Cobalt avant le départ T12'],lesson:'Commencez par les échéances et les prérequis. Les opérations indépendantes avancent ensemble. Consultez les rapports et les dates réelles ; les rôles suggérés dans Instructions sont facultatifs. Cette mission conclut l’entraînement sans joueurs PNJ.',next:'Poursuivez avec le chapitre 13 : le service britannique rejoint la formation.'},
+ ...NPC_MISSIONS
 ]);
 export const tutorialMission=id=>TUTORIAL_MISSIONS.find(m=>m.id===id);
 export function createTutorialGame(id){
  if(!TUTORIAL_IDS.includes(id))throw Error('Mission de formation inconnue.');
- const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],197,'normal');
+ const npc=NPC_MISSIONS.some(m=>m.id===id);
+ const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed(id),npc?'bb1':'normal',npc?{participants:['FR','GB','US','CN']}:{});
+ if(npc){setupNpcTutorial(s,id);E.log(s,tutorialMission(id).brief,'brief','FR');return s;}
  s.tutorial={version:1,mission:id,revision:2};
  // Only the player's service participates; the world map keeps all twelve countries.
  s.factions={FR:s.factions.FR};s.humanFactions=['FR'];
@@ -101,8 +106,14 @@ export function createTutorialGame(id){
 }
 export function validateTutorialGame(value){
  const s=structuredClone(value);
- if(!isTutorial(s)||s.player!=='FR'||s.seed!==197)throw Error('Exercice incompatible.');
+ if(!isTutorial(s)||s.player!=='FR'||s.seed!==tutorialSeed(s.tutorial.mission))throw Error('Exercice incompatible.');
  const expected=createTutorialGame(s.tutorial.mission);
+ if(isNpcTutorial(s)){
+  const participants=tutorialParticipants(s.tutorial.mission);
+  if(JSON.stringify(Object.keys(s.factions||{}).sort())!==JSON.stringify([...participants].sort())||s.humanFactions!==undefined&&(s.humanFactions.length!==1||s.humanFactions[0]!=='FR')||s.aiDifficulty!=='bb1'||s.participantRules!==1||s.gameMode!=='regular'||s.plots?.length!==expected.plots.length||s.plots.some(p=>!expected.plots.some(q=>q.id===p.id&&q.cell===p.cell&&q.kind===p.kind)))throw Error('Exercice incompatible.');
+  // Normal validation handles recruits, deaths, captures and genuine threat movements.
+  E.validateSave(s,{allowTutorial:true});return s;
+ }
  // Upgrade the three-agent mission 7 without discarding existing orders or progress.
  if(s.tutorial.mission==='stealth'&&(s.tutorial.revision||1)<2&&s.agents?.length===3&&['p0','p12','p14'].every(id=>s.agents.some(a=>a.id===id&&a.faction==='FR'))){
   s.agents.push(structuredClone(expected.agents.find(a=>a.id==='p15')));

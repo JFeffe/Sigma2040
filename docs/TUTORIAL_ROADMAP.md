@@ -1,6 +1,6 @@
 # Formation Filigrane — progression vers une campagne
 
-Décision du 25 octobre 2026 : quinze chapitres au total. Les chapitres 1 à 12 sont jouables dans la version 203. Les chapitres 13 à 15 sont prévus, pas encore implémentés.
+Décision du 25 octobre 2026 : quinze chapitres au total. Les quinze chapitres sont jouables dans la version 204.
 
 ## Contraintes communes
 
@@ -15,14 +15,15 @@ Décision du 25 octobre 2026 : quinze chapitres au total. Les chapitres 1 à 12 
 11. **Changement de plan** : départ réel d’une cible vers un autre pays, dossier conservé et localisation invalidée. Une équipe poursuit la cible pendant que l’autre enquête continue.
 12. **À vous de jouer** : deux cibles dans deux pays et une menace à échéance. Objectifs visibles, plans détaillés facultatifs. Réussite scénarisée des opérations encore conservée.
 
-## Chapitres 13 à 15 — transition vers les joueurs PNJ
+## Chapitres 13 à 15 — joueurs PNJ et campagne
 
-13. **Services alliés** : introduire des joueurs PNJ utilisant la véritable IA du jeu. Expliquer leurs actions visibles, la couverture des menaces, les possibilités de coopération et le partage des points. Commencer par une situation lisible, avec aide contextuelle.
-14. **Un monde en mouvement** : scénario plus long avec plusieurs joueurs PNJ actifs, plusieurs enquêtes et menaces successives. Montrer les effets des décisions des autres services et la nécessité d’adapter ses priorités. Diminuer les instructions imposées.
-15. **Prise de commandement** : partie presque complète avec les joueurs PNJ, les ressources, les durées et les risques habituels de la campagne. Début accompagné, puis aide à la demande. Aller jusqu’au véritable bilan final afin d’expliquer le prestige, la protection et le résultat collectif.
+13. **Services alliés** : un service britannique avec la véritable IA BB1, Vesper à Ankara et attaques à Berlin T4 / Ankara T8. Les opérations françaises sont garanties ; les opérations britanniques utilisent leurs chances normales. Une arrestation par le PNJ compte pour l’objectif, ainsi qu’une menace neutralisée par un autre service. Le chapitre se termine après les deux échéances, si Vesper est arrêté et au moins une menace neutralisée. Reprise proposée après T12 en cas d’échec.
+14. **Un monde en mouvement** : campagne de 20 tours maximum avec les services britannique, américain et chinois. Chances, coûts, blessures, recrutement et mouvements normaux. Suggestions à la demande, aucune action imposée. Graine 20414.
+15. **Prise de commandement** : véritable campagne normale de 30 tours maximum, trois PNJ BB1 et quatre agents français. La génération, les preuves falsifiées, le réseau et les ressources sont identiques à une partie normale de même graine (20416). Début accompagné pendant trois tours, puis aide facultative. Objectif collectif normal : arrêter l’Architecte et démanteler deux cellules.
 
-## Conditions avant d’implémenter 13 à 15
+## Validation et continuité
 
-Le mode tutoriel actuel interdit volontairement la planification des factions PNJ et garantit les actions du joueur. Les derniers chapitres doivent introduire une règle explicite, limitée à leurs identifiants, pour activer la véritable IA et rétablir progressivement les risques habituels. Ne pas appliquer ces changements aux douze premiers chapitres.
-
-Adapter la validation des sauvegardes pour autoriser uniquement les factions et agents attendus de chaque nouveau scénario, conserver les sauvegardes existantes et tester l’isolation de la campagne. Les objectifs doivent tenir compte des succès des PNJ : une arrestation ou une interception réalisée par un autre service ne doit pas bloquer la formation. Prévoir une reprise pédagogique après un échec, et vérifier la transition vers le véritable écran de fin de partie.
+- Les chapitres 14 et 15 se terminent au véritable bilan, victoire ou défaite. Le résultat collectif reste explicite, avec classement, prestige et détail des points de protection. Terminer le chapitre ne constitue pas une victoire de campagne.
+- Les PNJ choisissent leurs propres actions avec BB1. Seuls les nouveaux identifiants autorisent leurs factions ; les chapitres 1 à 12 restent isolés et garantis.
+- Sauvegardes vérifiées après chaque ordre et chaque tour, y compris recrutement, pertes, blessures et captivité. Contrôle des factions, du scénario, de la graine et du mode IA. Progression séparée des campagnes normales.
+- Tests de parties jusqu’à leur conclusion selon trois politiques : conseils, planification BB1 et joueur inactif. Vérification des victoires et défaites, de la coopération, des conseils parallèles et de l’écran final.

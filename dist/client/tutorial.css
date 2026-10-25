@@ -31,3 +31,5 @@ dialog:has(.training-order-note){width:min(850px,94vw)}dialog:has(.training-orde
 .tutorial-inquiry-note{padding:7px 10px}.tutorial-inquiry-note summary{cursor:pointer;color:#a6dbb7;font-weight:600}.tutorial-inquiry-note p{margin:8px 0 0}.tutorial-inquiry-note[open]{max-height:180px;overflow:auto}
 
 .training-roadmap{margin-top:32px;padding:20px 24px;border:1px solid #344952;border-radius:10px;max-width:920px;background:#101d28}.training-roadmap h2{font-size:18px;margin:0 0 10px}.training-roadmap p,.training-roadmap li{font-size:13px;line-height:1.7;color:#b6c7cd}.training-roadmap li{margin:8px 0}.training-roadmap small{color:#91a7b1}.tutorial-agent-plan li span{overflow-wrap:anywhere}
+
+.npc-training .unknown-target{display:block}.npc-training .inquiry-objective{display:flex}.tutorial-ending-summary{max-width:1280px;margin:0 auto 24px;padding:18px 22px;background:#142a23;border:1px solid #597d68;border-radius:10px}.tutorial-ending-summary p{color:#c4d9cc;line-height:1.5}.tutorial-ending-summary>div{display:flex;flex-wrap:wrap;gap:10px}

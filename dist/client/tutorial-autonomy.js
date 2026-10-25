@@ -1,10 +1,5 @@
 // Chapters 10–12 keep real game prerequisites and offer optional plans.
 export const AUTONOMY_TUTORIALS=['resources','reroute','autonomy'];
-export const TUTORIAL_ROADMAP=Object.freeze([
- {number:'13',title:'Services alliés',text:'Première opération avec des joueurs PNJ : observer leurs actions, coordonner la couverture et comprendre le partage des points.'},
- {number:'14',title:'Un monde en mouvement',text:'Une campagne plus longue avec des joueurs PNJ actifs : plusieurs dossiers, menaces successives et priorités qui changent.'},
- {number:'15',title:'Prise de commandement',text:'Une partie presque complète avec les joueurs PNJ et les règles de campagne, un début accompagné puis une aide à la demande.'}
-]);
 export function autonomyObjective(s){
  const mission=s.tutorial.mission;if(!AUTONOMY_TUTORIALS.includes(mission))return null;
  const f=s.factions.FR,orders=[],tech=[];
@@ -66,7 +61,7 @@ export function autonomyObjective(s){
  }
  const plot=s.plots[0],blocked=!!s.credited[plot.id+':FR'];
  if(plot.resolved&&!blocked||['s0','s1'].some(id=>!suspect(id).arrested&&suspect(id).country!==(id==='s0'?'TR':'JP')))return result('Une échéance a été manquée','Berlin devait être couvert à la fin de T6 et les deux suspects arrêtés avant leur départ à la fin de T12. Recommencez ; les suggestions restent disponibles dans Instructions.',{failed:true});
- if(blocked&&['s0','s1'].every(id=>suspect(id).arrested))return result('Prêt à commander','Deux suspects arrêtés et attaque interceptée. Les douze chapitres restent rejouables. La prochaine étape prévue, aux chapitres 13 à 15, introduira des joueurs PNJ puis une partie presque complète.',{done:true});
+ if(blocked&&['s0','s1'].every(id=>suspect(id).arrested))return result('Prêt à commander','Deux suspects arrêtés et attaque interceptée. Les douze chapitres restent rejouables. Poursuivez avec les chapitres 13 à 15 : des joueurs PNJ vous accompagnent jusqu’à une campagne complète.',{done:true});
  // Prepare from T2: a T1 protection would expire before the T6 attack.
  if(!plot.resolved&&(f.defense.DE||0)<plot.turn&&s.turn>=2)at('p0','DE','protect');
  caseWork('p12','s0');caseWork('p14','s1');analyst(!suspect('s0').arrested?'TR':'JP');

@@ -1,4 +1,5 @@
-import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=203';
+import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=204';
+import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=204';
 // Training is a separate, explicitly scripted mode. No campaign uses these rules.
 export const TUTORIAL_IDS=Object.freeze(['contact','evidence','arrest',...ADVANCED_TUTORIALS]);
 export const isTutorial=s=>s?.tutorial?.version===1&&TUTORIAL_IDS.includes(s.tutorial.mission);
@@ -50,7 +51,8 @@ export function tutorialOrderError(s,id,type,target,useCredits=false){
  if(!isTutorial(s))return null;
  const objective=tutorialObjective(s);
  if(objective.done||objective.failed)return 'Exercice terminé. Choisissez la mission suivante ou recommencez.';
- if(useCredits)return 'Exercice scénarisé : réussite garantie, aucun renfort nécessaire.';
+ if(isNpcTutorial(s)&&s.agents.find(a=>a.id===id)?.faction!=='FR')return null;
+ if(useCredits&&tutorialGuaranteed(s))return 'Exercice scénarisé : réussite garantie, aucun renfort nécessaire.';
  const advancedError=advancedOrderError(s,id,type,target);if(advancedError!==undefined)return advancedError;
  if(!objective.orders.some(o=>o.agentId===id&&o.type===type&&(o.target===null||o.target===target||type==='analyze'&&target===null)))return 'Suivez l’objectif de cet exercice. Les autres opérations seront disponibles en campagne.';
  return null;
@@ -61,7 +63,7 @@ export function tutorialPendingOrders(s){
 }
 export function tutorialAgentPlan(s){
  const o=tutorialObjective(s);if(!o||o.done||o.failed)return [];
- return s.agents.map(a=>{
+ return s.agents.filter(a=>a.faction===s.player&&!['dead','retired'].includes(a.status)).map(a=>{
   const order=o.orders.find(x=>x.agentId===a.id);
   if(a.task)return {agent:a,order,status:a.task.queued?'Planifié':'En cours',text:a.task.type+' · '+a.task.remaining+' tour(s)'};
   if(order)return {agent:a,order,status:order.optional?'Soutien utile':'À affecter',text:order.type};

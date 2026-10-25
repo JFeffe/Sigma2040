@@ -1,11 +1,11 @@
-import {isTutorial} from './tutorial-rules.js?v=203';
-import {prestigeHint} from './prestige.js?v=203';
-import {transmission} from './experience.js?v=203';
-import {contributors} from './command-ui.js?v=203';
-import * as E from './engine.js?v=203';
-import {caseFor,proofTitle} from './intelligence.js?v=203';
-import {COUNTRY,ACTIONS} from './data.js?v=203';
-import {esc,button,flag,portrait,icon} from './ui.js?v=203';
+import {tutorialGuaranteed} from './tutorial-mode.js?v=204';
+import {prestigeHint} from './prestige.js?v=204';
+import {transmission} from './experience.js?v=204';
+import {contributors} from './command-ui.js?v=204';
+import * as E from './engine.js?v=204';
+import {caseFor,proofTitle} from './intelligence.js?v=204';
+import {COUNTRY,ACTIONS} from './data.js?v=204';
+import {esc,button,flag,portrait,icon} from './ui.js?v=204';
 const delta=n=>(n>0?'+':'')+n;
 export function missionCostsMarkup(s,id,type,target){
  const a=s.agents.find(a=>a.id===id),o=E.options(s,id,type,target),d=ACTIONS[type];
@@ -13,10 +13,10 @@ export function missionCostsMarkup(s,id,type,target){
  const fatigue=recovery?`−${recovery} · récupération`:`+${o.fatigue*o.duration} au total${o.duration>1?` (${o.fatigue}/tour)`:''}`;
  const task={type,clandestine:o.clandestine};
  const success=E.missionExposure(a,type,true),failure=E.missionExposure(a,type,false);
- const exposure=d.safe||isTutorial(s)?delta(success):success===failure?`${delta(success)} · réussite ou échec`:`${delta(success)} si réussite · +${failure} si échec`;
+ const exposure=d.safe||tutorialGuaranteed(s,a.faction)?delta(success):success===failure?`${delta(success)} · réussite ou échec`:`${delta(success)} si réussite · +${failure} si échec`;
  const energy=recovery?recovery:-o.fatigue*o.duration;
- const exposureValue=d.safe||isTutorial(s)||success===failure?delta(success):`${delta(success)} / +${failure}`;
- return `<div class="briefing-metric metric-energy ${recovery?'recovery':''}" title="${esc('Fatigue : '+fatigue)}" aria-label="${esc('Énergie : '+(energy>0?'+':'')+energy+' au total')}"><span class="metric-symbol">${icon('bolt')}</span><div class="metric-value"><strong>${delta(energy)}</strong><small>énergie</small></div></div><div class="briefing-metric metric-exposure" title="${esc('Exposition : '+exposure)}" aria-label="${esc('Exposition : '+exposure)}"><span class="metric-symbol">${icon('eye')}</span><div class="metric-value"><strong>${esc(exposureValue)}</strong><small>${d.safe||isTutorial(s)?'exposition':success===failure?'exposition · tout résultat':`${icon('check')} réussite / ${icon('close')} échec`}</small></div></div>`;
+ const exposureValue=d.safe||tutorialGuaranteed(s,a.faction)||success===failure?delta(success):`${delta(success)} / +${failure}`;
+ return `<div class="briefing-metric metric-energy ${recovery?'recovery':''}" title="${esc('Fatigue : '+fatigue)}" aria-label="${esc('Énergie : '+(energy>0?'+':'')+energy+' au total')}"><span class="metric-symbol">${icon('bolt')}</span><div class="metric-value"><strong>${delta(energy)}</strong><small>énergie</small></div></div><div class="briefing-metric metric-exposure" title="${esc('Exposition : '+exposure)}" aria-label="${esc('Exposition : '+exposure)}"><span class="metric-symbol">${icon('eye')}</span><div class="metric-value"><strong>${esc(exposureValue)}</strong><small>${d.safe||tutorialGuaranteed(s,a.faction)?'exposition':success===failure?'exposition · tout résultat':`${icon('check')} réussite / ${icon('close')} échec`}</small></div></div>`;
 }
 export function forecastMarkup(s,id,type,target){const v=E.operationForecast(s,id,type,target);return `<section class="decision-box"><h3>À la résolution · fin du tour ${v.end}</h3><p>${esc(v.outcome)}</p>${prestigeHint(type)?`<p class="prestige-hint"><strong>Prestige</strong> — ${esc(prestigeHint(type))}</p>`:''}<p><strong>Risques</strong> — ${v.risk} Le coût engagé reste dépensé.</p>${v.warnings.map(w=>`<p class="decision-warning">${esc(w)}</p>`).join('')}<small>Chances fixées à l’affectation. Les prérequis peuvent évoluer pendant la mission.</small></section>`;}
 export function caseBrief(s,t){const c=caseFor(s,t),f=s.factions[s.player],entries=f.evidence.filter(e=>s.proofs.find(p=>p.id===e.id)?.suspect===t.id),next=E.nextOperation(s,t),linked=t.deduced&&c.link&&f.known[c.link];return `<section class="decision-box case-brief"><h3>${c.title}</h3>${t.flightUntil&&!t.arrested?`<p class="decision-warning">Départ signalé à la fin du tour ${t.flightUntil}. Une arrestation résolue ce tour peut empêcher la fuite. Les preuves resteront acquises.</p>`:''}<p>${c.brief}</p><div class="analyst-conclusion"><strong>Conclusion des analystes</strong><p>${t.deduced?c.deduction:entries.some(e=>e.contested)?'Une falsification a été isolée. Seules les pièces recevables comptent ; une nouvelle collecte peut compléter le dossier.':entries.filter(e=>e.verified).length===1?'Une source est vérifiée. Vérifier une seconde pièce permettra de recouper les liens avec le réseau.':'Les pièces brutes doivent être examinées au QG avant de tirer une conclusion.'}</p>${linked?button('Dossier lié : '+s.suspects.find(x=>x.id===c.link).name,'suspect','small','data-id="'+c.link+'"'):''}</div>${entries.length?`<ul class="case-evidence">${entries.map(e=>{const p=s.proofs.find(p=>p.id===e.id);return `<li><strong>${esc(proofTitle(p))}</strong><span class="tag ${e.contested?'danger':e.verified?'good':''}">${e.contested?'ÉCARTÉE · FAUSSE':e.verified?'VÉRIFIÉE':E.analysisAgent(s,s.player,e.id)?'EN VÉRIFICATION':'EN ATTENTE AU QG'}</span></li>`;}).join('')}</ul>`:'<p class="muted">Aucune pièce recueillie dans ce dossier.</p>'}${contributors(s,t)}${t.tacticalArrestBonus?'<p class="notice">Planification tactique : +5 à la prochaine tentative d’arrestation de votre équipe.</p>':''}<p><strong>Recommandation</strong> — ${next.text}</p>${!t.arrested&&t.prepared&&t.locationUntil>=s.turn?'<p class="decision-warning">Intervenir consomme la fenêtre actuelle. Surveiller prolonge la position, mais laisse du temps aux autres puissances.</p>':''}</section>`;}

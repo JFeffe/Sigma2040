@@ -1,6 +1,6 @@
-import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=203';
-import {COUNTRY,CELLS} from './data.js?v=203';
-import {heading,esc,flag,button,icon} from './ui.js?v=203';
+import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=204';
+import {COUNTRY,CELLS} from './data.js?v=204';
+import {heading,esc,flag,button,icon} from './ui.js?v=204';
 export function threatPanel(s){
  const status=threatStatus(s);
  return `${heading('SURVEILLANCE / FRACTURE','Menaces terroristes','Vos protections sont comparées au lieu et au tour prévus de chaque attaque.',`<span class="objective-chip">${icon('shield')} ${status.uncovered.length} menace(s) · ${status.covered} couverte(s)</span>`)}<div class="threat-grid compact-threat-grid">${status.plots.map(p=>{
