@@ -1,11 +1,11 @@
-import {tutorialGuaranteed} from './tutorial-mode.js?v=205';
-import {prestigeHint} from './prestige.js?v=205';
-import {transmission} from './experience.js?v=205';
-import {contributors} from './command-ui.js?v=205';
-import * as E from './engine.js?v=205';
-import {caseFor,proofTitle} from './intelligence.js?v=205';
-import {COUNTRY,ACTIONS} from './data.js?v=205';
-import {esc,button,flag,portrait,icon} from './ui.js?v=205';
+import {tutorialGuaranteed} from './tutorial-mode.js?v=206';
+import {prestigeHint} from './prestige.js?v=206';
+import {transmission} from './experience.js?v=206';
+import {contributors} from './command-ui.js?v=206';
+import * as E from './engine.js?v=206';
+import {caseFor,proofTitle} from './intelligence.js?v=206';
+import {COUNTRY,ACTIONS} from './data.js?v=206';
+import {esc,button,flag,portrait,icon} from './ui.js?v=206';
 const delta=n=>(n>0?'+':'')+n;
 export function missionCostsMarkup(s,id,type,target){
  const a=s.agents.find(a=>a.id===id),o=E.options(s,id,type,target),d=ACTIONS[type];
