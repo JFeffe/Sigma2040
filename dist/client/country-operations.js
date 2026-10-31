@@ -1,11 +1,11 @@
-import {countrySignals} from './country-signals.js?v=208';
-import {cooperationInfo} from './cooperation.js?v=208';
-import * as E from './engine.js?v=208';
-import {COUNTRY,COUNTRIES,ACTIONS} from './data.js?v=208';
-import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=208';
-import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=208';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=208';
-import {fullBody} from './visuals.js?v=208';
+import {countrySignals} from './country-signals.js?v=209';
+import {cooperationInfo} from './cooperation.js?v=209';
+import * as E from './engine.js?v=209';
+import {COUNTRY,COUNTRIES,ACTIONS} from './data.js?v=209';
+import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=209';
+import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=209';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=209';
+import {fullBody} from './visuals.js?v=209';
 
 const dossierActions=new Set(['analyze','collect','surveil','prepare','arrest','hack','intimidate','protect']);
 export function countryOperationTypes(s,country){
