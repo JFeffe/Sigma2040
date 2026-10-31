@@ -1,6 +1,6 @@
-import {PROTECTION_PRESTIGE} from './balance-rules.js?v=206';
-import {TECH,COUNTRY} from './data.js?v=206';
-import {campaignRules} from './campaign-rules.js?v=206';
+import {protectionShare} from './balance-rules.js?v=207';
+import {TECH,COUNTRY} from './data.js?v=207';
+import {campaignRules} from './campaign-rules.js?v=207';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -196,7 +196,7 @@ export function planBB1Faction(s,id,E){
     const rivals=sighted(p.country),defenders=Object.values(s.factions).filter(x=>x.id!==id&&x.defense[p.country]>=p.turn);
     const competition=defenders.length+[...rivals].filter(r=>!defenders.some(x=>x.id===r)).length*.35;
     const future=projected(a,p.country,'protect',null),chance=Math.min(90,future.chance+(f.budget+distance*2>=6&&future.chance<=80?10:0))/100;
-    const income=PROTECTION_PRESTIGE/(1+competition),value=52+income*10;
+    const income=protectionShare(1+competition),value=52+income*10;
     const goal={key:'protect:'+p.id,country:p.country,deadline:p.turn,type:'protect',reserved:future.chance<70?6:0};
     if(distance){
      if(agents.some(b=>b.id!==a.id&&moving(b)&&b.task.target===p.country))continue;

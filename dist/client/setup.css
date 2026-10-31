@@ -64,3 +64,5 @@
 .draft-team-agent .draft-order-actions{align-self:center}
 @media(max-width:1100px) and (min-width:851px){.draft-team-agent{grid-template-columns:64px minmax(0,1fr)}.draft-team-agent .draft-order-actions{grid-column:2;justify-content:flex-start;margin-left:0}}
 @media(max-width:500px){.draft-team-agent{padding:10px}.draft-agent-stats>div{gap:6px;padding:5px 6px}.draft-agent-stats dt{font-size:11px}.draft-agent-talents>span{font-size:11px}}
+
+.recruit-controls .draft-available-filter{cursor:pointer}.draft-available-filter input{width:16px;height:16px;min-width:16px;margin:0;accent-color:#73d3c2}

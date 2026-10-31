@@ -1,0 +1,50 @@
+{
+  "source": "Build 207: integer protection shares and mission prestige. Same outcomes, agents, suspects, plots and RNG as build 206; deterministic repeated runs. Historical fixtures preserved.",
+  "results": [
+    {
+      "level": "easy",
+      "seed": 55,
+      "hash": "255868dda3eb41514066bd010f56cce7159eab0a7758d9cdc0c4a43d793079ad"
+    },
+    {
+      "level": "easy",
+      "seed": 901,
+      "hash": "637b4f6d61d5d56eab19c88102e262e988422792dc5ae0cd140e93ced291f0e9"
+    },
+    {
+      "level": "easy",
+      "seed": 1001004,
+      "hash": "e1c99c4ae36a6815a172c3f0533b9c8bdf6d252a5997dbb922fb308995b8d004"
+    },
+    {
+      "level": "normal",
+      "seed": 55,
+      "hash": "5ee6e3a3abe11921647779df6e2c1fe600dc4024ac98de75733dbedfcf048d25"
+    },
+    {
+      "level": "normal",
+      "seed": 901,
+      "hash": "36eef4bd6986f2560a9ae37e17a1e68adf056fedc90ef0e53f1049ee31eca50e"
+    },
+    {
+      "level": "normal",
+      "seed": 1001004,
+      "hash": "e0b28c97ad3fc2f384508840d5e5afbf9e75e917907827b5611d3843b70dce81"
+    },
+    {
+      "level": "expert",
+      "seed": 55,
+      "hash": "d67a0c9ddf2833d8aff50cf7af6311f5330d85571729963b4077e024ee36b9b9"
+    },
+    {
+      "level": "expert",
+      "seed": 901,
+      "hash": "6881ee93911314ff1e4ad161fa8fbb358b45579db85209604656949a9b953d0e"
+    },
+    {
+      "level": "expert",
+      "seed": 1001004,
+      "hash": "5a922273f2265b134e998897ed2b196da3bd34227ef7882e701ab11dc767446c"
+    }
+  ]
+}

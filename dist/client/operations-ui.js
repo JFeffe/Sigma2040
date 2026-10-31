@@ -1,11 +1,11 @@
-import {tutorialGuaranteed} from './tutorial-mode.js?v=206';
-import {prestigeHint} from './prestige.js?v=206';
-import {transmission} from './experience.js?v=206';
-import {contributors} from './command-ui.js?v=206';
-import * as E from './engine.js?v=206';
-import {caseFor,proofTitle} from './intelligence.js?v=206';
-import {COUNTRY,ACTIONS} from './data.js?v=206';
-import {esc,button,flag,portrait,icon} from './ui.js?v=206';
+import {tutorialGuaranteed} from './tutorial-mode.js?v=207';
+import {prestigeHint} from './prestige.js?v=207';
+import {transmission} from './experience.js?v=207';
+import {contributors} from './command-ui.js?v=207';
+import * as E from './engine.js?v=207';
+import {caseFor,proofTitle} from './intelligence.js?v=207';
+import {COUNTRY,ACTIONS} from './data.js?v=207';
+import {esc,button,flag,portrait,icon,formatScore} from './ui.js?v=207';
 const delta=n=>(n>0?'+':'')+n;
 export function missionCostsMarkup(s,id,type,target){
  const a=s.agents.find(a=>a.id===id),o=E.options(s,id,type,target),d=ACTIONS[type];
@@ -25,7 +25,7 @@ export function reportCards(s,turn=null){
  return reports.length?`<div class="mission-reports">${reports.map(r=>{
   const a=s.agents.find(a=>a.id===r.agentId)||s.agents.find(a=>a.name===r.agent),tone=r.status==='RÉUSSITE'?'good':r.status==='INTERROMPUE'?'neutral':'danger';
   const effects=[['Énergie',-r.fatigue,true],['Exposition',r.exposure,false],['Prestige',r.prestige,true],['Crise',r.crisis,false]].filter(([,v])=>v!==0);
-  return `<article class="decision-box result-card ${tone}"><header>${a?portrait(a):''}<div class="result-heading"><strong>${esc(r.agent)}</strong><span>${esc(ACTIONS[r.type]?.name||'')}</span></div><span class="tag ${tone}">${esc(r.status)}</span></header><small>Tour ${r.turn}${COUNTRY[r.country]?' · '+COUNTRY[r.country].city:''} · ${r.duration} tour(s) · ${r.cost} crédits engagés</small>${r.prestige?`<p class="prestige-gain">+${r.prestige} prestige</p>`:''}<details class="mission-detail"><summary>Voir les détails</summary><div class="result-effects">${effects.map(([label,v,positive])=>`<span class="effect ${(v>0)===positive?'good':'danger'}"><strong>${delta(v)}</strong> ${label}</span>`).join('')||'<span class="effect neutral">Ressources inchangées</span>'}</div>${r.condition==='captured'||r.condition==='dead'||r.condition==='injured'?`<p class="result-condition">${r.condition==='captured'?'Agent capturé':r.condition==='dead'?'Agent décédé':'Agent blessé'}</p>`:''}${transmission(r)?`<blockquote class="agent-transmission"><span>TRANSMISSION · ${esc(r.agent)}</span>« ${esc(transmission(r))} »</blockquote>`:''}<div class="result-notes">${r.notes.map(n=>`<p>${esc(n)}</p>`).join('')}</div><p class="report-next"><strong>Suite conseillée</strong> — ${esc(r.next)}</p>${COUNTRY[r.country]?button('Voir le lieu','map-country','small',`data-id="${r.country}"`):''}</details></article>`;
+  return `<article class="decision-box result-card ${tone}"><header>${a?portrait(a):''}<div class="result-heading"><strong>${esc(r.agent)}</strong><span>${esc(ACTIONS[r.type]?.name||'')}</span></div><span class="tag ${tone}">${esc(r.status)}</span></header><small>Tour ${r.turn}${COUNTRY[r.country]?' · '+COUNTRY[r.country].city:''} · ${r.duration} tour(s) · ${r.cost} crédits engagés</small>${r.prestige?`<p class="prestige-gain">+${formatScore(r.prestige)} prestige</p>`:''}<details class="mission-detail"><summary>Voir les détails</summary><div class="result-effects">${effects.map(([label,v,positive])=>`<span class="effect ${(v>0)===positive?'good':'danger'}"><strong>${delta(label==='Prestige'?formatScore(v):v)}</strong> ${label}</span>`).join('')||'<span class="effect neutral">Ressources inchangées</span>'}</div>${r.condition==='captured'||r.condition==='dead'||r.condition==='injured'?`<p class="result-condition">${r.condition==='captured'?'Agent capturé':r.condition==='dead'?'Agent décédé':'Agent blessé'}</p>`:''}${transmission(r)?`<blockquote class="agent-transmission"><span>TRANSMISSION · ${esc(r.agent)}</span>« ${esc(transmission(r))} »</blockquote>`:''}<div class="result-notes">${r.notes.map(n=>`<p>${esc(n)}</p>`).join('')}</div><p class="report-next"><strong>Suite conseillée</strong> — ${esc(r.next)}</p>${COUNTRY[r.country]?button('Voir le lieu','map-country','small',`data-id="${r.country}"`):''}</details></article>`;
  }).join('')}</div>`:'';
 }
 export function cooperationPanel(s){return '';}
