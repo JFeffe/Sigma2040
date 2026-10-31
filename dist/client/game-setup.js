@@ -1,23 +1,25 @@
-import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=204';
+import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=205';
 
-export const GAME_MODES=Object.freeze({regular:'Régulier',advanced:'Avancé'});
+export const GAME_MODES=Object.freeze({regular:'Régulier',advanced:'Avancé',cooperative:'Coopératif'});
 export const PARTICIPANT_COUNT=4;
+export const usesDraft=mode=>mode==='advanced'||mode==='cooperative';
+export const participantCount=mode=>mode==='cooperative'?2:4;
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);
 const fail=()=>{throw Error('Repêchage incompatible ou endommagé.');};
 const next=s=>{s.rng=(Math.imul(s.rng,1664525)+1013904223)>>>0;return s.rng/4294967296;};
 function shuffle(list,s){const out=[...list];for(let i=out.length-1;i>0;i--){const j=Math.floor(next(s)*(i+1));[out[i],out[j]]=[out[j],out[i]];}return out;}
 function validHumans(humans){return Array.isArray(humans)&&humans.length>=1&&humans.length<=4&&new Set(humans).size===humans.length&&humans.every(c=>powers.includes(c));}
-export function selectParticipants(humans,seed=Date.now()){
- if(!validHumans(humans))throw Error('Choisissez de un à quatre pays distincts.');
- const selected=new Set([...humans,...shuffle(powers.filter(c=>!humans.includes(c)),{rng:(seed^0x6a09e667)>>>0}).slice(0,4-humans.length)]);
+export function selectParticipants(humans,seed=Date.now(),mode='regular'){
+ if(!validHumans(humans)||humans.length>participantCount(mode))throw Error('Choisissez de un à quatre pays distincts.');
+ const selected=new Set([...humans,...shuffle(powers.filter(c=>!humans.includes(c)),{rng:(seed^0x6a09e667)>>>0}).slice(0,participantCount(mode)-humans.length)]);
  return powers.filter(c=>selected.has(c));
 }
-export function createDraft(humans,seed=Date.now()){
- const countries=selectParticipants(humans,seed),s={rng:(seed^0xbb67ae85)>>>0};
+export function createDraft(humans,seed=Date.now(),mode='advanced'){
+ const countries=selectParticipants(humans,seed,mode),s={rng:(seed^0xbb67ae85)>>>0};
  const order=shuffle(countries,s);
- return {version:1,seed:seed>>>0,rng:s.rng,humans:[...humans],countries,order,teams:Object.fromEntries(countries.map(c=>[c,[]])),picks:[]};
+ return {version:1,...(mode==='cooperative'?{mode}:{}),seed:seed>>>0,rng:s.rng,humans:[...humans],countries,order,teams:Object.fromEntries(countries.map(c=>[c,[]])),picks:[]};
 }
-export function draftCountry(d){const n=d.picks.length;if(n>=16)return null;const round=Math.floor(n/4),slot=n%4;return d.order[round%2?3-slot:slot];}
+export function draftCountry(d){const n=d.picks.length,count=d.countries.length;if(n>=count*4)return null;const round=Math.floor(n/count),slot=n%count;return d.order[round%2?count-1-slot:slot];}
 export function availableDraftAgents(d){const used=new Set(d.picks.map(p=>p.id));return DISPLAY_ROSTER.filter(a=>!used.has(a.id));}
 export function pickDraftAgent(d,country,id){
  if(draftCountry(d)!==country)throw Error('Attendez le tour de votre pays.');
@@ -34,14 +36,15 @@ export function advanceNpcDraft(d){
  return d;
 }
 export function validateDraft(d){
+ const count=participantCount(d?.mode);
  const integer=n=>Number.isInteger(n)&&n>=0&&n<=4294967295;
- if(!d||d.version!==1||!integer(d.seed)||!integer(d.rng)||!validHumans(d.humans)||!Array.isArray(d.countries)||d.countries.length!==4||new Set(d.countries).size!==4||d.countries.some(c=>!powers.includes(c))||d.humans.some(c=>!d.countries.includes(c))||!Array.isArray(d.order)||d.order.length!==4||new Set(d.order).size!==4||d.order.some(c=>!d.countries.includes(c))||!Array.isArray(d.picks)||d.picks.length>16||!d.teams||Object.keys(d.teams).length!==4||Object.keys(d.teams).some(c=>!d.countries.includes(c)))fail();
+ if(!d||d.version!==1||!integer(d.seed)||!integer(d.rng)||!validHumans(d.humans)||d.humans.length>count||d.mode!==undefined&&d.mode!=='cooperative'||!Array.isArray(d.countries)||d.countries.length!==count||new Set(d.countries).size!==count||d.countries.some(c=>!powers.includes(c))||d.humans.some(c=>!d.countries.includes(c))||!Array.isArray(d.order)||d.order.length!==count||new Set(d.order).size!==count||d.order.some(c=>!d.countries.includes(c))||!Array.isArray(d.picks)||d.picks.length>count*4||!d.teams||Object.keys(d.teams).length!==count||Object.keys(d.teams).some(c=>!d.countries.includes(c)))fail();
  const teams=Object.fromEntries(d.countries.map(c=>[c,[]])),seen=new Set();
- for(let i=0;i<d.picks.length;i++){const p=d.picks[i],slot=i%4,country=d.order[Math.floor(i/4)%2?3-slot:slot];if(!p||p.country!==country||seen.has(p.id)||!DISPLAY_ROSTER.some(a=>a.id===p.id))fail();seen.add(p.id);teams[country].push(p.id);}
+ for(let i=0;i<d.picks.length;i++){const p=d.picks[i],slot=i%count,country=d.order[Math.floor(i/count)%2?count-1-slot:slot];if(!p||p.country!==country||seen.has(p.id)||!DISPLAY_ROSTER.some(a=>a.id===p.id))fail();seen.add(p.id);teams[country].push(p.id);}
  for(const c of d.countries)if(!Array.isArray(d.teams[c])||d.teams[c].join(',')!==teams[c].join(','))fail();
  return d;
 }
-export function publicDraft(d){if(!d)return null;const {version,humans,countries,order,teams,picks}=d;return structuredClone({version,humans,countries,order,teams,picks});}
+export function publicDraft(d){if(!d)return null;const {version,mode,humans,countries,order,teams,picks}=d;return structuredClone({version,...(mode?{mode}:{}),humans,countries,order,teams,picks});}
 export function sameTeam(ids,owned){return Array.isArray(ids)&&ids.length===4&&new Set(ids).size===4&&owned?.length===4&&ids.every(id=>owned.includes(id));}
 export function reorderTeam(ids,id,direction){
  const out=[...ids],i=out.indexOf(id);if(i<0)return out;

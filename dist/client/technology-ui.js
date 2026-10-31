@@ -1,7 +1,7 @@
-import * as E from './engine.js?v=204';
-import {COUNTRY,TECH,ACTIONS} from './data.js?v=204';
-import {icon,button,esc,portrait} from './ui.js?v=204';
-import {countryOptions} from './presentation.js?v=204';
+import * as E from './engine.js?v=205';
+import {COUNTRY,TECH,ACTIONS} from './data.js?v=205';
+import {icon,button,esc,portrait} from './ui.js?v=205';
+import {countryOptions} from './presentation.js?v=205';
 let selected=null,scope='';
 export function selectTechnology(type){selected=['ai','guard','drone'].includes(type)?type:null;}
 const modules={...TECH,protect:{name:'Protection d’infrastructure',icon:'shield',duration:2},drone:{name:'Reconnaissance par drone',icon:'drone',duration:1}};

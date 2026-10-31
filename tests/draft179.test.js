@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import * as E from '../dist/client/engine.js';
 import {COUNTRIES,COUNTRY,DISPLAY_ROSTER,ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
-import {selectParticipants,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,availableDraftAgents,validateDraft,reorderTeam} from '../dist/client/game-setup.js';
+import {usesDraft,selectParticipants,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,availableDraftAgents,validateDraft,reorderTeam} from '../dist/client/game-setup.js';
 import {newRoom,joinRoom,execute,startRoom,roomView,restoreRoom,PROTOCOL} from '../dist/client/multiplayer-core.js';
 import {Multiplayer} from '../dist/client/multiplayer.js';
 import {setupScreen,makeScreens} from '../dist/client/screens.js';
@@ -118,7 +118,7 @@ test('Advanced setup shows country selection first, disabled taken draft agents,
 
 test('Actual solo setup handlers draft four agents, reorder chief and launch the complete exclusive game',()=>{
  const app=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8'),cases=app.slice(app.indexOf(" case 'ai-difficulty':"),app.indexOf(" case 'resume':"));
- const context={setupDifficulty:'normal',setupMode:'advanced',setupDraft:null,setupConfirmed:false,setupDraftCandidate:null,setupCountry:'FR',setupAgents:[],E,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam,draftCandidate,render:()=>{},toast:()=>{},resetExperience:()=>{},clearSignals:()=>{},persist:()=>{},camera:{},focusCountry:()=>{},menuOpen:false,AI_LEVELS:{},state:null};
+ const context={setupDifficulty:'normal',setupMode:'advanced',setupDraft:null,setupConfirmed:false,setupDraftCandidate:null,setupCountry:'FR',setupAgents:[],E,usesDraft,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam,draftCandidate,render:()=>{},toast:()=>{},resetExperience:()=>{},clearSignals:()=>{},persist:()=>{},camera:{},focusCountry:()=>{},menuOpen:false,AI_LEVELS:{},state:null};
  const handle=runInNewContext('(cmd,id)=>{switch(cmd){'+cases+'}}',context);handle('solo-confirm-country');assert.equal(context.setupDraft.humans[0],'FR');for(let round=0;round<4;round++){assert.equal(draftCountry(context.setupDraft),'FR');const id=availableDraftAgents(context.setupDraft)[0].id,before=JSON.stringify(context.setupDraft);handle('solo-draft-preview',id);assert.equal(JSON.stringify(context.setupDraft),before);assert.equal(context.setupDraftCandidate,id);handle('solo-draft-confirm');assert.equal(context.setupDraftCandidate,null);}assert.equal(draftCountry(context.setupDraft),null);const chosen=context.setupAgents[3];handle('solo-draft-chief',chosen);handle('start');assert.equal(context.state,null);handle('solo-confirm-team');handle('start');assert.equal(context.state.agents.length,16);assert.equal(context.state.gameMode,'advanced');assert.equal(E.team(context.state).find(a=>a.chief).id,chosen);
 });
 

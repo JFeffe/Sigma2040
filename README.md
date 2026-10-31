@@ -1,3 +1,13 @@
+# Publication GitHub — build 205
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Mode **Coopératif** : deux pays actifs, deux humains ou un humain avec un PNJ, quatre agents chacun repêchés en serpentin. Enquêtes partagées, ressources et prestige individuels, agents alliés visibles avec un contour violet et consultation sans contrôle. Le PNJ prépare ses ordres avant le joueur; les missions sont résolues à la fin du tour.
+
+Nombre d’ennemis et conditions de victoire inchangés, limite de 30 tours. Victoire ou défaite des deux équipes. Le bilan conserve les statistiques des joueurs et ajoute les performances de Fracture par cellule et le statut des criminels.
+
+Validation : suite `npm test`, tests dédiés des deux configurations coopératives, permissions, dossiers partagés, reprise de sauvegarde à chaque tour sur les quatre niveaux de PNJ et limites de fin de campagne; parcours navigateur du repêchage jusqu’aux agents alliés en consultation.
+
 # Publication GitHub — build 200
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
