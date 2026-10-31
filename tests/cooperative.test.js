@@ -51,7 +51,7 @@ test('Two-human cooperative room enforces capacity, ownership, ready synchroniza
 });
 
 test('Single-human room starts with planned NPC, allied cards are read-only, both teams win, enemies appear at the end',()=>{
- const r=room(false),s=r.game,ally=s.agents.find(a=>a.faction!==s.player);assert.ok(s.agents.some(a=>a.faction!==s.player&&a.task));assert.match(agentMapMarkers(s),/coop-ally/);const panel=personnelPanel(s,ally.id);assert.match(panel,/consultation uniquement/);assert.match(panel,/data-cmd="agent"[^>]*disabled/);assert.doesNotMatch(panel,/data-cmd="agent-rest"[^>]*(?<!disabled)>/);
+ const r=room(false),s=r.game,ally=s.agents.find(a=>a.faction!==s.player);assert.ok(s.agents.some(a=>a.faction!==s.player&&a.task));assert.match(agentMapMarkers(s),/coop-ally/);const panel=personnelPanel(s,ally.id);assert.match(panel,/consultation uniquement/);assert.doesNotMatch(panel,/data-cmd="agent"/);assert.match(panel,/data-cmd="workspace-country"/);assert.doesNotMatch(panel,/data-cmd="agent-rest"[^>]*(?<!disabled)>/);
  s.ended='victory';s.enemyAttacks=[{plotId:s.plots[0].id,turn:3,cell:0,country:s.plots[0].country,status:'RÉUSSIE',crisisDelta:30}];s.factions[s.player].score=10;assert.doesNotMatch(endingScreen(s),/PAYS VAINQUEUR|VICTOIRE NATIONALE/);assert.match(campaignSummary(s,{tab:'enemies'}),/Bilan de Fracture/);assert.deepEqual(M.playerView(r,s.player).enemyAttacks,s.enemyAttacks);
 });
 

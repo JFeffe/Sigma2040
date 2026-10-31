@@ -23,21 +23,21 @@ function applicationDialog(){
  vm.runInContext("state=E.createGame('FR',['p0','p12','p13','p14'],42);",context);
  return {context,modal,state:vm.runInContext('state',context)};
 }
-test('Agent action popup opens through the real shared application dialog',()=>{
- const {context,modal,state}=applicationDialog();context.openAgent(E.team(state)[0].id);
+test('Explicit order confirmation still opens through the shared application dialog',()=>{
+ const {context,modal,state}=applicationDialog();context.openOrder(E.team(state)[0].id);
  assert.equal(modal.open,true);assert.match(modal.innerHTML,/Affecter une opération/);assert.match(modal.innerHTML,/data-cmd="close"/);
 });
-test('Dossier popup opens through the application dialog, then its portrait opens the agent action popup',async()=>{
+test('Dossier popup opens through the application dialog, and its portrait opens a separate agent without replacing the dossier',async()=>{
  const {context,modal,state}=applicationDialog(),t=E.knownTargets(state)[0],a=E.team(state)[0];a.country=t.country;
  const previous=globalThis.document;globalThis.document={activeElement:null};
  try{
- initCountryInquiry({state:()=>state,modal,showModal:context.showModal,openAgent:context.openAgent,readOnlyReason:()=>'',notify(){}});
+ let opened=null;initCountryInquiry({state:()=>state,modal,showModal:context.showModal,openAgent:id=>{opened=id;},readOnlyReason:()=>'',notify(){}});
  openCountryInquiry(t.id);assert.equal(modal.open,true);assert.match(modal.innerHTML,/inquiry-step-rail/);
- await handleInquiryCommand('inquiry-open-agent',a.id);assert.equal(modal.open,true);assert.equal(modal.className,'order-modal');assert.match(modal.innerHTML,/Affecter une opération/);
+ await handleInquiryCommand('inquiry-open-agent',a.id);assert.equal(modal.open,true);assert.equal(modal.className,'country-inquiry-modal');assert.equal(opened,a.id);assert.match(modal.innerHTML,/inquiry-step-rail/);
  }finally{globalThis.document=previous;}
 });
 
 test('Training opens the same dialog with honest guaranteed odds and the regular action menu',()=>{
- const {context,modal}=applicationDialog();vm.runInContext("state=createTutorialGame('contact');",context);context.openAgent('p0');
+ const {context,modal}=applicationDialog();vm.runInContext("state=createTutorialGame('contact');",context);context.openOrder('p0');
  assert.equal(modal.open,true);assert.equal(modal.className,'order-modal');assert.match(modal.innerHTML,/Formation scénarisée/);assert.match(modal.innerHTML,/Chances de réussite : 100 %/);assert.doesNotMatch(modal.innerHTML,/id="orderCredits"/);assert.match(modal.innerHTML,/<option value="travel"/);assert.match(modal.innerHTML,/<option value="counter"/);
 });

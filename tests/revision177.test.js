@@ -1,3 +1,4 @@
+import {countryOperationsMarkup,floatingAgentMarkup} from '../dist/client/country-operations.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
@@ -43,8 +44,8 @@ test('Country inquiry steps use status icons and preserve selection and completi
 
 test('Selected agent exposes the same known local cases and threats even when map country differs',()=>{
  const s=fresh(),t=E.knownTargets(s)[0],a=E.team(s)[0];a.country=t.country;
- const render=()=>makeScreens(s,'FR',a.id,[],{}).world(),before=JSON.stringify(s);
- let html=render();assert.match(html,/agent-focus/);assert.ok(html.includes('data-cmd="country-inquiry" data-id="'+t.id+'"'));
+ const render=()=>countryOperationsMarkup(s,a.country),before=JSON.stringify(s);
+ let html=render();assert.match(floatingAgentMarkup(s,a.id),/data-cmd="workspace-country"/);assert.ok(html.includes('data-cmd="country-inquiry" data-id="'+t.id+'"'));
  for(const unknown of s.suspects.filter(x=>!E.dossier(s,s.player,x.id)))assert.ok(!html.includes('data-cmd="country-inquiry" data-id="'+unknown.id+'"'));
  assert.equal(JSON.stringify(s),before);
  s.suspects.find(x=>x.id===t.id).arrested=true;assert.ok(!render().includes('data-cmd="country-inquiry" data-id="'+t.id+'"'));

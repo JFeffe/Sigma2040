@@ -27,7 +27,7 @@ test('Compact controller switches actions, opens portraits, and assigns only pro
  const modal={open:false,className:'',classList:{contains:c=>modal.className===c},close(){this.open=false;},querySelector(q){return q==='.inquiry-body'?{scrollTop:0}:q==='.country-inquiry'?{remove(){html='';}}:null;},insertAdjacentHTML(_,value){html+=value;}};
  const previous=globalThis.document;globalThis.document={activeElement:null};
  try{
-  initCountryInquiry({state:()=>s,modal,readOnlyReason:()=>readOnly,notify(){},showModal(h,c){html=h;modal.className=c;modal.open=true;},openAgent(id){assert.equal(modal.open,false);opened=id;},async assign(p){assigned=p;E.assign(s,p.id,p.type,p.target,p.useCredits);}});
+  initCountryInquiry({state:()=>s,modal,readOnlyReason:()=>readOnly,notify(){},showModal(h,c){html=h;modal.className=c;modal.open=true;},openAgent(id){assert.equal(modal.open,true);opened=id;},async assign(p){assigned=p;E.assign(s,p.id,p.type,p.target,p.useCredits);}});
   openCountryInquiry(t.id);assert.match(html,/inquiry-step-rail/);assert.doesNotMatch(html,/id="inquiryAction"/);
   await handleInquiryCommand('inquiry-step','intervention');
   assert.match(html,/data-id="prepare"/);assert.match(html,/Optionnel · une fois par pays/);

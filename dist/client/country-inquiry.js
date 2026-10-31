@@ -1,13 +1,13 @@
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=207';
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=207';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=207';
-import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=207';
-import * as E from './engine.js?v=207';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=207';
-import {esc,icon,button,flag,portrait} from './ui.js?v=207';
-import {suspectPortrait} from './fracture-profiles.js?v=207';
-import {countrySignals} from './country-signals.js?v=207';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=207';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=208';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=208';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=208';
+import {ACTIONS,COUNTRY,CELLS,STAT_NAMES,TALENTS} from './data.js?v=208';
+import * as E from './engine.js?v=208';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=208';
+import {esc,icon,button,flag,portrait} from './ui.js?v=208';
+import {suspectPortrait} from './fracture-profiles.js?v=208';
+import {countrySignals} from './country-signals.js?v=208';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=208';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -56,17 +56,6 @@ export function inquiryModel(s,id,type,agentId=null,proof=null,useCredits=false)
  return {t,type,rows,selected,proofs:inquiryProofs(s,t.id),requirements:inquiryRequirements(s,t,type)};
 }
 
-let api,selection=null,pending=false;
-export function initCountryInquiry(callbacks){api=callbacks;}
-export function openCountryInquiry(id,threat=false){
- if(threat){if(!threatInquiryModel(api.state(),id))return;selection={id,threat:true,type:'protect',agent:null,proof:null,boost:false,message:''};paint(true);return;}
- const s=api.state(),t=E.knownTargets(s).find(t=>t.id===id);if(!t)return;
- const next=E.nextOperation(s,t);selection={id,type:INQUIRY_ACTIONS.includes(next.type)?next.type:'contacts',agent:null,proof:null,boost:false,message:''};
- selection.step=stepForAction(selection.type);selection.substep=interventionForAction(selection.type);paint(true);
-}
-export function refreshCountryInquiry(){if(api?.modal.open&&api.modal.classList.contains('country-inquiry-modal'))paint();}
-function selectionModel(s,current){return current.threat?threatInquiryModel(s,current.id,current.agent,current.boost):inquiryModel(s,current.id,current.type,current.agent,current.proof,current.boost);}
-function readOnly(){return pending?'Confirmation en cours…':api.readOnlyReason()||'';}
 export function inquiryActionInputs(type,candidate){
  const d=ACTIONS[type],a=candidate?.a,o=candidate?.normal;
  const stat=`<span title="Stat utilisée">${icon(['scan','case','shield'][d.stat])} ${esc(STAT_NAMES[d.stat])}${a?' '+a.stats[d.stat]:''}</span>`;
@@ -80,6 +69,19 @@ export function inquiryActionCosts(type,candidate){
  const {a,o}=candidate,signed=n=>n>0?'+'+n:n<0?'−'+Math.abs(n):'0';
  return `<div class="inquiry-costs" aria-label="Énergie et exposition pour ${esc(a.name)}"><div><strong>${icon('bolt')} Énergie</strong><span><b>−${o.fatigue*o.duration}</b> · réussite ou échec</span></div><div><strong>${icon('eye')} Exposition</strong><span class="inquiry-outcomes"><span class="on-success">Réussite <b>${signed(E.missionExposure(a,type,true))}</b></span><span class="on-failure">Échec <b>${signed(E.missionExposure(a,type,false))}</b></span></span></div></div>`;
 }
+
+export function createCountryInquiryController(callbacks){
+let api=callbacks,selection=null,pending=false;
+function initCountryInquiry(callbacks){api=callbacks;}
+function openCountryInquiry(id,threat=false){
+ if(threat){if(!threatInquiryModel(api.state(),id))return;selection={id,threat:true,type:'protect',agent:null,proof:null,boost:false,message:''};paint(true);return;}
+ const s=api.state(),t=E.knownTargets(s).find(t=>t.id===id);if(!t)return;
+ const next=E.nextOperation(s,t);selection={id,type:INQUIRY_ACTIONS.includes(next.type)?next.type:'contacts',agent:null,proof:null,boost:false,message:''};
+ selection.step=stepForAction(selection.type);selection.substep=interventionForAction(selection.type);paint(true);
+}
+function refreshCountryInquiry(){if(api?.modal.open&&api.modal.classList.contains('country-inquiry-modal'))paint();}
+function selectionModel(s,current){return current.threat?threatInquiryModel(s,current.id,current.agent,current.boost):inquiryModel(s,current.id,current.type,current.agent,current.proof,current.boost);}
+function readOnly(){return pending?'Confirmation en cours…':api.readOnlyReason()||'';}
 function boostUnavailable(candidate,locked){return locked||candidate?.reason||candidate?.normal.error||(!candidate?'Choisissez un agent disponible.':'')||(candidate.normal.chance===100?'Formation : réussite garantie, sans boost.':candidate.normal.boostGain===0?'Chances déjà au plafond de 90 %.':'')||candidate.reinforced.error||'';}
 function paint(open=false){
  if(!selection)return;
@@ -92,7 +94,7 @@ function paint(open=false){
  const actionKeys=stage.id==='intervention'?INTERVENTION_ACTIONS[selection.substep||'prepare']:stage.actions;
  const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3></div>${stage.id==='intervention'?`<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle. Le mandat est facultatif.</p>${interventionMarkup(s,t,true,selection.substep)}`:''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
  const running=E.team(s).filter(a=>a.task&&(a.task.target===t.id||a.task.type==='analyze'&&s.proofs.find(p=>p.id===a.task.target)?.suspect===t.id||a.country===t.country&&['contacts','influence','authorize','drone',...(plot?['protect']:[])].includes(a.task.type)));
- const missions=running.length?`<section class="inquiry-running"><h3>Missions affectées · ${running.length}</h3>${running.map(a=>`<div>${button(portrait(a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${a.id}" aria-label="Ouvrir les actions de ${esc(a.name)}"`)}<span><strong>${esc(a.name)}</strong><small>${esc(ACTIONS[a.task.type].name)} · ${a.task.remaining} tour(s)${a.task.queued?' · planifiée':''}</small></span></div>`).join('')}</section>`:'';
+ const missions=running.length?`<section class="inquiry-running"><h3>Missions affectées · ${running.length}</h3>${running.map(a=>`<div>${button(portrait(a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${a.id}" aria-label="Consulter la fiche de ${esc(a.name)}"`)}<span><strong>${esc(a.name)}</strong><small>${esc(ACTIONS[a.task.type].name)} · ${a.task.remaining} tour(s)${a.task.queued?' · planifiée':''}</small></span></div>`).join('')}</section>`:'';
 
  const protection=plot?threatProtectionText(s,plot):null;
  const coverage=plot?threatCoverage(s,plot):null,otherCoverage=plot?coveringFactions(s,plot).filter(f=>f.id!==s.player):[];
@@ -108,18 +110,18 @@ function paint(open=false){
  ${type==='arrest'&&!f.authorized[t.country]&&!t.arrested?'<p class="inquiry-warning">Sans mandat : arrestation clandestine, risque accru et coopération −1 niveau après la tentative.</p>':''}
  ${type==='analyze'?`<label class="inquiry-proof">Pièce de ce dossier<select id="inquiryProof" ${!proofs.length?'disabled':''}>${proofs.length?proofs.map(p=>`<option value="${p.id}" ${p.id===selection.proof?'selected':''}>${esc(proofTitle(s.proofs.find(x=>x.id===p.id)))}</option>`).join(''):'<option>Aucune pièce disponible</option>'}</select></label>`:''}
  <div class="inquiry-agents-heading"><div><p class="inquiry-agent-label">Choisir un agent · ${type==='analyze'?'au QG':esc(COUNTRY[t.country].name)}</p><small class="inquiry-boost-status" role="status">${esc(boostReason||(selected?.normal.boostGain<10?'Plafond 90 %':''))}</small></div>${button(`${icon('boost')}<span>+10% -6cr/<b class="inquiry-boost-balance ${f.budget<E.ECONOMY.boostCost?'is-insufficient':''}">${f.budget}</b></span>`,'inquiry-boost','inquiry-boost',`id="inquiryBoost" aria-label="${selection.boost?'Désactiver':'Activer'} le boost : +10 points, ${E.ECONOMY.boostCost} crédits" aria-pressed="${selection.boost}" title="${esc(locked||(!selection.boost&&boostReason)||'Boost de l’action · plafond de 90 %')}" ${locked||f.budget<E.ECONOMY.boostCost||!selection.boost&&boostReason?'disabled':''}`)}</div>
- <div class="inquiry-agents">${rows.length?rows.map(r=>`<div class="inquiry-agent-row ${r.reason?'is-blocked':''}">${button(portrait(r.a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${r.a.id}" aria-label="Ouvrir les actions de ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible'+(r.a.status==='injured'?' · blessé':''))}</small></span><span class="inquiry-agent-numbers">${r.reason?'':`<b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small>`}</span>`,'inquiry-agent',`inquiry-agent ${r.reason?'is-blocked':''}`,`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="inquiry-empty">Aucun agent de votre équipe ${type==='analyze'?'au QG':'présent dans ce pays'}.</p>`}</div>
+ <div class="inquiry-agents">${rows.length?rows.map(r=>`<div class="inquiry-agent-row ${r.reason?'is-blocked':''}">${button(portrait(r.a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${r.a.id}" aria-label="Consulter la fiche de ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible'+(r.a.status==='injured'?' · blessé':''))}</small></span><span class="inquiry-agent-numbers">${r.reason?'':`<b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small>`}</span>`,'inquiry-agent',`inquiry-agent ${r.reason?'is-blocked':''}`,`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="inquiry-empty">Aucun agent de votre équipe ${type==='analyze'?'au QG':'présent dans ce pays'}.</p>`}</div>
  ${inquiryActionCosts(type,preview)}
  ${missions}</section></div><footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(selection.message||blocked)}</p>${button(`${icon('check')} Confirmer${selected?' · '+esc(selected.a.name):''}`,'inquiry-confirm','primary wide',blocked?'disabled':'')}</footer></section>`;
- const modal=api.modal,scroll=modal.querySelector('.inquiry-body')?.scrollTop||0,focus=document.activeElement?.id;
+ const modal=api.modal,scroll=modal.querySelector('.inquiry-body')?.scrollTop||0,focus=modal.contains?.(document.activeElement)?document.activeElement.id:null;
  if(open)api.showModal(html,'country-inquiry-modal');else {modal.querySelector('.country-inquiry')?.remove();modal.insertAdjacentHTML('beforeend',html);}
  modal.querySelector('.inquiry-body').scrollTop=scroll;if(focus?.startsWith('inquiry'))modal.querySelector('#'+focus)?.focus({preventScroll:true});
 }
-export async function handleInquiryCommand(cmd,id){
+async function handleInquiryCommand(cmd,id){
  if(cmd==='country-inquiry'||cmd==='country-threat'){openCountryInquiry(id,cmd==='country-threat');return;}
  if(!selection||!api.modal.open||!api.modal.classList.contains('country-inquiry-modal'))return;
  if(pending)return;
- if(cmd==='inquiry-open-agent'){const m=selectionModel(api.state(),selection);if(!E.team(api.state()).some(a=>a.id===id))return;api.modal.close();api.openAgent(id);return;}
+ if(cmd==='inquiry-open-agent'){const m=selectionModel(api.state(),selection);if(!E.team(api.state()).some(a=>a.id===id))return;api.openAgent(id);return;}
  if(cmd==='inquiry-step'&&!selection.threat){const st=INVESTIGATION_STEPS.find(x=>x.id===id);if(!st)return;selection.step=id;selection.substep='prepare';selection.type=st.actions[0];selection.agent=null;selection.boost=false;selection.message='';paint();}
  if(cmd==='inquiry-substep'&&!selection.threat&&INTERVENTION_ACTIONS[id]){selection.step='intervention';selection.substep=id;selection.type=INTERVENTION_ACTIONS[id][0];selection.agent=null;selection.boost=false;selection.message='';paint();}
  if(cmd==='inquiry-action'&&!selection.threat&&INQUIRY_ACTIONS.includes(id)){selection.type=id;selection.step=stepForAction(id,selection.step);if(selection.step==='intervention')selection.substep=interventionForAction(id);selection.agent=null;selection.boost=false;selection.message='';paint();}
@@ -140,4 +142,13 @@ export async function handleInquiryCommand(cmd,id){
   finally{pending=false;refreshCountryInquiry();}
  }
 }
-export function handleInquiryChange(el){if(!selection||pending||!api.modal.open||!api.modal.classList.contains('country-inquiry-modal'))return;if(el.id==='inquiryBoost'){selection.boost=el.checked;selection.message='';paint();}if(el.id==='inquiryProof'){selection.proof=el.value;selection.agent=null;selection.boost=false;selection.message='';paint();}}
+function handleInquiryChange(el){if(!selection||pending||!api.modal.open||!api.modal.classList.contains('country-inquiry-modal'))return;if(el.id==='inquiryBoost'){selection.boost=el.checked;selection.message='';paint();}if(el.id==='inquiryProof'){selection.proof=el.value;selection.agent=null;selection.boost=false;selection.message='';paint();}}
+
+ return {initCountryInquiry,openCountryInquiry,refreshCountryInquiry,handleInquiryCommand,handleInquiryChange};
+}
+const defaultInquiry=createCountryInquiryController();
+export const initCountryInquiry=(...args)=>defaultInquiry.initCountryInquiry(...args);
+export const openCountryInquiry=(...args)=>defaultInquiry.openCountryInquiry(...args);
+export const refreshCountryInquiry=(...args)=>defaultInquiry.refreshCountryInquiry(...args);
+export const handleInquiryCommand=(...args)=>defaultInquiry.handleInquiryCommand(...args);
+export const handleInquiryChange=(...args)=>defaultInquiry.handleInquiryChange(...args);

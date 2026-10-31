@@ -40,9 +40,9 @@ test('Personnel prominently renders every supplied full-body image and targets t
  for(const candidate of DISPLAY_ROSTER){const s=E.createGame('FR',[candidate.id,...DISPLAY_ROSTER.filter(x=>x.id!==candidate.id).slice(0,3).map(x=>x.id)],42),a=E.team(s).find(a=>a.templateId===candidate.id||a.id===candidate.id),html=personnelPanel(s,a.id);
   const figure=html.match(/<figure class="personnel-portrait-stage">([\s\S]*?)<\/figure>/)?.[1];assert.ok(figure,candidate.id);assert.match(figure,/class="full-body/);assert.doesNotMatch(figure,/<details/);
   const path=figure.match(/<image href="\.\/(.*?)"/)[1].split('?')[0];assert.ok(existsSync(new URL('../dist/client/'+path,import.meta.url)));
-  assert.match(html,new RegExp('data-cmd="agent"[^>]*data-id="'+a.id+'"'));assert.match(html,new RegExp('data-cmd="agent-journal"[^>]*data-id="'+a.id+'"'));
+  assert.match(html,new RegExp('data-cmd="workspace-country"[^>]*data-id="'+a.country+'"'));assert.doesNotMatch(html,/Affecter une opération/);assert.match(html,new RegExp('data-cmd="agent-journal"[^>]*data-id="'+a.id+'"'));
  }
  const s=fresh(),a=E.team(s)[1];E.assign(s,a.id,'travel','DE');a.task.queued=false;
  const html=personnelPanel(s,a.id);assert.match(html,/data-cmd="cancel"[^>]*disabled/);assert.match(html,/MISSION EN COURS/);
- a.task=null;a.status='captured';const detained=personnelPanel(s,a.id);assert.match(detained,/Consulter la détention/);assert.doesNotMatch(detained,/data-cmd="agent-rest"/);
+ a.task=null;a.status='captured';const detained=personnelPanel(s,a.id);assert.match(detained,/Extraction nécessaire/);assert.doesNotMatch(detained,/data-cmd="agent-rest"/);
 });
