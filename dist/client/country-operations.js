@@ -1,12 +1,12 @@
-import {quickActionMarkup} from './quick-actions.js?v=213';
-import {countrySignals} from './country-signals.js?v=213';
-import {cooperationInfo} from './cooperation.js?v=213';
-import * as E from './engine.js?v=213';
-import {COUNTRY,COUNTRIES,ACTIONS} from './data.js?v=213';
-import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=213';
-import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=213';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=213';
-import {fullBody} from './visuals.js?v=213';
+import {quickActionMarkup} from './quick-actions.js?v=214';
+import {countrySignals} from './country-signals.js?v=214';
+import {cooperationInfo} from './cooperation.js?v=214';
+import * as E from './engine.js?v=214';
+import {COUNTRY,COUNTRIES,ACTIONS} from './data.js?v=214';
+import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=214';
+import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=214';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=214';
+import {fullBody} from './visuals.js?v=214';
 
 const dossierActions=new Set(['analyze','collect','surveil','prepare','arrest','hack','intimidate']);
 export function countryOperationTypes(s,country){

@@ -1,9 +1,9 @@
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=213';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=213';
-import * as E from './engine.js?v=213';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=213';
-import {SUSPECTS} from './data.js?v=213';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=213';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=214';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=214';
+import * as E from './engine.js?v=214';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=214';
+import {SUSPECTS} from './data.js?v=214';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=214';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const TUTORIAL_MISSIONS=Object.freeze([
@@ -25,7 +25,7 @@ export const tutorialMission=id=>TUTORIAL_MISSIONS.find(m=>m.id===id);
 export function createTutorialGame(id){
  if(!TUTORIAL_IDS.includes(id))throw Error('Mission de formation inconnue.');
  const npc=NPC_MISSIONS.some(m=>m.id===id);
- const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed(id),npc?'bb1':'normal',npc?{participants:['FR','GB','US','CN']}:{});
+ const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed(id),'bb1',npc?{participants:['FR','GB','US','CN']}:{});
  if(npc){setupNpcTutorial(s,id);E.log(s,tutorialMission(id).brief,'brief','FR');return s;}
  s.tutorial={version:1,mission:id,revision:2};
  // Only the player's service participates; the world map keeps all twelve countries.

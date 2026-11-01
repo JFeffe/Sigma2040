@@ -106,7 +106,7 @@ test('An actual advanced-mode death proposes three saved legacy replacements in 
 });
 
 test('Regular and Advanced four-country campaigns remain valid through all bot difficulties and render all screens',()=>{
- for(const level of ['easy','normal','expert','bb1'])for(const mode of ['regular','advanced']){const s=mode==='advanced'?advancedGame(44):E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,44);s.aiDifficulty=level;s.humanFactions=[];while(!s.ended){E.advance(s);E.validateSave(structuredClone(s));}assert.equal(Object.keys(s.factions).length,4);for(const c of Object.keys(s.factions)){s.player=c;const screens=makeScreens(s,c,null,[],{});for(const view of ['agents','inquiry','operations','diplomacy','government','journal'])assert.equal(typeof screens[view](),'string');}assert.ok(s.ended);}
+ for(const level of ['bb1','bb2'])for(const mode of ['regular','advanced']){const s=mode==='advanced'?advancedGame(44):E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,44);s.aiDifficulty=level;s.humanFactions=[];while(!s.ended){E.advance(s);E.validateSave(structuredClone(s));}assert.equal(Object.keys(s.factions).length,4);for(const c of Object.keys(s.factions)){s.player=c;const screens=makeScreens(s,c,null,[],{});for(const view of ['agents','inquiry','operations','diplomacy','government','journal'])assert.equal(typeof screens[view](),'string');}assert.ok(s.ended);}
 });
 
 test('Advanced setup shows country selection first, disabled taken draft agents, ordered team controls and no Agents-menu relief button',()=>{

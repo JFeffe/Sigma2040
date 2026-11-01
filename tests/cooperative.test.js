@@ -56,7 +56,7 @@ test('Single-human room starts with planned NPC, allied cards are read-only, bot
 });
 
 test('Coop campaigns survive JSON save/load every turn for every NPC level',()=>{
- for(const level of ['easy','normal','expert','bb1'])for(let seed=1;seed<=4;seed++){
+ for(const level of ['bb1','bb2'])for(let seed=1;seed<=4;seed++){
   const d=draft(['FR'],seed);let s=E.createConfiguredGame('FR',d.teams.FR,seed,level,{gameMode:'cooperative',participants:d.countries,teams:d.teams});
   while(!s.ended){s=reload(s);E.planFaction(s,'FR');E.advance(s);assert.ok(s.turn<=30);assert.strictEqual(s.factions[d.countries[0]].evidence,s.factions[d.countries[1]].evidence);}
   assert.ok(s.enemyAttacks?.length);assert.doesNotThrow(()=>reload(s));

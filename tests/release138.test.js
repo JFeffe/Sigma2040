@@ -5,11 +5,11 @@ import {playerView} from '../dist/client/multiplayer-core.js';
 import {endingScreen} from '../dist/client/ending-ui.js';
 import {unreadPatchCount,patchNotesPage,PATCH_NOTES} from '../dist/client/patch-notes.js';
 test('Large final report crosses the relay in bounded fragments and renders for every player',()=>{
- const s=E.createGame('FR',['p0','p12','p13','p14'],42,'expert');s.ended='victory';
+ const s=E.createGame('FR',['p0','p12','p13','p14'],42,'bb2');s.ended='victory';
  s.campaignStats.events=Array.from({length:500},(_,i)=>({turn:1,faction:'FR',agentId:'p0',templateId:'p0',agent:'IRIS',type:'analyze',status:'RÉUSSITE',country:'FR',targetName:'Test',chance:70,notes:['É'.repeat(1000)]}));
  for(const country of ['FR','US']){const value={kind:'snapshot',value:{game:playerView({game:s},country)}};assert.ok(JSON.stringify(value).length>300000);const packets=relayPackets(value,'test'),assembler=new RelayAssembler();let result;
  for(const packet of [...packets].reverse()){assert.ok(new TextEncoder().encode(JSON.stringify(packet)).length<290000);const v=assembler.accept(packet);if(v)result=v;}
- assert.deepEqual(result,value);assert.equal(result.value.game.aiDifficulty,'expert');assert.equal(result.value.game.agents.length,s.agents.length);assert.match(endingScreen(result.value.game),/BILAN/);
+ assert.deepEqual(result,value);assert.equal(result.value.game.aiDifficulty,'bb2');assert.equal(result.value.game.agents.length,s.agents.length);assert.match(endingScreen(result.value.game),/BILAN/);
  }
 });
 test('Patch notes read marker survives visits and storage failures do not break the page',()=>{

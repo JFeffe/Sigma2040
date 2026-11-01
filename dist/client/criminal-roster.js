@@ -1,4 +1,4 @@
-import {SUSPECTS} from './data.js?v=213';
+import {SUSPECTS} from './data.js?v=214';
 // s0–s5 are stable campaign slots (two per cell); templateId is the drawn identity.
 // Keeping slots preserves all mission, evidence and threat rules, including old saves.
 export const CRIMINAL_POOL=[

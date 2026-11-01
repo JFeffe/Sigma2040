@@ -1,0 +1,112 @@
+{
+  "reference": "BB1 with immediate-victory and survival corrections, unpublished after build 213",
+  "candidate": "essential verification queue and one shared cooperative verifier",
+  "status": "unpublished",
+  "tests": {
+    "passed": 634,
+    "failed": 0,
+    "addedThisChange": 4
+  },
+  "campaigns": [
+    {
+      "mode": "cooperative",
+      "before": {
+        "n": 600,
+        "wins": 0,
+        "meanEndTurn": 11.853333333333333,
+        "meanArrests": 1.2966666666666666,
+        "meanCells": 0.09333333333333334,
+        "meanAnalyses": 9.4
+      },
+      "after": {
+        "n": 600,
+        "wins": 4,
+        "meanEndTurn": 13.173333333333334,
+        "meanArrests": 1.9816666666666667,
+        "meanCells": 0.20166666666666666,
+        "meanAnalyses": 6.046666666666667
+      },
+      "groups": [
+        {
+          "start": 0,
+          "n": 300,
+          "beforeWins": 0,
+          "afterWins": 2
+        },
+        {
+          "start": 900,
+          "n": 300,
+          "beforeWins": 0,
+          "afterWins": 2
+        }
+      ]
+    },
+    {
+      "mode": "advanced",
+      "before": {
+        "n": 300,
+        "wins": 95,
+        "meanEndTurn": 23.563333333333333,
+        "meanArrests": 4.1066666666666665,
+        "meanCells": 1.1966666666666668,
+        "meanAnalyses": 28.036666666666665
+      },
+      "after": {
+        "n": 300,
+        "wins": 135,
+        "meanEndTurn": 23.31,
+        "meanArrests": 4.586666666666667,
+        "meanCells": 1.4233333333333333,
+        "meanAnalyses": 18.876666666666665
+      },
+      "groups": [
+        {
+          "start": 0,
+          "n": 150,
+          "beforeWins": 46,
+          "afterWins": 66
+        },
+        {
+          "start": 450,
+          "n": 150,
+          "beforeWins": 49,
+          "afterWins": 69
+        }
+      ]
+    },
+    {
+      "mode": "regular",
+      "before": {
+        "n": 300,
+        "wins": 98,
+        "meanEndTurn": 22.7,
+        "meanArrests": 3.98,
+        "meanCells": 1.14,
+        "meanAnalyses": 27.653333333333332
+      },
+      "after": {
+        "n": 300,
+        "wins": 124,
+        "meanEndTurn": 22.703333333333333,
+        "meanArrests": 4.216666666666667,
+        "meanCells": 1.26,
+        "meanAnalyses": 18.373333333333335
+      },
+      "groups": [
+        {
+          "start": 0,
+          "n": 150,
+          "beforeWins": 46,
+          "afterWins": 57
+        },
+        {
+          "start": 450,
+          "n": 150,
+          "beforeWins": 52,
+          "afterWins": 67
+        }
+      ]
+    }
+  ],
+  "sourceSha256": "ebabe153212ac22174e4668542a13b7b113e9e6bda83704c5424cab3eb2f959f"
+}

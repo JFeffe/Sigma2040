@@ -1,0 +1,174 @@
+{
+  "baseBuild": 213,
+  "status": "unpublished working change",
+  "seedFormula": "730001 + i * 7919",
+  "tests": {
+    "total": 630,
+    "passed": 630,
+    "newPriorityTests": 8
+  },
+  "campaigns": [
+    {
+      "mode": "cooperative",
+      "before": {
+        "n": 600,
+        "wins": 0,
+        "meanEndTurn": 10.051666666666666,
+        "meanArrests": 1.2333333333333334,
+        "meanCells": 0.03833333333333333,
+        "crisisDefeats": 600,
+        "deadlineDefeats": 0
+      },
+      "after": {
+        "n": 600,
+        "wins": 1,
+        "meanEndTurn": 12.086666666666666,
+        "meanArrests": 1.36,
+        "meanCells": 0.105,
+        "crisisDefeats": 596,
+        "deadlineDefeats": 3
+      },
+      "batches": [
+        {
+          "start": 0,
+          "n": 300,
+          "beforeWins": 0,
+          "afterWins": 0
+        },
+        {
+          "start": 300,
+          "n": 300,
+          "beforeWins": 0,
+          "afterWins": 1
+        }
+      ],
+      "paired": {
+        "gainedWins": 1,
+        "lostWins": 0
+      }
+    },
+    {
+      "mode": "advanced",
+      "before": {
+        "n": 300,
+        "wins": 89,
+        "meanEndTurn": 18.576666666666668,
+        "meanArrests": 3.966666666666667,
+        "meanCells": 1.1133333333333333,
+        "crisisDefeats": 209,
+        "deadlineDefeats": 2
+      },
+      "after": {
+        "n": 300,
+        "wins": 100,
+        "meanEndTurn": 23.01,
+        "meanArrests": 4.1033333333333335,
+        "meanCells": 1.22,
+        "crisisDefeats": 137,
+        "deadlineDefeats": 63
+      },
+      "batches": [
+        {
+          "start": 0,
+          "n": 150,
+          "beforeWins": 41,
+          "afterWins": 46
+        },
+        {
+          "start": 150,
+          "n": 150,
+          "beforeWins": 48,
+          "afterWins": 54
+        }
+      ],
+      "paired": {
+        "gainedWins": 33,
+        "lostWins": 22
+      }
+    },
+    {
+      "mode": "regular",
+      "before": {
+        "n": 300,
+        "wins": 93,
+        "meanEndTurn": 18.796666666666667,
+        "meanArrests": 4.013333333333334,
+        "meanCells": 1.1166666666666667,
+        "crisisDefeats": 207,
+        "deadlineDefeats": 0
+      },
+      "after": {
+        "n": 300,
+        "wins": 91,
+        "meanEndTurn": 22.983333333333334,
+        "meanArrests": 3.966666666666667,
+        "meanCells": 1.1233333333333333,
+        "crisisDefeats": 143,
+        "deadlineDefeats": 66
+      },
+      "batches": [
+        {
+          "start": 0,
+          "n": 150,
+          "beforeWins": 52,
+          "afterWins": 46
+        },
+        {
+          "start": 150,
+          "n": 150,
+          "beforeWins": 41,
+          "afterWins": 45
+        }
+      ],
+      "paired": {
+        "gainedWins": 23,
+        "lostWins": 25
+      }
+    }
+  ],
+  "controlledScenarios": [
+    {
+      "kind": "crisis",
+      "botAction": "protect",
+      "botTarget": null,
+      "alternative": "protect",
+      "target": null,
+      "alternativeChance": 78,
+      "trials": 1000,
+      "botWins": 0,
+      "alternativeWins": 0,
+      "botSurvives": 780,
+      "alternativeSurvives": 780
+    },
+    {
+      "kind": "analyst",
+      "botAction": "arrest",
+      "botTarget": "s6",
+      "alternative": "arrest",
+      "target": "s6",
+      "alternativeChance": 71,
+      "trials": 1000,
+      "botWins": 707,
+      "alternativeWins": 707,
+      "botSurvives": 707,
+      "alternativeSurvives": 707
+    },
+    {
+      "kind": "objective",
+      "botAction": "arrest",
+      "botTarget": "s4",
+      "alternative": "arrest",
+      "target": "s4",
+      "alternativeChance": 57,
+      "trials": 1000,
+      "botWins": 578,
+      "alternativeWins": 578,
+      "botSurvives": 578,
+      "alternativeSurvives": 578
+    }
+  ],
+  "sourceSha256": {
+    "dist/client/bot-brillant-1.js": "a4f24762497a6a702d639fb3d79b425599d0c1c9c827b0acee36b38e2cafb20a",
+    "dist/client/engine.js": "5817487b012795bcad3d48b9395ac63c86b0e80b3454006dd0b80a893e37f862"
+  }
+}
