@@ -1,6 +1,6 @@
-import {protectionShare} from './balance-rules.js?v=212';
-import {TECH,COUNTRY} from './data.js?v=212';
-import {campaignRules} from './campaign-rules.js?v=212';
+import {protectionShare} from './balance-rules.js?v=213';
+import {TECH,COUNTRY} from './data.js?v=213';
+import {campaignRules} from './campaign-rules.js?v=213';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.

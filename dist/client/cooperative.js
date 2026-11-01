@@ -1,5 +1,5 @@
 export const isCooperative=s=>s?.gameMode==='cooperative';
-export const usesSharedCoop=s=>isCooperative(s)&&s.coopCampaignRules===1;
+export const usesSharedCoop=s=>isCooperative(s)&&[1,2].includes(s.coopCampaignRules);
 export const visibleTeam=s=>s.agents.filter(a=>(a.faction===s.player||isCooperative(s))&&!['dead','retired'].includes(a.status));
 export function bindCooperativeIntel(s){
  if(!isCooperative(s))return s;

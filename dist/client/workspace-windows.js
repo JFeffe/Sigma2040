@@ -1,9 +1,9 @@
-import {createFloatingWindows} from './floating-windows.js?v=212';
-import {createCountryInquiryController} from './country-inquiry.js?v=212';
-import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=212';
-import {countryTargetButtons} from './country-inquiry.js?v=212';
-import {COUNTRY,ACTIONS} from './data.js?v=212';
-import {visibleTeam} from './cooperative.js?v=212';
+import {createFloatingWindows} from './floating-windows.js?v=213';
+import {createCountryInquiryController} from './country-inquiry.js?v=213';
+import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=213';
+import {countryTargetButtons} from './country-inquiry.js?v=213';
+import {COUNTRY,ACTIONS} from './data.js?v=213';
+import {visibleTeam} from './cooperative.js?v=213';
 
 export function createGameWorkspace(api){
  const windows=createFloatingWindows();let context=null;

@@ -1,25 +1,25 @@
-import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=212';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=212';
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=212';
-import {normalizePrestige} from './score-rules.js?v=212';
-import {protectionShare} from './balance-rules.js?v=212';
-import {planBB1Faction} from './bot-brillant-1.js?v=212';
-import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=212';
-import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=212';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=212';
-import {balanceThreatCountries} from './threat-placement.js?v=212';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=212';
-import {exposurePenalty} from './exposure.js?v=212';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=212';
-import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=212';
-import {campaignRules} from './campaign-rules.js?v=212';
-import {stopClock} from './campaign-clock.js?v=212';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=212';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=212';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=212';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=212';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=212';
-import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=212';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=213';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=213';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=213';
+import {normalizePrestige} from './score-rules.js?v=213';
+import {protectionShare} from './balance-rules.js?v=213';
+import {planBB1Faction} from './bot-brillant-1.js?v=213';
+import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=213';
+import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=213';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=213';
+import {balanceThreatCountries} from './threat-placement.js?v=213';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=213';
+import {exposurePenalty} from './exposure.js?v=213';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=213';
+import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=213';
+import {campaignRules} from './campaign-rules.js?v=213';
+import {stopClock} from './campaign-clock.js?v=213';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=213';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=213';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=213';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=213';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=213';
+import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=213';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -104,7 +104,7 @@ export function createGame(home,ids,seed=Date.now(),aiDifficulty='normal',settin
  if(settings&&usesDraft(mode)){const all=participants.flatMap(c=>teams[c]||[]);if(Object.keys(teams).length!==participantCount(mode)||all.length!==participantCount(mode)*4||new Set(all).size!==participantCount(mode)*4||all.some(id=>!DISPLAY_ROSTER.some(a=>a.id===id))||ids.join(',')!==teams[home].join(','))throw Error('Terminez le repêchage de tous les agents.');}
  const s={pressureRules:1,campaignStats:{partial:false,detailsPartial:false,factions:{},agents:{},support:{}},turnActivities:[],cooperationRules:1,version:VERSION,agentRules:1,operationsRules:3,economyRules:1,equipmentRules:2,seed:seed>>>0,rng:seed>>>0,turn:1,player:home,crisis:12,ended:null,factions:{},agents:[],suspects:SUSPECTS.map(t=>({...t,arrested:false})),proofs:[],plots:[],logs:[],logId:0,prestigeLedger:[],credited:{},event:null,eventsSeen:[],recruitments:[],nextAgent:1};
  if(settings){s.participantRules=1;s.gameMode=mode;}
- if(isCooperative(s)){s.coopNetworkRules=1;s.coopCampaignRules=1;s.suspects=campaignSuspects(s).map(t=>({...t,arrested:false}));}
+ if(isCooperative(s)){s.coopNetworkRules=1;s.coopCampaignRules=2;s.suspects=campaignSuspects(s).map(t=>({...t,arrested:false}));}
  selectCriminals(s,random);
  placeSuspects(s,random);
  for(const c of COUNTRIES.filter(c=>participants.includes(c.id))){
@@ -601,7 +601,7 @@ export function advance(s){
 export function publicState(s){return {turn:s.turn,country:s.player,crisis:s.crisis,budget:s.factions[s.player].budget,confidence:s.factions[s.player].confidence,government:{lastFavor:s.factions[s.player].lastFavor||null,nextTurn:governmentOptions(s,'funding').nextTurn},funding:funding(s.factions[s.player]),foreignIntel:s.factions[s.player].foreignIntel,agents:team(s).map(a=>({id:a.id,name:a.name,country:a.country,nationalities:a.nationalities||[],status:a.status,fatigue:fatigueName(a.fatigue),energy:100-a.fatigue,exposure:a.exposure,task:a.task,weapon:a.weapon,safehouse:!!hasSafehouse(s,a.faction,a.country)})),targets:knownTargets(s).map(({id,name,country,arrested,identified,locationUntil,prepared})=>({id,name,country,arrested,identified,locationUntil,prepared})),evidence:s.factions[s.player].evidence,ended:s.ended};}
 export function validateSave(s,{allowTutorial=false}={}){
  const bad=()=>{throw Error('Sauvegarde incompatible ou endommagée.');},number=(v,a,b)=>Number.isFinite(v)&&v>=a&&v<=b;
- if(s?.coopCampaignRules!==undefined&&(s.coopCampaignRules!==1||!isCooperative(s)||s.coopNetworkRules!==1))bad();
+ if(s?.coopCampaignRules!==undefined&&(![1,2].includes(s.coopCampaignRules)||!isCooperative(s)||s.coopNetworkRules!==1))bad();
  const slots=campaignSuspects(s),cellIds=[0,1,2,3,...(s?.coopNetworkRules===1?[4]:[])];
  if(s?.coopNetworkRules!==undefined&&(s.coopNetworkRules!==1||!isCooperative(s)))bad();
  if(s?.tutorial&&(!allowTutorial||!isTutorial(s)))bad();
