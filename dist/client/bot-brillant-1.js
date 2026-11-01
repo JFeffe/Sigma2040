@@ -1,6 +1,6 @@
-import {protectionShare} from './balance-rules.js?v=211';
-import {TECH,COUNTRY} from './data.js?v=211';
-import {campaignRules} from './campaign-rules.js?v=211';
+import {protectionShare} from './balance-rules.js?v=212';
+import {TECH,COUNTRY} from './data.js?v=212';
+import {campaignRules} from './campaign-rules.js?v=212';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -205,7 +205,7 @@ export function planBB1Faction(s,id,E){
     }else add(a,'protect',null,value,'Encaisser sa part de protection avant l’échéance.',goal);
    }
    if(home){
-    const field=targets.filter(t=>agents.some(b=>b.id!==a.id&&at(b,t.country))&&(f.cyberSupport[t.country]?.until||0)<s.turn+2).sort((a,b)=>progress(b)-progress(a))[0];
+    const field=targets.filter(t=>agents.some(b=>b.id!==a.id&&at(b,t.country))&&E.cyberStatus(s,id,t.country).until<s.turn+2).sort((a,b)=>progress(b)-progress(a))[0];
     if(field)add(a,'cyberSupport',field.country,65,'Soutenir les opérations à venir dans le pays du groupe.');
     if(targets.length<4&&s.suspects.some(t=>!t.arrested&&!f.known[t.id]))add(a,'counter',null,55,'Trouver un dossier disponible et observer la concurrence.');
     if(a.fatigue>=25)add(a,'rest',null,37,'Récupérer pendant un creux dans la file de preuves.');
