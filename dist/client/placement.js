@@ -1,4 +1,4 @@
-import {COUNTRIES,COUNTRY} from './data.js?v=210';
+import {COUNTRIES,COUNTRY} from './data.js?v=211';
 // Geographic distance on a sphere, including routes across the date line.
 const distance=(a,b)=>{const rad=Math.PI/180,p=a.pos[1]*rad,q=b.pos[1]*rad;return Math.acos(Math.max(-1,Math.min(1,Math.sin(p)*Math.sin(q)+Math.cos(p)*Math.cos(q)*Math.cos((a.pos[0]-b.pos[0])*rad))));};
 export function placeSuspects(s,random){
@@ -6,7 +6,7 @@ export function placeSuspects(s,random){
  // One regular lead per secondary country guarantees nearby starting dossiers
  // for every power without favouring a country in the random distribution.
  for(let i=countries.length-1;i>0;i--){const j=Math.floor(random(s)*(i+1));[countries[i],countries[j]]=[countries[j],countries[i]];}
- s.suspects.filter(t=>t.cell!==3).forEach((t,i)=>{t.country=countries[i];});
+ s.suspects.filter(t=>t.cell!==3).forEach((t,i)=>{t.country=countries[i%countries.length];});
  for(const t of s.suspects.filter(t=>t.cell===3))t.country=countries[Math.floor(random(s)*countries.length)];
 }
 

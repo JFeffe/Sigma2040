@@ -97,3 +97,8 @@ dialog{border:1px solid #66738d;border-radius:9px;background:linear-gradient(135
 .coop-label { color:#d6b8ff; }
 
 .immersive-deck .field-team .agent-card.coop-ally { height:78px;min-height:78px; }
+
+/* Cooperative protection is green; ownership remains explicit. */
+.country-threat-button.threat-covered {background:#173d30;border-color:#50b98b;opacity:1;color:#c7f6df}
+.other-coverage,.threat-covered .other-coverage {color:#ff8585!important}
+.quick-action {display:grid;gap:5px;margin:8px 0}

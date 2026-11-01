@@ -1,11 +1,11 @@
-import {threatCountryClear,relocationCountries} from './threat-placement.js?v=210';
-import {cellName,namedCells} from './data.js?v=210';
-import {campaignRules} from './campaign-rules.js?v=210';
-import {refuge} from './placement.js?v=210';
-import {COUNTRIES,COUNTRY} from './data.js?v=210';
+import {threatCountryClear,relocationCountries} from './threat-placement.js?v=211';
+import {cellName,namedCells,regularCells} from './data.js?v=211';
+import {campaignRules} from './campaign-rules.js?v=211';
+import {refuge} from './placement.js?v=211';
+import {COUNTRIES,COUNTRY} from './data.js?v=211';
 // Only resolved, observable events enter Fracture's knowledge. Never inspect agent orders.
-export function initFracture(s){s.fracture??={version:1,cells:Array.from({length:3},()=>({pressure:0,resources:4,cooldown:0})),flights:[],moved:[],defenses:{}};return s.fracture;}
-export function observeFracture(s,cell,amount){if(cell>=0&&cell<3){const f=initFracture(s);f.cells[cell].pressure=Math.min(6,f.cells[cell].pressure+amount);}}
+export function initFracture(s){s.fracture??={version:1,cells:Array.from({length:s.coopNetworkRules===1?5:3},()=>({pressure:0,resources:4,cooldown:0})),flights:[],moved:[],defenses:{}};return s.fracture;}
+export function observeFracture(s,cell,amount){if(regularCells(s).includes(cell)){const f=initFracture(s);f.cells[cell].pressure=Math.min(6,f.cells[cell].pressure+amount);}}
 export function observeProtection(s,country,until){initFracture(s).defenses[country]=Math.max(initFracture(s).defenses[country]||0,until);}
 export const THREAT_NOTICE_TURNS=5;
 export const MIN_RELOCATION_LEAD=4;
@@ -27,7 +27,7 @@ export function tickFracture(s,random,write){
   }else for(const nation of Object.values(s.factions))if(nation.known[t.id])delete nation.known[t.id].flightUntil;
  }
  f.flights=f.flights.filter(x=>x.turn>s.turn&&!s.suspects.find(t=>t.id===x.id).arrested);
- for(let cell=0;cell<3;cell++){
+ for(const cell of regularCells(s)){
   const c=f.cells[cell],members=s.suspects.filter(t=>t.cell===cell&&!t.arrested);
   if(!members.length||c.cooldown>s.turn||c.resources<=0)continue;
   const p=s.plots.filter(p=>p.cell===cell&&!p.resolved&&p.turn>s.turn).sort((a,b)=>a.turn-b.turn)[0];
@@ -67,8 +67,8 @@ export function tickFracture(s,random,write){
 }
 export function validateFracture(s){
  const f=initFracture(s),int=(n,lo,hi)=>Number.isInteger(n)&&n>=lo&&n<=hi,bad=()=>{throw Error('Sauvegarde Fracture incompatible ou endommagée.');};
- if(f.version!==1||!Array.isArray(f.cells)||f.cells.length!==3||f.cells.some(c=>!c||!int(c.pressure,0,6)||!int(c.resources,0,4)||!int(c.cooldown,0,44))||!Array.isArray(f.flights)||f.flights.length>6||!Array.isArray(f.moved)||f.moved.length>6||!f.defenses||typeof f.defenses!=='object'||Array.isArray(f.defenses))bad();
- const valid=id=>s.suspects.some(t=>t.id===id&&t.cell<3);
+ if(f.version!==1||!Array.isArray(f.cells)||f.cells.length!==(s.coopNetworkRules===1?5:3)||f.cells.some(c=>!c||!int(c.pressure,0,6)||!int(c.resources,0,4)||!int(c.cooldown,0,44))||!Array.isArray(f.flights)||f.flights.length>s.suspects.length-1||!Array.isArray(f.moved)||f.moved.length>s.suspects.length-1||!f.defenses||typeof f.defenses!=='object'||Array.isArray(f.defenses))bad();
+ const valid=id=>s.suspects.some(t=>t.id===id&&t.cell!==3);
  if(new Set(f.moved).size!==f.moved.length||f.moved.some(id=>!valid(id))||new Set(f.flights.map(x=>x.id)).size!==f.flights.length||f.flights.some(x=>!valid(x.id)||f.moved.includes(x.id)||!COUNTRY[x.to]||!int(x.turn,1,40)))bad();
  if(Object.entries(f.defenses).some(([id,until])=>!COUNTRY[id]||!int(until,1,44)))bad();
  for(const r of s.requests||[])if(r.country!==undefined&&!COUNTRY[r.country]||r.deadline!==undefined&&!int(r.deadline,1,40))bad();

@@ -13,10 +13,10 @@ const reload=s=>E.validateSave(JSON.parse(JSON.stringify(s)));
 const cmd=(r,m,kind,payload={})=>M.execute(r,m.token,{protocol:M.PROTOCOL,seq:m.lastSeq+1,turn:r.game?.turn,kind,payload});
 const room=(two=true)=>{const r=M.newRoom('r'.repeat(24),'i'.repeat(24),'h'.repeat(24),'Hôte'),h=r.members[0];cmd(r,h,'game-mode',{mode:'cooperative'});if(two)M.joinRoom(r,{invite:r.invite,token:'g'.repeat(24),name:'Allié'});for(const m of r.members)cmd(r,m,'confirm-country');cmd(r,h,'begin-draft');while(r.phase==='draft'){const c=D.draftCountry(r.draft),m=r.members.find(m=>m.country===c);cmd(r,m,'draft-pick',{id:D.availableDraftAgents(r.draft)[0].id});}for(const m of r.members)cmd(r,m,'team',{agents:m.agents});cmd(r,h,'start');return r;};
 
-test('Coop drafts eight unique agents in two-country snake order; unchanged enemy count and 30-turn clock',()=>{
+test('Coop drafts eight unique agents in two-country snake order; expanded cooperative network and 30-turn clock',()=>{
  const d=draft();D.validateDraft(d);assert.equal(d.picks.length,8);assert.deepEqual(d.picks.map(p=>p.country),[d.order[0],d.order[1],d.order[1],d.order[0],d.order[0],d.order[1],d.order[1],d.order[0]]);
  assert.throws(()=>D.createDraft(['FR','US','CN'],1,'cooperative'));
- const s=fresh(),normal=E.createGame('FR',d.teams.FR,123);assert.equal(Object.keys(s.factions).length,2);assert.equal(s.agents.length,8);assert.equal(s.suspects.length,normal.suspects.length);assert.equal(s.proofs.length,normal.proofs.length);assert.equal(s.plots.length,normal.plots.length);assert.equal(new Set(s.agents.map(a=>a.templateId||a.id)).size,8);
+ const s=fresh(),normal=E.createGame('FR',d.teams.FR,123);assert.equal(Object.keys(s.factions).length,2);assert.equal(s.agents.length,8);assert.equal(s.suspects.length,normal.suspects.length+2);assert.equal(s.proofs.length,normal.proofs.length+6);assert.equal(s.plots.length,normal.plots.length+5);assert.equal(new Set(s.agents.map(a=>a.templateId||a.id)).size,8);
  s.turn=30;s.crisis=0;s.plots.forEach(p=>p.resolved=true);E.advance(s);assert.equal(s.ended,'defeat');assert.equal(s.turn,30);
  const v=fresh();v.turn=30;v.crisis=0;v.plots.forEach(p=>p.resolved=true);for(const t of v.suspects)if(t.cell<2||t.cell===3)t.arrested=true;E.advance(v);assert.equal(v.ended,'victory');
 });

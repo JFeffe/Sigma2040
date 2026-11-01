@@ -1,25 +1,25 @@
-import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=210';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=210';
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=210';
-import {normalizePrestige} from './score-rules.js?v=210';
-import {protectionShare} from './balance-rules.js?v=210';
-import {planBB1Faction} from './bot-brillant-1.js?v=210';
-import {isCooperative,bindCooperativeIntel} from './cooperative.js?v=210';
-import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=210';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=210';
-import {balanceThreatCountries} from './threat-placement.js?v=210';
-import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=210';
-import {exposurePenalty} from './exposure.js?v=210';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=210';
-import {cellName,namedCells} from './data.js?v=210';
-import {campaignRules} from './campaign-rules.js?v=210';
-import {stopClock} from './campaign-clock.js?v=210';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=210';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=210';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=210';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=210';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=210';
-import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=210';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=211';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=211';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=211';
+import {normalizePrestige} from './score-rules.js?v=211';
+import {protectionShare} from './balance-rules.js?v=211';
+import {planBB1Faction} from './bot-brillant-1.js?v=211';
+import {isCooperative,bindCooperativeIntel} from './cooperative.js?v=211';
+import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=211';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=211';
+import {balanceThreatCountries} from './threat-placement.js?v=211';
+import {AI_LEVELS,aiLevel,aiChoiceScore} from './ai-difficulty.js?v=211';
+import {exposurePenalty} from './exposure.js?v=211';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=211';
+import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=211';
+import {campaignRules} from './campaign-rules.js?v=211';
+import {stopClock} from './campaign-clock.js?v=211';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=211';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=211';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=211';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=211';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=211';
+import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=211';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -98,6 +98,7 @@ export function createGame(home,ids,seed=Date.now(),aiDifficulty='normal',settin
  if(settings&&usesDraft(mode)){const all=participants.flatMap(c=>teams[c]||[]);if(Object.keys(teams).length!==participantCount(mode)||all.length!==participantCount(mode)*4||new Set(all).size!==participantCount(mode)*4||all.some(id=>!DISPLAY_ROSTER.some(a=>a.id===id))||ids.join(',')!==teams[home].join(','))throw Error('Terminez le repêchage de tous les agents.');}
  const s={pressureRules:1,campaignStats:{partial:false,detailsPartial:false,factions:{},agents:{},support:{}},turnActivities:[],cooperationRules:1,version:VERSION,agentRules:1,operationsRules:3,economyRules:1,equipmentRules:2,seed:seed>>>0,rng:seed>>>0,turn:1,player:home,crisis:12,ended:null,factions:{},agents:[],suspects:SUSPECTS.map(t=>({...t,arrested:false})),proofs:[],plots:[],logs:[],logId:0,prestigeLedger:[],credited:{},event:null,eventsSeen:[],recruitments:[],nextAgent:1};
  if(settings){s.participantRules=1;s.gameMode=mode;}
+ if(isCooperative(s)){s.coopNetworkRules=1;s.suspects=campaignSuspects(s).map(t=>({...t,arrested:false}));}
  selectCriminals(s,random);
  placeSuspects(s,random);
  for(const c of COUNTRIES.filter(c=>participants.includes(c.id))){
@@ -114,10 +115,11 @@ export function createGame(home,ids,seed=Date.now(),aiDifficulty='normal',settin
  // Independent seeded stream: evidence selection cannot change placements or other campaign rolls.
  const evidenceRng={rng:(s.seed^0x9e3779b9)>>>0},candidates=s.suspects.map(t=>t.id),forgeries=new Map();
  for(let i=candidates.length-1;i>0;i--){const j=Math.floor(random(evidenceRng)*(i+1));[candidates[i],candidates[j]]=[candidates[j],candidates[i]];}
- for(const id of candidates.slice(0,3))forgeries.set(id,Math.floor(random(evidenceRng)*2));
+ for(const id of candidates.slice(0,isCooperative(s)?4:3))forgeries.set(id,Math.floor(random(evidenceRng)*2));
  for(const t of s.suspects)for(let i=0;i<3;i++)s.proofs.push({id:`${t.id}-e${i}`,suspect:t.id,...(t.templateId?{templateId:t.templateId}:{}),source:i,authentic:forgeries.get(t.id)!==i,foundBy:null});
  for(let i=0;i<campaignRules(s).attackCount;i++){const target=pick(s,COUNTRIES.filter(c=>!c.power));s.plots.push({id:'plot'+i,turn:campaignRules(s).firstAttack+i*campaignRules(s).attackInterval,country:target.id,cell:i%3,kind:i%2?'Sabotage par drones':'Attaque d’infrastructure',resolved:false});}
  for(const [i,turn] of [16,22,28].entries())s.plots.push({id:'architect'+i,turn,country:COUNTRIES.filter(c=>!c.power)[((s.seed>>>0)+i*5)%COUNTRIES.filter(c=>!c.power).length].id,cell:3,kind:['Effondrement des réseaux financiers','Black-out des communications mondiales','Sabotage des centres de commandement'][i],resolved:false});
+ if(s.coopNetworkRules===1)for(const [i,turn] of [6,12,18,24,30].entries())s.plots.push({id:'coop'+i,turn,country:'DE',cell:4,kind:i%2?'Sabotage par drones':'Attaque d’infrastructure',resolved:false});
  balanceThreatCountries(s,random);
  log(s,'Opération LIGNE DE FAILLE. Fracture prépare une campagne de déstabilisation. Identifiez son réseau et arrêtez ses dirigeants.','brief');
  log(s,'Deux pistes initiales sont disponibles. Envoyez vos agents, activez un contact local, puis collectez et vérifiez les preuves.','clue',home);
@@ -129,7 +131,7 @@ export function locationExpiry(s,f,id){return dossier(s,f,id)?.locationUntil||0;
 export function knownTargets(s,f=s.player){return s.suspects.filter(t=>dossier(s,f,t.id)).map(t=>({...t,...dossier(s,f,t.id),locationUntil:locationExpiry(s,f,t.id)}));}
 export function evidenceFor(s,f,id){return s.factions[f].evidence.filter(e=>s.proofs.find(p=>p.id===e.id)?.suspect===id&&!e.contested);}
 const countProofs=(s,f,id)=>evidenceFor(s,f,id).length;
-export function cellsDone(s){return [0,1,2].filter(c=>s.suspects.filter(t=>t.cell===c).every(t=>t.arrested));}
+export function cellsDone(s){return regularCells(s).filter(c=>s.suspects.filter(t=>t.cell===c).every(t=>t.arrested));}
 export function getTechSlots(s,f){return s.factions[f].tech.filter(t=>t.until>=s.turn).length+team(s,f).filter(a=>['drone','protect'].includes(a.task?.type)).length;}
 export function territoryError(a,type,target){
  const moving=['travel','sneak'].includes(type),country=moving?target:a.country;
@@ -250,7 +252,7 @@ function resolve(s,a,task){
  else if(type==='analyze'){
   const e=f.evidence.find(e=>(!task.target||e.id===task.target)&&!e.verified&&!e.contested);if(e){const p=s.proofs.find(p=>p.id===e.id),ss=s.suspects.find(t=>t.id===p.suspect);e.verified=p.authentic;e.contested=!p.authentic;e.verifiedBy=a.faction;
    award(s,'proof:'+p.id+':'+a.faction,a.faction,2,(p.authentic?'preuve vérifiée : ':'preuve falsifiée détectée : ')+ss.name+' — '+proofTitle(p));
-   if(p.authentic){log(s,`${a.name} a vérifié « ${proofTitle(p)} » contre ${ss.name}.`,'clue',a.faction);const distinct=new Set(f.evidence.filter(e=>e.verified).map(e=>s.proofs.find(p=>p.id===e.id).suspect));if(distinct.size>=3&&!f.known.s6){reveal(s,a.faction,'s6',`${a.name} — Vérification et recoupement de preuves sur trois suspects distincts.`);log(s,'Les preuves convergent vers L’Architecte. Nouvelle piste de direction.','clue',a.faction);}}
+   if(p.authentic){log(s,`${a.name} a vérifié « ${proofTitle(p)} » contre ${ss.name}.`,'clue',a.faction);const distinct=new Set(f.evidence.filter(e=>e.verified).map(e=>s.proofs.find(p=>p.id===e.id).suspect));if(distinct.size>=architectEvidenceThreshold(s)&&!f.known.s6){reveal(s,a.faction,'s6',`${a.name} — Vérification et recoupement de preuves sur ${isCooperative(s)?'quatre':'trois'} suspects distincts.`);log(s,'Les preuves convergent vers L’Architecte. Nouvelle piste de direction.','clue',a.faction);}}
    else log(s,`${a.name} : « ${proofTitle(p)} » contredit les sources indépendantes. Falsification par IA écartée ; recueillir une autre pièce avant toute nouvelle préparation ou arrestation. Les missions déjà engagées continuent.`,'warning',a.faction);
    deduce(s,a.faction,a.name);
   }
@@ -437,7 +439,7 @@ export function planFaction(s,f){
    if(a.country!==f){go('travel',f);continue;}
    const localThreat=threats.find(p=>p.country===f&&p.turn>=s.turn+1&&p.turn<=s.turn+4&&(hard?!Object.values(s.factions).some(ff=>(ff.defense[f]||0)>=p.turn):(faction.defense[f]||0)<p.turn));
    if(localThreat&&!claimed('protect',null,f)&&go('protect'))continue;
-   if(targets.length<3&&s.suspects.some(t=>!t.arrested&&t.cell<3&&!faction.known[t.id])&&go('counter'))continue;
+   if(targets.length<3&&s.suspects.some(t=>!t.arrested&&t.cell!==3&&!faction.known[t.id])&&go('counter'))continue;
    // Do not extend a hack forever; cover a real field assignment only near expiry.
    const field=members.find(b=>b.country!==f&&b.status!=='captured'&&(!b.task||b.task.remaining===1)&&!['travel','sneak','rest','fieldRest','hide'].includes(b.task?.type)&&targets.some(t=>t.country===b.country&&(level!=='normal'||t.prepared))&&(faction.cyberSupport[b.country]?.until||0)<s.turn+1); // Benefits future orders, never an already locked roll.
    if(field&&a.fatigue<45&&go('cyberSupport',field.country))continue;
@@ -593,6 +595,8 @@ export function advance(s){
 export function publicState(s){return {turn:s.turn,country:s.player,crisis:s.crisis,budget:s.factions[s.player].budget,confidence:s.factions[s.player].confidence,government:{lastFavor:s.factions[s.player].lastFavor||null,nextTurn:governmentOptions(s,'funding').nextTurn},funding:funding(s.factions[s.player]),foreignIntel:s.factions[s.player].foreignIntel,agents:team(s).map(a=>({id:a.id,name:a.name,country:a.country,nationalities:a.nationalities||[],status:a.status,fatigue:fatigueName(a.fatigue),energy:100-a.fatigue,exposure:a.exposure,task:a.task,weapon:a.weapon,safehouse:!!hasSafehouse(s,a.faction,a.country)})),targets:knownTargets(s).map(({id,name,country,arrested,identified,locationUntil,prepared})=>({id,name,country,arrested,identified,locationUntil,prepared})),evidence:s.factions[s.player].evidence,ended:s.ended};}
 export function validateSave(s,{allowTutorial=false}={}){
  const bad=()=>{throw Error('Sauvegarde incompatible ou endommagée.');},number=(v,a,b)=>Number.isFinite(v)&&v>=a&&v<=b;
+ const slots=campaignSuspects(s),cellIds=[0,1,2,3,...(s?.coopNetworkRules===1?[4]:[])];
+ if(s?.coopNetworkRules!==undefined&&(s.coopNetworkRules!==1||!isCooperative(s)))bad();
  if(s?.tutorial&&(!allowTutorial||!isTutorial(s)))bad();
  if(!s||s.version!==VERSION||!COUNTRY[s.player]?.power||!Number.isInteger(s.turn)||!number(s.turn,1,40)||!number(s.rng,0,4294967295)||!number(s.crisis,0,100)||!['victory','defeat',null].includes(s.ended))bad();
  if(isCooperative(s)){
@@ -600,13 +604,13 @@ export function validateSave(s,{allowTutorial=false}={}){
   for(const key of ['enemyAttacks','enemyFlights','enemyMoves'])if(s[key]!==undefined&&(!Array.isArray(s[key])||s[key].length>100||s[key].some(e=>!e||!Number.isInteger(e.turn)||!number(e.turn,1,s.turn))))bad();
   if((s.enemyAttacks||[]).some(e=>!s.plots.some(p=>p.id===e.plotId&&p.cell===e.cell)||!COUNTRY[e.country]||!['INTERCEPTÉE','RÉUSSIE'].includes(e.status)||!number(e.crisisDelta,-5,30))||new Set((s.enemyAttacks||[]).map(e=>e.plotId)).size!==(s.enemyAttacks||[]).length)bad();
   if((s.enemyFlights||[]).some(e=>!s.suspects.some(t=>t.id===e.id)||!['EMPÊCHÉE','RÉUSSIE'].includes(e.status)))bad();
-  if((s.enemyMoves||[]).some(e=>!Number.isInteger(e.cell)||!number(e.cell,0,3)||!['flight','delay','relocation'].includes(e.type)))bad();
+  if((s.enemyMoves||[]).some(e=>!Number.isInteger(e.cell)||!cellIds.includes(e.cell)||!['flight','delay','relocation'].includes(e.type)))bad();
   if(s.suspects.some(t=>t.arrestedTurn!==undefined&&(!t.arrested||!Number.isInteger(t.arrestedTurn)||!number(t.arrestedTurn,1,s.turn))))bad();
  }
  if(s.aiDifficulty!==undefined&&!Object.hasOwn(AI_LEVELS,s.aiDifficulty))bad();s.aiDifficulty??='normal';
  if(s.pressureRules!==undefined&&s.pressureRules!==1)bad();
- if(!Array.isArray(s.agents)||s.agents.length>150||!Array.isArray(s.suspects)||s.suspects.length!==7||!Array.isArray(s.proofs)||s.proofs.length!==21||!Array.isArray(s.plots)||!Array.isArray(s.logs)||!Array.isArray(s.recruitments)||!Array.isArray(s.eventsSeen)||!s.credited||!number(s.logId,0,100000)||!number(s.nextAgent,1,10000))bad();
- const allPowers=COUNTRIES.filter(c=>c.power).map(c=>c.id),powers=s.participantRules===1?Object.keys(s.factions||{}):allPowers,suspectIds=SUSPECTS.map(t=>t.id),proofIds=new Set(SUSPECTS.flatMap(t=>[0,1,2].map(i=>`${t.id}-e${i}`)));
+ if(!Array.isArray(s.agents)||s.agents.length>150||!Array.isArray(s.suspects)||s.suspects.length!==slots.length||!Array.isArray(s.proofs)||s.proofs.length!==slots.length*3||!Array.isArray(s.plots)||!Array.isArray(s.logs)||!Array.isArray(s.recruitments)||!Array.isArray(s.eventsSeen)||!s.credited||!number(s.logId,0,100000)||!number(s.nextAgent,1,10000))bad();
+ const allPowers=COUNTRIES.filter(c=>c.power).map(c=>c.id),powers=s.participantRules===1?Object.keys(s.factions||{}):allPowers,suspectIds=slots.map(t=>t.id),proofIds=new Set(slots.flatMap(t=>[0,1,2].map(i=>`${t.id}-e${i}`)));
  if(s.participantRules!==undefined&&s.participantRules!==1)bad();
  if(!s.factions||Object.keys(s.factions).length!==(isTutorial(s)?tutorialParticipants(s.tutorial.mission).length:s.participantRules===1?participantCount(s.gameMode):6)||powers.some(id=>!allPowers.includes(id))||!powers.includes(s.player))bad();
  if(s.gameMode!==undefined&&!Object.hasOwn(GAME_MODES,s.gameMode)||usesDraft(s.gameMode)&&s.participantRules!==1)bad();
@@ -626,22 +630,22 @@ export function validateSave(s,{allowTutorial=false}={}){
  const textSafe=v=>typeof v==='string'&&v.length<500&&!/[<>"]/.test(v);
  for(const f of Object.values(s.factions))for(const t of f.tech){if(t.activatedTurn!==undefined&&(!Number.isInteger(t.activatedTurn)||!number(t.activatedTurn,1,40)))bad();if(t.targets!==undefined&&(t.type!=='relay'||!t.targets||Array.isArray(t.targets)||Object.entries(t.targets).some(([id,v])=>!suspectIds.includes(id)||!v||!COUNTRY[v.country]||!number(v.until,1,50)||v.extendedUntil!==undefined&&!number(v.extendedUntil,v.until,50))))bad();}
  for(const f of Object.values(s.factions))if(f.recruitOffer!==undefined&&(!Array.isArray(f.recruitOffer)||f.recruitOffer.length>3||new Set(f.recruitOffer).size!==f.recruitOffer.length||f.recruitOffer.some(id=>!ROSTER.some(a=>a.id===id))))bad();
- if(s.cellReports!==undefined&&(!Array.isArray(s.cellReports)||s.cellReports.length>3||s.cellReports.some(r=>!r||r.type!=='cell'||!Number.isInteger(r.cell)||!number(r.cell,0,2)||!number(r.turn,1,40)||!Array.isArray(r.suspects)||r.suspects.length!==2||new Set(r.suspects).size!==2||r.suspects.some(id=>!s.suspects.some(t=>t.id===id&&t.cell===r.cell&&t.arrested))||!Array.isArray(r.attacks)||r.attacks.length>s.plots.length||r.attacks.some(p=>!p||!s.plots.some(t=>t.id===p.plotId&&t.cell===r.cell&&t.resolved)||!COUNTRY[p.country]||!number(p.turn,1,40)||!textSafe(p.kind)))))bad();
+ if(s.cellReports!==undefined&&(!Array.isArray(s.cellReports)||s.cellReports.length>Math.floor(slots.length/2)||s.cellReports.some(r=>!r||r.type!=='cell'||!Number.isInteger(r.cell)||![0,1,2,...(s.coopNetworkRules===1?[4]:[])].includes(r.cell)||!number(r.turn,1,40)||!Array.isArray(r.suspects)||r.suspects.length!==2||new Set(r.suspects).size!==2||r.suspects.some(id=>!s.suspects.some(t=>t.id===id&&t.cell===r.cell&&t.arrested))||!Array.isArray(r.attacks)||r.attacks.length>s.plots.length||r.attacks.some(p=>!p||!s.plots.some(t=>t.id===p.plotId&&t.cell===r.cell&&t.resolved)||!COUNTRY[p.country]||!number(p.turn,1,40)||!textSafe(p.kind)))))bad();
  if(s.flightReports!==undefined&&(!Array.isArray(s.flightReports)||s.flightReports.length>42||s.flightReports.some(r=>!r||r.type!=='flight'||!powers.includes(r.faction)||!suspectIds.includes(r.suspectId)||!s.factions[r.faction].known[r.suspectId]||!COUNTRY[r.origin]||!COUNTRY[r.country]||r.origin===r.country||!Number.isInteger(r.turn)||!number(r.turn,1,40))))bad();
  if(s.attackDelayReports!==undefined&&(!Array.isArray(s.attackDelayReports)||s.attackDelayReports.length>s.plots.length*2||s.attackDelayReports.some(r=>!r||r.type!=='postponement'||!s.plots.some(p=>p.id===r.plotId&&p.cell===r.cell&&p.kind===r.kind)||!COUNTRY[r.origin]||!COUNTRY[r.country]||!['flight','protection','relocation'].includes(r.reason)||(r.reason==='relocation')!==(r.origin!==r.country)||!Number.isInteger(r.turn)||!number(r.turn,1,40)||!Number.isInteger(r.oldTurn)||!number(r.oldTurn,r.turn+1,39)||!Number.isInteger(r.attackTurn)||!number(r.attackTurn,r.oldTurn+1,Math.min(40,r.oldTurn+2)))))bad();
- if(s.threatReports!==undefined&&(!Array.isArray(s.threatReports)||s.threatReports.length>s.plots.length||s.threatReports.some(r=>r.type!=='threat'||!s.plots.some(p=>p.id===r.plotId)||!COUNTRY[r.country]||!number(r.turn,1,40)||!number(r.attackTurn,1,40)||!number(r.cell,0,3)||!textSafe(r.kind))))bad();
- if(s.attackReports!==undefined&&(!Array.isArray(s.attackReports)||s.attackReports.length>s.plots.length||s.attackReports.some(r=>r.type!=='attack'||!textSafe(r.plotId)||!number(r.turn,1,40)||!COUNTRY[r.country]||!number(r.cell,0,3)||!textSafe(r.kind)||!['INTERCEPTÉE','RÉUSSIE'].includes(r.status)||!Array.isArray(r.participants)||r.participants.length>6||r.participants.some(f=>!powers.includes(f))||(r.prestigeTotal!==undefined&&![0,1,2,3,4,6].includes(r.prestigeTotal))||!number(r.crisisDelta,-5,30))))bad();
+ if(s.threatReports!==undefined&&(!Array.isArray(s.threatReports)||s.threatReports.length>s.plots.length||s.threatReports.some(r=>r.type!=='threat'||!s.plots.some(p=>p.id===r.plotId)||!COUNTRY[r.country]||!number(r.turn,1,40)||!number(r.attackTurn,1,40)||!cellIds.includes(r.cell)||!textSafe(r.kind))))bad();
+ if(s.attackReports!==undefined&&(!Array.isArray(s.attackReports)||s.attackReports.length>s.plots.length||s.attackReports.some(r=>r.type!=='attack'||!textSafe(r.plotId)||!number(r.turn,1,40)||!COUNTRY[r.country]||!cellIds.includes(r.cell)||!textSafe(r.kind)||!['INTERCEPTÉE','RÉUSSIE'].includes(r.status)||!Array.isArray(r.participants)||r.participants.length>6||r.participants.some(f=>!powers.includes(f))||(r.prestigeTotal!==undefined&&![0,1,2,3,4,6].includes(r.prestigeTotal))||!number(r.crisisDelta,-5,30))))bad();
  for(const a of s.agents){if(!powers.includes(a.faction)||!COUNTRY[a.country]||!textSafe(a.id)||!textSafe(a.name)||!textSafe(a.role)||!textSafe(a.bio)||!['Légale','Clandestine'].includes(a.cover)||!Array.isArray(a.stats)||a.stats.length!==3||a.stats.some(n=>!number(n,1,10))||!Array.isArray(a.talents)||a.talents.some(t=>!TALENTS_FOR_SAVE.has(t))||!number(a.fatigue,0,100)||!number(a.exposure,0,150)||!['ready','injured','captured','dead','retired'].includes(a.status)||(a.portrait!==null&&!number(a.portrait,0,11)))bad();if(a.task){const t=a.task;if(t.travelDistance!==undefined&&(!['travel','sneak'].includes(t.type)||![1,2].includes(t.travelDistance)))bad();if(t.logisticsApplied!==undefined&&typeof t.logisticsApplied!=='boolean')bad();if(t.logisticsModuleId!==undefined&&t.logisticsModuleId!==null&&!textSafe(t.logisticsModuleId))bad();if(t.tacticalBonus!==undefined&&(![0,5].includes(t.tacticalBonus)||t.tacticalBonus===5&&t.type!=='arrest'))bad();if(!ACTIONS[t.type]||!number(t.remaining,1,4)||!number(t.total,1,4)||!number(t.cost,0,12)||!number(t.chance,10,100)||!number(t.fatigue,0,18)||!COUNTRY[t.origin])bad();if(['travel','sneak'].includes(t.type)&&!COUNTRY[t.target])bad();if(['collect','surveil','hack','prepare','arrest','blackmail','intimidate'].includes(t.type)&&!suspectIds.includes(t.target))bad();if(t.type==='drone'&&t.target!==null&&!suspectIds.includes(t.target))bad();if(t.type==='cyberSupport'&&!COUNTRY[t.target])bad();if(t.type==='analyze'&&t.target!==null&&!proofIds.has(t.target))bad();if(t.bonusCredits!==undefined&&(![0,2,6].includes(t.bonusCredits)||t.bonusCredits===2&&(!['authorize','influence'].includes(t.type)||t.cost<2)))bad();if(t.bonusCredits===6&&(ACTIONS[t.type].safe||t.cost!==6))bad();if(t.chanceInputs){const c=t.chanceInputs;if((c.drone!==undefined&&typeof c.drone!=='boolean')||!number(c.raw,-200,300)||['boost','ai','cyber'].some(k=>typeof c[k]!=='boolean')||ACTIONS[t.type].safe||c.boost!==(t.bonusCredits===6))bad();}if(t.influenceSpent!==undefined){if(![0,1].includes(t.influenceSpent))bad();delete t.influenceSpent;}}}
  if(new Set(s.agents.map(a=>a.id)).size!==s.agents.length)bad();
  const drawn=s.suspects.filter(t=>t.templateId!==undefined);
- if(drawn.length&& (drawn.length!==6||drawn.some(t=>t.id==='s6'||!CRIMINAL_POOL.some(p=>p.id===t.templateId))||new Set(drawn.map(t=>t.templateId)).size!==6))bad();
- for(const t of s.suspects){const slot=SUSPECTS.find(o=>o.id===t.id),original=t.templateId===undefined?slot:CRIMINAL_POOL.find(o=>o.id===t.templateId);if(!slot||!original||!COUNTRY[t.country]||(t.arrestedBy&&!powers.includes(t.arrestedBy)))bad();t.name=original.name;t.role=original.role;t.cell=slot.cell;}
- if(new Set(s.suspects.map(t=>t.id)).size!==7||new Set(s.proofs.map(p=>p.id)).size!==21)bad();
+ if(drawn.length&& (drawn.length!==slots.length-1||drawn.some(t=>t.id==='s6'||!CRIMINAL_POOL.some(p=>p.id===t.templateId))||new Set(drawn.map(t=>t.templateId)).size!==slots.length-1))bad();
+ for(const t of s.suspects){const slot=slots.find(o=>o.id===t.id),original=t.templateId===undefined?slot:CRIMINAL_POOL.find(o=>o.id===t.templateId);if(!slot||!original||!COUNTRY[t.country]||(t.arrestedBy&&!powers.includes(t.arrestedBy)))bad();t.name=original.name;t.role=original.role;t.cell=slot.cell;}
+ if(new Set(s.suspects.map(t=>t.id)).size!==slots.length||new Set(s.proofs.map(p=>p.id)).size!==slots.length*3)bad();
  for(const p of s.proofs){if(!proofIds.has(p.id)||!suspectIds.includes(p.suspect)||!Number.isInteger(p.source)||!number(p.source,0,2)||p.id!==`${p.suspect}-e${p.source}`||(p.foundBy&&!powers.includes(p.foundBy)))bad();const t=s.suspects.find(t=>t.id===p.suspect);if(t.templateId)p.templateId=t.templateId;else delete p.templateId;}
  for(const f of Object.values(s.factions)){for(const a of Object.values(f.publicAgents))if(!textSafe(a.name)||!COUNTRY[a.country]||!powers.includes(a.faction)||!number(a.turn,1,40)||(a.source!==undefined&&a.source!=='counter')||(a.until!==undefined&&!number(a.until,a.turn,a.turn+1))||(a.source==='counter'&&a.until!==a.turn+1)||(a.templateId!==undefined&&!textSafe(a.templateId))||(a.portrait!==undefined&&a.portrait!==null&&!number(a.portrait,0,11)))bad();if(team(s,f.id).length+s.recruitments.filter(r=>r.faction===f.id).length>4)bad();}
  if(s.recruitments.some(r=>!textSafe(r.id)||!number(r.remaining,1,2)||!powers.includes(r.faction)||(r.templateId!==undefined&&!ROSTER.some(a=>a.id===r.templateId))))bad();
  if(usesDraft(s.gameMode)){const templates=s.agents.map(a=>a.templateId||a.id),reserved=s.recruitments.map(r=>r.templateId||r.id);if(templates.some(id=>!ROSTER.some(a=>a.id===id))||new Set([...templates,...reserved]).size!==templates.length+reserved.length||reserved.some(id=>DISPLAY_ROSTER.some(a=>a.id===id))||s.recruitments.some(r=>npcId(r)&&!r.templateId))bad();}
- if(s.plots.some(p=>!textSafe(p.id)||!textSafe(p.kind)||!COUNTRY[p.country]||!number(p.cell,0,3)||!number(p.turn,1,40)))bad();
+ if(s.plots.some(p=>!textSafe(p.id)||!textSafe(p.kind)||!COUNTRY[p.country]||!cellIds.includes(p.cell)||!number(p.turn,1,40)))bad();
  if(s.logs.some(l=>typeof l.text!=='string'||!['info','brief','clue','score','move','danger','warning','success'].includes(l.type)||(l.faction&&!powers.includes(l.faction))||!number(l.turn,1,40)))bad();
  if(s.requests!==undefined&&(!Array.isArray(s.requests)||s.requests.length>s.plots.length||new Set(s.requests.map(r=>r.plot)).size!==s.requests.length||s.requests.some(r=>!s.plots.some(p=>p.id===r.plot)||!powers.includes(r.from)||r.from===s.player||!['pending','accepted','declined','expired'].includes(r.status))))bad();
  if(s.operationReports!==undefined&&(!Array.isArray(s.operationReports)||s.operationReports.length>(s.humanFactions?480:80)||s.operationReports.some(r=>!textSafe(r.agent)||!ACTIONS[r.type]||!['RÉUSSITE','ÉCHEC','INTERROMPUE'].includes(r.status)||!number(r.turn,1,40)||!number(r.cost,0,12)||!number(r.duration,1,4)||!number(r.fatigue,-100,100)||!number(r.exposure,-100,100)||!number(r.prestige,0,100)||!number(r.crisis,-100,100)||typeof r.next!=='string'||!Array.isArray(r.notes)||r.notes.some(n=>typeof n!=='string'))))bad();
@@ -710,7 +714,7 @@ export function deduce(s,f,analyst='Cellule d’analyse'){
   if(e.filter(x=>x.verified).length>=2&&!k.deduced){k.deduced=true;if(content.link)reveal(s,f,content.link,`${analyst} — Deux preuves vérifiées dans le dossier « ${content.title} » ont révélé ce lien.`);log(s,`${analyst} — Déduction : ${content.deduction}`,'clue',f);}
  }
  const distinct=new Set(faction.evidence.filter(e=>e.verified).map(e=>s.proofs.find(p=>p.id===e.id).suspect));
- if(distinct.size>=3&&!faction.known.s6){reveal(s,f,'s6',"Recoupement par les analystes de preuves vérifiées sur trois suspects distincts.");log(s,'Cellule d’analyse — Trois dossiers recoupés : une piste mène à L’Architecte.','clue',f);}
+ if(distinct.size>=architectEvidenceThreshold(s)&&!faction.known.s6){reveal(s,f,'s6',`Recoupement par les analystes de preuves vérifiées sur ${isCooperative(s)?'quatre':'trois'} suspects distincts.`);log(s,isCooperative(s)?'Cellule d’analyse — Quatre dossiers recoupés : une piste mène à L’Architecte.':'Cellule d’analyse — Trois dossiers recoupés : une piste mène à L’Architecte.','clue',f);}
 }
 export function nextOperation(s,t){
  if(t.arrested)return {text:'Cible en détention. Exploitez les autres pistes.',type:null};

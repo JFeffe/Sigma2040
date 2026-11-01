@@ -1,3 +1,13 @@
+# Publication GitHub — build 211
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+
+Actions du territoire : hack depuis le QG et protection. Fiche du personnage : accès à l’enquête du territoire, repos, profil bas et protection avec chances visibles même en cas de blocage. Suppression de la consigne de double-clic. La résolution du dernier tour précède le bilan de campagne.
+
+Nouvelles campagnes coop : 9 cibles, dont les deux membres de la cellule Éclipse; 22 menaces (5 supplémentaires à T6/12/18/24/30), 4 preuves falsifiées. Le recoupement vers l’Architecte demande 4 suspects distincts avec preuve authentique vérifiée; la voie des deux cellules démantelées est conservée. Les anciennes sauvegardes conservent leur réseau et leur calendrier. La protection alliée est verte avec une mention rouge explicite.
+
+Validation : `npm test` — 602 tests réussis. Cinquante graines coop testées pour le placement, les identités, les falsifications, l’espacement des menaces et la sauvegarde; tests du seuil de découverte, du démantèlement et de la protection alliée. Vérification navigateur de la sélection d’un agent, de l’affectation du repos et de l’ouverture de l’enquête du territoire.
+
 # Publication GitHub — build 205
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)

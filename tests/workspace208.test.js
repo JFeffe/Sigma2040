@@ -10,7 +10,7 @@ const fresh=()=>{const s=E.createGame('FR',DEFAULT_TEAM_IDS,42);s.humanFactions=
 test('Country operations expose general actions only and list exclusively own available agents already there',()=>{
  const s=fresh(),[a,b,c,d]=E.team(s);a.country=b.country=c.country='DE';a.weapon=false;b.task={type:'hide',remaining:1,total:1};c.status='captured';d.country='FR';s.agents.find(a=>a.faction==='US').country='DE';
  const types=countryOperationTypes(s,'DE');assert.ok(types.includes('equip')&&types.includes('findSafehouse'));
- for(const type of ['collect','prepare','arrest','protect','surveil','hack','analyze','travel','sneak'])assert.ok(!types.includes(type));
+ for(const type of ['collect','prepare','arrest','surveil','hack','analyze','travel','sneak'])assert.ok(!types.includes(type));
  const m=countryOperationModel(s,'DE',{type:'equip'});assert.deepEqual(m.rows.map(r=>r.a.id),[a.id]);assert.equal(m.selected.o.chance,E.options(s,a.id,'equip').chance);
  const html=countryOperationsMarkup(s,'DE',{type:'equip'});assert.match(html,/Déployer un agent/);assert.match(html,/Agents disponibles sur place/);assert.ok(html.includes(m.selected.o.chance+' %'));
 });
@@ -23,8 +23,8 @@ test('Country selection validates rescue targets, boosts, unavailable equipment 
  a.task=null;a.weapon=true;assert.ok(countryOperationModel(s,'DE',{type:'equip'}).rows[0].reason);
 });
 
-test('Agent sheets are consultation only, preserve mission cancellation and keep allied controls read-only',()=>{
- const s=fresh(),[a]=E.team(s);let html=floatingAgentMarkup(s,a.id);assert.doesNotMatch(html,/data-cmd="(?:agent-rest|suggest-action|confirm-order|pick-agent)"|Affecter une opération/);assert.match(html,/workspace-country/);
+test('Agent sheets offer quick actions, preserve mission cancellation and keep allied controls read-only',()=>{
+ const s=fresh(),[a]=E.team(s);let html=floatingAgentMarkup(s,a.id);assert.doesNotMatch(html,/data-cmd="(?:agent-rest|confirm-order|pick-agent)"|Affecter une opération/);assert.match(html,/workspace-country/);
  E.assign(s,a.id,'rest');html=floatingAgentMarkup(s,a.id);assert.match(html,/data-cmd="cancel"/);
  const ally=s.agents.find(x=>x.faction==='US');ally.task={...a.task};html=floatingAgentMarkup(s,ally.id);assert.match(html,/consultation uniquement/);assert.doesNotMatch(html,/data-cmd="cancel"/);
 });

@@ -116,6 +116,10 @@ export const SUSPECTS=[
  {id:'s4',name:'Orphée',role:'Coordination terrain',cell:2,country:'ZA'}, {id:'s5',name:'Kestrel',role:'Approvisionnement',cell:2,country:'CA'},
  {id:'s6',name:'L’Architecte',role:'Direction de Fracture',cell:3,country:'TR'}
 ];
+export const COOP_SUSPECTS=[{id:'s7',name:'Sable',role:'Transactions clandestines',cell:4,country:'DE'},{id:'s8',name:'Rook',role:'Transport clandestin',cell:4,country:'BR'}];
+export const campaignSuspects=s=>s?.coopNetworkRules===1?[...SUSPECTS,...COOP_SUSPECTS]:SUSPECTS;
+export const regularCells=s=>[...new Set(s.suspects.filter(t=>t.cell!==3).map(t=>t.cell))];
+export const architectEvidenceThreshold=s=>s?.gameMode==='cooperative'?4:3;
 export const CELLS=['Cellule JANUS','Cellule PRISME','Cellule CENDRE'];
 export const EVIDENCE_NAMES=['Flux financiers','Journal d’accès','Déposition recoupée'];
 export const TECH={
@@ -125,5 +129,5 @@ logistics:{name:'Logistique prioritaire',cost:3,duration:2,icon:'plane',art:'tra
 guard:{name:'Sentinelle autonome',cost:5,duration:5,icon:'shield',art:'protect',desc:'Ancien appui : protège un pays pendant 5 tours.'}
 };
 
-export const cellName=cell=>CELLS[cell]||(cell===3?'L’Architecte':'Direction de Fracture');
+export const cellName=cell=>CELLS[cell]||(cell===4?'Cellule ÉCLIPSE':cell===3?'L’Architecte':'Direction de Fracture');
 export const namedCells=text=>typeof text==='string'?text.replace(/cellule\s+([123])\b/gi,(_,n)=>cellName(Number(n)-1)):text;

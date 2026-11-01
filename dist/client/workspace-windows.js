@@ -1,8 +1,9 @@
-import {createFloatingWindows} from './floating-windows.js?v=210';
-import {createCountryInquiryController} from './country-inquiry.js?v=210';
-import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=210';
-import {COUNTRY,ACTIONS} from './data.js?v=210';
-import {visibleTeam} from './cooperative.js?v=210';
+import {createFloatingWindows} from './floating-windows.js?v=211';
+import {createCountryInquiryController} from './country-inquiry.js?v=211';
+import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=211';
+import {countryTargetButtons} from './country-inquiry.js?v=211';
+import {COUNTRY,ACTIONS} from './data.js?v=211';
+import {visibleTeam} from './cooperative.js?v=211';
 
 export function createGameWorkspace(api){
  const windows=createFloatingWindows();let context=null;
@@ -12,6 +13,7 @@ export function createGameWorkspace(api){
   const active=api.active();windows.setVisible(active);if(!active||!s)return;
   for(const r of windows.values()){
    if(r.kind==='country')r.setHTML(countryOperationsMarkup(s,r.id,r.selection,r.pending?'Confirmation en cours…':api.readOnlyReason()));
+   if(r.kind==='territory')r.setHTML(countryTargetButtons(s,r.id));
    if(r.kind==='agent')r.setHTML(floatingAgentMarkup(s,r.id));
    if(r.controller)r.controller.refreshCountryInquiry();
   }
@@ -30,6 +32,7 @@ export function createGameWorkspace(api){
   if(!r.el.querySelector('.country-inquiry'))r.close();
  }
  async function command(cmd,id,el){
+  if(cmd==='workspace-inquiry'){const r=windows.open('territory:'+id,'Enquête · '+COUNTRY[id].name,{width:440});r.kind='territory';r.id=id;refresh();return true;}
   if(cmd==='workspace-country'){country(id);return true;}
   if(cmd==='country-inquiry'||cmd==='country-threat'||cmd==='suspect'){inquiry(id,cmd==='country-threat');return true;}
   if(cmd==='workspace-deploy'){api.deploy(id);return true;}
