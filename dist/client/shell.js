@@ -1,14 +1,14 @@
-import {isNpcTutorial} from './tutorial-mode.js?v=209';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=209';
-import {bureauEnabled} from './mod-settings.js?v=209';
-import {inquiryIndicator} from './inquiry-notifications.js?v=209';
-import {threatStatus} from './threat-status.js?v=209';
-import {campaignRules} from './campaign-rules.js?v=209';
-import {clockMarkup} from './campaign-clock.js?v=209';
-import {newsTicker} from './news.js?v=209';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=209';
-import {COUNTRY,COUNTRIES} from './data.js?v=209';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=209';
+import {isNpcTutorial} from './tutorial-mode.js?v=210';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=210';
+import {bureauEnabled} from './mod-settings.js?v=210';
+import {inquiryIndicator} from './inquiry-notifications.js?v=210';
+import {threatStatus} from './threat-status.js?v=210';
+import {campaignRules} from './campaign-rules.js?v=210';
+import {clockMarkup} from './campaign-clock.js?v=210';
+import {newsTicker} from './news.js?v=210';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=210';
+import {COUNTRY,COUNTRIES} from './data.js?v=210';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=210';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;

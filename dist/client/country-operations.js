@@ -1,14 +1,15 @@
-import {countrySignals} from './country-signals.js?v=209';
-import {cooperationInfo} from './cooperation.js?v=209';
-import * as E from './engine.js?v=209';
-import {COUNTRY,COUNTRIES,ACTIONS} from './data.js?v=209';
-import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=209';
-import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=209';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=209';
-import {fullBody} from './visuals.js?v=209';
+import {countrySignals} from './country-signals.js?v=210';
+import {cooperationInfo} from './cooperation.js?v=210';
+import * as E from './engine.js?v=210';
+import {COUNTRY,COUNTRIES,ACTIONS} from './data.js?v=210';
+import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=210';
+import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=210';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=210';
+import {fullBody} from './visuals.js?v=210';
 
 const dossierActions=new Set(['analyze','collect','surveil','prepare','arrest','hack','intimidate','protect']);
 export function countryOperationTypes(s,country){
+ if(COUNTRY[country]?.power&&country!==s.player)return [];
  const sample={...(E.team(s)[0]||{}),faction:s.player,country,safehouses:[]};
  const allowed=new Set(agentMenuActions(sample,s).map(([id])=>id));
  return ACTION_GROUPS.flatMap(([,ids])=>ids).filter(id=>allowed.has(id)&&!dossierActions.has(id)&&!['travel','sneak'].includes(id));
@@ -31,13 +32,13 @@ export function countryOperationsMarkup(s,country,selection={},locked=''){
  const {type,types,targets,target,local,rows,selected}=m;selection.type=type;selection.agent=selected?.a.id;selection.target=target;
  const d=ACTIONS[type],boostReason=locked||!selected||selected.normal.boostGain===0||selected.reinforced.error,blocked=locked||selected?.reason||(!selected?'Aucun agent disponible pour cette action.':'');
  return `<section class="workspace-body country-operations"><header class="country-operations-heading"><h2>${flag(country)} ${esc(COUNTRY[country].name)}</h2><p>${esc(COUNTRY[country].city)} · ${local.length} agent(s) de votre équipe sur place</p>${button(icon('plane')+' Déployer un agent','workspace-deploy','small',`data-id="${country}"`)}</header>
- <div class="country-title-signals">${countrySignals(s,country)}</div><p class="country-authorities">Autorités · ${esc(cooperationInfo(s,s.player,country).name)} · Crédits : ${s.factions[s.player].budget}</p>
+ <div class="country-title-signals">${countrySignals(s,country,true)}</div><p class="country-authorities">Autorités · ${esc(cooperationInfo(s,s.player,country).name)} · Crédits : ${s.factions[s.player].budget}</p>
  <details class="country-operations-cases"><summary>Dossiers et menaces du pays</summary>${countryTargetButtons(s,country)}</details>
- <h3>Actions générales</h3><div class="country-operation-types">${types.map(id=>button(icon(ACTIONS[id].icon)+esc(ACTIONS[id].name),'workspace-action','small',`data-id="${id}" aria-pressed="${id===type}"`)).join('')}</div>
- ${d?`<section class="country-operation-detail"><h3>${icon(d.icon)} ${esc(d.name)}</h3><p>${esc(d.desc)}</p>${targets.length?`<label>Cible<select data-country-target>${targets.map(([id,name])=>`<option value="${id}" ${id===target?'selected':''}>${esc(name)}</option>`).join('')}</select></label>`:''}
+ <h3>Actions générales</h3><div class="country-operation-types">${types.map(id=>button(icon(ACTIONS[id].icon)+esc(ACTIONS[id].name),'workspace-action','small',`data-id="${id}" aria-pressed="${id===type}" title="${esc(ACTIONS[id].desc)}"`)).join('')}</div>
+ ${d?`<section class="country-operation-detail"><h3><span class="info-word" tabindex="0" title="${esc(d.desc)}">${icon(d.icon)} ${esc(d.name)} ⓘ</span></h3>${targets.length?`<label>Cible<select data-country-target>${targets.map(([id,name])=>`<option value="${id}" ${id===target?'selected':''}>${esc(name)}</option>`).join('')}</select></label>`:''}
  <div class="country-operations-boost"><strong>Agents disponibles sur place</strong>${button(icon('boost')+` +10 % · −${E.ECONOMY.boostCost} cr`,'workspace-boost','small',`aria-pressed="${!!selection.boost}" ${!selection.boost&&boostReason?'disabled':''}`)}</div>
- <div class="country-operation-agents">${rows.length?rows.map(r=>`<div class="country-operation-agent">${button(portrait(r.a),'agent','agent-photo',`data-id="${r.a.id}" aria-label="Consulter ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible')}</small></span><span><b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small></span>`,'workspace-agent','country-operation-choice',`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):'<p class="muted">Aucun agent disponible sur place. Déployez un agent ou attendez la fin de sa mission.</p>'}</div>
- ${selected?`<details class="country-chance-details"><summary>Détail des chances · ${selected.o.chance} %</summary>${selected.o.explanations.map(x=>`<p>${esc(x)}</p>`).join('')||'<p>Réussite automatique.</p>'}</details>${inquiryActionCosts(type,selected)}`:''}
+ <div class="country-operation-agents">${rows.length?rows.map(r=>`<div class="country-operation-agent">${button(portrait(r.a),'agent','agent-photo',`data-id="${r.a.id}" aria-label="Consulter ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible')}</small></span><span><b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small></span>`,'workspace-agent','country-operation-choice',`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):'<p class="muted">Aucun agent disponible sur place.</p>'}</div>
+ ${selected?`<details class="country-chance-details"><summary title="Formule, talents, bonus et malus de cette action">Chances · ${selected.o.chance} % ⓘ</summary>${selected.o.explanations.map(x=>`<p>${esc(x)}</p>`).join('')||'<p>Réussite automatique.</p>'}</details>${inquiryActionCosts(type,selected)}`:''}
  <p class="workspace-message" role="status">${esc(selection.message||blocked)}</p>${button(icon('check')+' Confirmer'+(selected?' · '+esc(selected.a.name):''),'workspace-confirm','primary wide',blocked?'disabled':'')}</section>`:''}
  ${local.some(a=>a.task||a.status==='captured')?`<details class="country-local-missions"><summary>Agents occupés ou capturés</summary>${local.filter(a=>a.task||a.status==='captured').map(a=>button(`${esc(a.name)} · ${esc(a.task?ACTIONS[a.task.type].name:'En détention')}`,'agent','small',`data-id="${a.id}"`)).join('')}</details>`:''}</section>`;
 }

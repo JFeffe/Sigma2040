@@ -19,5 +19,5 @@ test('Repeated successful hacks extend duration, retain +10, expire and survive 
  E.assign(s,a.id,'cyberSupport','DE');a.task.chance=100;E.advance(s);assert.deepEqual(s.factions.FR.cyberSupport.DE,{from:12,until:14,cost:0});
  s.factions.FR.cyberSupport.DE.until=60;const restored=E.validateSave(structuredClone(s));assert.equal(restored.factions.FR.cyberSupport.DE.until,60);
  const html=countryOperationsMarkup(restored,'DE');
- assert.match(html,/Hack · 49 tour\(s\)/);assert.match(html,/class="is-active" title="Accès : actif"/);
+ assert.match(html,/title="Hack : actif · 49 tour\(s\)"/);assert.match(html,/class="compact-country-signal is-active" title="Accès : actif"/);
 });

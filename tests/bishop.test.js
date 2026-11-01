@@ -15,5 +15,5 @@ test('Bishop is strong at investigation with weaker social and intervention succ
  b.country='US';const homeland=E.options(s,b.id,'contacts').chance;b.nationalities=[];assert.equal(homeland,E.options(s,b.id,'contacts').chance);
 });
 test('Existing campaign can recruit Bishop and preserve him across reload and turns',()=>{
- const s=E.createGame('FR',['p0','p1','p2','p3'],11);E.recruit(s,'p12','p2');E.advance(s);E.advance(s);let b=E.team(s).find(a=>a.id==='p12');assert.ok(b);const loaded=E.validateSave(structuredClone(s));assert.deepEqual(loaded.agents.find(a=>a.id==='p12'),b);E.assign(loaded,'p12','travel','US');E.advance(loaded);if(loaded.event)E.answerEvent(loaded,1);E.advance(loaded);b=loaded.agents.find(a=>a.id==='p12');assert.equal(b.country,'US');assert.deepEqual(b.nationalities,['US','FR']);
+ const s=E.createGame('FR',['p0','p1','p2','p3'],11);E.recruit(s,'p12','p2');E.advance(s);E.advance(s);let b=E.team(s).find(a=>a.id==='p12');assert.ok(b);const loaded=E.validateSave(structuredClone(s));assert.deepEqual(loaded.agents.find(a=>a.id==='p12'),b);E.assign(loaded,'p12','travel','CA');E.advance(loaded);if(loaded.event)E.answerEvent(loaded,1);E.advance(loaded);b=loaded.agents.find(a=>a.id==='p12');assert.equal(b.country,'CA');assert.deepEqual(b.nationalities,['US','FR']);
 });

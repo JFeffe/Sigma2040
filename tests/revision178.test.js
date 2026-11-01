@@ -30,16 +30,13 @@ function evidenceMission(s,type,flightTurn=s.turn){
  return {a,t,f};
 }
 
-test('Real map selection keeps an off-center portrait still until the second click and opens its menu once',()=>{
- const app=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8'),clock=fakeClock(),trace=[],camera={};
- const context={createMapAgentActivation:(select,open)=>createMapAgentActivation(select,open,clock.options),state:{player:'FR',agents:[{id:'iris',country:'DE',faction:'FR'}]},setup:false,menuOpen:false,camera,modal:{close:()=>trace.push('close')},selectedAgent:null,selectedCountry:'FR',view:'world',multiplayer:{observer:false},focusCountry:(_,country)=>trace.push('center '+country),render:()=>trace.push('render'),openAgent:id=>trace.push('menu '+id)};
- const activation=app.match(/const mapAgentActivation=createMapAgentActivation\([^]*?\},openAgent\);/)[0];
- const control=runInNewContext(activation+'mapAgentActivation;',context);
- control.click('iris');assert.deepEqual(trace,[]);clock.advance(120);control.click('iris');
- assert.deepEqual(trace,['close','center DE','render','menu iris']);assert.equal(context.selectedAgent,'iris');assert.equal(context.selectedCountry,'DE');assert.equal(camera.panelOpen,true);
- clock.advance(1000);assert.equal(trace.length,4);
- context.multiplayer={observer:true,observe:f=>trace.push('observe '+f)};context.state.agents[0].faction='US';trace.length=0;
- control.click('iris');assert.deepEqual(trace,[]);clock.advance(100);control.click('iris');assert.deepEqual(trace,['observe US','close','center DE','render','menu iris']);
+test('One map-agent click opens the right sidebar immediately, including observer selection',()=>{
+ const app=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8'),trace=[],camera={};
+ const context={state:{player:'FR',agents:[{id:'iris',country:'DE',faction:'FR'}]},setup:false,menuOpen:false,camera,modal:{close:()=>trace.push('close')},selectedAgent:null,selectedCountry:'FR',view:'world',multiplayer:{observer:false},focusCountry:(_,country)=>trace.push('center '+country),render:()=>trace.push('render')};
+ const open=app.match(/function openAgent[^]*?\n/)[0],activation=app.match(/const mapAgentActivation=[^\n]+/)[0];
+ const control=runInNewContext(open+activation+'mapAgentActivation;',context);
+ control.click('iris');assert.deepEqual(trace,['close','center DE','render']);assert.equal(context.selectedAgent,'iris');assert.equal(context.selectedCountry,'DE');assert.equal(camera.panelOpen,true);
+ context.multiplayer={observer:true,observe:f=>trace.push('observe '+f)};context.state.agents[0].faction='US';trace.length=0;control.click('iris');assert.deepEqual(trace,['observe US','close','center DE','render']);
 });
 
 test('Single map clicks still select; a different agent or cancelled click cannot trigger a stale selection',()=>{

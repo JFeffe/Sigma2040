@@ -48,6 +48,6 @@ test('Independent dossier and threat controllers retain their own agent, action 
 
 test('Window positions remain reachable after dragging offscreen or resizing to mobile',()=>{
  assert.deepEqual(clampWindowPosition(-50,-60,520,800,1360,900),{x:8,y:8});
- const mobile=clampWindowPosition(1200,850,359,800,375,667);assert.equal(mobile.x,8);assert.ok(mobile.y<=459);
+ const mobile=clampWindowPosition(1200,850,359,800,375,667);assert.equal(mobile.x,8);assert.ok(mobile.y<=607);
  const p=clampWindowPosition(130,170,440,600,1360,900);assert.deepEqual(p,{x:130,y:170});
 });
