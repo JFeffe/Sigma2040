@@ -18,7 +18,8 @@ test('Infiltration reduces every positive mission exposure gain, including autom
  const s=fresh(),{a,t}=caseReady(s);a.talents=['infiltration','endurance','combat'];
  for(const type of Object.keys(ACTIONS))for(const success of [true,false]){const plain=E.missionExposure({...a,talents:[]},type,success);assert.equal(E.missionExposure(a,type,success),plain>0?Math.ceil(plain*.8):plain,type);}
  E.assign(s,a.id,'intimidate',t.id);a.task.chance=0;E.advance(s);assert.equal(a.exposure,16);assert.match(missionCostsMarkup(s,a.id,'intimidate',t.id),/\+16/);
- E.assign(s,a.id,'intimidate',t.id);a.task.chance=100;E.advance(s);assert.equal(a.exposure,32);
+ // Reset the new injury/capture consequence to isolate exposure on the next success.
+ a.status='ready';E.assign(s,a.id,'intimidate',t.id);a.task.chance=100;E.advance(s);assert.equal(a.exposure,32);
  E.assign(s,a.id,'travel','FR');E.advance(s);assert.equal(a.exposure,40);
 });
 test('Languages stacks five points with other talents for safehouse and weapon only; cap stays ninety',()=>{

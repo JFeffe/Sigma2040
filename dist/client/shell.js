@@ -1,14 +1,14 @@
-import {isNpcTutorial} from './tutorial-mode.js?v=216';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=216';
-import {bureauEnabled} from './mod-settings.js?v=216';
-import {inquiryIndicator} from './inquiry-notifications.js?v=216';
-import {threatStatus} from './threat-status.js?v=216';
-import {campaignRules} from './campaign-rules.js?v=216';
-import {clockMarkup} from './campaign-clock.js?v=216';
-import {newsTicker} from './news.js?v=216';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=216';
-import {COUNTRY,COUNTRIES} from './data.js?v=216';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=216';
+import {isNpcTutorial} from './tutorial-mode.js?v=217';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=217';
+import {bureauEnabled} from './mod-settings.js?v=217';
+import {inquiryIndicator} from './inquiry-notifications.js?v=217';
+import {threatStatus} from './threat-status.js?v=217';
+import {campaignRules} from './campaign-rules.js?v=217';
+import {clockMarkup} from './campaign-clock.js?v=217';
+import {newsTicker} from './news.js?v=217';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=217';
+import {COUNTRY,COUNTRIES} from './data.js?v=217';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=217';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
@@ -44,7 +44,7 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
     </main>
    </div>
   </div>
-  <footer><span>${icon('lock')} ${saveWarning?'SAUVEGARDE INDISPONIBLE':'CANAL SÉCURISÉ · SAUVEGARDE LOCALE'}</span><span>DIVISION ${state.player} / ${state.agents.filter(a=>a.faction===state.player&&a.status==='dead').length} PERTE(S)</span><span>SIGMA NETWORK / 2040</span></footer>
+  <footer><span>${icon('lock')} ${saveWarning?'SAUVEGARDE INDISPONIBLE':'CANAL SÉCURISÉ · SAUVEGARDE LOCALE'}</span><span>DIVISION ${state.player} / ${state.agents.filter(a=>a.faction===state.player&&!['dead','retired'].includes(a.status)).length} AGENT(S)</span><span>SIGMA NETWORK / 2040</span></footer>
  </div>`;
 }
 

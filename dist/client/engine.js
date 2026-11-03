@@ -1,26 +1,27 @@
-import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=216';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=216';
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=216';
-import {normalizePrestige} from './score-rules.js?v=216';
-import {protectionShare} from './balance-rules.js?v=216';
-import {planBB2Faction} from './bot-brillant-2.js?v=216';
-import {planBB1Faction} from './bot-brillant-1.js?v=216';
-import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=216';
-import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=216';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=216';
-import {balanceThreatCountries} from './threat-placement.js?v=216';
-import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=216';
-import {exposurePenalty} from './exposure.js?v=216';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=216';
-import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=216';
-import {campaignRules} from './campaign-rules.js?v=216';
-import {stopClock} from './campaign-clock.js?v=216';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=216';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=216';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=216';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=216';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=216';
-import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=216';
+import {incidentRates,incidentDescription} from './incident-rules.js?v=217';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=217';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=217';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=217';
+import {normalizePrestige} from './score-rules.js?v=217';
+import {protectionShare} from './balance-rules.js?v=217';
+import {planBB2Faction} from './bot-brillant-2.js?v=217';
+import {planBB1Faction} from './bot-brillant-1.js?v=217';
+import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=217';
+import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=217';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=217';
+import {balanceThreatCountries} from './threat-placement.js?v=217';
+import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=217';
+import {exposurePenalty} from './exposure.js?v=217';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=217';
+import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=217';
+import {campaignRules} from './campaign-rules.js?v=217';
+import {stopClock} from './campaign-clock.js?v=217';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=217';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=217';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=217';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=217';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=217';
+import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=217';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -225,7 +226,15 @@ export const missionFatigue=(a,type)=>Math.ceil(ACTIONS[type].fatigue*(a.talents
 export const exposureGain=(a,task,n)=>n>0?Math.ceil(n*(a.talents.includes('infiltration')?.8:1)):n;
 export function missionExposure(a,type,success=true){const base=success?({travel:10,sneak:-a.exposure,intimidate:20,drone:10,equip:10,blackmail:30,rest:-20,fieldRest:-15,hide:-35}[type]||0):type==='sneak'?10:type==='intimidate'?20:18;return exposureGain(a,{type},base);}
 
-function incident(s,a,task){a.exposure=clamp(a.exposure+missionExposure(a,task.type,false),0,100);if(['arrest','sneak','rescue'].includes(task.type)){const r=random(s);if(r<.07&&task.clandestine||r<.035){a.status='dead';log(s,`${a.name} a été tué pendant l’opération. Ses renseignements transmis sont conservés.`,'danger',a.faction);}else if(r<.28){a.status='captured';if(task.type==='sneak')a.country=task.target;log(s,`${a.name} est détenu en ${COUNTRY[a.country].name}. Une extraction est possible.`,'danger',a.faction);}else if(task.type==='sneak'&&r>=.64){log(s,`${a.name} a renoncé au passage clandestin et reste en ${COUNTRY[a.country].name}, sans nouvelle blessure.`,'info',a.faction);}else {a.status='injured';log(s,`${a.name} est blessé. Des soins sont disponibles au QG ou auprès d’un secouriste sur place.`,'warning',a.faction);}}}
+function incident(s,a,task){
+ a.exposure=clamp(a.exposure+missionExposure(a,task.type,false),0,100);
+ const rates=incidentRates(task.type,task.clandestine);if(!rates)return;
+ const r=random(s),{safe,capture}=rates;
+ if(r<safe){log(s,`${a.name} : opération abandonnée, sans nouvelle blessure ni capture.`,'info',a.faction);}
+ else if(r<1-capture){a.status='injured';log(s,`${a.name} est blessé. Des soins sont disponibles au QG ou auprès d’un secouriste sur place.`,'warning',a.faction);}
+ else {a.status='captured';if(task.type==='sneak')a.country=task.target;log(s,`${a.name} est détenu en ${COUNTRY[a.country].name}. Une extraction est possible.`,'danger',a.faction);}
+}
+
 function resolve(s,a,task){
  const f=s.factions[a.faction],type=task.type,t=s.suspects.find(t=>t.id===task.target);
  if(type==='analyze'&&!f.evidence.some(e=>(!task.target||e.id===task.target)&&!e.verified&&!e.contested)){log(s,`${a.name} : mission close, les pièces ont déjà été traitées par un autre analyste.`,'info',a.faction);return;}
@@ -241,7 +250,7 @@ function resolve(s,a,task){
  if(type==='arrest'&&task.chanceInputs?.drone)removeAssignedSupport(task,'drone');
  if(type==='arrest'&&task.clandestine)shiftCooperation(s,a.faction,a.country,-1,'arrestation sans mandat');
  if(type==='arrest'&&task.tacticalBonus===5){dossier(s,a.faction,t.id).tacticalArrestBonus=false;log(s,`${a.name} : Planification tactique +5 consommée pour cette tentative.`,'info',a.faction);}
- if(random(s)*100>=task.chance){log(s,`${a.name} : ${ACTIONS[type].name.toLowerCase()}, échec. Aucune progression.`,'warning',a.faction);if(type==='intimidate')a.exposure=clamp(a.exposure+missionExposure(a,type,true),0,100);else incident(s,a,task);if(t&&['collect','surveil','hack','prepare','arrest','drone','intimidate'].includes(type))observeFracture(s,t.cell,1);return;}
+ if(random(s)*100>=task.chance){log(s,`${a.name} : ${ACTIONS[type].name.toLowerCase()}, échec. Aucune progression.`,'warning',a.faction);incident(s,a,task);if(t&&['collect','surveil','hack','prepare','arrest','drone','intimidate'].includes(type))observeFracture(s,t.cell,1);return;}
  const pressureTarget=t,exposedAtResolution=a.exposure>=80;
  if(exposedAtResolution&&pressureTarget&&['collect','surveil','hack','prepare','intimidate'].includes(type)){observeFracture(s,t.cell,1);log(s,`${a.name} : forte exposition, pression +1 sur ${cellName(t.cell)}.`,'warning',a.faction);}
  if(!ACTIONS[type].safe){const gain=Math.min(3,100-f.confidence);f.confidence+=gain;if(gain)log(s,`${a.name} : +${gain} confiance · opération réussie.`,'success',a.faction);}
@@ -610,9 +619,9 @@ export function nextOperation(s,t){
  return {text:'Intervenir maintenant, ou surveiller pour prolonger la validité de la position.',type:'arrest'};
 }
 export function operationForecast(s,id,type,target){const a=s.agents.find(a=>a.id===id),o=options(s,id,type,target),end=s.turn+o.duration-1,t=knownTargets(s,a.faction).find(t=>t.id===target);
- const dangerous=['arrest','sneak','rescue'].includes(type);
+ const dangerous=!!incidentRates(type,o.clandestine);
  const incidentExposure=missionExposure(a,type,false);
- const risk=isTutorial(s)&&tutorialGuaranteed(s,a.faction)?'Exercice scénarisé : réussite garantie. La position doit rester valide et la cible présente à la résolution.':type==='intimidate'?`Réussite ou échec : exposition +${incidentExposure}. En cas d’échec : aucun renseignement, nouvelle tentative possible.`:ACTIONS[type].safe?'Aucun jet d’échec.':dangerous?`En cas d’échec : exposition +${incidentExposure}, blessure, capture ou décès possibles.`:`En cas d’échec : aucune progression et exposition +${incidentExposure}.`;
+ const risk=isTutorial(s)&&tutorialGuaranteed(s,a.faction)?'Exercice scénarisé : réussite garantie. La position doit rester valide et la cible présente à la résolution.':ACTIONS[type].safe?'Aucun jet d’échec.':dangerous?`En cas d’échec : aucune progression, exposition +${incidentExposure}. ${incidentDescription(type,o.clandestine)}${type==='sneak'?' Capture à destination ; sinon, l’agent reste au départ.':''}`:`En cas d’échec : aucune progression et exposition +${incidentExposure}.`;
  const warnings=[];if(o.tacticalBonus)warnings.push('Planification tactique : +5 réservé à cet ordre à sa confirmation, consommé seulement lors du jet. Annulation ou interruption avant le jet : bonus conservé.');
  if(type==='surveil'){const relation=cooperationInfo(s,a.faction,a.country),relay=s.factions[a.faction].tech.some(x=>x.type==='relay'&&x.until>=end),duration=relation.location+(relay?2:0);warnings.push(`Position valide ${duration} tours après résolution, jusqu’à fin T${end+duration} : ${relation.name} (${relation.location})${relay?' + relais satellite (2)':''}. Prévision si la coopération reste identique à la réussite ; une fuite invalide la position.`);}
  if(type==='arrest'&&o.clandestine)warnings.push('Tentative sans mandat : coopération des autorités −1 niveau, réussite ou échec.');

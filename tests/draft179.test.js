@@ -100,8 +100,10 @@ test('Advanced replacements use only legacy agents and reserve identities across
  const view=roomView({protocol:PROTOCOL,id:'view',revision:1,phase:'playing',gameMode:'advanced',members:[{token:'owner',country:'FR',agents:[],connected:true}],game:loaded,offers:[]},'owner').game;assert.ok(view.unavailableRecruits.includes(queued.templateId));assert.ok(!E.recruitmentCandidates(view).some(a=>a.id===queued.templateId));
  const bad=structuredClone(loaded);bad.agents.find(a=>a.id===queued.id).templateId=candidate.id;assert.throws(()=>E.validateSave(bad));
 });
-test('An actual advanced-mode death proposes three saved legacy replacements in the illustrated alert',()=>{
- let s,a;for(let seed=1;seed<200;seed++){s=advancedGame(seed);s.humanFactions=Object.keys(s.factions);s.plots=[];s.fracture.cells.forEach(c=>c.resources=0);a=E.team(s)[0];a.country='TR';E.assign(s,a.id,'sneak','JP');a.task.remaining=1;a.task.chance=0;E.advance(s);if(a.status==='dead')break;}
+test('Legacy advanced-mode death reports preserve saved replacement offers',()=>{
+ const s=advancedGame(42),a=E.team(s)[0];s.humanFactions=Object.keys(s.factions);s.plots=[];s.fracture.cells.forEach(c=>c.resources=0);a.country='TR';E.assign(s,a.id,'sneak','JP');a.task.remaining=1;a.task.chance=0;E.advance(s);
+ // Reconstruct a pre-217 save, rather than generating a new death.
+ a.status='dead';s.turnActivities.find(x=>x.agentId===a.id).condition='dead';s.factions.FR.recruitOffer=E.recruitmentCandidates(s).map(x=>x.id);
  assert.equal(a.status,'dead');const offer=s.factions.FR.recruitOffer;assert.equal(offer.length,3);assert.ok(offer.every(id=>!DISPLAY_ROSTER.some(a=>a.id===id)));const card=missionCards(s).find(r=>r.type==='death');assert.ok(card);const html=missionRevealMarkup(card,0,1,true,a,s);for(const id of offer)assert.match(html,new RegExp('data-id="'+id+'"'));assert.deepEqual(E.validateSave(structuredClone(s)).factions.FR.recruitOffer,offer);E.recruit(s,offer[0]);assert.equal(s.recruitments[0].remaining,2);
 });
 

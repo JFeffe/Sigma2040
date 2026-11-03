@@ -1,6 +1,6 @@
-import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=216';
-import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=216';
-import {fullBody} from './visuals.js?v=216';
+import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=217';
+import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=217';
+import {fullBody} from './visuals.js?v=217';
 const faces={solo:new Set(),multi:new Set()};
 const slots={solo:[null,null,null,null],multi:[null,null,null,null]};
 const filters={solo:{sort:'default',talent:'',availableOnly:false},multi:{sort:'default',talent:'',availableOnly:false}};

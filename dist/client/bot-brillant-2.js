@@ -1,6 +1,7 @@
-import {protectionShare} from './balance-rules.js?v=216';
-import {TECH,COUNTRY} from './data.js?v=216';
-import {campaignRules} from './campaign-rules.js?v=216';
+import {incidentRates} from './incident-rules.js?v=217';
+import {protectionShare} from './balance-rules.js?v=217';
+import {TECH,COUNTRY} from './data.js?v=217';
+import {campaignRules} from './campaign-rules.js?v=217';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -134,6 +135,15 @@ export function planBB2Faction(s,id,E){
  }
  favors.sort((a,b)=>b.value-a.value||a.type.localeCompare(b.type));
  if(favors[0]?.value>1){const best=favors[0];E.requestGovernmentFavor(s,best.type,best.country,id);memory.decisions.push({type:'government',target:best.type,country:best.country,utility:best.value,reason:'Choisir l’appui utile à la prochaine opération, avec son coût et le délai partagé.'});}
+ // Expected consequence cost, conditional on failure. Uses only visible state.
+ const incidentCost=(a,type,o={})=>{
+  const rates=incidentRates(type,o.clandestine);if(!rates)return 0;
+  const {capture,injury}=rates;
+  const medic=agents.some(b=>b.country===a.country&&b.talents.includes('secours')&&!['travel','sneak'].includes(b.task?.type));
+  // Injury costs recovery time; captivity also requires a second agent to rescue.
+  const injuryCost=a.status==='injured'?0:medic?4:a.country===id?14:26;
+  return injury*injuryCost+capture*60;
+ };
  const risk=(a,type,target)=>{
   const base=E.options(s,a.id,type,target),paid=E.options(s,a.id,type,target,true);
   // No probability floor. Spend only for a material improvement and a useful job.
@@ -191,7 +201,7 @@ export function planBB2Faction(s,id,E){
   const medic=agents.some(b=>b.country===a.country&&b.talents.includes('secours')&&!['travel','sneak'].includes(b.task?.type));
   if(a.status==='injured'&&!medic){go(a,a.country===id?'heal':'travel',a.country===id?null:id,'Soigner pour préserver les opérations suivantes.');continue;}
   const immediate=targets.some(t=>t.country===a.country&&t.prepared&&t.locationUntil>=s.turn&&!risk(a,'arrest',t.id).error&&(risk(a,'arrest',t.id).chance>=60||s.turn>=campaignRules(s).maxTurns||t.flightUntil===s.turn));
-  if(a.fatigue>=65&&!immediate){if(a.country===id)go(a,'rest',null,'Récupération au QG.');else if(E.hasSafehouse(s,id,a.country))go(a,'fieldRest',null,'Récupération partagée au terrain.');else if(!claimed('findSafehouse',null,a.country)&&E.options(s,a.id,'findSafehouse').chance>=45)go(a,'findSafehouse',null,'Préparer une récupération locale.');else go(a,'hide',null,'Réduire fatigue et exposition.');}
+  if(a.fatigue>=65&&!immediate){if(a.country===id)go(a,'rest',null,'Récupération au QG.');else if(E.hasSafehouse(s,id,a.country))go(a,'fieldRest',null,'Récupération partagée au terrain.');else if(!claimed('findSafehouse',null,a.country)&&E.options(s,a.id,'findSafehouse').chance>=65)go(a,'findSafehouse',null,'Préparer une récupération locale.');else go(a,'hide',null,'Réduire fatigue et exposition.');}
   else if(a.exposure>=65&&!immediate&&a.country!==id)go(a,E.hasSafehouse(s,id,a.country)&&a.fatigue>=25?'fieldRest':'hide',null,'Récupérer une capacité d’intervention.');
  }
  // Process receipts with the home specialists before recruiting extra verifiers.
@@ -227,7 +237,7 @@ export function planBB2Faction(s,id,E){
    const p=o.chance/100,duration=type==='surveil'&&canActivate('relay',a.id)?1:o.duration;
    // Failures lose future actor time as well as the current attempt. A low roll
    // can still win this comparison when the payoff or disappearing window warrants it.
-   const failure=['arrest','rescue'].includes(type)?14:['collect','hack','prepare','surveil'].includes(type)?7:4;
+   const failure=(['collect','hack','prepare','surveil'].includes(type)?7:4)+incidentCost(a,type,o);
    let utility=expected??(value*p/Math.sqrt(duration)-(1-p)*failure-o.fatigue*duration*.12);
    if(goal&&memory.plans[a.id]?.key===goal.key)utility+=6;
    choices.push({a,type,target,utility,reason,goal,paid});
@@ -268,7 +278,7 @@ export function planBB2Faction(s,id,E){
      const base=E.options(s,a.id,'arrest',t.id,f.budget>=6),armed=E.options(after,a.id,'arrest',t.id,f.budget>=6),readiness=t.prepared?1:proofs(t).length>=2?.8:proofs(t).length?.5:.25;
      benefit+=Math.max(0,armed.chance-base.chance)*(184+(t.cell===3?90:0))/100*readiness;
     }
-    const expected=benefit*o.chance/100-(1-o.chance/100)*4-o.fatigue*.12;
+    const expected=benefit*o.chance/100-(1-o.chance/100)*(4+incidentCost(a,'equip',o))-o.fatigue*.12;
     if(expected>0)add(a,'equip',null,0,'Profiter d’un créneau pour améliorer les interventions futures avec une arme.',null,expected,false);
    }
    for(const t of targets){
@@ -294,7 +304,7 @@ export function planBB2Faction(s,id,E){
       const route=E.options(s,a.id,'sneak',t.country,paid);if(route.error||paid&&(f.budget-6<reserved(a.id)||route.boostGain<7))continue;
       const p=route.chance/100,continuation=caseArrival(a,t,'sneak',route)/legal;
       const extraEnergy=Math.max(0,route.fatigue*route.duration-arrival.fatigue*arrival.duration);
-      const expected=value*continuation*p*(arrival.duration+.5)/(route.duration+.5)-competition-(1-p)*14-extraEnergy*.12-route.cost*.5;
+      const expected=value*continuation*p*(arrival.duration+.5)/(route.duration+.5)-competition-(1-p)*(4+incidentCost(a,'sneak',route))-extraEnergy*.12-route.cost*.5;
       add(a,'sneak',t.country,0,'Comparer arme conservée et discrétion au risque, à la fatigue et au coût du passage.',goal,expected,paid);
      }
      continue;
