@@ -48,8 +48,9 @@ test('Six BB1 bots produce legal reproducible campaigns and bounded decision mem
  const run=()=>{const s=E.createGame('FR',['p15','p12','p0','p20'],901,'bb1');s.humanFactions=[];while(!s.ended){E.advance(s);E.validateSave(structuredClone(s));for(const f of Object.values(s.factions))assert.ok(f.bb1.decisions.length<=11);}return s;};assert.deepEqual(run(),run());
 });
 
+// Keep these boundary fixtures at the same odds after the common stat-scale change.
 test('BB1 accepts a low-probability last-turn arrest but prepares the same risk when time remains',()=>{
- const build=turn=>{const {s,f,m,t}=fixture();s.turn=turn;f.known[t.id].locationUntil=turn;f.authorized.DE=false;f.cooperation.DE=0;for(const a of m)a.task={type:'rest',remaining:1};const a=m[1];a.task=null;a.stats=[9,9,5];a.talents=[];a.weapon=false;if(turn<30)f.known[t.id].locationUntil=turn+5;return {s,f,a,t};};
+ const build=turn=>{const {s,f,m,t}=fixture();s.turn=turn;f.known[t.id].locationUntil=turn;f.authorized.DE=false;f.cooperation.DE=0;for(const a of m)a.task={type:'rest',remaining:1};const a=m[1];a.task=null;a.stats=[9,9,4];a.talents=[];a.weapon=false;if(turn<30)f.known[t.id].locationUntil=turn+5;return {s,f,a,t};};
  const last=build(30),early=build(10);const p=E.options(last.s,last.a.id,'arrest',last.t.id).chance;assert.ok(p<35&&p>=20);
  E.planFaction(last.s,'FR');E.planFaction(early.s,'FR');assert.equal(last.a.task.type,'arrest');assert.equal(early.a.task.type,'authorize');
 });
@@ -92,7 +93,7 @@ function passageFixture(){
  f.evidence=s.proofs.filter(p=>p.suspect===t.id).slice(0,2).map(p=>({id:p.id,verified:true,contested:false}));
  f.budget=12;f.authorized.DE=false;f.cooperation.DE=0;
  for(const a of m){a.country='FR';a.task={type:'rest',remaining:1};}
- const a=m[1];a.task=null;a.templateId='p14';a.stats=[4,7,9];a.talents=['combat','endurance','infiltration'];a.exposure=35;a.weapon=true;
+ const a=m[1];a.task=null;a.templateId='p14';a.stats=[4,7,8];a.talents=['combat','endurance','infiltration'];a.exposure=35;a.weapon=true;
  return {s,f,m,t,a};
 }
 test('BB1 can choose a boosted clandestine passage when the retained weapon and discretion improve the dossier',()=>{

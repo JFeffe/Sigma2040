@@ -1,3 +1,7 @@
+## Build 215 — Réussite unifiée
+
+Toutes les actions à risque utilisent `50 + 7 × (stat − 5) + bonus − pénalités`, avec les limites existantes de 10 à 90 %. Une stat de 5 donne 50 % avant les modificateurs. Aucune difficulté propre à une action. Actions automatiques : 100 %. Même règle en Régulier, Avancé et Coopératif ; les missions déjà affectées conservent leur chance enregistrée.
+
 # Publication GitHub — build 211
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)

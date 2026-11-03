@@ -1,26 +1,26 @@
-import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=214';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=214';
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=214';
-import {normalizePrestige} from './score-rules.js?v=214';
-import {protectionShare} from './balance-rules.js?v=214';
-import {planBB2Faction} from './bot-brillant-2.js?v=214';
-import {planBB1Faction} from './bot-brillant-1.js?v=214';
-import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=214';
-import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=214';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=214';
-import {balanceThreatCountries} from './threat-placement.js?v=214';
-import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=214';
-import {exposurePenalty} from './exposure.js?v=214';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=214';
-import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=214';
-import {campaignRules} from './campaign-rules.js?v=214';
-import {stopClock} from './campaign-clock.js?v=214';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=214';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=214';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=214';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=214';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=214';
-import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=214';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=215';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=215';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=215';
+import {normalizePrestige} from './score-rules.js?v=215';
+import {protectionShare} from './balance-rules.js?v=215';
+import {planBB2Faction} from './bot-brillant-2.js?v=215';
+import {planBB1Faction} from './bot-brillant-1.js?v=215';
+import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=215';
+import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=215';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=215';
+import {balanceThreatCountries} from './threat-placement.js?v=215';
+import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=215';
+import {exposurePenalty} from './exposure.js?v=215';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=215';
+import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=215';
+import {campaignRules} from './campaign-rules.js?v=215';
+import {stopClock} from './campaign-clock.js?v=215';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=215';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=215';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=215';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=215';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=215';
+import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=215';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -201,9 +201,9 @@ export function options(s,agentId,type,target,useCredits=false){
  if(!d.safe&&ROSTER.find(r=>r.id===(a.templateId||a.id))?.nationalities.includes(operationCountry)){bonus+=5;explanations.push('Nationalité locale +5');}
  const tactical=type==='arrest'&&k?.tacticalArrestBonus&&!s.agents.some(b=>b.faction===a.faction&&b.task?.type==='arrest'&&b.task.target===target&&b.task.tacticalBonus===5);if(tactical){bonus+=5;explanations.push('Planification tactique +5 · prochaine tentative');}
  const chief=!d.safe&&coordinationChief(s,a);if(chief){bonus+=5;explanations.push(`Coordination · ${chief.name} +5`);}
- const difficulty=['arrest','rescue','sneak','blackmail'].includes(type)?6:5;
- const rawChance=50+7*(a.stats[d.stat]-difficulty)+bonus-penalty;
- if(!d.safe){explanations.unshift(`Base · ${STAT_NAMES[d.stat]} ${a.stats[d.stat]} : 50 + 7 × (${a.stats[d.stat]} − ${difficulty}) = ${50+7*(a.stats[d.stat]-difficulty)} %`);if(rawChance<10||rawChance>90)explanations.push(`Total avant limites : ${rawChance} % · ${rawChance<10?'minimum 10':'plafond 90'} %`);}
+ const statChance=50+7*(a.stats[d.stat]-5);
+ const rawChance=statChance+bonus-penalty;
+ if(!d.safe){explanations.unshift(`Base · ${STAT_NAMES[d.stat]} ${a.stats[d.stat]} : 50 + 7 × (${a.stats[d.stat]} − 5) = ${statChance} %`);if(rawChance<10||rawChance>90)explanations.push(`Total avant limites : ${rawChance} % · ${rawChance<10?'minimum 10':'plafond 90'} %`);}
  const baseChance=d.safe?100:clamp(rawChance,10,90),boostGain=d.safe?0:Math.min(ECONOMY.boostPoints,90-baseChance);
  if(useCredits&&!d.safe&&boostGain===0&&!error)error='Chances déjà au plafond : aucun renfort nécessaire.';
  const chance=d.safe?100:boostedChance(rawChance,useCredits),aiApplied=explanations.includes('IA +10'),cyberApplied=explanations.includes('Hack d’un pays +10'),aiBonus=aiApplied?chance-boostedChance(rawChance-10,useCredits):0,cyberBonus=cyberApplied?chance-boostedChance(rawChance-10,useCredits):0;
