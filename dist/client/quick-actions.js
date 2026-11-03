@@ -1,7 +1,7 @@
-import {locationActions} from './presentation.js?v=215';
-import * as E from './engine.js?v=215';
-import {ACTIONS} from './data.js?v=215';
-import {button,esc,icon} from './ui.js?v=215';
+import {locationActions} from './presentation.js?v=216';
+import * as E from './engine.js?v=216';
+import {ACTIONS} from './data.js?v=216';
+import {button,esc,icon} from './ui.js?v=216';
 export function quickAction(s,a){
  if(!a||a.task||['captured','dead','retired'].includes(a.status)||s.ended)return null;
  const candidates=[],add=(type,target,reason)=>candidates.push({type,target,reason});
@@ -19,6 +19,6 @@ export function quickAction(s,a){
 }
 export function quickActionMarkup(s,a){
  if(!a||a.faction!==s.player)return '';
- const types=[a.country===a.faction?'rest':'fieldRest','hide','protect'];
- return `<div class="quick-action">${types.map(type=>{const o=E.options(s,a.id,type),reason=o.error||'';return button(`${icon(ACTIONS[type].icon)}${ACTIONS[type].name} · ${o.chance} %`,'suggest-action','small wide',`data-id="${esc(a.id)}" data-type="${type}" title="${esc(reason||ACTIONS[type].desc)}" ${reason?'disabled':''}`);}).join('')}</div>`;
+ const types=[a.country===a.faction?'rest':'fieldRest','hide','protect',...(a.country===a.faction?['cyberSupport']:[])];
+ return `<div class="quick-action">${types.map(type=>{const o=E.options(s,a.id,type),reason=type==='cyberSupport'?(!a.task&&!['captured','dead','retired'].includes(a.status)&&!s.ended?'':o.error||'Agent indisponible.'):o.error||'';return button(`${icon(ACTIONS[type].icon)}${ACTIONS[type].name} · ${o.chance} %`,'suggest-action','small wide',`data-id="${esc(a.id)}" data-type="${type}" title="${esc(reason||ACTIONS[type].desc)}" ${reason?'disabled':''}`);}).join('')}</div>`;
 }

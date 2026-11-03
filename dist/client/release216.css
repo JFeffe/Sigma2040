@@ -1,0 +1,11 @@
+/* Build 216: location hierarchy and high-visibility delay reports. */
+.agent-nationality{display:inline-flex;align-items:center;gap:4px;color:#b8c4d3;font-size:10px;vertical-align:middle}.agent-nationality small{font-size:10px}.agent-nationality .origin-nationalities img{width:17px!important;height:12px!important}.agent-deployment{display:flex;align-items:center;gap:6px;white-space:normal;color:#e8edf5;font-size:12px;line-height:1.35}.agent-deployment .country-code{width:27px;height:19px;flex-shrink:0}.agent-brief{flex-wrap:wrap;gap:5px}.floating-agent>.agent-deployment{margin:8px 0}.attack-delay-banner{position:relative;z-index:2;max-width:640px;margin:12px auto;padding:12px;border:2px solid #e3b16b;border-radius:8px;background:#292315;box-shadow:0 3px 15px #0008}.attack-delay-notice{display:grid;gap:6px;padding:10px;border-left:4px solid #e3b16b;background:#332b1b;color:#ffe0ac;text-align:left}.attack-delay-notice strong{font-size:14px;letter-spacing:.4px}.attack-delay-notice b{font-size:19px}.attack-delay-notice p{font-size:13px;color:#f3dcc0}.attack-delay-banner>.btn{margin-top:8px}.postponement-reveal .mission-outcome{color:#ffe0ac}.archive-actions{display:flex;gap:10px;flex-wrap:wrap;margin:15px 0}
+
+.agent-deployment .country-code img{width:27px;height:19px;object-fit:cover}
+.immersive-deck .attack-delay-banner{position:fixed;top:calc(var(--hud-top,150px) + 44px);left:110px;right:auto;width:min(430px,calc(100vw - 130px));max-height:35vh;overflow:auto;margin:0;z-index:24;padding:9px}
+.immersive-deck .field-team .agent-card{height:auto;min-height:96px;padding:7px 8px}
+.immersive-deck .field-team .agent-brief{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.immersive-deck .field-team .agent-brief>.agent-deployment{white-space:normal;overflow:visible;font-size:11px}
+.immersive-deck .field-team .agent-deployment .country-code{width:25px!important;height:18px!important;min-width:25px;flex-shrink:0}
+.immersive-deck .field-team .agent-deployment .country-code img{width:25px!important;height:18px!important}
+@media(max-width:700px){.immersive-deck .attack-delay-banner{left:8px;right:8px;width:auto;max-height:27vh}.immersive-deck .field-team .agent-card{min-height:105px}}

@@ -1,9 +1,9 @@
-import {createFloatingWindows} from './floating-windows.js?v=215';
-import {createCountryInquiryController} from './country-inquiry.js?v=215';
-import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=215';
-import {countryTargetButtons} from './country-inquiry.js?v=215';
-import {COUNTRY,ACTIONS} from './data.js?v=215';
-import {visibleTeam} from './cooperative.js?v=215';
+import {createFloatingWindows} from './floating-windows.js?v=216';
+import {createCountryInquiryController} from './country-inquiry.js?v=216';
+import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=216';
+import {countryTargetButtons} from './country-inquiry.js?v=216';
+import {COUNTRY,ACTIONS} from './data.js?v=216';
+import {visibleTeam} from './cooperative.js?v=216';
 
 export function createGameWorkspace(api){
  const windows=createFloatingWindows();let context=null;
@@ -33,7 +33,7 @@ export function createGameWorkspace(api){
  }
  async function command(cmd,id,el){
   if(cmd==='workspace-inquiry'){const r=windows.open('territory:'+id,'Enquête · '+COUNTRY[id].name,{width:440});r.kind='territory';r.id=id;refresh();return true;}
-  if(cmd==='workspace-country'){country(id);return true;}
+  if(cmd==='workspace-country'){country(id,el?.dataset.type||null);return true;}
   if(cmd==='country-inquiry'||cmd==='country-threat'||cmd==='suspect'){inquiry(id,cmd==='country-threat');return true;}
   if(cmd==='workspace-deploy'){api.deploy(id);return true;}
   const root=el?.closest('[data-workspace-window]'),r=root&&windows.get(root.dataset.workspaceWindow);if(!r)return false;
