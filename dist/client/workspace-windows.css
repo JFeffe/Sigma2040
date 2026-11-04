@@ -33,3 +33,14 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .immersive-deck .map-dossier.country-sidebar{width:260px}.immersive-deck .country-sidebar>summary{padding:8px;font-size:12px}.immersive-deck .country-sidebar .country-dossier{padding:8px;gap:6px}.country-sidebar .country-case-button.btn{padding:6px;font-size:12px;gap:6px;min-height:35px}.country-sidebar .country-case-button small{font-size:10px}.country-sidebar .country-case-button .suspect-portrait{width:30px;height:36px;min-width:30px;flex-basis:30px}.country-sidebar .country-dossier>.btn{min-height:28px;padding:5px 7px;font-size:11px}.country-sidebar .power-sidebar-art{width:100%;height:140px;min-height:140px;border-radius:5px}.power-consultation{font-size:11px;line-height:1.4;margin:0}
 .immersive-deck .map-dossier.agent-sidebar{width:330px;max-height:calc(100dvh - var(--hud-top) - 158px)}.agent-sidebar .workspace-body{overflow:visible;padding:10px}.agent-sidebar .floating-agent-overview{grid-template-columns:38% minmax(0,1fr);gap:8px}.agent-sidebar .floating-agent-overview .full-body{height:180px}.agent-sidebar .floating-agent h2{font-size:17px}.agent-sidebar .floating-agent p{font-size:11px;margin:5px 0}.agent-sidebar .floating-agent-mission{margin:7px 0;padding-bottom:6px}.agent-sidebar .floating-agent .btn{font-size:11px;padding:5px;min-height:28px}.agent-sidebar .talents{font-size:11px;gap:4px}.agent-sidebar .floating-agent .statlines{font-size:11px}
 @media(max-width:600px){.immersive-deck .map-dossier.agent-sidebar,.immersive-deck .map-dossier.country-sidebar{width:min(300px,calc(100vw - 16px))}}
+
+/* Build 218: country popup actions, without the redundant country summary. */
+.country-operations .country-operation-types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.country-operations .country-operation-types .btn{min-width:0;min-height:29px;padding:5px 6px;gap:5px;font-size:11px;line-height:1.2;justify-content:flex-start}
+.country-operations .country-operation-types .icon{width:14px;height:14px}
+.country-operations .country-operation-detail{margin-top:7px;padding-top:1px}
+.country-operations .country-operation-detail h3{margin:6px 0}
+.country-operations .country-operations-boost{gap:6px;margin:6px 0 3px}
+.country-operations .country-operation-choice.btn{padding:4px 6px;gap:6px}
+.country-operations .country-operation-agent{gap:5px;margin:3px 0}
+.country-operations .country-chance-details{margin:5px 0}

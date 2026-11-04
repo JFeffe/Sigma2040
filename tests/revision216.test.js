@@ -9,21 +9,16 @@ import {attackDelayBanner} from '../dist/client/attack-delay-ui.js';
 import {endingScreen} from '../dist/client/ending-ui.js';
 import {campaignSummary} from '../dist/client/campaign-stats.js';
 const fresh=()=>E.createGame('FR',DEFAULT_TEAM_IDS,216,'bb2');
-test('Country verification selects local case evidence and a home analyst, never an unrelated proof',()=>{
+test('Country verification is offered only at own HQ with all pending evidence',()=>{
  const s=fresh(),a=E.team(s)[0],target=E.knownTargets(s)[0],p=s.proofs.find(p=>p.suspect===target.id);
  s.factions.FR.evidence.push({id:p.id,verified:false,contested:false});
- assert.ok(countryOperationTypes(s,target.country).includes('analyze'));
- const m=countryOperationModel(s,target.country,{type:'analyze',agent:a.id});assert.equal(m.target,p.id);assert.equal(m.selected.a.country,'FR');assert.equal(m.selected.reason,'');
- E.assign(s,m.selected.a.id,m.type,m.target);assert.equal(a.task.target,p.id);
- assert.ok(countryOperationModel(s,target.country,{type:'analyze'}).rows.every(r=>r.reason));
- const other=COUNTRIES.find(c=>!c.power&&c.id!==target.country).id;
- assert.equal(countryOperationTargets(s,other,'analyze').length,0);
- assert.ok(countryOperationModel(s,other,{type:'analyze'}).rows.every(r=>r.reason));
- assert.equal(countryOperationTypes(s,'US').length,0);
+ for(const c of COUNTRIES){assert.equal(countryOperationTypes(s,c.id).includes('analyze'),c.id==='FR');if(c.id!=='FR')assert.deepEqual(countryOperationTargets(s,c.id,'analyze'),[]);}
+ const m=countryOperationModel(s,'FR',{type:'analyze',agent:a.id});assert.equal(m.target,p.id);assert.equal(m.selected.a.country,'FR');assert.equal(m.selected.reason,'');
+ E.assign(s,a.id,m.type,m.target);assert.equal(a.task.target,p.id);assert.ok(countryOperationModel(s,'FR',{type:'analyze'}).rows.every(r=>r.reason));
 });
 test('HQ quick hack opens while available and disables occupied agents; field agents do not get HQ hack',()=>{
  const s=fresh(),a=E.team(s)[0];assert.match(quickActionMarkup(s,a),/data-type="cyberSupport"/);
- const m=countryOperationModel(s,'FR',{type:'cyberSupport',agent:a.id});assert.equal(m.type,'cyberSupport');assert.equal(m.selected.reason,'');E.assign(s,a.id,m.type,m.target);
+ const m=countryOperationModel(s,'DE',{type:'cyberSupport',agent:a.id});assert.equal(m.type,'cyberSupport');assert.equal(m.selected.reason,'');E.assign(s,a.id,m.type,m.target);
  assert.match(quickActionMarkup(s,a),/data-type="cyberSupport"[^>]*disabled/);a.task=null;a.country='DE';assert.doesNotMatch(quickActionMarkup(s,a),/data-type="cyberSupport"/);
 });
 test('Location separates current country, HQ, queued and active travel',()=>{

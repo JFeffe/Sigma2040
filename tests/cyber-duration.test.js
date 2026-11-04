@@ -1,4 +1,4 @@
-import {countryOperationsMarkup} from '../dist/client/country-operations.js';
+import {countrySignals} from '../dist/client/country-signals.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
@@ -18,6 +18,6 @@ test('Repeated successful hacks extend duration, retain +10, expire and survive 
  s.turn=11;assert.equal(E.cyberStatus(s,'FR','DE').active,false);assert.equal(E.options(s,b.id,'collect','s0').chance,base);
  E.assign(s,a.id,'cyberSupport','DE');a.task.chance=100;E.advance(s);assert.deepEqual(s.factions.FR.cyberSupport.DE,{from:12,until:14,cost:0});
  s.factions.FR.cyberSupport.DE.until=60;const restored=E.validateSave(structuredClone(s));assert.equal(restored.factions.FR.cyberSupport.DE.until,60);
- const html=countryOperationsMarkup(restored,'DE');
+ const html=countrySignals(restored,'DE',true);
  assert.match(html,/title="Hack : actif · 49 tour\(s\)"/);assert.match(html,/class="compact-country-signal is-active" title="Accès : actif"/);
 });

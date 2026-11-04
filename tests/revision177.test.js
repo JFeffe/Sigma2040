@@ -42,14 +42,12 @@ test('Country inquiry steps use status icons and preserve selection and completi
  assert.match(html,/data-id="proofs" aria-pressed="true"/);
 });
 
-test('Selected agent exposes the same known local cases and threats even when map country differs',()=>{
+test('Selected agent retains country navigation while country popup omits the removed case and threat summary',()=>{
  const s=fresh(),t=E.knownTargets(s)[0],a=E.team(s)[0];a.country=t.country;
- const render=()=>countryOperationsMarkup(s,a.country),before=JSON.stringify(s);
- let html=render();assert.match(floatingAgentMarkup(s,a.id),/data-cmd="workspace-country"/);assert.ok(html.includes('data-cmd="country-inquiry" data-id="'+t.id+'"'));
- for(const unknown of s.suspects.filter(x=>!E.dossier(s,s.player,x.id)))assert.ok(!html.includes('data-cmd="country-inquiry" data-id="'+unknown.id+'"'));
+ const before=JSON.stringify(s),html=countryOperationsMarkup(s,a.country);
+ assert.match(floatingAgentMarkup(s,a.id),/data-cmd="workspace-country"/);
+ assert.doesNotMatch(html,/data-cmd="country-inquiry"|data-cmd="country-threat"|Dossiers et menaces du pays/);
  assert.equal(JSON.stringify(s),before);
- s.suspects.find(x=>x.id===t.id).arrested=true;assert.ok(!render().includes('data-cmd="country-inquiry" data-id="'+t.id+'"'));
- const p=E.visiblePlots(s)[0];a.country=p.country;html=render();assert.ok(html.includes('data-cmd="country-threat" data-id="'+p.id+'"'));
 });
 
 test('Operation summary includes all unused current actions at zero without changing counters or inventing retired actions',()=>{
