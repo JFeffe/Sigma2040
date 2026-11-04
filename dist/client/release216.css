@@ -18,3 +18,6 @@
 .map-dossier.agent-sidebar>summary{justify-content:flex-start;gap:5px}
 .map-dossier.agent-sidebar>summary>.origin-nationalities{margin:0;flex:0 0 auto}
 .map-dossier.agent-sidebar>summary::after{margin-left:auto}
+
+.attack-delay-banner{cursor:pointer;padding-right:48px}
+.attack-delay-banner>.attack-delay-close{position:absolute;top:7px;right:7px;margin:0;font-size:20px;line-height:1;min-width:30px;min-height:30px}

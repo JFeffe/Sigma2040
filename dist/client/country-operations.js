@@ -1,18 +1,18 @@
-import {agentLocation} from './agent-location.js?v=218';
-import {quickActionMarkup} from './quick-actions.js?v=218';
-import * as E from './engine.js?v=218';
-import {COUNTRY,ACTIONS} from './data.js?v=218';
-import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=218';
-import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=218';
-import {inquiryActionCosts} from './country-inquiry.js?v=218';
-import {proofTitle} from './intelligence.js?v=218';
-import {fullBody} from './visuals.js?v=218';
+import {agentLocation} from './agent-location.js?v=219';
+import {quickActionMarkup} from './quick-actions.js?v=219';
+import * as E from './engine.js?v=219';
+import {COUNTRY,ACTIONS} from './data.js?v=219';
+import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=219';
+import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=219';
+import {inquiryActionCosts} from './country-inquiry.js?v=219';
+import {proofTitle} from './intelligence.js?v=219';
+import {fullBody} from './visuals.js?v=219';
 
 const dossierActions=new Set(['collect','surveil','prepare','arrest','hack','intimidate']);
 export function countryOperationTypes(s,country){
  if(COUNTRY[country]?.power&&country!==s.player)return [];
  const sample={...(E.team(s)[0]||{}),faction:s.player,country,safehouses:[]};
- const allowed=new Set(agentMenuActions(sample,s).map(([id])=>id));if(country===s.player)allowed.add('analyze');else allowed.delete('analyze');if(!COUNTRY[country]?.power)allowed.add('cyberSupport');else allowed.delete('cyberSupport');allowed.add('protect');
+ const allowed=new Set(agentMenuActions(sample,s).map(([id])=>id));if(country===s.player)allowed.add('analyze');else allowed.delete('analyze');if(!COUNTRY[country]?.power)allowed.add('cyberSupport');else allowed.delete('cyberSupport');if(country===s.player)allowed.delete('protect');else allowed.add('protect');
  return ACTION_GROUPS.flatMap(([,ids])=>ids).filter(id=>allowed.has(id)&&!dossierActions.has(id)&&!['travel','sneak'].includes(id));
 }
 export function countryOperationTargets(s,country,type){
