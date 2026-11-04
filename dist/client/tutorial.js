@@ -1,12 +1,13 @@
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=220';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=220';
-import * as E from './engine.js?v=220';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=220';
-import {SUSPECTS} from './data.js?v=220';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=220';
+import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=221';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=221';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=221';
+import * as E from './engine.js?v=221';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=221';
+import {SUSPECTS} from './data.js?v=221';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=221';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
-export const TUTORIAL_MISSIONS=Object.freeze([
+export const LEGACY_TUTORIAL_MISSIONS=Object.freeze([
  {id:'contact',number:'01',title:'Premier contact',place:'Paris → Berlin',duration:'3–5 min',agents:1,skills:'Choisir un agent · Voyager · Ouvrir un accès',brief:'Une archiviste de Berlin a repéré des transferts sous le nom de « Filigrane ». Elle ne parlera qu’à IRIS. Rejoignez-la et activez le contact.',goals:['Rejoindre Berlin','Activer le contact'],lesson:'Un ordre confirmé est planifié. Il ne commence qu’à la fin du tour. L’accès local permet ensuite la collecte de preuves.',next:'Les archives sont ouvertes. Deux documents nous attendent.'},
  {id:'evidence',number:'02',title:'La pièce suspecte',place:'Berlin / QG de Paris',duration:'6–9 min',agents:2,skills:'Collecter · Vérifier au QG · Écarter un faux',brief:'Les archives lient Vesper au réseau Filigrane, mais deux documents se contredisent. BISHOP poursuit l’enquête à Berlin pendant qu’APÉRO vérifie les pièces au QG.',goals:['Première collecte','Collecte et vérification en parallèle','Planque et seconde vérification','Remplacement et récupération','Dernière vérification'],lesson:'Les preuves sont partagées par votre équipe. Vérifiez la première pendant la deuxième collecte. Pendant les autres attentes, préparez une planque et récupérez l’énergie dépensée. Un faux écarté doit être remplacé.',next:'Vesper prépare son départ. Il reste une courte fenêtre pour intervenir.'},
  {id:'arrest',number:'03',title:'La fenêtre d’intervention',place:'Berlin · Départ à la fin de T6',duration:'5–7 min',agents:3,skills:'Préparer · Obtenir un mandat · Localiser · Arrêter',brief:'Le dossier est prêt à être exploité : deux preuves vérifiées, trois agents à Berlin. Vesper quittera la ville à la fin du tour 6. Coordonnez BISHOP, IRIS et LEI pour l’arrêter légalement.',goals:['Préparer le dossier','Obtenir le mandat','Confirmer la position','Arrêter Vesper'],lesson:'Préparation, mandat et localisation peuvent avancer au même tour avec trois agents différents. La position, elle, expire : localisez près du moment de l’arrestation et vérifiez toujours sa date de validité.',next:'Vesper révèle une attaque imminente contre Berlin.'},
@@ -21,8 +22,19 @@ export const TUTORIAL_MISSIONS=Object.freeze([
  {id:'autonomy',number:'12',title:'À vous de jouer',place:'Berlin / Ankara / Tokyo / Paris',duration:'10–15 min',agents:4,skills:'Priorités · Deux enquêtes · Protection · Autonomie',brief:'Une attaque vise Berlin à la fin du T6. Vesper se trouve à Ankara et Cobalt à Tokyo : arrêtez les deux avant leur départ à la fin du T12. Chaque dossier possède une pièce brute. Vous disposez de quatre agents et de 6 crédits. Organisez vos tours ; les suggestions sont disponibles dans Instructions.',goals:['Couvrir Berlin au T6','Mener les deux enquêtes','Vérifier pendant les collectes','Arrêter Vesper et Cobalt avant le départ T12'],lesson:'Commencez par les échéances et les prérequis. Les opérations indépendantes avancent ensemble. Consultez les rapports et les dates réelles ; les rôles suggérés dans Instructions sont facultatifs. Cette mission conclut l’entraînement sans joueurs PNJ.',next:'Poursuivez avec le chapitre 13 : le service britannique rejoint la formation.'},
  ...NPC_MISSIONS
 ]);
-export const tutorialMission=id=>TUTORIAL_MISSIONS.find(m=>m.id===id);
+export const TUTORIAL_MISSIONS=Object.freeze(COMPACT_MISSIONS);
+export const tutorialMission=id=>[...TUTORIAL_MISSIONS,...LEGACY_TUTORIAL_MISSIONS].find(m=>m.id===id);
 export function createTutorialGame(id){
+ if(COMPACT_IDS.includes(id)){
+  const s=createTutorialGame(COMPACT_BASE[id]),f=s.factions.FR;
+  s.tutorial={version:1,revision:3,mission:id};
+  if(id==='inquiry'){s.proofs.forEach(p=>p.authentic=true);f.evidence=[{id:'s0-e0',verified:false,contested:false,collectedBy:'FR',verifiedBy:null}];}
+  if(id==='intervention'){s.fracture.flights=[];delete f.known.s0.flightUntil;}
+  if(id==='shield'){s.agents=s.agents.filter(a=>['p0','p15'].includes(a.id));s.agents.find(a=>a.id==='p0').country='DE';s.plots[0].turn=3;f.defense.DE=0;f.defenseBase.DE=0;}
+  if(id==='recovery'){s.agents=s.agents.filter(a=>['p0','p12'].includes(a.id));s.agents.find(a=>a.id==='p0').country='FR';s.agents.find(a=>a.id==='p0').fatigue=60;const b=s.agents.find(a=>a.id==='p12');b.country='DE';b.exposure=70;f.budget=1;f.confidence=40;}
+  if(id==='simulation'){s.humanFactions=['FR'];}
+  s.logs=[];s.logId=0;E.log(s,tutorialMission(id).brief,'brief','FR');return s;
+ }
  if(!TUTORIAL_IDS.includes(id))throw Error('Mission de formation inconnue.');
  const npc=NPC_MISSIONS.some(m=>m.id===id);
  const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed(id),'bb1',npc?{participants:['FR','GB','US','CN']}:{});
@@ -121,7 +133,7 @@ export function validateTutorialGame(value){
   if(!s.factions.FR.evidence.some(e=>e.id==='s1-e0'))s.factions.FR.evidence.push(structuredClone(expected.factions.FR.evidence.find(e=>e.id==='s1-e0')));
   s.tutorial.revision=2;
  }
- if(s.agents?.length!==expected.agents.length||s.agents.some(a=>a.faction!=='FR'||!expected.agents.some(b=>b.id===a.id))||s.plots?.length!==expected.plots.length||s.plots.some((p,i)=>p.id!==expected.plots[i].id||p.country!==expected.plots[i].country||p.turn!==expected.plots[i].turn)||s.recruitments?.length||s.humanFactions?.length!==Object.keys(s.factions||{}).length||s.humanFactions.some(f=>!s.factions[f])||Object.values(s.factions).some(f=>f.tech?.some(t=>!tutorialTechAllowed(s,t.type))))throw Error('Exercice incompatible.');
+ if(s.agents?.length!==expected.agents.length||s.agents.some(a=>a.faction!=='FR'||!expected.agents.some(b=>b.id===a.id))||s.plots?.length!==expected.plots.length||s.plots.some((p,i)=>p.id!==expected.plots[i].id||p.country!==expected.plots[i].country||s.tutorial.mission!=='shield'&&p.turn!==expected.plots[i].turn)||s.recruitments?.length||s.humanFactions?.length!==Object.keys(s.factions||{}).length||s.humanFactions.some(f=>!s.factions[f])||Object.values(s.factions).some(f=>f.tech?.some(t=>!tutorialTechAllowed(s,t.type))))throw Error('Exercice incompatible.');
  // Build 197 stored inert foreign records. Discard them without changing the exercise.
  s.factions={FR:s.factions.FR};s.humanFactions=['FR'];
  E.validateSave(s,{allowTutorial:true});

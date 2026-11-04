@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
-import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_KEY,TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
+import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_KEY,LEGACY_TUTORIAL_MISSIONS as TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
 import {tutorialHint} from '../dist/client/tutorial-rules.js';
 import {tutorialGuide,tutorialMenu,markTutorialControls} from '../dist/client/tutorial-ui.js';
 import {inquiryModel,countryTargetButtons} from '../dist/client/country-inquiry.js';
@@ -79,5 +79,5 @@ test('Fifteen playable chapters are saved separately, including the NPC campaign
  const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};let p=readTutorialProgress(storage);
  for(const m of TUTORIAL_MISSIONS)p=saveTutorialProgress(storage,createTutorialGame(m.id),p);
  assert.ok(data.has(TUTORIAL_KEY));assert.equal(readTutorialProgress(storage).warning,false);assert.equal(Object.keys(readTutorialProgress(storage).sessions).length,15);
- const menu=tutorialMenu(p);assert.match(menu,/Quinze chapitres/);assert.doesNotMatch(menu,/ne sont pas encore jouables/);assert.equal((menu.match(/data-cmd="tutorial-start"/g)||[]).length,15);
+ const menu=tutorialMenu(p);assert.match(menu,/Six modules/);assert.doesNotMatch(menu,/ne sont pas encore jouables/);assert.equal((menu.match(/data-cmd="tutorial-start"/g)||[]).length,6);
 });

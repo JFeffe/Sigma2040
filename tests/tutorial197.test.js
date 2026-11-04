@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import * as E from '../dist/client/engine.js';
-import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_KEY,TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
+import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_KEY,LEGACY_TUTORIAL_MISSIONS as TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
 import {tutorialMenu,tutorialGuide} from '../dist/client/tutorial-ui.js';
 import {campaignRules} from '../dist/client/campaign-rules.js';
 import {CAMPAIGN_KEY} from '../dist/client/save-compat.js';
@@ -49,7 +49,7 @@ test('Each mission saves separately; completing, replaying and resuming never mo
  let p=readTutorialProgress(store),contact=play(createTutorialGame('contact'));p=saveTutorialProgress(store,contact,p);
  const evidence=createTutorialGame('evidence');E.assign(evidence,'p12','collect','s0');E.advance(evidence);p=saveTutorialProgress(store,evidence,p);
  p=readTutorialProgress(store);assert.equal(p.sessions.evidence.agents.find(a=>a.id==='p12').task.remaining,1);assert.deepEqual(p.completed,['contact']);p=saveTutorialProgress(store,createTutorialGame('contact'),p);assert.equal(p.sessions.evidence.turn,2);assert.deepEqual(p.completed,['contact']);assert.equal(store.getItem(CAMPAIGN_KEY),campaign);
- assert.match(tutorialMenu(p),/Reprendre · tour 2/);
+ assert.equal(p.sessions.evidence.turn,2); // Historical saves remain readable; the menu now exposes the compact course.
 });
 test('A damaged exercise does not discard other progress; unavailable storage is explicit',()=>{
  const store=storage();let p=saveTutorialProgress(store,play(createTutorialGame('contact')),readTutorialProgress(store));p.sessions.evidence={broken:true};store.setItem(TUTORIAL_KEY,JSON.stringify(p));p=readTutorialProgress(store);assert.equal(p.warning,true);assert.equal(tutorialObjective(p.sessions.contact).done,true);assert.equal(p.sessions.evidence,undefined);assert.deepEqual(p.completed,['contact']);

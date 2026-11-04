@@ -1,10 +1,13 @@
-import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=220';
-import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=220';
+import {ACTIONS} from './data.js?v=221';
+import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=221';
+import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=221';
+import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=221';
 // Training is a separate, explicitly scripted mode. No campaign uses these rules.
-export const TUTORIAL_IDS=Object.freeze(['contact','evidence','arrest',...ADVANCED_TUTORIALS]);
+export const TUTORIAL_IDS=Object.freeze([...COMPACT_IDS,'contact','evidence','arrest',...ADVANCED_TUTORIALS]);
 export const isTutorial=s=>s?.tutorial?.version===1&&TUTORIAL_IDS.includes(s.tutorial.mission);
 export function tutorialObjective(s){
  if(!isTutorial(s))return null;
+ const compact=compactObjective(s);if(compact)return compact;
  const advanced=advancedObjective(s);if(advanced)return advanced;
  const f=s.factions[s.player],k=f.known.s0,e=f.evidence,t=s.suspects.find(t=>t.id==='s0');
  const order=(agentId,type,target=null)=>({agentId,type,target});
@@ -53,6 +56,7 @@ export function tutorialOrderError(s,id,type,target,useCredits=false){
  if(objective.done||objective.failed)return 'Exercice terminé. Choisissez la mission suivante ou recommencez.';
  if(isNpcTutorial(s)&&s.agents.find(a=>a.id===id)?.faction!=='FR')return null;
  if(useCredits&&tutorialGuaranteed(s))return 'Exercice scénarisé : réussite garantie, aucun renfort nécessaire.';
+ if(isCompactTutorial(s)){if(s.tutorial.mission==='simulation')return null;return objective.orders.some(o=>o.agentId===id&&o.type===type&&(o.target===null||o.target===target))?null:'Suivez les ordres indiqués dans ce module.';}
  const advancedError=advancedOrderError(s,id,type,target);if(advancedError!==undefined)return advancedError;
  if(!objective.orders.some(o=>o.agentId===id&&o.type===type&&(o.target===null||o.target===target||type==='analyze'&&target===null)))return 'Suivez l’objectif de cet exercice. Les autres opérations seront disponibles en campagne.';
  return null;
@@ -73,6 +77,7 @@ export function tutorialAgentPlan(s){
 }
 export function tutorialHint(s){
  const o=tutorialObjective(s);if(!o)return '';if(o.done||o.failed)return o.text;
+ if(isCompactTutorial(s))return o.text+' '+tutorialPendingOrders(s).map(x=>s.agents.find(a=>a.id===x.agentId).name+' : '+ACTIONS[x.type].name+(x.target?' ('+(s.suspects.find(t=>t.id===x.target)?.name||x.target)+')':'')+'.').join(' ');
  const free=tutorialPendingOrders(s);
  if(ADVANCED_TUTORIALS.includes(s.tutorial.mission))return advancedHint(s,o,free);
  if(!free.length&&s.agents.some(a=>a.task))return 'Tous les ordres utiles sont affectés. Fermez le dossier puis utilisez « Terminer le tour ». Les missions de deux tours continuent au tour suivant. Consultez le rôle de chaque agent ci-dessous.';

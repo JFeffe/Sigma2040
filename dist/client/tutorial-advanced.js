@@ -1,11 +1,12 @@
-import {NPC_TUTORIALS,isNpcTutorial} from './tutorial-mode.js?v=220';
-import {npcTutorialObjective} from './tutorial-npc.js?v=220';
-import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=220';
+import {NPC_TUTORIALS,isNpcTutorial} from './tutorial-mode.js?v=221';
+import {npcTutorialObjective} from './tutorial-npc.js?v=221';
+import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=221';
 // Later lessons derive their progress from real game state and operation reports.
-import {ACTIONS,COUNTRY} from './data.js?v=220';
+import {ACTIONS,COUNTRY} from './data.js?v=221';
 export const ADVANCED_TUTORIALS=['countdown','longrange','hostile','stealth','digital','finale',...AUTONOMY_TUTORIALS,...NPC_TUTORIALS];
 export const tutorialTechAllowed=(s,type)=>isNpcTutorial(s)||['longrange','resources','autonomy'].includes(s?.tutorial?.mission)&&['logistics','relay'].includes(type);
 export const tutorialGovernmentAllowed=(s,type,country)=>{
+ if(s?.tutorial?.mission==='recovery')return type==='funding';
  if(isNpcTutorial(s))return true;
  if(AUTONOMY_TUTORIALS.includes(s?.tutorial?.mission))return ['funding','medical'].includes(type)||type==='diplomacy'&&['TR','JP'].includes(country);
  if(!['hostile','finale'].includes(s?.tutorial?.mission))return false;
@@ -14,7 +15,7 @@ export const tutorialGovernmentAllowed=(s,type,country)=>{
  const cost=[15,15,10,5][s.factions.FR.cooperation.TR]??0;
  return type==='diplomacy'&&country==='TR'&&(used||s.factions.FR.confidence-cost>=15);
 };
-export const tutorialCanWait=s=>['arrest',...ADVANCED_TUTORIALS].includes(s?.tutorial?.mission);
+export const tutorialCanWait=s=>['intervention','shield','recovery','simulation','arrest',...ADVANCED_TUTORIALS].includes(s?.tutorial?.mission);
 const active=(s,type)=>s.factions.FR.tech.some(t=>t.type===type&&t.until>=s.turn);
 export function advancedObjective(s){
  const npc=npcTutorialObjective(s);if(npc)return npc;

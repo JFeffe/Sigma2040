@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
-import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
+import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,LEGACY_TUTORIAL_MISSIONS as TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
 import {tutorialGuaranteed,tutorialParticipants,tutorialRiskNote,tutorialSeed} from '../dist/client/tutorial-mode.js';
 import {tutorialGuide,tutorialMenu,markTutorialControls} from '../dist/client/tutorial-ui.js';
 import {campaignRules,CURRENT_RULES} from '../dist/client/campaign-rules.js';
@@ -85,7 +85,7 @@ test('Saved NPC chapters cannot change participants or human controllers, and pr
 test('The guide displays only player agents, keeps recruitment enabled and never promises guaranteed late operations',()=>{
  const s=createTutorialGame('allies'),html=tutorialGuide(s);assert.equal((html.match(/<li title=/g)||[]).length,4);assert.doesNotMatch(html,/GB-0/);assert.match(gameShell(s,'world',''),/--training-agents:4/);
  const recruit={dataset:{cmd:'recruit'},disabled:false};markTutorialControls({querySelectorAll:q=>q.includes('[data-cmd="recruit"]')?[recruit]:[],querySelector:()=>null},s);assert.equal(recruit.disabled,false);
- const menu=tutorialMenu({sessions:{},completed:[]});assert.match(menu,/Quinze chapitres/);assert.match(menu,/3 PNJ/);assert.doesNotMatch(menu,/ne sont pas encore jouables/);
+ const menu=tutorialMenu({sessions:{},completed:[]});assert.match(menu,/Six modules/);assert.match(menu,/1 PNJ/);assert.doesNotMatch(menu,/ne sont pas encore jouables/);
  assert.match(tutorialRiskNote(createTutorialGame('command')),/risques de la campagne/);
 });
 

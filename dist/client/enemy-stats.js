@@ -1,5 +1,5 @@
-import {dataTable} from './data-tables.js?v=220';
-import {COUNTRY,cellName,regularCells} from './data.js?v=220';
+import {dataTable} from './data-tables.js?v=221';
+import {COUNTRY,cellName,regularCells} from './data.js?v=221';
 export function enemyReport(s){
  if(s.gameMode!=='cooperative'||!s.ended)return '';
  const attacks=s.enemyAttacks||[],flights=s.enemyFlights||[],moves=s.enemyMoves||[];

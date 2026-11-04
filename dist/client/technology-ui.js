@@ -1,8 +1,8 @@
-import {usesSharedCoop} from './cooperative.js?v=220';
-import * as E from './engine.js?v=220';
-import {COUNTRY,TECH,ACTIONS} from './data.js?v=220';
-import {icon,button,esc,portrait} from './ui.js?v=220';
-import {countryOptions} from './presentation.js?v=220';
+import {usesSharedCoop} from './cooperative.js?v=221';
+import * as E from './engine.js?v=221';
+import {COUNTRY,TECH,ACTIONS} from './data.js?v=221';
+import {icon,button,esc,portrait} from './ui.js?v=221';
+import {countryOptions} from './presentation.js?v=221';
 let selected=null,scope='';
 export function selectTechnology(type){selected=['ai','guard','drone'].includes(type)?type:null;}
 const modules={...TECH,protect:{name:'Protection d’infrastructure',icon:'shield',duration:2},drone:{name:'Reconnaissance par drone',icon:'drone',duration:1}};

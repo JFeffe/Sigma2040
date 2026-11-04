@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
-import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
+import {createTutorialGame,tutorialObjective,validateTutorialGame,readTutorialProgress,saveTutorialProgress,LEGACY_TUTORIAL_MISSIONS as TUTORIAL_MISSIONS} from '../dist/client/tutorial.js';
 import {tutorialGuide} from '../dist/client/tutorial-ui.js';
 function play(value,{skipAnalysis=false,skipInfluence=false}={}){
  let s=validateTutorialGame(value);

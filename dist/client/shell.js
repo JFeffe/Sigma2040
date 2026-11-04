@@ -1,14 +1,14 @@
-import {isNpcTutorial} from './tutorial-mode.js?v=220';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=220';
-import {bureauEnabled} from './mod-settings.js?v=220';
-import {inquiryIndicator} from './inquiry-notifications.js?v=220';
-import {threatStatus} from './threat-status.js?v=220';
-import {campaignRules} from './campaign-rules.js?v=220';
-import {clockMarkup} from './campaign-clock.js?v=220';
-import {newsTicker} from './news.js?v=220';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=220';
-import {COUNTRY,COUNTRIES} from './data.js?v=220';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=220';
+import {isNpcTutorial} from './tutorial-mode.js?v=221';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=221';
+import {bureauEnabled} from './mod-settings.js?v=221';
+import {inquiryIndicator} from './inquiry-notifications.js?v=221';
+import {threatStatus} from './threat-status.js?v=221';
+import {campaignRules} from './campaign-rules.js?v=221';
+import {clockMarkup} from './campaign-clock.js?v=221';
+import {newsTicker} from './news.js?v=221';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=221';
+import {COUNTRY,COUNTRIES} from './data.js?v=221';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=221';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
@@ -28,7 +28,7 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
     <button class="resource government-button" data-resource="confidence" data-cmd="nav" data-id="government" title="Confiance du gouvernement"><span>CONFIANCE</span><strong>${f.confidence}<small>/100</small></strong></button>
     <div class="resource prestige-resource" data-resource="score"><span>PRESTIGE</span><strong>${formatScore(f.score)}<small> pts</small></strong></div>
     <div class="crisis-block ${danger?'crisis-critical':''}" data-resource="crisis"><span>CRISE MONDIALE · +${campaignRules(state).crisisPerTurn}/TOUR <strong>${state.crisis}%</strong></span><i><b style="width:${state.crisis}%"></b></i></div>
-    <div class="turn-block"><span>TOUR</span><strong>${String(state.turn).padStart(2,'0')}<small>${isTutorial(state)&&!isNpcTutorial(state)?state.tutorial.mission==='arrest'?' / 6':'':' / '+campaignRules(state).maxTurns}</small></strong></div>
+    <div class="turn-block"><span>TOUR</span><strong>${String(state.tutorial?.mission==='simulation'?Math.min(10,state.turn):state.turn).padStart(2,'0')}<small>${state.tutorial?.mission==='simulation'?' / 10':isTutorial(state)&&!isNpcTutorial(state)?state.tutorial.mission==='arrest'?' / 6':'':' / '+campaignRules(state).maxTurns}</small></strong></div>
    </div>
    ${clockMarkup(state)}<div class="deck-system">${button(state.ended?'Voir le bilan':state.event?'Communication':`Terminer le tour ${icon('arrow')}`,'advance','primary',isTutorial(state)&&!state.ended&&(tutorialObjective(state).done||tutorialObjective(state).failed)?'disabled':'')}${button(icon('help'),'open-wiki','system-button','aria-label="Wiki opérationnel" title="Wiki opérationnel · Ctrl + Espace"')}${button(icon('settings'),'settings','system-button','aria-label="Paramètres" title="Paramètres"')}${button('Menu','main-menu','new-game-button','aria-label="Menu principal"')}</div>
    ${newsTicker(state)}${danger?`<section class="crisis-alert" role="alert"><span>${icon('shield')} <strong>ALERTE ROUGE · ${state.crisis} %</strong><span>${danger}</span></span>${button('Voir les menaces','nav','small','data-id="threats"')}</section>`:''}
