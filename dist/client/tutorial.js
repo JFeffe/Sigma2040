@@ -1,9 +1,9 @@
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=219';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=219';
-import * as E from './engine.js?v=219';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=219';
-import {SUSPECTS} from './data.js?v=219';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=219';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=220';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=220';
+import * as E from './engine.js?v=220';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=220';
+import {SUSPECTS} from './data.js?v=220';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=220';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const TUTORIAL_MISSIONS=Object.freeze([

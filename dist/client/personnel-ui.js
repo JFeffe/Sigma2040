@@ -1,12 +1,12 @@
-import {isCooperative,visibleTeam} from './cooperative.js?v=219';
-import * as E from './engine.js?v=219';
-import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=219';
-import {fullBody} from './visuals.js?v=219';
-import {availability} from './presentation.js?v=219';
-import {quickActionMarkup} from './quick-actions.js?v=219';
-import {statActions} from './recruit-selection.js?v=219';
-import {proofTitle} from './intelligence.js?v=219';
-import {heading,esc,icon,button,portrait,nationalityFlags,talentIcon,sortedTalents} from './ui.js?v=219';
+import {isCooperative,visibleTeam} from './cooperative.js?v=220';
+import * as E from './engine.js?v=220';
+import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=220';
+import {fullBody} from './visuals.js?v=220';
+import {availability} from './presentation.js?v=220';
+import {quickActionMarkup} from './quick-actions.js?v=220';
+import {statActions} from './recruit-selection.js?v=220';
+import {proofTitle} from './intelligence.js?v=220';
+import {heading,esc,icon,button,portrait,nationalityFlags,talentIcon,sortedTalents} from './ui.js?v=220';
 
 const statSymbols=['scan','target','shield'],statShort=['A','H','SF'];
 

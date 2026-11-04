@@ -1,6 +1,6 @@
-import {COUNTRY,cellName} from './data.js?v=219';
-import {visiblePlots} from './engine.js?v=219';
-import {esc,flag,button} from './ui.js?v=219';
+import {COUNTRY,cellName} from './data.js?v=220';
+import {visiblePlots} from './engine.js?v=220';
+import {esc,flag,button} from './ui.js?v=220';
 export function activeAttackDelays(s){const visible=new Set(visiblePlots(s).map(p=>p.id));return (s.attackDelayReports||[]).filter(r=>visible.has(r.plotId)&&s.plots.some(p=>p.id===r.plotId&&!p.resolved&&!p.cancelled));}
 export function attackDelayNotice(r){return `<div class="attack-delay-notice"><strong>${r.reason==='protection'?'ATTAQUE REPORTÉE PAR LA PROTECTION ACTIVE':'ATTAQUE REPORTÉE'}</strong><span>${flag(r.country)} ${esc(COUNTRY[r.country].name)} · ${esc(cellName(r.cell))}</span><b>Fin T${r.oldTurn} → fin T${r.attackTurn}</b><p>${r.reason==='relocation'?'Le pays ciblé a changé. La protection ne suit pas la menace.':'La menace reste active. Vérifiez la couverture à la nouvelle échéance.'}</p></div>`;}
 const dismissed=new Set();
