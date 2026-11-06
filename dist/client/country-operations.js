@@ -1,12 +1,12 @@
-import {agentLocation} from './agent-location.js?v=225';
-import {quickActionMarkup} from './quick-actions.js?v=225';
-import * as E from './engine.js?v=225';
-import {COUNTRY,ACTIONS} from './data.js?v=225';
-import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=225';
-import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=225';
-import {inquiryActionCosts} from './country-inquiry.js?v=225';
-import {proofTitle} from './intelligence.js?v=225';
-import {fullBody} from './visuals.js?v=225';
+import {agentLocation} from './agent-location.js?v=226';
+import {quickActionMarkup} from './quick-actions.js?v=226';
+import * as E from './engine.js?v=226';
+import {COUNTRY,ACTIONS} from './data.js?v=226';
+import {agentMenuActions,ACTION_GROUPS,availability} from './presentation.js?v=226';
+import {button,esc,icon,portrait,flag,nationalityFlags,statlines,talents} from './ui.js?v=226';
+import {inquiryActionCosts} from './country-inquiry.js?v=226';
+import {proofTitle} from './intelligence.js?v=226';
+import {fullBody} from './visuals.js?v=226';
 
 const dossierActions=new Set(['collect','surveil','prepare','arrest','hack','intimidate']);
 export function countryOperationTypes(s,country){
