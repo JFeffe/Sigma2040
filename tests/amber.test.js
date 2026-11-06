@@ -9,7 +9,7 @@ test('Amber follows Bishop without changing existing agent IDs',()=>{
  assert.deepEqual(DISPLAY_ROSTER.slice(0,3).map(a=>a.name),['IRIS','BISHOP','AMBER']);
  assert.equal(new Set(ROSTER.map(a=>a.id)).size,ROSTER.length);
  const a=ROSTER.find(a=>a.id==='p13');
- assert.deepEqual(a.stats,[5,7,8]);assert.deepEqual(a.talents,['contacts','informatique','drones']);assert.deepEqual(a.nationalities,['RU']);
+ assert.deepEqual(a.stats,[5,8,7]);assert.deepEqual(a.talents,['contacts','informatique','drones']);assert.deepEqual(a.nationalities,['RU']);
  assert.match(portrait(a),/amber-portrait-transparent.webp/);assert.match(fullBody(a),/amber-full-transparent.webp/);assert.match(nationalities(a),/ru.svg/);
  const s=E.createGame('FR',['p0','p12','p13','p3'],77);
  assert.deepEqual(E.validateSave(structuredClone(s)),s);

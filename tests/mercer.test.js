@@ -14,7 +14,7 @@ test('Mercer follows Midnight and survives recruitment, save and multiplayer ide
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,11);
  E.recruit(s,'p18','p13');E.advance(s);E.advance(s);
  const a=E.team(E.validateSave(structuredClone(s))).find(a=>a.id==='p18');
- assert.ok(a);assert.deepEqual(a.stats,[7,6,7]);
+ assert.ok(a);assert.deepEqual(a.stats,[6,6,8]);
  assert.deepEqual(a.talents,['contacts','combat','infiltration']);
  assert.ok(a.nationalities.includes('US'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),`./assets/mercer-portrait-transparent.webp?v=${BUILD_VERSION}`);

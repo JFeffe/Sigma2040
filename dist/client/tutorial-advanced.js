@@ -1,8 +1,8 @@
-import {NPC_TUTORIALS,isNpcTutorial} from './tutorial-mode.js?v=222';
-import {npcTutorialObjective} from './tutorial-npc.js?v=222';
-import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=222';
+import {NPC_TUTORIALS,isNpcTutorial} from './tutorial-mode.js?v=223';
+import {npcTutorialObjective} from './tutorial-npc.js?v=223';
+import {AUTONOMY_TUTORIALS,autonomyObjective,autonomyOrderError} from './tutorial-autonomy.js?v=223';
 // Later lessons derive their progress from real game state and operation reports.
-import {ACTIONS,COUNTRY} from './data.js?v=222';
+import {ACTIONS,COUNTRY} from './data.js?v=223';
 export const ADVANCED_TUTORIALS=['countdown','longrange','hostile','stealth','digital','finale',...AUTONOMY_TUTORIALS,...NPC_TUTORIALS];
 export const tutorialTechAllowed=(s,type)=>isNpcTutorial(s)||['longrange','resources','autonomy'].includes(s?.tutorial?.mission)&&['logistics','relay'].includes(type);
 export const tutorialGovernmentAllowed=(s,type,country)=>{

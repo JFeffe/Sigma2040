@@ -1,9 +1,9 @@
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=222';
-import {attackDamage} from './engine.js?v=222';
-import {activeAttackDelays,attackDelayNotice} from './attack-delay-ui.js?v=222';
-import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=222';
-import {COUNTRY,CELLS,cellName} from './data.js?v=222';
-import {heading,esc,flag,button,icon} from './ui.js?v=222';
+import {cellInfoButton,captiveMarkup} from './cell-info.js?v=223';
+import {attackDamage} from './engine.js?v=223';
+import {activeAttackDelays,attackDelayNotice} from './attack-delay-ui.js?v=223';
+import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=223';
+import {COUNTRY,CELLS,cellName} from './data.js?v=223';
+import {heading,esc,flag,button,icon} from './ui.js?v=223';
 export function threatPanel(s){
  const status=threatStatus(s);
  return `${heading('SURVEILLANCE / FRACTURE','Menaces terroristes','Vos protections sont comparées au lieu et au tour prévus de chaque attaque.',`<span class="objective-chip">${icon('shield')} ${status.uncovered.length} menace(s) · ${status.covered} couverte(s)</span>`)}<div class="threat-grid compact-threat-grid">${status.plots.map(p=>{

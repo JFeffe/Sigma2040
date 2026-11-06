@@ -1,3 +1,7 @@
+## Build 223 — Amber et Mercer
+
+Amber : A5 / H8 / SF7. Mercer : A6 / H6 / SF8. Talents inchangés. Les cartes, fiches et sauvegardes solo/multijoueur utilisent les nouvelles statistiques ; les missions déjà engagées conservent leurs chances confirmées. Les 20 profils restent uniques, totalisent 20 points et conservent cinq agents par talent.
+
 ## Build 215 — Réussite unifiée
 
 Toutes les actions à risque utilisent `50 + 7 × (stat − 5) + bonus − pénalités`, avec les limites existantes de 10 à 90 %. Une stat de 5 donne 50 % avant les modificateurs. Aucune difficulté propre à une action. Actions automatiques : 100 %. Même règle en Régulier, Avancé et Coopératif ; les missions déjà affectées conservent leur chance enregistrée.
