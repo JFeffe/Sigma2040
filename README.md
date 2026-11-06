@@ -1,3 +1,7 @@
+## Build 224 — Alba et Selin
+
+Alba : A8 / H6 / SF6. Selin : A7 / H8 / SF5. Talents inchangés. Sélection, fiches, repêchage et sauvegardes actualisés ; chances des missions déjà engagées conservées. Mira et Viktor inchangés.
+
 ## Build 223 — Amber et Mercer
 
 Amber : A5 / H8 / SF7. Mercer : A6 / H6 / SF8. Talents inchangés. Les cartes, fiches et sauvegardes solo/multijoueur utilisent les nouvelles statistiques ; les missions déjà engagées conservent leurs chances confirmées. Les 20 profils restent uniques, totalisent 20 points et conservent cinq agents par talent.

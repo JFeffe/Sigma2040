@@ -9,7 +9,7 @@ import {BUILD_VERSION} from '../dist/client/build-version.js';
 import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
 
 const agents=[
- {id:'p25',slug:'alba',stats:[7,7,6],talents:['diplomatie','endurance','infiltration'],nationality:'BR'},
+ {id:'p25',slug:'alba',stats:[8,6,6],talents:['diplomatie','endurance','infiltration'],nationality:'BR'},
  {id:'p26',slug:'raven',stats:[5,6,9],talents:['secours','langues','combat'],nationality:'CN'}
 ];
 function check(a,expected){

@@ -9,7 +9,7 @@ import {agentMapMarkers} from '../dist/client/map.js';
 import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
 
 const agents=[
- {id:'p23',slug:'selin',stats:[6,8,6],talents:['langues','informatique','tactique'],nationality:'TR'},
+ {id:'p23',slug:'selin',stats:[7,8,5],talents:['langues','informatique','tactique'],nationality:'TR'},
  {id:'p24',slug:'rocket',stats:[8,8,4],talents:['secours','diplomatie','enquete'],nationality:'CA'}
 ];
 function check(a,expected){

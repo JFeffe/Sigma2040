@@ -1,4 +1,4 @@
-import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=223';
+import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=224';
 
 export const GAME_MODES=Object.freeze({regular:'Régulier',advanced:'Avancé',cooperative:'Coopératif'});
 export const PARTICIPANT_COUNT=4;
