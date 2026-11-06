@@ -1,5 +1,5 @@
-import {isNpcTutorial} from './tutorial-mode.js?v=225';
-import {isTutorial} from './tutorial-rules.js?v=225';
+import {isNpcTutorial} from './tutorial-mode.js?v=226';
+import {isTutorial} from './tutorial-rules.js?v=226';
 const LEGACY=Object.freeze({maxTurns:40,crisisPerTurn:2,firstAttack:7,attackInterval:4,attackCount:9});
 export const CURRENT_RULES=Object.freeze({maxTurns:30,crisisPerTurn:3,firstAttack:3,attackInterval:2,attackCount:14});
 const COOP_BUILD_212=Object.freeze({...CURRENT_RULES,maxTurns:35,crisisPerTurn:2,attackDamage:5});
