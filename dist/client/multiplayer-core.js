@@ -1,11 +1,11 @@
-import {threatAnnounced} from './fracture.js?v=221';
-import {AI_LEVELS,normalizeAI} from './ai-difficulty.js?v=221';
-import {GAME_MODES,usesDraft,participantCount,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=221';
-import {recordAgentCondition} from './campaign-stats.js?v=221';
-import {assignDeployment} from './deployment.js?v=221';
-import {startClock} from './campaign-clock.js?v=221';
-import * as E from './engine.js?v=221';
-import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=221';
+import {threatAnnounced} from './fracture.js?v=222';
+import {AI_LEVELS,normalizeAI} from './ai-difficulty.js?v=222';
+import {GAME_MODES,usesDraft,participantCount,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=222';
+import {recordAgentCondition} from './campaign-stats.js?v=222';
+import {assignDeployment} from './deployment.js?v=222';
+import {startClock} from './campaign-clock.js?v=222';
+import * as E from './engine.js?v=222';
+import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=222';
 export const PROTOCOL=19;
 export const playingMembers=room=>room.members.filter(m=>!m.observer);
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);
@@ -31,7 +31,7 @@ export function startRoom(room,seed=Date.now()){
  if(playingMembers(room).some(m=>!m.confirmed||m.agents.length!==4))fail('Tous les joueurs doivent confirmer leur équipe avant le lancement.');
  const players=playingMembers(room),host=players.find(m=>m.host)||players[0];
  if(advanced){validateDraft(room.draft);if(participantCount(room.draft.mode)!==participantCount(room.gameMode)||room.draft.picks.length!==participantCount(room.gameMode)*4||players.some(m=>!sameTeam(m.agents,room.draft.teams[m.country])))fail('Le repêchage doit être terminé.');}
- const settings=room.participantRules===1?{participants:advanced?room.draft.countries:selectParticipants(players.map(m=>m.country),seed),gameMode:room.gameMode||'regular',teams:{...(advanced?room.draft.teams:{}),...Object.fromEntries(players.map(m=>[m.country,m.agents]))}}:null;
+ const settings=room.participantRules===1?{cellVariants:room.gameMode!=='cooperative',participants:advanced?room.draft.countries:selectParticipants(players.map(m=>m.country),seed),gameMode:room.gameMode||'regular',teams:{...(advanced?room.draft.teams:{}),...Object.fromEntries(players.map(m=>[m.country,m.agents]))}}:null;
  const game=E.createGame(host.country,host.agents,seed,room.aiDifficulty||'bb1',settings);
  for(const m of players){if(!settings){const template=E.createGame(m.country,m.agents,seed);game.agents=game.agents.filter(a=>a.faction!==m.country);game.agents.push(...E.team(template));}for(const a of game.agents.filter(a=>a.faction===m.country)){a.templateId=a.templateId||a.id;a.id=`${m.country}:${a.templateId}`;}m.ready=false;}
  game.campaignStats.agents={};recordAgentCondition(game,0);
@@ -104,7 +104,7 @@ export function playerView(room,country){
  const s=room.game;if(!s)return null;const f=s.factions[country];if(!f)fail('Pays invalide.');
  const coop=s.gameMode==='cooperative';
  const ownIds=new Set(s.agents.filter(a=>a.faction===country).map(a=>a.id));
- return {...(s.ended&&coop?{enemyAttacks:copy(s.enemyAttacks||[]),enemyFlights:copy(s.enemyFlights||[]),enemyMoves:copy(s.enemyMoves||[])}:{}),...(s.participantRules===1?{participantRules:1,gameMode:s.gameMode||'regular',...(s.coopNetworkRules===1?{coopNetworkRules:1}:{}),...([1,2].includes(s.coopCampaignRules)?{coopCampaignRules:s.coopCampaignRules}:{})}:{}),...(s.pressureRules===1?{pressureRules:1}:{}),flightReports:copy((s.flightReports||[]).filter(r=>r.faction===country)),attackDelayReports:copy(s.attackDelayReports||[]),cellReports:copy(s.cellReports||[]),threatReports:copy(s.threatReports||[]),attackReports:copy(s.attackReports||[]),campaignClock:copy(s.campaignClock||null),campaignStats:{travel:copy(Object.fromEntries(Object.entries(s.campaignStats?.travel||{}).filter(([f])=>s.ended||f===country))),events:copy((s.campaignStats?.events||[]).filter(e=>s.ended||e.faction===country)),detailsPartial:!!s.campaignStats?.detailsPartial,agents:copy(Object.fromEntries(Object.entries(s.campaignStats?.agents||{}).filter(([f])=>s.ended||f===country))),support:copy(Object.fromEntries(Object.entries(s.campaignStats?.support||{}).filter(([f])=>s.ended||f===country))),highlights:copy((s.campaignStats?.highlights||[]).filter(e=>s.ended||e.faction===country)),partial:!!s.campaignStats?.partial,factions:s.ended?copy(s.campaignStats?.factions||{}):{[country]:copy(s.campaignStats?.factions?.[country]||{})}},turnActivities:copy((s.turnActivities||[]).filter(r=>r.faction===country)),aiDifficulty:s.aiDifficulty||'bb1',version:s.version,turn:s.turn,player:country,crisis:s.crisis,ended:s.ended,logId:s.logId,
+ return {...(s.cellVariantRules===1?{cellVariantRules:1,captives:copy(s.captives||[])}:{}),...(s.ended&&coop?{enemyAttacks:copy(s.enemyAttacks||[]),enemyFlights:copy(s.enemyFlights||[]),enemyMoves:copy(s.enemyMoves||[])}:{}),...(s.participantRules===1?{participantRules:1,gameMode:s.gameMode||'regular',...(s.coopNetworkRules===1?{coopNetworkRules:1}:{}),...([1,2].includes(s.coopCampaignRules)?{coopCampaignRules:s.coopCampaignRules}:{})}:{}),...(s.pressureRules===1?{pressureRules:1}:{}),flightReports:copy((s.flightReports||[]).filter(r=>r.faction===country)),attackDelayReports:copy(s.attackDelayReports||[]),cellReports:copy(s.cellReports||[]),threatReports:copy(s.threatReports||[]),attackReports:copy(s.attackReports||[]),campaignClock:copy(s.campaignClock||null),campaignStats:{travel:copy(Object.fromEntries(Object.entries(s.campaignStats?.travel||{}).filter(([f])=>s.ended||f===country))),events:copy((s.campaignStats?.events||[]).filter(e=>s.ended||e.faction===country)),detailsPartial:!!s.campaignStats?.detailsPartial,agents:copy(Object.fromEntries(Object.entries(s.campaignStats?.agents||{}).filter(([f])=>s.ended||f===country))),support:copy(Object.fromEntries(Object.entries(s.campaignStats?.support||{}).filter(([f])=>s.ended||f===country))),highlights:copy((s.campaignStats?.highlights||[]).filter(e=>s.ended||e.faction===country)),partial:!!s.campaignStats?.partial,factions:s.ended?copy(s.campaignStats?.factions||{}):{[country]:copy(s.campaignStats?.factions?.[country]||{})}},turnActivities:copy((s.turnActivities||[]).filter(r=>r.faction===country)),aiDifficulty:s.aiDifficulty||'bb1',version:s.version,turn:s.turn,player:country,crisis:s.crisis,ended:s.ended,logId:s.logId,
   factions:Object.fromEntries(Object.values(s.factions).map(x=>[x.id,(s.ended||coop||x.id===country)?copy(x):{id:x.id,score:x.score,defense:copy(x.defense),budget:(s.requestsByFaction?.[country]||[]).some(r=>r.from===x.id&&r.status==='pending')?Math.min(x.budget,3):0,known:{},evidence:[],tech:[],publicAgents:{},access:{},authorized:{},cooperation:{},foreignIntel:{}}])),
   agents:copy([...s.agents.filter(a=>a.faction===country),...(s.ended||coop?s.agents.filter(a=>a.faction!==country):[])]),
   suspects:s.suspects.map(t=>{const k=f.known[t.id];return {id:t.id,...(t.templateId?{templateId:t.templateId}:{}),cell:t.cell,name:t.name,role:t.role,arrested:t.arrested,arrestedBy:t.arrestedBy||null,...(s.ended&&t.arrestedTurn?{arrestedTurn:t.arrestedTurn}:{}),country:k?.country||null};}),

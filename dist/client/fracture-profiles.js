@@ -1,9 +1,10 @@
-import {esc} from './ui.js?v=221';
+import {esc,button} from './ui.js?v=222';
 export const CELL_PROFILES=[
  {name:'JANUS',motto:'Tout a un prix. Rien ne porte notre nom.',description:'Des comptes aux cargaisons : JANUS donne une façade civile aux moyens de Fracture. Son identité repose sur la discrétion et les intermédiaires.'},
  {name:'PRISME',motto:'Ce que vous voyez a déjà été modifié.',description:'Systèmes autonomes et intrusions : PRISME brouille la frontière entre incident technique et attaque organisée. Ses membres privilégient la précision et les traces trompeuses.'},
  {name:'CENDRE',motto:'Quand l’ordre arrive, tout est déjà en place.',description:'Matériel et coordination de terrain : CENDRE transforme les instructions en opérations. Son identité repose sur le cloisonnement et la discipline.'},
- {name:'DIRECTION',motto:'Chaque cellule ne connaît qu’une partie du plan.',description:'Le commandement relie les opérations de Fracture sans se montrer. L’enquête doit établir qui donne les ordres et comment ils circulent.'}
+ {name:'DIRECTION',motto:'Chaque cellule ne connaît qu’une partie du plan.',description:'Le commandement relie les opérations de Fracture sans se montrer. L’enquête doit établir qui donne les ordres et comment ils circulent.'},
+ {name:'ÉCLIPSE',motto:'Personne ne disparaît sans raison.',description:'Opérations clandestines et enlèvements.'}
 ];
 export const SUSPECT_PROFILES={
  s0:{trait:'La négociatrice',bio:'Vesper parle bas, laisse ses interlocuteurs annoncer leur prix et ne promet jamais deux fois. Pour elle, la fidélité est une dette dont on conserve la trace.',signature:'Ne signe rien de sa main ; préfère les chaînes de sociétés écrans.'},
@@ -23,4 +24,4 @@ export const SUSPECT_PROFILES={
 export const identityKnown=t=>!!(t.identified||t.arrested);
 export function suspectPortrait(t,extra=''){if(!identityKnown(t))return `<div class="suspect-portrait unknown-portrait ${extra}" role="img" aria-label="Portrait non disponible"><span aria-hidden="true">?</span><small>PORTRAIT NON DISPONIBLE</small></div>`;return `<img class="suspect-portrait ${extra}" src="./assets/fracture/${t.templateId??t.id}.png" alt="Portrait de ${esc(t.name)}" width="384" height="480" loading="lazy">`;}
 export function discoveryMarkup(t){return `<div class="dossier-origin"><span class="eyebrow">ORIGINE DU DOSSIER${t.discovery?' · TOUR '+t.discovery.turn:''}</span><p>${esc(t.discovery?.source||'Dossier déjà connu. Son origine n’a pas été consignée dans cette sauvegarde.')}</p></div>`;}
-export function suspectProfile(t){const p=SUSPECT_PROFILES[t.templateId??t.id],c=CELL_PROFILES[t.cell];return `<section class="suspect-profile">${suspectPortrait(t)}<div><span class="eyebrow">${identityKnown(t)?esc(p.trait):'Identité à confirmer'}</span><p>${identityKnown(t)?esc(p.bio):'Ce nom de code désigne une piste. Le portrait apparaîtra au fil de l’enquête.'}</p>${identityKnown(t)?`<p class="muted">${esc(p.signature)}</p>`:''}</div></section><section class="cell-profile"><strong>${c.name} · « ${esc(c.motto)} »</strong><p>${esc(c.description)}</p></section>${discoveryMarkup(t)}`;}
+export function suspectProfile(t){const p=SUSPECT_PROFILES[t.templateId??t.id],c=CELL_PROFILES[t.cell];return `<section class="suspect-profile">${suspectPortrait(t)}<div><span class="eyebrow">${identityKnown(t)?esc(p.trait):'Identité à confirmer'}</span><p>${identityKnown(t)?esc(p.bio):'Ce nom de code désigne une piste. Le portrait apparaîtra au fil de l’enquête.'}</p>${identityKnown(t)?`<p class="muted">${esc(p.signature)}</p>`:''}</div></section><section class="cell-profile"><strong>${button('Infos cellule','cell-info','small',`data-id="${t.cell}"`)}</strong></section>${discoveryMarkup(t)}`;}

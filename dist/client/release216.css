@@ -24,3 +24,8 @@
 
 /* Reserve space for the close control, including immersive and mobile layouts. */
 .immersive-deck .attack-delay-banner{padding-right:48px}
+
+/* Experimental cell details stay in a compact dialog. */
+dialog.cell-info-dialog{width:min(440px,calc(100vw - 32px));max-height:80vh;}
+.cell-info-dialog .simple-modal{padding:24px;max-width:100%;}
+.captive-card{padding:16px;margin-block:12px;}

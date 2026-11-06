@@ -1,10 +1,10 @@
-import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=221';
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=221';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=221';
-import * as E from './engine.js?v=221';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=221';
-import {SUSPECTS} from './data.js?v=221';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=221';
+import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=222';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=222';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=222';
+import * as E from './engine.js?v=222';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=222';
+import {SUSPECTS} from './data.js?v=222';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=222';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const LEGACY_TUTORIAL_MISSIONS=Object.freeze([
@@ -37,7 +37,7 @@ export function createTutorialGame(id){
  }
  if(!TUTORIAL_IDS.includes(id))throw Error('Mission de formation inconnue.');
  const npc=NPC_MISSIONS.some(m=>m.id===id);
- const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed(id),'bb1',npc?{participants:['FR','GB','US','CN']}:{});
+ const s=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed(id),'bb1',npc?{cellVariants:false,participants:['FR','GB','US','CN']}:{cellVariants:false});
  if(npc){setupNpcTutorial(s,id);E.log(s,tutorialMission(id).brief,'brief','FR');return s;}
  s.tutorial={version:1,mission:id,revision:2};
  // Only the player's service participates; the world map keeps all twelve countries.

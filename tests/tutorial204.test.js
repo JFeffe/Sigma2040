@@ -56,8 +56,8 @@ test('Chapters 14 and 15 use real odds, boosts, module costs and failure forecas
   assert.doesNotMatch(E.operationForecast(s,'p0','sneak','TR').risk,/garantie/);assert.match(missionCostsMarkup(s,'p0','sneak','TR'),/échec/);
  }
 });
-test('Chapter 15 is the ordinary thirty-turn campaign setup, with its original randomness and forgeries',()=>{
- const s=createTutorialGame('command'),normal=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed('command'),'bb1',{participants:['FR','GB','US','CN']});
+test('Legacy chapter 15 preserves its original thirty-turn setup, randomness and forgeries',()=>{
+ const s=createTutorialGame('command'),normal=E.createConfiguredGame('FR',['p0','p12','p14','p15'],tutorialSeed('command'),'bb1',{cellVariants:false,participants:['FR','GB','US','CN']});
  for(const key of ['suspects','proofs','plots','factions','agents','fracture','rng','crisis'])assert.deepEqual(s[key],normal[key],key);
  assert.equal(s.humanFactions,undefined);assert.deepEqual(campaignRules(s),CURRENT_RULES);assert.equal(s.proofs.filter(p=>!p.authentic).length,3);
  const short=createTutorialGame('network');assert.equal(campaignRules(short).maxTurns,20);assert.ok(short.plots.every(p=>p.turn<=20));assert.notEqual(short.seed,s.seed);

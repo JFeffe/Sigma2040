@@ -1,7 +1,8 @@
-import {incidentRates} from './incident-rules.js?v=221';
-import {protectionShare} from './balance-rules.js?v=221';
-import {TECH,COUNTRY} from './data.js?v=221';
-import {campaignRules} from './campaign-rules.js?v=221';
+import {activeCaptives,rescueTargets} from './cell-variants.js?v=222';
+import {incidentRates} from './incident-rules.js?v=222';
+import {protectionShare} from './balance-rules.js?v=222';
+import {TECH,COUNTRY} from './data.js?v=222';
+import {campaignRules} from './campaign-rules.js?v=222';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -79,7 +80,7 @@ export function planBB2Faction(s,id,E){
    if(pp.length<2){add('intimidate',t.id,78+bonus);add('collect',t.id,86+bonus);add('hack',t.id,89+bonus);}
   }
   for(const p of threats.filter(p=>p.country===a.country&&p.turn>=view.turn+1&&p.turn<=view.turn+4&&f.defense[p.country]<p.turn))add('protect',null,112);
-  for(const b of members.filter(b=>b.status==='captured'&&b.country===a.country))add('rescue',b.id,90);
+  for(const b of rescueTargets(s,id).filter(b=>b.country===a.country))add('rescue',b.id,90);
   return result;
  };
  const withAgent=(a,changes,view=s)=>({...view,agents:view.agents.map(b=>b.id===a.id?{...a,...changes}:b)});
@@ -176,7 +177,7 @@ export function planBB2Faction(s,id,E){
  for(const p of exposed){
   if(reservedThreat(p))continue;
   // Do not assume every other visible plot will succeed: that starves cases.
-  const fatal=s.crisis+(rules.attackDamage??30)+rules.crisisPerTurn*(p.turn-s.turn+1)>=100;
+  const fatal=s.crisis+(E.attackDamage?.(s,p)??rules.attackDamage??30)+rules.crisisPerTurn*(p.turn-s.turn+1)>=100;
   if(!fatal)continue;
   const choices=[];
   for(const a of agents.filter(a=>!a.task)){
@@ -259,6 +260,12 @@ export function planBB2Faction(s,id,E){
      const expected=value*chance/(distance+1.6)-(1-chance)*5-(p.turn-end)*1.5;
      add(a,'travel',p.country,0,'Rejoindre une protection : chances à l’arrivée et financement inclus.',goal,expected);
     }else add(a,'protect',null,value,'Encaisser sa part de protection avant l’échéance.',goal);
+   }
+   for(const victim of activeCaptives(s)){
+    if(claimed('rescue',victim.id))continue;
+    const value=100+Math.min(40,s.crisis/2);
+    if(victim.country===a.country)add(a,'rescue',victim.id,value,'Libérer un agent de liaison et arrêter la hausse de crise.');
+    else {const route=E.options(s,a.id,'travel',victim.country),distance=route.duration;if(!route.error&&s.turn+distance+1<=campaignRules(s).maxTurns&&!agents.some(b=>b.id!==a.id&&at(b,victim.country)))add(a,'travel',victim.country,0,'Rejoindre un agent de liaison captif.',{key:'rescue:'+victim.id,type:'rescue',country:victim.country},value*projected(a,victim.country,'rescue',victim.id).chance/100/(distance+1.5));}
    }
    if(home){
     const field=targets.filter(t=>agents.some(b=>b.id!==a.id&&at(b,t.country))&&E.cyberStatus(s,id,t.country).until<s.turn+2).sort((a,b)=>progress(b)-progress(a))[0];

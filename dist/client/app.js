@@ -1,58 +1,59 @@
-import {isCompactTutorial} from './tutorial-compact.js?v=221';
-import {dismissAttackDelays} from './attack-delay-ui.js?v=221';
-import {createGameWorkspace} from './workspace-windows.js?v=221';
-import {isNpcTutorial,tutorialGuaranteed,tutorialRiskNote} from './tutorial-mode.js?v=221';
-import {readPreference,writePreference} from './browser-preferences.js?v=221';
-import {tutorialPendingOrders,tutorialHint} from './tutorial-rules.js?v=221';
-import {isTutorial,createTutorialGame,tutorialObjective,tutorialMission,readTutorialProgress,saveTutorialProgress} from './tutorial.js?v=221';
-import {tutorialMenu,tutorialGuide,markTutorialControls} from './tutorial-ui.js?v=221';
-import {createMapAgentActivation} from './map-agent-activation.js?v=221';
-import {GAME_MODES,usesDraft,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam} from './game-setup.js?v=221';
-import {draftScreen,gameModeControl,draftCandidate} from './draft-ui.js?v=221';
-import {deploymentPickerMarkup,assignDeployment} from './deployment.js?v=221';
-import {initCountryInquiry,refreshCountryInquiry,handleInquiryCommand,handleInquiryChange} from './country-inquiry.js?v=221';
-import {setRecruitFilter,resetRecruitFilters,toggleRecruitSelection,updateRecruitFaces,isRecruitPortrait,recruitDetails} from './recruit-selection.js?v=221';
-import {bureauEnabled,setBureauEnabled,modsMarkup} from './mod-settings.js?v=221';
-import {initBureau,openBureau,refreshBureau,closeBureau} from './bureau.js?v=221';
-import {aiDifficultyControl,AI_LEVELS} from './ai-difficulty.js?v=221';
+import {cellInfoMarkup} from './cell-info.js?v=222';
+import {isCompactTutorial} from './tutorial-compact.js?v=222';
+import {dismissAttackDelays} from './attack-delay-ui.js?v=222';
+import {createGameWorkspace} from './workspace-windows.js?v=222';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRiskNote} from './tutorial-mode.js?v=222';
+import {readPreference,writePreference} from './browser-preferences.js?v=222';
+import {tutorialPendingOrders,tutorialHint} from './tutorial-rules.js?v=222';
+import {isTutorial,createTutorialGame,tutorialObjective,tutorialMission,readTutorialProgress,saveTutorialProgress} from './tutorial.js?v=222';
+import {tutorialMenu,tutorialGuide,markTutorialControls} from './tutorial-ui.js?v=222';
+import {createMapAgentActivation} from './map-agent-activation.js?v=222';
+import {GAME_MODES,usesDraft,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam} from './game-setup.js?v=222';
+import {draftScreen,gameModeControl,draftCandidate} from './draft-ui.js?v=222';
+import {deploymentPickerMarkup,assignDeployment} from './deployment.js?v=222';
+import {initCountryInquiry,refreshCountryInquiry,handleInquiryCommand,handleInquiryChange} from './country-inquiry.js?v=222';
+import {setRecruitFilter,resetRecruitFilters,toggleRecruitSelection,updateRecruitFaces,isRecruitPortrait,recruitDetails} from './recruit-selection.js?v=222';
+import {bureauEnabled,setBureauEnabled,modsMarkup} from './mod-settings.js?v=222';
+import {initBureau,openBureau,refreshBureau,closeBureau} from './bureau.js?v=222';
+import {aiDifficultyControl,AI_LEVELS} from './ai-difficulty.js?v=222';
 let setupDifficulty='bb2',setupMode='regular',setupDraft=null,setupConfirmed=false,setupDraftCandidate=null;
-import {selectOrderTarget} from './order-targets.js?v=221';
-import {patchNotesPage} from './patch-notes.js?v=221';
+import {selectOrderTarget} from './order-targets.js?v=222';
+import {patchNotesPage} from './patch-notes.js?v=222';
 let menuPage='home';
-import './report-tooltips.js?v=221';
-import {createInquiryTracker} from './inquiry-notifications.js?v=221';
-import {campaignRules} from './campaign-rules.js?v=221';
-import {patchOrderDialog} from './order-dialog.js?v=221';
-import {setGraphicsQuality} from './graphics.js?v=221';
-import {CAMPAIGN_KEY,ECONOMY_BACKUP_KEY,readCampaign} from './save-compat.js?v=221';
-import {endingScreen,mountEnding} from './ending-ui.js?v=221';
-import {wikiPanel,wikiResults} from './wiki.js?v=221';
-import {sortTable} from './data-tables.js?v=221';
-import {startClock,elapsedMs,formatDuration,clockMarkup} from './campaign-clock.js?v=221';
-import {selectTechnology,technologyCancellationMarkup} from './technology-ui.js?v=221';
-import {campaignSummary} from './campaign-stats.js?v=221';
-import {missionCards,missionRevealMarkup,revealDelay} from './mission-reveal.js?v=221';
-import {cooperationRules} from './cooperation.js?v=221';
-import {bindBackdropDismiss} from './dialog-behavior.js?v=221';
-import {eventsGuide} from './events-ui.js?v=221';
-import {prestigeHistory} from './prestige.js?v=221';
-import {Multiplayer} from './multiplayer.js?v=221';
-import {mainMenu,mountMenuEarth} from './main-menu.js?v=221';
-import {initMusic,setMusic,nextTrack} from './music.js?v=221';
-import {suspectProfile} from './fracture-profiles.js?v=221';
-import {investigationSnapshot,investigationHighlights,milestoneBanner} from './milestones.js?v=221';
-import {trackExperience,resetExperience,paintResourceFeedback,reportUpdates,settingsMarkup,applyPreferences,updatePreference,playCue,dismissNotices} from './experience.js?v=221';
-import {stageSignal,turnSignals,orderFeedback,paintSignals,clearSignals} from './feedback.js?v=221';
-import {energyHelp,exposureMarkup,nationalPanel} from './command-ui.js?v=221';
-import {proofTitle} from './intelligence.js?v=221';
-import {missionCostsMarkup,forecastMarkup,caseBrief,reportCards} from './operations-ui.js?v=221';
-import {agentMenuActions,locationActions,actionOptions,actionEffects,actionResources,actionUnavailable,countryOptions,progressMarkup} from './presentation.js?v=221';
-import {syncCameraTurn,createCamera,mountMap,focusCountry,renderMap} from './map.js?v=221';
-import {gameShell} from './shell.js?v=221';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,DEFAULT_TEAM_IDS,TALENTS,STAT_NAMES,ACTIONS,CELLS,TECH} from './data.js?v=221';
-import * as E from './engine.js?v=221';
-import {esc,icon,button,flag,nationalities,nationalityFlags,portrait,statlines,talents,fatigue,brand,formatScore} from './ui.js?v=221';
-import {setupScreen,makeScreens} from './screens.js?v=221';
+import './report-tooltips.js?v=222';
+import {createInquiryTracker} from './inquiry-notifications.js?v=222';
+import {campaignRules} from './campaign-rules.js?v=222';
+import {patchOrderDialog} from './order-dialog.js?v=222';
+import {setGraphicsQuality} from './graphics.js?v=222';
+import {CAMPAIGN_KEY,ECONOMY_BACKUP_KEY,readCampaign} from './save-compat.js?v=222';
+import {endingScreen,mountEnding} from './ending-ui.js?v=222';
+import {wikiPanel,wikiResults} from './wiki.js?v=222';
+import {sortTable} from './data-tables.js?v=222';
+import {startClock,elapsedMs,formatDuration,clockMarkup} from './campaign-clock.js?v=222';
+import {selectTechnology,technologyCancellationMarkup} from './technology-ui.js?v=222';
+import {campaignSummary} from './campaign-stats.js?v=222';
+import {missionCards,missionRevealMarkup,revealDelay} from './mission-reveal.js?v=222';
+import {cooperationRules} from './cooperation.js?v=222';
+import {bindBackdropDismiss} from './dialog-behavior.js?v=222';
+import {eventsGuide} from './events-ui.js?v=222';
+import {prestigeHistory} from './prestige.js?v=222';
+import {Multiplayer} from './multiplayer.js?v=222';
+import {mainMenu,mountMenuEarth} from './main-menu.js?v=222';
+import {initMusic,setMusic,nextTrack} from './music.js?v=222';
+import {suspectProfile} from './fracture-profiles.js?v=222';
+import {investigationSnapshot,investigationHighlights,milestoneBanner} from './milestones.js?v=222';
+import {trackExperience,resetExperience,paintResourceFeedback,reportUpdates,settingsMarkup,applyPreferences,updatePreference,playCue,dismissNotices} from './experience.js?v=222';
+import {stageSignal,turnSignals,orderFeedback,paintSignals,clearSignals} from './feedback.js?v=222';
+import {energyHelp,exposureMarkup,nationalPanel} from './command-ui.js?v=222';
+import {proofTitle} from './intelligence.js?v=222';
+import {missionCostsMarkup,forecastMarkup,caseBrief,reportCards} from './operations-ui.js?v=222';
+import {agentMenuActions,locationActions,actionOptions,actionEffects,actionResources,actionUnavailable,countryOptions,progressMarkup} from './presentation.js?v=222';
+import {syncCameraTurn,createCamera,mountMap,focusCountry,renderMap} from './map.js?v=222';
+import {gameShell} from './shell.js?v=222';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,DEFAULT_TEAM_IDS,TALENTS,STAT_NAMES,ACTIONS,CELLS,TECH} from './data.js?v=222';
+import * as E from './engine.js?v=222';
+import {esc,icon,button,flag,nationalities,nationalityFlags,portrait,statlines,talents,fatigue,brand,formatScore} from './ui.js?v=222';
+import {setupScreen,makeScreens} from './screens.js?v=222';
 let inquiryStorage;try{inquiryStorage=localStorage;}catch{}
 const inquiryTracker=createInquiryTracker(inquiryStorage);
 const inquiryRoom=()=>isTutorial(state)?'tutorial:'+state.tutorial.mission:multiplayer.active?multiplayer.details?.id||'multi':'solo';
@@ -84,11 +85,11 @@ function openOrder(id,type=null,target=null){if(multiplayer.observer){agentJourn
  if(a.task){showModal(`<div class="simple-modal">${agentPager(a.id)}<span class="eyebrow">OPÉRATION ${a.task.queued?'PLANIFIÉE':'EN COURS'}</span><h2>${a.name} ${nationalityFlags(a)}</h2><h3>${ACTIONS[a.task.type].name}</h3><p><strong>${a.task.chance} % de réussite</strong></p><p>${a.task.remaining} tour(s) restant(s). ${E.travelInProgress(a)?'Le déplacement est commencé : il ne peut plus être annulé.':'Une annulation abandonne la progression et libère l’agent.'}</p>${(E.travelInProgress(a)?'<span class="muted">Déplacement en cours · non annulable</span>':button('Annuler cette opération','cancel','primary','data-id="'+a.id+'"'))}</div>`);return;}
  const preferred=a.country===selectedCountry?'contacts':'travel',allowed=agentMenuActions(a,state),suggested=allowed.some(([key])=>key===preferred)&&!actionUnavailable(state,a,preferred)?preferred:allowed.find(([key])=>!actionUnavailable(state,a,key))?.[0]||preferred;order={useCredits:false,id,contextType:type,type:type||suggested,target:target||selectedCountry};orderModal();}
 function showOrderModal(html,agentId){if(patchOrderDialog(modal,html,agentId))return;showModal(html,'order-modal');modal.dataset.orderAgent=agentId;}
-function orderModal(){const a=state.agents.find(a=>a.id===order.id),allowed=locationActions(a,state).filter(([id])=>id===order.contextType||agentMenuActions(a,state).some(([key])=>key===id));if(!allowed.some(([id])=>id===order.type))order.type=allowed[0][0];const d=ACTIONS[order.type];let list=[];if(['travel','sneak','cyberSupport'].includes(order.type))list=COUNTRIES.filter(c=>c.id!==a.country&&(!c.power||c.id===a.faction)&&(order.type!=='cyberSupport'||!c.power)).map(c=>[c.id,c.name]);else if(['collect','surveil','hack','prepare','arrest','intimidate'].includes(order.type))list=E.knownTargets(state).filter(t=>!t.arrested&&t.country===a.country).map(t=>[t.id,`${t.name} · ${COUNTRY[t.country].name}${order.type==='intimidate'?' · '+(t.intimidated?'0/1 restante':'1/1 restante'):order.type==='prepare'&&t.prepared?' · Déjà préparée':''}`]);else if(order.type==='analyze')list=E.evidenceQueue(state,state.player).filter(e=>!E.analysisAgent(state,state.player,e.id)).map(e=>{const p=state.proofs.find(p=>p.id===e.id),t=state.suspects.find(t=>t.id===p.suspect);return [e.id,proofTitle(p)+' · '+t.name];});else if(order.type==='rescue')list=E.team(state).filter(b=>b.status==='captured'&&b.country===a.country).map(b=>[b.id,b.name]);
+function orderModal(){const a=state.agents.find(a=>a.id===order.id),allowed=locationActions(a,state).filter(([id])=>id===order.contextType||agentMenuActions(a,state).some(([key])=>key===id));if(!allowed.some(([id])=>id===order.type))order.type=allowed[0][0];const d=ACTIONS[order.type];let list=[];if(['travel','sneak','cyberSupport'].includes(order.type))list=COUNTRIES.filter(c=>c.id!==a.country&&(!c.power||c.id===a.faction)&&(order.type!=='cyberSupport'||!c.power)).map(c=>[c.id,c.name]);else if(['collect','surveil','hack','prepare','arrest','intimidate'].includes(order.type))list=E.knownTargets(state).filter(t=>!t.arrested&&t.country===a.country).map(t=>[t.id,`${t.name} · ${COUNTRY[t.country].name}${order.type==='intimidate'?' · '+(t.intimidated?'0/1 restante':'1/1 restante'):order.type==='prepare'&&t.prepared?' · Déjà préparée':''}`]);else if(order.type==='analyze')list=E.evidenceQueue(state,state.player).filter(e=>!E.analysisAgent(state,state.player,e.id)).map(e=>{const p=state.proofs.find(p=>p.id===e.id),t=state.suspects.find(t=>t.id===p.suspect);return [e.id,proofTitle(p)+' · '+t.name];});else if(order.type==='rescue')list=E.rescueTargets(state,state.player).filter(b=>b.country===a.country).map(b=>[b.id,b.name]);
  if(order.type==='drone')list=[['','Tous les suspects du pays']];
  ({list,target:order.target}=selectOrderTarget(state,a.id,order.type,list,order.target));
  const normal=E.options(state,a.id,order.type,order.target),reinforced=E.options(state,a.id,order.type,order.target,true);if(d.safe||normal.boostGain===0||tutorialGuaranteed(state))order.useCredits=false;const o=order.useCredits?reinforced:normal;showOrderModal(`<div class="order-layout"><aside class="order-agent">${portrait(a)}<div><span class="eyebrow">AGENT ${a.id.toUpperCase()}</span><h2>${a.name} ${nationalityFlags(a)}</h2><p>${COUNTRY[a.country].city} · ${a.role}</p>${statlines(a)}${fatigue(a)}${energyHelp(a)}${exposureMarkup(a)}${talents(a)}<p class="field-equipment">${a.weapon?'Arme équipée':'Sans arme'} · ${a.country===a.faction?'Au QG':E.hasSafehouse(state,a.faction,a.country)?'Planque disponible':'Sans planque'}</p></div></aside><section class="order-form">${agentPager(a.id)}<span class="eyebrow">NOUVEL ORDRE / TOUR ${state.turn}</span><h2>Affecter une opération</h2>${isTutorial(state)?`<p class="training-order-note">${tutorialGuaranteed(state)?'Formation scénarisée : cette opération réussira à 100 %. En campagne, les chances dépendent des agents et de la situation.':'Formation en conditions réelles : les chances affichées s’appliquent. Un échec et ses conséquences restent possibles.'}</p>`:''}<p class="order-budget">Crédits disponibles <strong>${state.factions[a.faction].budget}</strong></p><p class="action-location">${a.country===a.faction?'AU QUARTIER GÉNÉRAL':'SUR LE TERRAIN'} · ${COUNTRY[a.country].name}</p><label>Action<select id="orderType">${actionOptions(allowed,order.type,state,a,order.target)}</select></label>${list.length?`<label>${order.type==='analyze'?'Pièce à vérifier · '+(state.suspects.find(t=>t.id===state.proofs.find(p=>p.id===order.target)?.suspect)?.name||''):order.type==='cyberSupport'?'Pays soutenu':['travel','sneak'].includes(order.type)?'Destination':'Cible'}<select id="orderTarget">${['travel','sneak'].includes(order.type)?countryOptions(order.target,a.country,false,a.faction):list.map(([id,name,blocked])=>`<option value="${id}" ${blocked?'disabled':''} ${id===order.target?'selected':''}>${name}${blocked?' · '+esc(blocked):''}</option>`).join('')}</select></label>`:''}${o.error?`<div class="notice warning" id="orderBlockReason">${icon('lock')} ${esc(o.error)}</div>`:''}${button(`${icon('check')} Confirmer l’ordre`,'confirm-order','primary wide',o.error||state.ended?'disabled aria-describedby="orderBlockReason" title="'+esc(o.error||'Campagne terminée.')+'"':'')}${actionResources(order.type)}${actionEffects(order.type)}${!d.safe&&!tutorialGuaranteed(state)?`<label class="influence-choice"><input type="checkbox" id="orderCredits" ${order.useCredits?'checked':''} ${!order.useCredits&&reinforced.error?'disabled':''}> Renforcer l’opération · ${E.ECONOMY.boostCost} crédits · ${normal.chance} % → ${reinforced.chance} % (+${normal.boostGain} points)</label>${!order.useCredits&&reinforced.error?`<p class="muted">${esc(normal.boostGain===0?'Chances déjà au plafond.':state.factions[a.faction].budget<E.ECONOMY.boostCost?'Crédits insuffisants pour le renfort. L’action de base reste gratuite.':reinforced.error)}</p>`:''}`:''}<section class="briefing-metrics" aria-label="Prévision de la mission"><div class="briefing-metric metric-duration" title="Durée de la mission" aria-label="Durée : ${o.duration} tour(s)"><span class="metric-symbol">${icon('clock')}</span><div class="metric-value"><strong>${o.duration}</strong><small>${o.duration===1?'tour':'tours'}</small></div></div><div class="briefing-metric metric-chance ${o.chance>=70?'high':'moderate'}" title="Chances de réussite" aria-label="Chances de réussite : ${o.chance} %"><span class="metric-symbol">${icon('target')}</span><div class="metric-value"><strong>${o.chance}<small>%</small></strong></div><span class="metric-track" aria-hidden="true"><i style="width:${o.chance}%"></i></span></div>${missionCostsMarkup(state,a.id,order.type,order.target)}</section><div class="order-checks"><p>${icon('scan')} Stat mobilisée <strong>${d.safe?'Aucune · réussite automatique':STAT_NAMES[o.stat]+' · '+a.stats[o.stat]}</strong></p>${o.explanations.map(x=>`<p class="modifier">${icon('plus')} ${x}</p>`).join('')}</div>${forecastMarkup(state,a.id,order.type,order.target)}${o.clandestine?'<div class="notice warning">Intervention sans mandat : risque de blessure, capture ou décès accru.</div>':''}${o.error?'':tutorialGuaranteed(state)?'<p class="muted">L’ordre commencera lorsque vous terminerez le tour. Dans cette formation, aucun renfort n’est nécessaire.</p>':'<p class="muted">L’ordre commencera lorsque vous terminerez le tour. Le renfort facultatif est payé immédiatement, puis remboursé si vous annulez l’ordre avant le début de la mission.</p>'}<p class="action-description">${d.desc}</p></section></div>`,a.id);}
-function deploy(type='travel',target=selectedCountry){if(['travel','sneak'].includes(type)){showModal(deploymentPickerMarkup(state,type,target));return;}const location=E.knownTargets(state).find(t=>t.id===target)?.country||COUNTRY[target]?.id,ready=E.team(state).filter(a=>!a.task&&a.status!=='captured'&&locationActions(a,state).some(([id])=>id===type)&&(!location||['analyze','cyberSupport'].includes(type)||a.country===location));showModal(`<div class="simple-modal"><span class="eyebrow">AFFECTATION</span><h2>Choisir un agent</h2><p class="order-budget">Crédits disponibles <strong>${state.factions[state.player].budget}</strong></p><p>Sélectionnez un agent disponible.</p>${ready.length?ready.map(a=>`<button class="agent-picker" data-cmd="pick-agent" data-id="${a.id}" data-type="${type}" data-target="${target||''}">${portrait(a)}<div><strong>${a.name}</strong><span>${COUNTRY[a.country].city} · ${E.fatigueName(a.fatigue)}</span></div>${icon('chevron')}</button>`).join(''):'<p>Aucun agent disponible au lieu requis. Déployez un agent dans le pays de la cible, ou libérez un analyste au QG pour vérifier une pièce.</p>'}</div>`);}
+function deploy(type='travel',target=selectedCountry){if(['travel','sneak'].includes(type)){showModal(deploymentPickerMarkup(state,type,target));return;}const location=E.rescueTargets(state,state.player).find(t=>t.id===target)?.country||E.knownTargets(state).find(t=>t.id===target)?.country||COUNTRY[target]?.id,ready=E.team(state).filter(a=>!a.task&&a.status!=='captured'&&locationActions(a,state).some(([id])=>id===type)&&(!location||['analyze','cyberSupport'].includes(type)||a.country===location));showModal(`<div class="simple-modal"><span class="eyebrow">AFFECTATION</span><h2>Choisir un agent</h2><p class="order-budget">Crédits disponibles <strong>${state.factions[state.player].budget}</strong></p><p>Sélectionnez un agent disponible.</p>${ready.length?ready.map(a=>`<button class="agent-picker" data-cmd="pick-agent" data-id="${a.id}" data-type="${type}" data-target="${target||''}">${portrait(a)}<div><strong>${a.name}</strong><span>${COUNTRY[a.country].city} · ${E.fatigueName(a.fatigue)}</span></div>${icon('chevron')}</button>`).join(''):'<p>Aucun agent disponible au lieu requis. Déployez un agent dans le pays de la cible, ou libérez un analyste au QG pour vérifier une pièce.</p>'}</div>`);}
 async function confirmDeployment(){
  if(multiplayer.observer)throw Error('Observateur : consultation uniquement.');
  const picker=modal.querySelector('.deployment-picker'),confirm=picker?.querySelector('[data-cmd="confirm-deployment"]');if(!picker||confirm.disabled)return;
@@ -162,6 +163,8 @@ document.addEventListener('change',event=>{
  if(event.target.id==='mpImport'){const file=event.target.files[0];if(!file)return;if(file.size>5000000){toast('Fichier trop volumineux.');return;}file.text().then(text=>{if(multiplayer.hasSave()&&!confirm('Remplacer la sauvegarde multijoueur locale par ce fichier ?'))return;return multiplayer.resume(JSON.parse(text));}).catch(e=>toast(e.message));}
 });
 document.addEventListener('click',event=>{const el=event.target.closest('[data-cmd]');if(!el||el.disabled)return;const cmd=el.dataset.cmd,id=el.dataset.id;if(cmd!=='map-agent')mapAgentActivation.cancel();if(cmd!=='map-country')mapCountryActivation.cancel();if(cmd.startsWith('workspace-')||['country-inquiry','country-threat','suspect'].includes(cmd)||cmd.startsWith('inquiry-')&&el.closest('[data-workspace-window]')){workspace.command(cmd,id,el).catch(e=>toast(e.message));return;}switch(cmd){
+ case 'cell-info':showModal(cellInfoMarkup(state,Number(id)),'cell-info-dialog');break;
+ case 'rescue-captive':deploy('rescue',id);break;
  case 'dismiss-attack-delays':dismissAttackDelays(state);render();break;
  case 'inquiry-step':case 'inquiry-substep':case 'country-threat':case 'inquiry-open-agent':case 'country-inquiry':case 'inquiry-action':case 'inquiry-agent':case 'inquiry-boost':case 'inquiry-effects':case 'inquiry-confirm':handleInquiryCommand(cmd,id);break;
  case 'patch-notes':modal.close();menuPage='patch-notes';menuOpen=true;render();window.scrollTo(0,0);app.scrollTop=0;break;

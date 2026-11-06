@@ -94,7 +94,7 @@ export const ACTIONS={
  blackmail:{disabled:true,name:'Faire pression',icon:'lock',stat:2,duration:1,cost:0,fatigue:12,talents:['diplomatie'],desc:'Une preuve vérifiée devient un levier pour obtenir accès et mandat. Accroît l’exposition.'},
  drone:{name:'Reconnaissance par drone',icon:'drone',stat:1,duration:1,cost:0,fatigue:12,talents:['drones'],tech:true,desc:"Ouvre l’accès local et découvre/localise tous les suspects présents dans le pays à la résolution, sauf L’Architecte encore inconnu et les suspects arrêtés. Habileté + Drones. 1 tour, 12 énergie. Position valide 4 tours après résolution, 6 avec relais satellite. Aucune preuve et aucun bonus d’arrestation. Réserve 1 module pendant la mission, libéré à la fin. Réussite : exposition +10."},
  cyberSupport:{name:'Hack d’un pays',icon:'terminal',stat:1,duration:1,cost:0,fatigue:10,talents:['informatique'],home:true,desc:'Depuis le QG : +10 aux jets de votre équipe dans le pays visé pendant les trois tours suivant la réussite. Dans les nouvelles campagnes coop, le bonus profite aussi à l’équipe alliée. Chaque nouvelle réussite prolonge votre propre source de hack de 3 tours ; les durées des deux équipes ne s’additionnent pas. Le bonus reste à +10 ; aucune preuve obtenue.'},
- rescue:{name:'Extraire un agent capturé',icon:'plane',stat:2,duration:2,cost:0,fatigue:12,talents:['tactique', 'combat'],desc:'Dans le pays de détention, libère un coéquipier. Opération risquée. En cas d’échec : 50 % sans nouvelle blessure ni capture, 40 % blessure, 10 % capture. Aucun décès.'}
+ rescue:{name:'Extraire un agent',icon:'plane',stat:2,duration:2,cost:0,fatigue:12,talents:['tactique', 'combat'],desc:'Dans le pays de détention, libère un coéquipier ou un agent de liaison extérieur. Pour ce dernier : −10 crise, +2 prestige et fin de la hausse de crise liée à sa captivité, sans recrutement. Opération risquée. En cas d’échec : 50 % sans nouvelle blessure ni capture, 40 % blessure, 10 % capture. Aucun décès.'}
 };
 // Current talent help follows the engine's enabled action/talent mappings.
 const talentPassives={
@@ -117,7 +117,7 @@ export const SUSPECTS=[
  {id:'s6',name:'L’Architecte',role:'Direction de Fracture',cell:3,country:'TR'}
 ];
 export const COOP_SUSPECTS=[{id:'s7',name:'Sable',role:'Transactions clandestines',cell:4,country:'DE'},{id:'s8',name:'Rook',role:'Transport clandestin',cell:4,country:'BR'}];
-export const campaignSuspects=s=>s?.coopNetworkRules===1?[...SUSPECTS,...COOP_SUSPECTS]:SUSPECTS;
+export const campaignSuspects=s=>s?.cellVariantRules===1&&s.gameMode!=='cooperative'?SUSPECTS.map(t=>({...t,cell:t.cell===3?3:s.activeCells[t.cell]})):s?.coopNetworkRules===1?[...SUSPECTS,...COOP_SUSPECTS]:SUSPECTS;
 export const regularCells=s=>[...new Set(s.suspects.filter(t=>t.cell!==3).map(t=>t.cell))];
 export const architectEvidenceThreshold=s=>s?.gameMode==='cooperative'?4:3;
 export const CELLS=['Cellule JANUS','Cellule PRISME','Cellule CENDRE'];
