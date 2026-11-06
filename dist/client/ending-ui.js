@@ -1,10 +1,10 @@
-import {coopCellGoal,cellsDone} from './engine.js?v=224';
-import {isNpcTutorial} from './tutorial-mode.js?v=224';
-import {campaignRules} from './campaign-rules.js?v=224';
-import {COUNTRY} from './data.js?v=224';
-import {icon,button,esc,flag,formatScore} from './ui.js?v=224';
-import {campaignSummary,prestigeChart,contributionBreakdown} from './campaign-stats.js?v=224';
-import {clockMarkup} from './campaign-clock.js?v=224';
+import {coopCellGoal,cellsDone} from './engine.js?v=225';
+import {isNpcTutorial} from './tutorial-mode.js?v=225';
+import {campaignRules} from './campaign-rules.js?v=225';
+import {COUNTRY} from './data.js?v=225';
+import {icon,button,esc,flag,formatScore} from './ui.js?v=225';
+import {campaignSummary,prestigeChart,contributionBreakdown} from './campaign-stats.js?v=225';
+import {clockMarkup} from './campaign-clock.js?v=225';
 export function endingScreen(s,options={}){
  const win=s.ended==='victory',factions=Object.values(s.factions).sort((a,b)=>b.score-a.score),best=s.gameMode==='cooperative'?factions:factions.filter(f=>f.score===factions[0].score),max=Math.max(1,...factions.map(f=>f.score)),cells=cellsDone(s).length;
  const title=win?'Fracture est démantelée.':'Le monde a basculé.',verdict=s.gameMode==='cooperative'?'ÉQUIPES ALLIÉES':win?(best.length>1?'VICTOIRE NATIONALE PARTAGÉE':'PAYS VAINQUEUR'):'CONTRIBUTIONS DES PAYS',reason=win?`L’Architecte est arrêté et au moins ${coopCellGoal(s)} cellules sont démantelées. Victoire collective.`:s.crisis>=100?'Crise mondiale à 100 : défaite collective. Aucun pays vainqueur.':`Le délai de ${campaignRules(s).maxTurns} tours est écoulé : défaite collective. Aucun pays vainqueur.`;

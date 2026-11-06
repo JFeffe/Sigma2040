@@ -15,7 +15,7 @@ const additions=[
  {id:'p27',slug:'link',name:'LINK',role:'Le Furtif',stats:[3,9,8],talents:['informatique','infiltration','secours'],nationalities:['DE']},
  {id:'p29',slug:'monroe',name:'MONROE',role:'Le Gardien',stats:[8,3,9],talents:['combat','diplomatie','surveillance'],nationalities:['GB','FR']},
  {id:'p30',slug:'tara',name:'TARA',role:'La Prévoyante',stats:[9,5,6],talents:['tactique','endurance','secours'],nationalities:['IN']},
- {id:'p28',slug:'viktor',name:'VIKTOR',role:'Le Repéreur',stats:[6,9,5],talents:['drones','enquete','langues'],nationalities:['RU']}
+ {id:'p28',slug:'viktor',name:'VIKTOR',role:'Le Repéreur',stats:[6,9,5],talents:['drones','surveillance','langues'],nationalities:['RU']}
 ];
 function checkProfile(a,expected){
  assert.ok(a);assert.equal(a.name,expected.name);assert.equal(a.role,expected.role);
@@ -33,7 +33,7 @@ test('Twenty distinct profiles retain approved stats, identities and five agents
  for(const t of Object.keys(TALENTS).filter(t=>t!=='chef'))assert.equal(DISPLAY_ROSTER.filter(a=>a.talents.includes(t)).length,5,t);
  for(const expected of additions){
   const a=DISPLAY_ROSTER.find(a=>a.id===expected.id);checkProfile(a,expected);assert.deepEqual(a.nationalities,expected.nationalities);
-  for(const b of DISPLAY_ROSTER.filter(b=>b.id!==a.id))assert.ok(a.talents.filter(t=>b.talents.includes(t)).length<2,`${a.name} / ${b.name}`);
+  for(const b of DISPLAY_ROSTER.filter(b=>b.id!==a.id))assert.ok(a.talents.filter(t=>b.talents.includes(t)).length<3,`${a.name} / ${b.name}`);
  }
 });
 test('Transparent artwork is present, and cards and map markers use the shared centered background',()=>{

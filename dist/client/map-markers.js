@@ -1,8 +1,8 @@
-import {isCooperative,visibleTeam} from './cooperative.js?v=224';
-import {availability} from './presentation.js?v=224';
-import {COUNTRY} from './data.js?v=224';
-import {team,travelInProgress,activeSightings} from './engine.js?v=224';
-import {esc,portraitSvg} from './ui.js?v=224';
+import {isCooperative,visibleTeam} from './cooperative.js?v=225';
+import {availability} from './presentation.js?v=225';
+import {COUNTRY} from './data.js?v=225';
+import {team,travelInProgress,activeSightings} from './engine.js?v=225';
+import {esc,portraitSvg} from './ui.js?v=225';
 export const OBSERVER_COLORS={FR:'#74b9ff',US:'#ffca70',CN:'#ff858d',IN:'#c7a0ff',RU:'#7cdec4',GB:'#f49dd6'};
 export const mapAgents=s=>s.multiplayer?.observer?s.agents.filter(a=>s.multiplayer.humanFactions.includes(a.faction)):visibleTeam(s);
 const project=([lon,lat])=>[lon,lat];

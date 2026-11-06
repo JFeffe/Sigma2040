@@ -15,7 +15,7 @@ test('Midnight follows Mira and survives recruitment, save and multiplayer ident
  E.recruit(s,'p17','p13');E.advance(s);E.advance(s);
  const a=E.team(E.validateSave(structuredClone(s))).find(a=>a.id==='p17');
  assert.ok(a);assert.deepEqual(a.stats,[8,7,5]);
- assert.deepEqual(a.talents,['drones','tactique','surveillance']);
+ assert.deepEqual(a.talents,['drones','tactique','enquete']);
  assert.ok(a.nationalities.includes('CN'));assert.equal(a.age,undefined);
  assert.equal(portraitAsset(a),`./assets/midnight-portrait-transparent.webp?v=${BUILD_VERSION}`);
  assert.match(fullBody(a),/midnight-full-transparent.webp/);

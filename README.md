@@ -1,3 +1,7 @@
+## Build 225 — Mira, Viktor et Midnight
+
+Mira : A6 / H8 / SF6, talents conservés. Viktor garde A6 / H9 / SF5 et échange Enquête contre la Surveillance de Midnight, qui garde A8 / H7 / SF5. Les informations de sélection, repêchage et fiches suivent les profils ; les anciennes sauvegardes sont migrées sans recalculer les missions confirmées. Les 20 profils restent uniques, totalisent 20 points et conservent cinq porteurs par talent.
+
 ## Build 224 — Alba et Selin
 
 Alba : A8 / H6 / SF6. Selin : A7 / H8 / SF5. Talents inchangés. Sélection, fiches, repêchage et sauvegardes actualisés ; chances des missions déjà engagées conservées. Mira et Viktor inchangés.
