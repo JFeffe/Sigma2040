@@ -1,3 +1,9 @@
+## Build 230 — Lisbonne et Sydney
+
+Le point d’opération australien est Sydney. Le globe et les fiches de territoire utilisent Sydney, avec une illustration de l’opéra et du Harbour Bridge. Lisbonne met en scène la tour de Belém et le pont du 25-Avril. Les durées de trajet suivent la matrice de la build 229.
+
+[Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/cb6ac2da2f4cf3f3898fbb82d803bcf4a0fb2ecf...build-230)
+
 ## Build 229 — Cartes de campagne
 
 Le Portugal (Lisbonne) et l’Australie (Darwin) portent à huit le nombre de pays d’opération coopératifs. En Régulier et Avancé, six pays sont tirés selon les quatre superpuissances et affichés avant le recrutement. Les dossiers, attaques, fuites et transferts restent dans cette carte. Les trajets entre les huit territoires forment un triangle Allemagne–Turquie–Portugal et une boucle Canada–Brésil–Afrique du Sud–Australie–Japon, à un tour par liaison. Les campagnes existantes et la formation utilisent leurs règles historiques.

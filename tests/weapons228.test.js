@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as E from '../dist/client/engine.js?v=229';
-import {ACTIONS,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js?v=229';
-import {weaponOpportunity} from '../dist/client/bot-weapon.js?v=229';
+import * as E from '../dist/client/engine.js?v=230';
+import {ACTIONS,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js?v=230';
+import {weaponOpportunity} from '../dist/client/bot-weapon.js?v=230';
 const affected=['sneak','arrest','findSafehouse','intimidate','rescue'];
 test('Armed Sang-froid actions get one bonus, with equip and automatic actions excluded',()=>{
  for(const r of DISPLAY_ROSTER)for(const fatigue of [0,55,80])for(const exposure of [0,25,65,90])for(const boost of [false,true]){

@@ -24,7 +24,9 @@ test('Complete map has the agreed two-way HQ and field routes, assets and map ge
    assert.equal(travelTurns(to,from,s),expected,`${to} → ${from}`);
   }
  const world=JSON.parse(readFileSync(new URL('../dist/client/assets/world.json',import.meta.url)));
- for(const [id,art] of [['PT','lisbonne'],['AU','darwin']]){
+ assert.equal(COUNTRY.AU.city,'Sydney');
+ assert.deepEqual(COUNTRY.AU.pos,[151.21,-33.87]);
+ for(const [id,art] of [['PT','lisbonne-belem'],['AU','sydney']]){
   assert.ok(world.some(f=>f.id===COUNTRY[id].iso));
   assert.match(cityArt(id),new RegExp(`${art}\\.webp`));
   assert.ok(readFileSync(new URL(`../dist/client/assets/${art}.webp`,import.meta.url)).length>10000);

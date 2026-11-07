@@ -1,9 +1,9 @@
-import {mapCountries} from './operation-map.js?v=229';
-import {rescueTargets} from './cell-variants.js?v=229';
-import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=229';
-import {COUNTRY,ACTIONS} from './data.js?v=229';
-import {icon,esc} from './ui.js?v=229';
-import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=229';
+import {mapCountries} from './operation-map.js?v=230';
+import {rescueTargets} from './cell-variants.js?v=230';
+import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=230';
+import {COUNTRY,ACTIONS} from './data.js?v=230';
+import {icon,esc} from './ui.js?v=230';
+import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=230';
 const fieldOnly=new Set(['contacts','authorize','hide','influence','blackmail','drone','rescue']);
 export function locationActions(a,s=null){const home=a.country===a.faction,local=s?knownTargets(s,a.faction).some(t=>!t.arrested&&t.country===a.country):true;return Object.entries(ACTIONS).filter(([id,d])=>!d.disabled&&(home?!d.field&&!fieldOnly.has(id):!d.home)&&(id!=='rescue'||!!s&&rescueTargets(s,a.faction).some(b=>b.country===a.country))&&(id!=='findSafehouse'||!!s||!a.safehouses?.includes(a.country))&&(!['collect','surveil','prepare','arrest','hack','intimidate'].includes(id)||local));}
 export const CONTEXT_ACTIONS=new Set(['collect','surveil','prepare','arrest','hack','intimidate','protect']);
