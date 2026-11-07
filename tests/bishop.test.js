@@ -10,7 +10,7 @@ test('Bishop is a thirteenth unique recruit with matching standalone assets',()=
  const s=fresh();assert.deepEqual(E.validateSave(structuredClone(s)),s);
 });
 test('Bishop is strong at investigation with weaker social and intervention success',()=>{
- const s=fresh(),b=s.agents[1];b.country='DE';s.factions.FR.access.DE=true;
+ const s=fresh(),b=s.agents[1];b.country='DE';b.weapon=false;s.factions.FR.access.DE=true;
  assert.equal(E.options(s,b.id,'collect','s0').chance,88);assert.equal(E.options(s,b.id,'prepare','s0').chance,88);assert.equal(E.options(s,b.id,'sneak','CA').chance,60);assert.equal(E.options(s,b.id,'contacts').chance,52);
  b.country='US';const homeland=E.options(s,b.id,'contacts').chance;b.nationalities=[];assert.equal(homeland,E.options(s,b.id,'contacts').chance);
 });

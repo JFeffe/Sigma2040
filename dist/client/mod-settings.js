@@ -1,4 +1,4 @@
-import {readPreference,writePreference} from './browser-preferences.js?v=227';
+import {readPreference,writePreference} from './browser-preferences.js?v=228';
 // Interface-only preference: never modifies campaign saves or multiplayer rules.
 const KEY='sigma2040-mods';
 export const bureauEnabled=()=>{try{return JSON.parse(readPreference(KEY,'{}')).bureau===true;}catch{return false;}};

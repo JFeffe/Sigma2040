@@ -96,15 +96,18 @@ function passageFixture(){
  const a=m[1];a.task=null;a.templateId='p14';a.stats=[4,7,8];a.talents=['combat','endurance','infiltration'];a.exposure=35;a.weapon=true;
  return {s,f,m,t,a};
 }
-test('BB1 can choose a boosted clandestine passage when the retained weapon and discretion improve the dossier',()=>{
+test('BB1 keeps its credits when the weapon already caps clandestine success',()=>{
  const {s,f,a}=passageFixture();E.planFaction(s,'FR');
- assert.equal(a.task.type,'sneak');assert.equal(a.task.target,'DE');assert.equal(a.task.chance,90);assert.equal(a.task.cost,6);
- assert.equal(f.budget,6);assert.equal(f.bb1.plans[a.id].type,'case');assert.ok(Number.isFinite(f.bb1.decisions.find(d=>d.agent===a.id).utility));
+ assert.equal(a.task.type,'sneak');assert.equal(a.task.target,'DE');assert.equal(a.task.chance,90);assert.equal(a.task.cost,0);
+ assert.equal(f.budget,12);assert.equal(f.bb1.plans[a.id].type,'case');assert.ok(Number.isFinite(f.bb1.decisions.find(d=>d.agent===a.id).utility));
 });
 test('Clandestine travel remains conditional on its benefit, the real odds and the budget',()=>{
- for(const change of [({a})=>{a.weapon=false;},({a})=>{a.exposure=0;},({a})=>{a.stats[2]=4;},({a})=>{a.fatigue=41;},({f})=>{f.budget=0;},({f})=>{f.authorized.DE=true;f.cooperation.DE=4;}]){
+ for(const change of [({a})=>{a.weapon=false;},({a})=>{a.stats[2]=4;},({a})=>{a.fatigue=41;},({f})=>{f.authorized.DE=true;f.cooperation.DE=4;}]){
   const scenario=passageFixture();change(scenario);E.planFaction(scenario.s,'FR');assert.equal(scenario.a.task.type,'travel');
  }
+});
+test('Weapon bonus keeps clandestine travel viable without credits or prior exposure',()=>{
+ for(const change of [({a})=>a.exposure=0,({f})=>f.budget=0]){const x=passageFixture();change(x);E.planFaction(x.s,'FR');assert.equal(x.a.task.type,'sneak');assert.equal(x.a.task.cost,0);assert.equal(x.a.task.chance,90);}
 });
 test('The passage comparison accounts for faster passport logistics',()=>{
  const {s,f,a,t}=passageFixture();a.country='BR';f.known[t.id].country='JP';

@@ -1,29 +1,29 @@
-import {incidentRates,incidentDescription} from './incident-rules.js?v=227';
-import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=227';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=227';
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=227';
-import {normalizePrestige} from './score-rules.js?v=227';
-import {protectionShare} from './balance-rules.js?v=227';
-import {planBB2Faction} from './bot-brillant-2.js?v=227';
-import {planBB1Faction} from './bot-brillant-1.js?v=227';
-import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=227';
-import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=227';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=227';
-import {balanceThreatCountries} from './threat-placement.js?v=227';
-import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=227';
-import {exposurePenalty} from './exposure.js?v=227';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=227';
-import {selectCells,variantPlots,plotDamage,activeCaptives,rescueTargets,captureLiaison,captivityTick,validateCellVariants} from './cell-variants.js?v=227';
-export {rescueTargets} from './cell-variants.js?v=227';
-import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=227';
-import {campaignRules} from './campaign-rules.js?v=227';
-import {stopClock} from './campaign-clock.js?v=227';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=227';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=227';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=227';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=227';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=227';
-import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=227';
+import {incidentRates,incidentDescription} from './incident-rules.js?v=228';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=228';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=228';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=228';
+import {normalizePrestige} from './score-rules.js?v=228';
+import {protectionShare} from './balance-rules.js?v=228';
+import {planBB2Faction} from './bot-brillant-2.js?v=228';
+import {planBB1Faction} from './bot-brillant-1.js?v=228';
+import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=228';
+import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=228';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=228';
+import {balanceThreatCountries} from './threat-placement.js?v=228';
+import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=228';
+import {exposurePenalty} from './exposure.js?v=228';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=228';
+import {selectCells,variantPlots,plotDamage,activeCaptives,rescueTargets,captureLiaison,captivityTick,validateCellVariants} from './cell-variants.js?v=228';
+export {rescueTargets} from './cell-variants.js?v=228';
+import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=228';
+import {campaignRules} from './campaign-rules.js?v=228';
+import {stopClock} from './campaign-clock.js?v=228';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=228';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=228';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=228';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=228';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=228';
+import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=228';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -200,7 +200,8 @@ export function options(s,agentId,type,target,useCredits=false){
  if(NATIONAL_BONUSES_ENABLED&&DOCTRINE_ACTIONS[a.faction]?.includes(type)){bonus+=10;explanations.push('Doctrine nationale +10');}
  if(a.country!==a.faction&&!a.talents.includes('langues')&&['contacts','influence','authorize','blackmail'].includes(type)){penalty+=5;explanations.push('Langue −5');}
  if(type==='analyze'&&f.tech.some(t=>t.type==='ai'&&t.until>=s.turn)){bonus+=10;explanations.push('IA +10');}
- if(type==='arrest'){if(a.weapon){bonus+=10;explanations.push('Arme +10');}if(!f.authorized[a.country]){penalty+=15;explanations.push('Sans mandat −15');}}
+ if(a.weapon&&d.stat===2&&!d.safe&&!d.disabled&&type!=='equip'){bonus+=10;explanations.push('Arme +10');}
+ if(type==='arrest'&&!f.authorized[a.country]){penalty+=15;explanations.push('Sans mandat −15');}
  const coop=cooperationInfo(s,a.faction,a.country),coopBonus=type==='authorize'?coop.mandate:type==='surveil'||type==='arrest'&&f.authorized[a.country]?coop.field:0;if(coopBonus){bonus+=coopBonus;explanations.push('Coopération des autorités · '+coop.name+' '+(coopBonus>0?'+':'')+coopBonus);}
  const operationCountry=['travel','sneak'].includes(type)?target:a.country;
  if(!d.safe&&ROSTER.find(r=>r.id===(a.templateId||a.id))?.nationalities.includes(operationCountry)){bonus+=5;explanations.push('Nationalité locale +5');}

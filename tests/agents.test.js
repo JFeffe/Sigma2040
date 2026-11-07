@@ -9,7 +9,7 @@ test('Twelve talents, three unique specialties each and approved Iris identity',
  assert.deepEqual(ROSTER[0].stats,[9,4,7]);assert.deepEqual(ROSTER[0].nationalities,['GB']);
 });
 test('Best base talent plus cumulative languages, homeland bonus and cap',()=>{
- const s=fresh(),a=s.agents[0];a.country='GB';a.stats=[5,5,5];a.cover='Clandestine';
+ const s=fresh(),a=s.agents[0];a.country='GB';a.stats=[5,5,5];a.cover='Clandestine';a.weapon=false;
  assert.equal(E.options(s,a.id,'findSafehouse').chance,70);
  a.nationalities=[];assert.equal(E.options(s,a.id,'findSafehouse').chance,70);
  a.talents=['langues'];assert.equal(E.options(s,a.id,'findSafehouse').chance,60);

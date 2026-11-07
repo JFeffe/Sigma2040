@@ -1,7 +1,8 @@
-import {activeCaptives,rescueTargets} from './cell-variants.js?v=227';
-import {protectionShare} from './balance-rules.js?v=227';
-import {TECH,COUNTRY} from './data.js?v=227';
-import {campaignRules} from './campaign-rules.js?v=227';
+import {weaponOpportunity} from './bot-weapon.js?v=228';
+import {activeCaptives,rescueTargets} from './cell-variants.js?v=228';
+import {protectionShare} from './balance-rules.js?v=228';
+import {TECH,COUNTRY} from './data.js?v=228';
+import {campaignRules} from './campaign-rules.js?v=228';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -223,14 +224,9 @@ export function planBB1Faction(s,id,E){
     else {const distance=E.options(s,a.id,'travel',victim.country).duration;if(s.turn+distance+1<=campaignRules(s).maxTurns&&!agents.some(b=>b.id!==a.id&&at(b,victim.country)))add(a,'travel',victim.country,0,'Rejoindre un coéquipier détenu pour préparer son extraction.',{key:'rescue:'+victim.id,type:'rescue',country:victim.country},90*projected(a,victim.country,'rescue',victim.id).chance/100/(distance+1.5));}
    }
    if(a.country!==id&&!a.weapon){
-    const o=E.options(s,a.id,'equip'),after=withAgent(a,{weapon:true,fatigue:Math.min(100,a.fatigue+o.fatigue*o.duration),exposure:Math.min(100,a.exposure+E.missionExposure(a,'equip',true))});
-    let benefit=0;
-    for(const t of targets.filter(t=>t.country===a.country&&(!t.prepared||t.locationUntil>=s.turn+1))){
-     const base=E.options(s,a.id,'arrest',t.id,f.budget>=6),armed=E.options(after,a.id,'arrest',t.id,f.budget>=6),readiness=t.prepared?1:proofs(t).length>=2?.8:proofs(t).length?.5:.25;
-     benefit+=Math.max(0,armed.chance-base.chance)*(184+(t.cell===3?90:0))/100*readiness;
-    }
+    const o=E.options(s,a.id,'equip'),benefit=weaponOpportunity(s,a,E,targets,proofs);
     const expected=benefit*o.chance/100-(1-o.chance/100)*4-o.fatigue*.12;
-    if(expected>0)add(a,'equip',null,0,'Profiter d’un créneau pour améliorer les interventions futures avec une arme.',null,expected,false);
+    if(expected>0)add(a,'equip',null,0,'Évaluer les actions de sang-froid à venir avant de chercher une arme.',null,expected,false);
    }
    for(const t of targets){
     if(claimed('arrest',t.id))continue;

@@ -1,0 +1,44 @@
+{
+  "regular": {
+    "weaponRuleOldBB2": {
+      "games": 200,
+      "wins": 102,
+      "equipOrders": 9,
+      "sneakOrders": 397
+    },
+    "build228": {
+      "games": 200,
+      "wins": 100,
+      "equipOrders": 12,
+      "sneakOrders": 397
+    }
+  },
+  "advanced": {
+    "weaponRuleOldBB2": {
+      "games": 100,
+      "wins": 49,
+      "equipOrders": 6,
+      "sneakOrders": 192
+    },
+    "build228": {
+      "games": 100,
+      "wins": 48,
+      "equipOrders": 10,
+      "sneakOrders": 193
+    }
+  },
+  "cooperative": {
+    "weaponRuleOldBB2": {
+      "games": 100,
+      "wins": 2,
+      "equipOrders": 1,
+      "sneakOrders": 74
+    },
+    "build228": {
+      "games": 100,
+      "wins": 2,
+      "equipOrders": 4,
+      "sneakOrders": 73
+    }
+  }
+}
