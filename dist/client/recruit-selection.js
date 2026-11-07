@@ -1,13 +1,13 @@
-import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=230';
-import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=230';
-import {fullBody} from './visuals.js?v=230';
+import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=231';
+import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=231';
+import {fullBody} from './visuals.js?v=231';
 // Selection-only categories: never attached to agent profiles or saved games.
 const RECRUIT_TYPES=[
- ['protecteur','Protecteur',['p16','p28','p20','p15']],
- ['investigateur','Investigateur',['p0','p21','p25','p18','p24']],
- ['analyste','Analyste',['p12','p17','p30','p22']],
- ['specialiste','Spécialiste',['p13','p23','p27']],
- ['intervenant','Intervenant',['p14','p26','p29','p19']]
+ ['protecteur','Protecteur',['p20','p28','p16','p27']],
+ ['intervenant','Intervenant',['p14','p26','p29','p18','p19']],
+ ['bureaucrate','Bureaucrate',['p15','p23','p24']],
+ ['diplomate','Diplomate',['p0','p21','p25','p13']],
+ ['enqueteur','Enquêteur',['p12','p22','p30','p17']]
 ];
 const recruitTypeById=new Map(RECRUIT_TYPES.flatMap(([type,,ids])=>ids.map(id=>[id,type])));
 const faces={solo:new Set(),multi:new Set()};

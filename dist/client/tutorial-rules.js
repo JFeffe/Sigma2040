@@ -1,7 +1,7 @@
-import {ACTIONS} from './data.js?v=230';
-import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=230';
-import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=230';
-import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=230';
+import {ACTIONS} from './data.js?v=231';
+import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=231';
+import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=231';
+import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=231';
 // Training is a separate, explicitly scripted mode. No campaign uses these rules.
 export const TUTORIAL_IDS=Object.freeze([...COMPACT_IDS,'contact','evidence','arrest',...ADVANCED_TUTORIALS]);
 export const isTutorial=s=>s?.tutorial?.version===1&&TUTORIAL_IDS.includes(s.tutorial.mission);
