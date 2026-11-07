@@ -1,3 +1,9 @@
+## Build 232 — Plan B et Soutien médical
+
+Plan B remplace Secourisme. Après un échec, la prochaine mission avec jet lancée dans les deux tours suivants reçoit +5 points de réussite, avec un plafond de 90 %. Le Soutien médical rend jusqu’à 12 points d’énergie immédiatement à toute l’équipe et soigne ses blessés à la fin du tour. Il coûte 25 points de confiance et peut servir trois fois par équipe et par campagne.
+
+[Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/68470098205424399868de651ece1dc2ecd00945...build-232)
+
 ## Build 230 — Lisbonne et Sydney
 
 Le point d’opération australien est Sydney. Le globe et les fiches de territoire utilisent Sydney, avec une illustration de l’opéra et du Harbour Bridge. Lisbonne met en scène la tour de Belém et le pont du 25-Avril. Les durées de trajet suivent la matrice de la build 229.

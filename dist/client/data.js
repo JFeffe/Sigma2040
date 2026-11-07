@@ -27,7 +27,7 @@ export const TALENTS={
  tactique:['Planification tactique','+10 à la préparation d’arrestation et à l’extraction.'],
  combat:['Combat','+10 aux arrestations, extractions et intimidations, avec ou sans arme.'],
  drones:['Drones','+10 à la reconnaissance par drone.'],
- secours:['Secourisme','En fin de tour, soigne une blessure sur un coéquipier dans le même pays, sinon sur lui-même. Secouriste présent, ni en voyage ni capturé, même après une autre action. Aucun gain d’énergie.'],
+ planB:['Plan B',''],
  endurance:['Endurance','−25 % de toutes les dépenses d’énergie des missions (arrondi supérieur).']
 };
 export const LEGACY_TALENTS=['hacking','cybersecurite','forensique','analyse','filature','contacts','diplomatie','charisme','manipulation','polyglotte','infiltration','identite','arts','tir','conduite','secours','drones','autonome','protection','endurance'];
@@ -39,20 +39,20 @@ const cast=[
  ['IRIS','L’Ambassadrice',[9,4,7],['diplomatie','contacts','langues'],'Elle repère une hésitation avant même que la phrase soit terminée.'],
  ['SABLE','Infiltrateur',[5,8,7],['infiltration','surveillance','combat'],'Une identité pour chaque frontière. Une seule loyauté.'],
  ['NYX','Intrusion numérique',[8,8,5],['informatique','enquete','surveillance'],'Les systèmes mentent. Les traces, beaucoup moins.'],
- ['ATLAS','Protection & extraction',[5,8,8],['tactique','secours','endurance'],'Toujours le dernier à quitter les lieux.'],
+ ['ATLAS','Protection & extraction',[5,8,8],['tactique','planB','endurance'],'Toujours le dernier à quitter les lieux.'],
  ['VEGA','Renseignement',[8,6,7],['surveillance','contacts','enquete'],'Son carnet de contacts vaut une ambassade.'],
  ['ÉCHO','Guerre électronique',[8,7,6],['informatique','drones','enquete'],'Il écoute ce que les machines ne devaient pas raconter.'],
  ['ROOK','Intervention',[5,8,8],['combat','tactique','endurance'],'La force n’est utile qu’au bon moment.'],
  ['ONYX','Agent de terrain',[6,8,6],['infiltration','contacts','endurance'],'Elle traverse les villes comme une habitante.'],
  ['KAI','Analyste',[9,5,7],['enquete','surveillance','informatique'],'Il relie les détails que tout le monde a classés.'],
  ['MARA','Négociations sensibles',[7,5,9],['diplomatie','langues','tactique'],'Un secret peut ouvrir plus de portes qu’une clé.'],
- ['SOL','Opérateur drones',[6,8,7],['drones','tactique','secours'],'Des yeux dans le ciel, les pieds sur terre.'],
+ ['SOL','Opérateur drones',[6,8,7],['drones','tactique','planB'],'Des yeux dans le ciel, les pieds sur terre.'],
  ['ASH','Contre-espionnage',[8,6,8],['surveillance','enquete','infiltration'],'La meilleure piste est parfois celle laissée pour vous.'],
  ['BISHOP','Officier de terrain',[9,6,5],['enquete','infiltration','tactique'],'Il prépare toujours une sortie avant de franchir la première porte.'],
  ['AMBER','L’Entrepreneuse',[5,8,7],['contacts','informatique','drones'],'Des biens du quotidien aux équipements sensibles, ses réseaux livrent là où les autres renoncent.'],
  ['LEI','Le Prédateur',[4,7,9],['combat','endurance','infiltration'],'Il attend sans bruit. Quand il intervient, chaque mouvement compte.'],
  ['APÉRO','Le Hacker',[9,8,3],['surveillance','informatique','enquete'],'Génie de la tech, il préfère les connexions à distance aux relations humaines.'],
- ['MIRA','La Vigie',[6,8,6],['secours','langues','surveillance'],'Elle veille sur les autres sans jamais perdre de vue ce qui se passe autour d’elle.'],
+ ['MIRA','La Vigie',[6,8,6],['planB','langues','surveillance'],'Elle veille sur les autres sans jamais perdre de vue ce qui se passe autour d’elle.'],
  ['MIDNIGHT','Le Coordinateur',[8,7,5],['drones','tactique','enquete'],'Ancien coordinateur de recherche et de secours, il organise les opérations avec méthode et un humour sec. Il veut parfois trop préparer avant d’agir.'],
  ['MERCER','L’Intermédiaire',[6,6,8],['contacts','combat','infiltration'],'Ancien agent sous couverture dans les réseaux de corruption et de courtage international, il ouvre les portes avec un sourire. Difficile de savoir quand il abandonne son personnage.'],
  ['MARLOWE','La Convoyeuse',[4,8,8],['contacts','drones','endurance'],'Ancienne logisticienne humanitaire devenue intermédiaire pour les missions sensibles, elle trouve toujours un passage et un contact fiable. Directe et débrouillarde, elle ne promet jamais une livraison impossible.'],
@@ -60,13 +60,13 @@ const cast=[
  ['ADLER','Le Consul',[8,9,3],['diplomatie','contacts','tactique'],'Ancien diplomate chargé de négociations commerciales sensibles, il ouvre les portes avec charme et prépare chaque rencontre avec soin. Cultivé et légèrement vaniteux, il perd son assurance lorsque la menace devient physique.'],
  ['DANTE','Le Traqueur',[8,5,7],['enquete','combat','endurance'],'Ancien enquêteur spécialisé dans les fraudes portuaires, il suit les pistes que les autres abandonnent. Tenace et direct, il relie les indices sur le terrain et ne recule pas lorsque la confrontation devient inévitable.'],
  ['SELIN','La Stratège',[7,8,5],['langues','informatique','tactique'],'Ancienne conceptrice de simulations de crise pour un réseau de transport international, elle croise les communications et les données pour anticiper les incidents. Précise et légèrement sarcastique, elle prépare toujours une solution de rechange.'],
- ['ROCKET','Le Médiateur',[8,8,4],['secours','diplomatie','enquete'],'Ancien ambulancier devenu enquêteur sur les interventions d’urgence controversées, il relie les accidents aux réseaux qui les provoquent. Chaleureux et patient, il désamorce les tensions, mais la violence délibérée le déstabilise.'],
+ ['ROCKET','Le Médiateur',[8,8,4],['planB','diplomatie','enquete'],'Ancien ambulancier devenu enquêteur sur les interventions d’urgence controversées, il relie les accidents aux réseaux qui les provoquent. Chaleureux et patient, il désamorce les tensions, mais la violence délibérée le déstabilise.'],
  ['ALBA','La Faussaire',[8,6,6],['diplomatie','endurance','infiltration'],'Ancienne restauratrice de documents, elle a découvert un réseau de faux certificats derrière des acquisitions de musées. Joueuse et théâtrale, elle négocie les passages difficiles et se glisse dans les milieux les mieux gardés.'],
- ['RAVEN','L’Expérimentée',[5,6,9],['secours','langues','combat'],'Secouriste aguerrie aux interventions internationales, elle soigne, traduit et protège son équipe quand la situation dégénère. Austère et difficile à déstabiliser, elle refuse d’abandonner quelqu’un sur le terrain.'],
- ['LINK','Le Furtif',[3,9,8],['informatique','infiltration','secours'],'Ancien technicien des réseaux urbains, il a appris à entrer discrètement, réparer vite et ressortir avec les autres. Habile et calme, il préfère une solution concrète à un long exposé. Il improvise parfois avant de mesurer toutes les conséquences.'],
+ ['RAVEN','L’Expérimentée',[5,6,9],['planB','langues','combat'],'Secouriste aguerrie aux interventions internationales, elle soigne, traduit et protège son équipe quand la situation dégénère. Austère et difficile à déstabiliser, elle refuse d’abandonner quelqu’un sur le terrain.'],
+ ['LINK','Le Furtif',[3,9,8],['informatique','infiltration','planB'],'Ancien technicien des réseaux urbains, il a appris à entrer discrètement, réparer vite et ressortir avec les autres. Habile et calme, il préfère une solution concrète à un long exposé. Il improvise parfois avant de mesurer toutes les conséquences.'],
  ['VIKTOR','Le Repéreur',[6,9,5],['drones','surveillance','langues'],'Ancien inspecteur de sites industriels internationaux, il a découvert des sabotages dissimulés derrière de faux rapports d’accident. Curieux et sociable, il suit les traces depuis le terrain comme depuis les airs. Il cherche parfois une dernière donnée quand il faudrait déjà décider.'],
  ['MONROE','Le Gardien',[8,3,9],['combat','diplomatie','surveillance'],'Ancien responsable de la sécurité de délégations franco-britanniques, il lit une salle aussi attentivement qu’un dossier. Courtois, protecteur et doté d’un humour sec, il négocie sans perdre son calme et intervient quand il le faut. Son besoin de tout contrôler laisse peu de place à l’improvisation.'],
- ['TARA','La Prévoyante',[9,5,6],['tactique','endurance','secours'],'Ancienne préparatrice d’opérations et d’évacuations sur des terrains isolés, elle prévoit les itinéraires, les réserves et les solutions de repli. Patiente et directe, elle prépare son équipe à tenir jusqu’au retour. Elle doit parfois accepter de partir avant que le plan soit parfait.']
+ ['TARA','La Prévoyante',[9,5,6],['tactique','endurance','planB'],'Ancienne préparatrice d’opérations et d’évacuations sur des terrains isolés, elle prévoit les itinéraires, les réserves et les solutions de repli. Patiente et directe, elle prépare son équipe à tenir jusqu’au retour. Elle doit parfois accepter de partir avant que le plan soit parfait.']
 ];
 export const ROSTER=cast.map((c,i)=>({id:'p'+i,name:c[0],role:c[1],stats:c[2],talents:c[3],bio:c[4],portrait:i<12?i:null,nationalities:i===0?['GB']:i===12?['US']:i===13?['RU']:i===14?['CN']:i===15?['FR']:i===16?['IN']:i===17?['CN']:i===18?['US']:i===19?['ZA']:i===20?['JP']:i===21?['DE','US']:i===22?['BR']:i===23?['TR']:i===24?['CA']:i===25?['FR','BR']:i===26?['CN']:i===27?['DE']:i===28?['RU']:i===29?['GB','FR']:i===30?['IN']:[],...(i===15?{age:28}:{})}));
 // Presentation order is independent of stable roster IDs and NPC templates.
@@ -104,7 +104,7 @@ const talentPassives={
  chef:'Accorde +5 points de réussite aux autres agents de son équipe dans le même pays, dans la limite de 90 %. Le chef doit être vivant, libre et hors transit. Bonus fixé à la confirmation de l’ordre, sans effet sur ses propres actions ni les actions automatiques.',
  langues:'À l’étranger, annule le malus linguistique de −5 points pour Activer un contact, Obtenir un mandat et Chantage diplomatique. Bonus de +5 points pour Trouver une planque et Trouver une arme, cumulable avec les autres talents.',
  infiltration:'Réduit de 20 % tous les gains d’exposition des missions, en réussite comme en échec, y compris les voyages. Gain final arrondi au supérieur ; les baisses d’exposition sont inchangées.',
- secours:'En fin de tour, soigne une blessure dans le même pays : coéquipier prioritaire, sinon lui-même. Secouriste et bénéficiaire présents, ni en voyage ni capturés. Fonctionne après une autre action et même si le secouriste est blessé, sans restaurer d’énergie.',
+ planB:'Après une mission ratée, +5 points à la prochaine mission avec jet lancée dans les deux tours suivants. Le bonus est consommé au jet et ne se cumule pas.',
  endurance:'Réduit de 25 % toutes les dépenses d’énergie des missions, chaque tour, quel que soit le résultat. Dépense finale arrondie au supérieur. Ne modifie pas la récupération d’énergie.'
 };
 for(const [id,talent] of Object.entries(TALENTS)){

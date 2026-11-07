@@ -12,9 +12,9 @@ import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/
 import {BUILD_VERSION} from '../dist/client/build-version.js';
 
 const additions=[
- {id:'p27',slug:'link',name:'LINK',role:'Le Furtif',stats:[3,9,8],talents:['informatique','infiltration','secours'],nationalities:['DE']},
+ {id:'p27',slug:'link',name:'LINK',role:'Le Furtif',stats:[3,9,8],talents:['informatique','infiltration','planB'],nationalities:['DE']},
  {id:'p29',slug:'monroe',name:'MONROE',role:'Le Gardien',stats:[8,3,9],talents:['combat','diplomatie','surveillance'],nationalities:['GB','FR']},
- {id:'p30',slug:'tara',name:'TARA',role:'La Prévoyante',stats:[9,5,6],talents:['tactique','endurance','secours'],nationalities:['IN']},
+ {id:'p30',slug:'tara',name:'TARA',role:'La Prévoyante',stats:[9,5,6],talents:['tactique','endurance','planB'],nationalities:['IN']},
  {id:'p28',slug:'viktor',name:'VIKTOR',role:'Le Repéreur',stats:[6,9,5],talents:['drones','surveillance','langues'],nationalities:['RU']}
 ];
 function checkProfile(a,expected){

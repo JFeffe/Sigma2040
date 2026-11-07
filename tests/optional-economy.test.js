@@ -5,7 +5,7 @@ import {ACTIONS,COUNTRIES,ROSTER} from '../dist/client/data.js';
 import {CAMPAIGN_KEY,ECONOMY_BACKUP_KEY,readCampaign} from '../dist/client/save-compat.js';
 const fresh=()=>{const s=E.createGame('FR',['p0','p12','p13','p14'],42);s.humanFactions=COUNTRIES.filter(c=>c.power).map(c=>c.id);return s;};
 const tick=s=>{s.eventsByFaction={};if(s.event)E.answerEvent(s,s.event.choices.length-1);E.advance(s);};
-function fixture(type){const s=fresh(),a=E.team(s)[0],f=s.factions.FR;a.stats=[5,5,5];a.talents=['endurance','secours','langues'];a.nationalities=['FR'];let target=null;
+function fixture(type){const s=fresh(),a=E.team(s)[0],f=s.factions.FR;a.stats=[5,5,5];a.talents=['endurance','planB','langues'];a.nationalities=['FR'];let target=null;
  if(!ACTIONS[type].home&&!['travel','sneak'].includes(type))a.country='TR';
  s.suspects[0].country='TR';f.known.s0={identified:true,country:'TR',locationUntil:5,prepared:true};
  if(['travel','sneak','cyberSupport'].includes(type))target='JP';

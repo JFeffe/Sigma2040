@@ -6,7 +6,7 @@ import {statlines} from '../dist/client/ui.js';
 import {createDraft,draftCountry,pickDraftAgent,availableDraftAgents,validateDraft} from '../dist/client/game-setup.js';
 import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
 const profiles=[
- {id:'p16',oldStats:[6,7,7],stats:[6,8,6],oldTalents:['secours','langues','surveillance'],talents:['secours','langues','surveillance']},
+ {id:'p16',oldStats:[6,7,7],stats:[6,8,6],oldTalents:['secours','langues','surveillance'],talents:['planB','langues','surveillance']},
  {id:'p17',oldStats:[8,7,5],stats:[8,7,5],oldTalents:['drones','tactique','surveillance'],talents:['drones','tactique','enquete']},
  {id:'p28',oldStats:[6,9,5],stats:[6,9,5],oldTalents:['drones','enquete','langues'],talents:['drones','surveillance','langues']}
 ];
@@ -23,7 +23,7 @@ test('225 card faces, dossiers, bars and talent filters use new profiles',()=>{
  for(const p of profiles){const a=R.find(a=>a.id===p.id);
   for(const html of [recruitProfile(a),recruitDetails(p.id),statlines(a)])assert.deepEqual([...html.matchAll(/<strong>(\d)<\/strong>/g)].map(m=>+m[1]),p.stats);
   for(const mode of ['solo','multi']){setRecruitView(mode,p.id,true);const card=recruitCard(a,[],mode);for(const t of p.talents)assert.ok(card.includes(TALENTS[t][0]));}
-  const dossier=recruitDetails(p.id);for(const t of p.talents)assert.ok(dossier.includes(`<strong>${TALENTS[t][0]}</strong>`));for(const t of p.oldTalents.filter(t=>!p.talents.includes(t)))assert.ok(!dossier.includes(`<strong>${TALENTS[t][0]}</strong>`));
+  const dossier=recruitDetails(p.id);for(const t of p.talents)assert.ok(dossier.includes(`<strong>${TALENTS[t][0]}</strong>`));for(const t of p.oldTalents.filter(t=>TALENTS[t]&&!p.talents.includes(t)))assert.ok(!dossier.includes(`<strong>${TALENTS[t][0]}</strong>`));
  }
  for(const mode of ['solo','multi']){resetRecruitFilters(mode);setRecruitFilter(mode,'talent','surveillance');assert.ok(visibleRecruits(mode).some(a=>a.id==='p28'));assert.ok(!visibleRecruits(mode).some(a=>a.id==='p17'));setRecruitFilter(mode,'talent','enquete');assert.ok(visibleRecruits(mode).some(a=>a.id==='p17'));assert.ok(!visibleRecruits(mode).some(a=>a.id==='p28'));resetRecruitFilters(mode);}
 });

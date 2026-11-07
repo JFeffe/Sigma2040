@@ -10,7 +10,7 @@ import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/
 
 const agents=[
  {id:'p23',slug:'selin',stats:[7,8,5],talents:['langues','informatique','tactique'],nationality:'TR'},
- {id:'p24',slug:'rocket',stats:[8,8,4],talents:['secours','diplomatie','enquete'],nationality:'CA'}
+ {id:'p24',slug:'rocket',stats:[8,8,4],talents:['planB','diplomatie','enquete'],nationality:'CA'}
 ];
 function check(a,expected){
  assert.ok(a);

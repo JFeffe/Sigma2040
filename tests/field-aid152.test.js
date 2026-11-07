@@ -1,7 +1,121 @@
-import test from 'node:test';import assert from 'node:assert/strict';import * as E from '../dist/client/engine.js';
-const fresh=()=>{const s=E.createGame('FR',['p0','p12','p13','p14'],152);s.humanFactions=Object.keys(s.factions);s.plots=[];s.fracture.cells.forEach(c=>c.resources=0);for(const a of s.agents)a.talents=[];return s;};
-test('Field aid prioritizes one teammate over the injured medic without restoring energy or cancelling orders',()=>{const s=fresh(),[m,a,b]=E.team(s);m.talents=['secours'];for(const x of [m,a,b]){x.status='injured';x.fatigue=66;}E.assign(s,m.id,'heal');const task=m.task;E.advance(s);assert.equal(m.status,'injured');assert.equal([a,b].filter(x=>x.status==='ready').length,1);assert.equal(a.fatigue,66);assert.equal(b.fatigue,66);assert.equal(m.task,task);assert.ok(s.logs.some(l=>l.text.startsWith('Secourisme :')));});
-test('A medic alone can heal after another action and retains fatigue',()=>{const s=fresh(),m=E.team(s)[0];m.talents=['secours'];m.status='injured';m.fatigue=66;m.country='DE';E.assign(s,m.id,'hide');E.advance(s);assert.equal(m.status,'ready');assert.equal(m.fatigue,56);});
-test('Absent, captured, dead and retired medics do not heal',()=>{for(const status of ['captured','dead','retired','travel','otherCountry']){const s=fresh(),[m,a]=E.team(s);m.talents=['secours'];a.status='injured';if(status==='travel')E.assign(s,m.id,'travel','JP');else if(status==='otherCountry')m.country='DE';else m.status=status;E.advance(s);assert.equal(a.status,'injured',status);}});
-test('Patients in transit and agents of another team are excluded; arrivals can receive aid',()=>{const s=fresh(),[m,a]=E.team(s),foreign=s.agents.find(x=>x.faction==='US');m.talents=['secours'];a.status='injured';foreign.status='injured';foreign.country='FR';E.assign(s,a.id,'travel','JP');E.advance(s);assert.equal(a.status,'injured');assert.equal(foreign.status,'injured');m.country='JP';E.advance(s);assert.equal(a.country,'JP');assert.equal(a.status,'ready');});
-test('Multiple medics each treat one different wound, deterministically across serialized multiplayer states',()=>{const s=fresh(),[m,n,a,b]=E.team(s);m.talents=n.talents=['secours'];a.status=b.status='injured';const clone=JSON.parse(JSON.stringify(s));E.advance(s);E.advance(clone);assert.equal(a.status,'ready');assert.equal(b.status,'ready');assert.deepEqual(s,clone);});
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as E from '../dist/client/engine.js';
+
+function fresh(seed=152){
+ const s=E.createGame('FR',['p0','p16','p27','p14'],seed);
+ s.humanFactions=Object.keys(s.factions);
+ s.plots=[];
+ s.threatReports=[];
+ s.fracture.cells.forEach(c=>c.resources=0);
+ s.factions.FR.confidence=50;
+ return s;
+}
+
+test('Medical support restores energy immediately and heals every injured member at turn end',()=>{
+ const s=fresh(),[home,field,transit,captured]=E.team(s);
+ const foreign=s.agents.find(a=>a.faction==='US');
+ for(const a of [home,field,transit,foreign]){a.status='injured';a.fatigue=24;}
+ captured.status='captured';
+ captured.fatigue=24;
+ field.country=foreign.country='DE';
+ E.requestGovernmentFavor(s,'medical');
+ assert.deepEqual([home,field,transit,captured,foreign].map(a=>a.fatigue),[12,12,12,12,24]);
+ assert.equal(s.factions.FR.confidence,25);
+ assert.equal(s.factions.FR.medicalUses,1);
+ assert.equal(home.status,'injured');
+ E.assign(s,transit.id,'travel','JP');
+ assert.throws(()=>E.requestGovernmentFavor(s,'medical'),/tour 3/);
+ E.advance(s);
+ assert.deepEqual([home,field,transit].map(a=>a.status),['ready','ready','ready']);
+ assert.equal(transit.task?.type,'travel');
+ assert.equal(foreign.status,'injured');
+ assert.equal(captured.status,'captured');
+ assert.equal(home.fatigue,12);
+ assert.equal(E.medicalCarePending(s),false);
+});
+
+test('Medical support remains available for a fully rested injured agent and survives reload',()=>{
+ const s=fresh(),a=E.team(s)[0];
+ a.status='injured';
+ assert.equal(E.governmentOptions(s,'medical').error,null);
+ E.requestGovernmentFavor(s,'medical');
+ const restored=E.validateSave(structuredClone(s));
+ assert.equal(E.medicalCarePending(restored),true);
+ E.advance(restored);
+ assert.equal(E.team(restored)[0].status,'ready');
+ assert.equal(E.team(restored)[0].fatigue,0);
+ const b=E.team(restored)[1];
+ b.status='injured';
+ E.advance(restored);
+ assert.equal(b.status,'injured');
+});
+
+test('Medical support heals a new wound caused by a mission in the same turn',()=>{
+ let observed=false;
+ for(let seed=1;seed<=100&&!observed;seed++){
+  const s=fresh(seed),a=E.team(s)[0];
+  a.country='DE';
+  a.fatigue=12;
+  E.requestGovernmentFavor(s,'medical');
+  E.assign(s,a.id,'findSafehouse').chance=0;
+  const control=structuredClone(s);
+  control.factions.FR.lastFavor=null;
+  E.advance(control);
+  if(E.team(control)[0].status!=='injured')continue;
+  E.advance(s);
+  assert.equal(a.status,'ready');
+  assert.ok(s.logs.some(l=>l.text.startsWith('Soutien médical : ')));
+  observed=true;
+ }
+ assert.ok(observed);
+});
+
+test('Plan B replaces Secourisme in existing saves and applies to the next rolled mission',()=>{
+ const s=fresh(),a=E.team(s)[1];
+ assert.ok(a.talents.includes('planB'));
+ a.talents=a.talents.map(t=>t==='planB'?'secours':t);
+ E.validateSave(s);
+ assert.ok(a.talents.includes('planB'));
+ assert.equal(E.options(s,a.id,'counter').planBonus,0);
+ E.assign(s,a.id,'counter').chance=0;
+ E.advance(s);
+ assert.equal(a.planBExpires,s.turn+1);
+ assert.equal(E.options(s,a.id,'protect').planBonus,5);
+ E.assign(s,a.id,'rest');
+ E.advance(s);
+ assert.equal(E.options(s,a.id,'protect').planBonus,5);
+ const task=E.assign(s,a.id,'protect');
+ assert.equal(task.planBonus,5);
+ E.cancel(s,a.id);
+ assert.equal(E.options(s,a.id,'protect').planBonus,5);
+ E.advance(s);
+ assert.equal(E.options(s,a.id,'protect').planBonus,0);
+});
+
+test('Plan B keeps an already queued bonus and consumes it on resolution',()=>{
+ const s=fresh(),a=E.team(s)[1];
+ E.assign(s,a.id,'counter').chance=0;
+ E.advance(s);
+ E.advance(s);
+ const task=E.assign(s,a.id,'protect');
+ assert.equal(task.planBonus,5);
+ assert.ok(task.chance<=90);
+ const restored=E.validateSave(structuredClone(s)),b=E.team(restored)[1];
+ E.advance(restored);
+ assert.equal(b.task.planBonus,5);
+ b.task.chance=100;
+ E.advance(restored);
+ assert.equal(b.planBExpires,undefined);
+});
+
+test('An energy-only medical favor from an old save does not queue new healing',()=>{
+ const s=fresh(),a=E.team(s)[0];
+ a.status='injured';
+ E.requestGovernmentFavor(s,'medical');
+ delete s.factions.FR.lastFavor.care;
+ const restored=E.validateSave(structuredClone(s));
+ assert.equal(E.medicalCarePending(restored),false);
+ E.advance(restored);
+ assert.equal(E.team(restored)[0].status,'injured');
+});

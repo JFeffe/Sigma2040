@@ -25,7 +25,7 @@ test('Nationality applies at clandestine destination and physical operation site
  const remote=E.options(s,a.id,'cyberSupport','GB').chance;a.nationalities=[];assert.equal(E.options(s,a.id,'cyberSupport','GB').chance,remote);
 });
 test('Passives reduce exposure and fatigue; field aid does not boost medical energy recovery',()=>{
- const s=fresh(),a=s.agents[0];a.talents=['infiltration','endurance','secours'];a.fatigue=80;
+ const s=fresh(),a=s.agents[0];a.talents=['infiltration','endurance','planB'];a.fatigue=80;
  assert.equal(E.exposureGain(a,{type:'sneak'},18),15);assert.equal(E.exposureGain(a,{type:'arrest',clandestine:false},18),15);
  assert.equal(E.options(s,a.id,'surveil','s0').fatigue,6);
  a.status='injured';E.assign(s,a.id,'heal');E.advance(s);E.advance(s);assert.equal(a.fatigue,40);assert.equal(a.status,'ready');

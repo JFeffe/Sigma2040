@@ -24,7 +24,7 @@ function room(){
 function send(r,m,kind,payload,seq=m.lastSeq+1){return execute(r,m.token,{protocol:PROTOCOL,seq,turn:r.game.turn,kind,payload});}
 function evidenceMission(s,type,flightTurn=s.turn){
  const a=E.team(s)[1],t=s.suspects.find(t=>t.id==='s0'),f=s.factions.FR;
- a.country=t.country='DE';a.stats=[5,5,5];a.talents=['endurance','secours','langues'];a.fatigue=20;a.exposure=10;
+ a.country=t.country='DE';a.stats=[5,5,5];a.talents=['endurance','planB','langues'];a.fatigue=20;a.exposure=10;
  f.known[t.id]={country:'DE',identified:true,prepared:false,locationUntil:5};f.access.DE=true;
  E.assign(s,a.id,type,t.id,true);s.fracture.flights=[{id:t.id,to:'TR',turn:flightTurn}];
  return {a,t,f};
@@ -94,7 +94,7 @@ test('Collect and intrusion stop on the departure turn, without a second fatigue
 });
 
 test('Already departed targets free all their collecting agents before another tick; unchanged targets retain two turns',()=>{
- const s=fresh(),{a,t}=evidenceMission(s,'collect'),b=E.team(s)[2];b.country='DE';b.stats=[5,5,5];b.talents=['endurance','secours','langues'];E.assign(s,b.id,'hack',t.id);t.country='TR';s.fracture.flights=[];
+ const s=fresh(),{a,t}=evidenceMission(s,'collect'),b=E.team(s)[2];b.country='DE';b.stats=[5,5,5];b.talents=['endurance','planB','langues'];E.assign(s,b.id,'hack',t.id);t.country='TR';s.fracture.flights=[];
  E.advance(s);assert.equal(a.task,null);assert.equal(b.task,null);assert.equal(a.fatigue,20);assert.equal(b.fatigue,0);assert.equal(s.operationReports.filter(r=>r.targetName===t.name&&r.status==='INTERROMPUE').length,2);
  for(const type of ['collect','hack']){const live=fresh(),x=evidenceMission(live,type,5);x.a.task.chance=100;E.advance(live);assert.equal(x.a.task.remaining,1);E.advance(live);assert.equal(x.a.task,null);assert.equal(live.operationReports[0].status,'RÉUSSITE');assert.equal(x.f.evidence.length,1);}
 });

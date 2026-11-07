@@ -1,8 +1,8 @@
-import {weaponOpportunity} from './bot-weapon.js?v=231';
-import {activeCaptives,rescueTargets} from './cell-variants.js?v=231';
-import {protectionShare} from './balance-rules.js?v=231';
-import {TECH,COUNTRY} from './data.js?v=231';
-import {campaignRules} from './campaign-rules.js?v=231';
+import {weaponOpportunity} from './bot-weapon.js?v=232';
+import {activeCaptives,rescueTargets} from './cell-variants.js?v=232';
+import {protectionShare} from './balance-rules.js?v=232';
+import {TECH,COUNTRY} from './data.js?v=232';
+import {campaignRules} from './campaign-rules.js?v=232';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -82,9 +82,10 @@ export function planBB1Faction(s,id,E){
  const favors=[],medical=E.governmentOptions(s,'medical',null,id);
  const tired=agents.filter(a=>a.status==='ready'&&a.fatigue>=30);
  const medicalUrgent=tired.some(a=>!a.task&&a.fatigue>=65&&jobs(a).some(j=>['arrest','protect','rescue'].includes(j.type)));
- if(!medical.error&&(tired.length>=2||medicalUrgent)){
+ if(!medical.error&&(tired.length>=2||medicalUrgent||medical.wounded.length)){
   let value=0;
-  for(const a of agents.filter(a=>a.status==='ready'&&a.fatigue>=25)){
+  for(const a of agents.filter(a=>a.status==='injured'))value+=a.country===id?10:18;
+  for(const a of agents.filter(a=>a.fatigue>=25)){
    const gain=Math.min(medical.energy,a.fatigue),soon=!a.task||a.task.remaining<=1,after=withAgent(a,{fatigue:a.fatigue-gain});
    const improvement=Math.max(0,...jobs(a).map(j=>(E.options(after,a.id,j.type,j.target).chance-j.o.chance)*j.value/100));
    // Use the same recovery value as the agent planner, scaled to the energy
@@ -144,8 +145,8 @@ export function planBB1Faction(s,id,E){
  };
  // Recovery protects future production. An urgent, viable arrest can precede it.
  for(const a of agents.filter(a=>!a.task)){
-  const medic=agents.some(b=>b.country===a.country&&b.talents.includes('secours')&&!['travel','sneak'].includes(b.task?.type));
-  if(a.status==='injured'&&!medic){go(a,a.country===id?'heal':'travel',a.country===id?null:id,'Soigner pour préserver les opérations suivantes.');continue;}
+  const carePending=E.medicalCarePending(s,id);
+  if(a.status==='injured'&&!carePending){go(a,a.country===id?'heal':'travel',a.country===id?null:id,'Soigner pour préserver les opérations suivantes.');continue;}
   const immediate=targets.some(t=>t.country===a.country&&t.prepared&&t.locationUntil>=s.turn&&!risk(a,'arrest',t.id).error&&(risk(a,'arrest',t.id).chance>=60||s.turn>=campaignRules(s).maxTurns||t.flightUntil===s.turn));
   if(a.fatigue>=65&&!immediate){if(a.country===id)go(a,'rest',null,'Récupération au QG.');else if(E.hasSafehouse(s,id,a.country))go(a,'fieldRest',null,'Récupération partagée au terrain.');else if(!claimed('findSafehouse',null,a.country)&&E.options(s,a.id,'findSafehouse').chance>=45)go(a,'findSafehouse',null,'Préparer une récupération locale.');else go(a,'hide',null,'Réduire fatigue et exposition.');}
   else if(a.exposure>=65&&!immediate&&a.country!==id)go(a,E.hasSafehouse(s,id,a.country)&&a.fatigue>=25?'fieldRest':'hide',null,'Récupérer une capacité d’intervention.');

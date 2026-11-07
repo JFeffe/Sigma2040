@@ -1,4 +1,4 @@
-// Probabilities conditional on a failed action. Secourisme acts afterwards.
+// Probabilities conditional on a failed action. Medical support resolves separately at the end of the turn.
 export function incidentRates(type,clandestine=false){
  if(['findSafehouse','intimidate'].includes(type))return {safe:.75,injury:.20,capture:.05};
  if(type==='equip')return {safe:.75,injury:.175,capture:.075};

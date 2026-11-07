@@ -25,7 +25,7 @@ test('Selection fills the leftmost vacancy without moving the chief; solo and mu
 test('Flip all includes filtered-out cards, persists through sorting, and never modifies selection or talents',()=>{
  resetRecruitFilters('solo');resetRecruitFilters('multi');
  const ids=['p0','p12','p13','p14'],snapshot=JSON.stringify(DISPLAY_ROSTER);
- setRecruitFilter('solo','talent','secours');setRecruitView('solo',null,true);
+ setRecruitFilter('solo','talent','planB');setRecruitView('solo',null,true);
  for(const a of DISPLAY_ROSTER)assert.ok(isRecruitPortrait(a.id,'solo'));
  setRecruitView('solo','p0',false);setRecruitFilter('solo','sort','1');
  assert.equal(isRecruitPortrait('p0','solo'),false);assert.equal(isRecruitPortrait('p12','solo'),true);
