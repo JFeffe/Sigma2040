@@ -20,7 +20,7 @@ test('Seeded distribution varies, favors secondary countries and limits concentr
  assert.ok(layouts.size>500);
 });
 test('Criminal placements stay evenly distributed across secondary countries over many seeds',()=>{
- const counts=Object.fromEntries(Object.keys(COUNTRY).filter(id=>!COUNTRY[id].power).map(id=>[id,0]));
+ const counts=Object.fromEntries(Object.keys(COUNTRY).filter(id=>!COUNTRY[id].power&&!COUNTRY[id].expansion).map(id=>[id,0]));
  for(let seed=1;seed<=6000;seed++)for(const suspect of fresh(seed).suspects)counts[suspect.country]++;
  const average=6000*7/6;
  for(const count of Object.values(counts))assert.ok(Math.abs(count-average)<average*.04,JSON.stringify(counts));
@@ -29,7 +29,7 @@ test('Every superpower has exactly two secondary countries one passport turn awa
  const expected={FR:['DE','TR'],GB:['DE','TR'],RU:['DE','TR'],US:['CA','BR'],IN:['TR','JP'],CN:['TR','JP']};
  for(const [home,nearby] of Object.entries(expected)){
   const s=E.createGame(home,['p0','p1','p2','p3'],42),a=s.agents.find(agent=>agent.faction===home);
-  const actual=Object.keys(COUNTRY).filter(id=>!COUNTRY[id].power&&E.options(s,a.id,'travel',id).duration===1);
+  const actual=Object.keys(COUNTRY).filter(id=>!COUNTRY[id].power&&!COUNTRY[id].expansion&&E.options(s,a.id,'travel',id).duration===1);
   assert.deepEqual(actual.sort(),nearby.sort(),home);
   for(const destination of nearby){
    assert.equal(E.options(s,a.id,'sneak',destination).duration,1);

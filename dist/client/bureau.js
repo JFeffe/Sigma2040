@@ -1,13 +1,14 @@
 // Bureau des enquêtes : portage de la maquette validée (module.js / style.css),
 // branché sur le moteur réel. Même structure et mêmes interactions ; seules la source
 // des données, la palette et les demandes de suivi changent.
-import {COOPERATION} from './cooperation.js?v=228';
-import * as E from './engine.js?v=228';
-import {ACTIONS as GAME_ACTIONS, COUNTRY, COUNTRIES, STAT_NAMES} from './data.js?v=228';
-import {proofTitle} from './intelligence.js?v=228';
-import {actionResources} from './presentation.js?v=228';
-import {portraitAsset, portraitBackgroundAsset, icon} from './ui.js?v=228';
-import {suspectPortrait} from './fracture-profiles.js?v=228';
+import {COOPERATION} from './cooperation.js?v=229';
+import * as E from './engine.js?v=229';
+import {mapCountries} from './operation-map.js?v=229';
+import {ACTIONS as GAME_ACTIONS, COUNTRY, STAT_NAMES} from './data.js?v=229';
+import {proofTitle} from './intelligence.js?v=229';
+import {actionResources} from './presentation.js?v=229';
+import {portraitAsset, portraitBackgroundAsset, icon} from './ui.js?v=229';
+import {suspectPortrait} from './fracture-profiles.js?v=229';
 
 const asset = p => new URL(p, location.href).href;
 const opened = new Set();
@@ -127,7 +128,7 @@ export async function openBureau(caseId = null) {
   if (!s || !ctx.ready()) return;
   mountBureau();
   try {
-    stylePromise ||= fetch(asset('./bureau.css?v=228')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
+    stylePromise ||= fetch(asset('./bureau.css?v=229')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
     styles = await stylePromise;
   } catch (error) { stylePromise = null; ctx.notify?.(error.message); return; }
   if (!ctx.ready()) return;
@@ -234,7 +235,7 @@ export function bureauCaseMarkup(s, id = selected) {
   <aside class="optional" aria-label="Appuis optionnels"><header><span class="tag">Facultatif</span><strong>Appuis dans le pays</strong><small>Permanents</small></header>${node(s, t, 'contact', 'Activer un contact')}${node(s, t, 'authorize', 'Obtenir un mandat')}${node(s,t,'equip','Récupérer une arme')}</aside></div>
   ${t.rejected.length ? `<section class="activity"><header class="panel-head"><strong>Preuves falsifiées écartées</strong></header><ul>${t.rejected.map(name => `<li class="ko">${esc(name)} · ne compte pas parmi les deux preuves recevables</li>`).join('')}</ul></section>` : ''}${activity(s, t)}</main></div>`;
 }
-function teamBar(s){return `<section class="bureau-team"><div class="bureau-roster">${team(s).map(a=>`<label>${portrait(a)}<span><strong>${esc(a.name)}</strong><small>Énergie ${100-a.fatigue}/100 · Exposition ${a.exposure}</small><small>${a.task?esc(GAME_ACTIONS[a.task.type].name):a.status==='captured'?'Détenu':'Disponible'}</small></span><input type="checkbox" data-travel-agent="${a.id}" ${a.task||a.status==='captured'?'disabled':''} aria-label="Déplacer ${esc(a.name)}"></label>`).join('')}</div><div class="bureau-travel"><select data-destination aria-label="Destination">${COUNTRIES.map(c=>`<option value="${c.id}" ${c.id===caseOf(s,selected).country?'selected':''}>${esc(c.name)}</option>`).join('')}</select><select data-travel-mode aria-label="Mode de voyage"><option value="travel">Voyager sous passeport</option><option value="sneak">Passage clandestin</option></select><button data-send-team>Envoyer les agents cochés</button></div></section>`;}
+function teamBar(s){return `<section class="bureau-team"><div class="bureau-roster">${team(s).map(a=>`<label>${portrait(a)}<span><strong>${esc(a.name)}</strong><small>Énergie ${100-a.fatigue}/100 · Exposition ${a.exposure}</small><small>${a.task?esc(GAME_ACTIONS[a.task.type].name):a.status==='captured'?'Détenu':'Disponible'}</small></span><input type="checkbox" data-travel-agent="${a.id}" ${a.task||a.status==='captured'?'disabled':''} aria-label="Déplacer ${esc(a.name)}"></label>`).join('')}</div><div class="bureau-travel"><select data-destination aria-label="Destination">${mapCountries(s).filter(c=>!c.power||c.id===s.player).map(c=>`<option value="${c.id}" ${c.id===caseOf(s,selected).country?'selected':''}>${esc(c.name)}</option>`).join('')}</select><select data-travel-mode aria-label="Mode de voyage"><option value="travel">Voyager sous passeport</option><option value="sneak">Passage clandestin</option></select><button data-send-team>Envoyer les agents cochés</button></div></section>`;}
 async function assignGroup(ids,type,target){const errors=[],sent=[];for(const id of ids){try{const readOnly=ctx.readOnlyReason?.();if(readOnly)throw Error(readOnly);await ctx.assign({id,type,target,useCredits:false});sent.push(id);}catch(e){errors.push(e.message);}}refreshBureau();notify(`${sent.length} ordre(s) affecté(s).${errors.length?' '+[...new Set(errors)].join(' · '):''}`);}
 function render() {
   const s = ctx.state(), f = s.factions[s.player];

@@ -18,9 +18,10 @@ test('Multiplayer confirmation is the first lobby control for host and guest, wi
  globalThis.location={href:'https://example.com/'};globalThis.localStorage={getItem:()=>null,setItem(){}};
  let html='';const mp=new Multiplayer({lobby:h=>{html=h;}}),r=room();
  try{
-  mp.active=true;mp.details={id:r.id,invite};
+  mp.active=true;mp.details={id:r.id,invite};r.phase='teams';r.mapSetup={seed:177,participants:['FR','US','CN','IN']};r.operationCountries=['CA','DE','TR','JP','PT','AU'];
   for(const isHost of [true,false]){
    mp.room=isHost?r:null;const m=r.members[isHost?0:1];mp.snapshot={...r,country:m.country};mp.draftRoom=r.id;
+   mp.draftPhase='teams';
    for(const [count,confirmed] of [[3,false],[4,false],[4,true]]){
     m.confirmed=confirmed;mp.draft=DEFAULT_TEAM_IDS.slice(0,count);mp.panel();
     const top=html.slice(html.indexOf('<section class="mp-lobby-header'),html.indexOf('Choisir votre pays')),button=top.match(/<button[^]*?<\/button>/)[0];

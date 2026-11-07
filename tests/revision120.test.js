@@ -18,5 +18,5 @@ test('Initial dossiers are unread; reading persists and hides alerts until next 
 });
 test('Contested and closed-case evidence never adds a pending verification; nav order and main menu build are correct',()=>{
  const s=fresh(),t=s.suspects[0],p=s.proofs.find(p=>p.suspect===t.id);s.factions.FR.evidence=[{id:p.id,contested:true}];assert.equal(inquiryIndicator(s),null);s.factions.FR.evidence[0].contested=false;t.arrested=true;assert.equal(inquiryIndicator(s),null);
- const html=gameShell(s,'world','',false,'',true);assert.match(html,/nav-available nav-inquiry/);assert.ok(html.indexOf('data-id="government"')<html.indexOf('data-id="diplomacy"'));assert.ok(mainMenu(s).includes('class="menu-build">BUILD '+BUILD_VERSION));
+ const html=gameShell(s,'world','',false,'',true);assert.match(html,/nav-available nav-inquiry/);assert.ok(html.indexOf('data-id="government"')<html.indexOf('data-id="diplomacy"'));assert.match(mainMenu(s),new RegExp('<a class="menu-build" href="https://github.com/JFeffe/Sigma2040/compare/[^"]+"[^>]*>BUILD '+BUILD_VERSION));
 });

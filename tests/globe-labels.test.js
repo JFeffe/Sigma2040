@@ -6,7 +6,7 @@ import {countryPin,layoutCountryLabels} from '../dist/client/globe.js';
 
 test('Every strategic country has a map name, independent city marker and centered status icons',()=>{
  const s=E.createGame('FR',['p0','p12','p13','p14'],42);s.factions.FR.access.DE=true;s.factions.FR.authorized.DE=true;s.factions.FR.safehouses.push('DE');
- const pins=COUNTRIES.map(c=>countryPin(s,c,[],[]));assert.equal(pins.length,12);
+ const pins=COUNTRIES.filter(c=>!c.expansion).map(c=>countryPin(s,c,[],[]));assert.equal(pins.length,12);
  for(let i=0;i<12;i++){assert.match(pins[i],new RegExp(`data-id="${COUNTRIES[i].id}"`));assert.ok(pins[i].includes(COUNTRIES[i].name.toLocaleUpperCase('fr')));assert.ok(pins[i].includes(COUNTRIES[i].city));assert.match(pins[i],/class="pin-country"/);assert.doesNotMatch(pins[i],/pin-card/);assert.equal((pins[i].match(/class="map-status /g)||[]).length,COUNTRIES[i].power?1:5);assert.equal((pins[i].match(/<svg x="-7" y="-7" width="14" height="14"/g)||[]).length,COUNTRIES[i].power?1:5);}
  assert.match(pins[COUNTRIES.findIndex(c=>c.id==='DE')],/map-status access is-active/);
  assert.match(pins[COUNTRIES.findIndex(c=>c.id==='DE')],/map-status mandate is-active/);

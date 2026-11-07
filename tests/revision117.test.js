@@ -9,7 +9,7 @@ import {navigationAvailability,gameShell} from '../dist/client/shell.js';
 import {personnelPanel} from '../dist/client/personnel-ui.js';
 const fresh=(seed=42)=>E.createGame('FR',['p0','p12','p13','p14'],seed);
 test('Cooperation shuffles independently per power and seed, preserving every starting distribution and saved relations',()=>{
- const minors=COUNTRIES.filter(c=>!c.power),seen=new Set();
+ const minors=COUNTRIES.filter(c=>!c.power&&!c.expansion),seen=new Set();
  for(let seed=1;seed<=100;seed++){
   const s=fresh(seed),rows=Object.values(s.factions).map(f=>minors.map(c=>f.cooperation[c.id]));
   for(const row of rows)assert.deepEqual([...row].sort(),[0,1,2,2,3,4]);

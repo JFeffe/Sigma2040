@@ -6,7 +6,7 @@ import {recruitProfile,recruitDetails,recruitCard,setRecruitView} from '../dist/
 import {statlines} from '../dist/client/ui.js';
 import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/multiplayer-core.js';
 const profiles=[{id:'p13',old:[5,7,8],stats:[5,8,7],talents:['contacts','informatique','drones']},{id:'p18',old:[7,6,7],stats:[6,6,8],talents:['contacts','combat','infiltration']}];
-const fresh=()=>E.createConfiguredGame('FR',['p13','p18','p0','p12'],223);
+const fresh=()=>E.createConfiguredGame('FR',['p13','p18','p0','p12'],223,'bb2',{operationMap:false});
 test('Approved profiles preserve all roster creation constraints',()=>{
  for(const p of profiles){const a=DISPLAY_ROSTER.find(a=>a.id===p.id);assert.deepEqual(a.stats,p.stats);assert.deepEqual(a.talents,p.talents);}
  assert.equal(new Set(DISPLAY_ROSTER.map(a=>a.stats.join(','))).size,20);

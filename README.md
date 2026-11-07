@@ -1,3 +1,9 @@
+## Build 229 — Cartes de campagne
+
+Le Portugal (Lisbonne) et l’Australie (Darwin) portent à huit le nombre de pays d’opération coopératifs. En Régulier et Avancé, six pays sont tirés selon les quatre superpuissances et affichés avant le recrutement. Les dossiers, attaques, fuites et transferts restent dans cette carte. Les trajets entre les huit territoires forment un triangle Allemagne–Turquie–Portugal et une boucle Canada–Brésil–Afrique du Sud–Australie–Japon, à un tour par liaison. Les campagnes existantes et la formation utilisent leurs règles historiques.
+
+[Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/116b423be58805f8c69be15f4916017f29807c07...build-229)
+
 ## Build 225 — Mira, Viktor et Midnight
 
 Mira : A6 / H8 / SF6, talents conservés. Viktor garde A6 / H9 / SF5 et échange Enquête contre la Surveillance de Midnight, qui garde A8 / H7 / SF5. Les informations de sélection, repêchage et fiches suivent les profils ; les anciennes sauvegardes sont migrées sans recalculer les missions confirmées. Les 20 profils restent uniques, totalisent 20 points et conservent cinq porteurs par talent.

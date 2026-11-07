@@ -1,8 +1,9 @@
-import {threatCountryClear,relocationCountries} from './threat-placement.js?v=228';
-import {cellName,namedCells,regularCells} from './data.js?v=228';
-import {campaignRules} from './campaign-rules.js?v=228';
-import {refuge} from './placement.js?v=228';
-import {COUNTRIES,COUNTRY} from './data.js?v=228';
+import {threatCountryClear,relocationCountries} from './threat-placement.js?v=229';
+import {cellName,namedCells,regularCells} from './data.js?v=229';
+import {campaignRules} from './campaign-rules.js?v=229';
+import {operationCountries} from './operation-map.js?v=229';
+import {refuge} from './placement.js?v=229';
+import {COUNTRY} from './data.js?v=229';
 // Only resolved, observable events enter Fracture's knowledge. Never inspect agent orders.
 export function initFracture(s){s.fracture??={version:1,cells:Array.from({length:s.coopNetworkRules===1||s.cellVariantRules===1?5:3},()=>({pressure:0,resources:4,cooldown:0})),flights:[],moved:[],defenses:{}};return s.fracture;}
 export function observeFracture(s,cell,amount){if(regularCells(s).includes(cell)){const f=initFracture(s);f.cells[cell].pressure=Math.min(6,f.cells[cell].pressure+amount);}}
@@ -51,7 +52,7 @@ export function tickFracture(s,random,write){
   if(p&&!p.adapted&&(mayRelocate||mayPostpone)){
    const old=p.country;let kind='report';
    if(mayRelocate){
-    const choices=relocationCountries(s,p,COUNTRIES.filter(x=>x.id!==old&&(f.defenses[x.id]||0)<p.turn+1),p.turn+1);
+    const choices=relocationCountries(s,p,operationCountries(s).filter(x=>x.id!==old&&(f.defenses[x.id]||0)<p.turn+1),p.turn+1);
     if(choices.length){p.country=choices[Math.floor(random(s)*choices.length)].id;kind='cible';}
    }
    if(kind==='report'&&!mayPostpone)continue;

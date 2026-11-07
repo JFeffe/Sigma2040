@@ -17,7 +17,7 @@
 @media(max-width:700px){.menu-earth{width:150vw;height:150vw;right:-66vw;top:37%;opacity:.75}.main-menu:after{background:linear-gradient(90deg,#040910e8,#040910a8 65%,#04091055)}.menu-panel{width:calc(100% - 48px);max-width:410px;margin:35px 24px 30px;padding:10px 0}.menu-brand{margin-bottom:40px}.menu-brand .brand{font-size:clamp(22px,6vw,30px);gap:13px;letter-spacing:.12em}.menu-brand .brand svg{width:36px;height:38px}.menu-eyebrow{font-size:10px;letter-spacing:2px;margin-bottom:25px}.menu-panel h1{font-size:clamp(21px,5.5vw,27px)}.menu-intro{font-size:15px;margin-bottom:27px}.main-menu footer{margin:0 24px 20px;flex-direction:column;line-height:1.6}}
 @media(prefers-reduced-motion:reduce){.menu-panel nav .btn{transition:none}}
 .music-settings{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #ffffff24}.music-settings label{display:block;font-size:15px;margin:14px 0 9px}.music-settings input[type=range]{width:100%}.music-settings small{display:block;margin:12px 0;color:#b8b3be;line-height:1.5}.music-settings p{font-size:14px;line-height:1.5}.music-settings summary{cursor:pointer;font-size:14px}.settings-modal{width:580px;max-width:100%}.settings-modal h2{font-size:28px}.setup-menu-return{margin:16px 24px}.main-menu .btn:disabled{opacity:.4}
-.main-menu .menu-build{position:absolute;top:18px;left:22px;z-index:5;color:#b9bccb;font:12px/1.4 Arial,sans-serif;letter-spacing:.1em;pointer-events:none}
+.main-menu .menu-build{position:absolute;top:18px;left:22px;z-index:5;color:#b9bccb;font:12px/1.4 Arial,sans-serif;letter-spacing:.1em;pointer-events:auto;text-decoration:none}
 
 /* Compact main menu and saved campaign metadata. */
 .main-menu .menu-panel{margin-top:clamp(38px,5vh,65px)}

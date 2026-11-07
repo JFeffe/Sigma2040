@@ -1,19 +1,20 @@
-import {isNpcTutorial} from './tutorial-mode.js?v=228';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=228';
-import {bureauEnabled} from './mod-settings.js?v=228';
-import {inquiryIndicator} from './inquiry-notifications.js?v=228';
-import {threatStatus} from './threat-status.js?v=228';
-import {campaignRules} from './campaign-rules.js?v=228';
-import {clockMarkup} from './campaign-clock.js?v=228';
-import {newsTicker} from './news.js?v=228';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=228';
-import {COUNTRY,COUNTRIES} from './data.js?v=228';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=228';
+import {operationCountries} from './operation-map.js?v=229';
+import {isNpcTutorial} from './tutorial-mode.js?v=229';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=229';
+import {bureauEnabled} from './mod-settings.js?v=229';
+import {inquiryIndicator} from './inquiry-notifications.js?v=229';
+import {threatStatus} from './threat-status.js?v=229';
+import {campaignRules} from './campaign-rules.js?v=229';
+import {clockMarkup} from './campaign-clock.js?v=229';
+import {newsTicker} from './news.js?v=229';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=229';
+import {COUNTRY} from './data.js?v=229';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=229';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
  const free=Math.max(0,2-getTechSlots(state,state.player));
- const government=!governmentOptions(state,'funding').error||!governmentOptions(state,'medical').error||COUNTRIES.some(c=>!c.power&&!governmentOptions(state,'diplomacy',c.id).error);
+ const government=!governmentOptions(state,'funding').error||!governmentOptions(state,'medical').error||operationCountries(state).some(c=>!governmentOptions(state,'diplomacy',c.id).error);
  const alerts={inquiry:inquiryIndicator(state,unreadInquiry),threats:count?{badge:String(count),label:`${count} menace${count>1?'s':''} non couverte${count>1?'s':''} par votre pays`,tone:'threats'}:null,operations:free?{badge:String(free),label:`${free} emplacement${free>1?'s':''} de module disponible${free>1?'s':''}`,tone:'modules'}:null,government:government?{badge:'!',label:'Au moins une faveur gouvernementale disponible',tone:'favors'}:null};
  for(const id of Object.keys(alerts))if(dismissed[id]){if(id==='threats'&&alerts[id])alerts[id]={...alerts[id],quiet:true};else alerts[id]=null;};return alerts;
 }

@@ -1,4 +1,5 @@
-import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=228';
+import {selectOperationMap} from './operation-map.js?v=229';
+import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=229';
 
 export const GAME_MODES=Object.freeze({regular:'Régulier',advanced:'Avancé',cooperative:'Coopératif'});
 export const PARTICIPANT_COUNT=4;
@@ -44,7 +45,7 @@ export function validateDraft(d){
  for(const c of d.countries)if(!Array.isArray(d.teams[c])||d.teams[c].join(',')!==teams[c].join(','))fail();
  return d;
 }
-export function publicDraft(d){if(!d)return null;const {version,mode,humans,countries,order,teams,picks}=d;return structuredClone({version,...(mode?{mode}:{}),humans,countries,order,teams,picks});}
+export function publicDraft(d){if(!d)return null;const {version,mode,humans,countries,order,teams,picks}=d;return structuredClone({version,...(mode?{mode}:{}),humans,countries,order,teams,picks,operationCountries:selectOperationMap(countries,d.seed,mode)});}
 export function sameTeam(ids,owned){return Array.isArray(ids)&&ids.length===4&&new Set(ids).size===4&&owned?.length===4&&ids.every(id=>owned.includes(id));}
 export function reorderTeam(ids,id,direction){
  const out=[...ids],i=out.indexOf(id);if(i<0)return out;

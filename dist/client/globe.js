@@ -1,11 +1,12 @@
-import {renderRatio,terrainLimit} from './graphics.js?v=228';
-import {COOPERATION} from './cooperation.js?v=228';
-import {paintSignals,signalSnapshot} from './feedback.js?v=228';
-import {domeRaw,limitDome} from './dome-projection.js?v=228';
-import {COUNTRIES,COUNTRY} from './data.js?v=228';
-import {team,knownTargets,visiblePlots,cyberStatus,hasSafehouse} from './engine.js?v=228';
-import {icon,esc} from './ui.js?v=228';
-import {agentMapMarkers,mapAgents,OBSERVER_COLORS} from './map-markers.js?v=228';
+import {mapCountries,countryOnMap} from './operation-map.js?v=229';
+import {renderRatio,terrainLimit} from './graphics.js?v=229';
+import {COOPERATION} from './cooperation.js?v=229';
+import {paintSignals,signalSnapshot} from './feedback.js?v=229';
+import {domeRaw,limitDome} from './dome-projection.js?v=229';
+import {COUNTRIES,COUNTRY} from './data.js?v=229';
+import {team,knownTargets,visiblePlots,cyberStatus,hasSafehouse} from './engine.js?v=229';
+import {icon,esc} from './ui.js?v=229';
+import {agentMapMarkers,mapAgents,OBSERVER_COLORS} from './map-markers.js?v=229';
 export const createCamera=()=>{let mode='globe',foreign=true;try{if(localStorage.getItem('sigma-map-mode')==='dome')mode='dome';}catch{}return {lon:25,lat:18,k:1,mode,yaw:0,pitch:0,panX:0,panY:0,expanded:false,routes:true,intel:true,foreign};};
 export function constrain(c){c.k=Math.max(1,Math.min(3,c.k));c.lat=Math.max(-80,Math.min(80,c.lat));c.lon=((c.lon+180)%360+360)%360-180;limitDome(c);return c;}
 export function zoomAt(c,k){c.k=k;if(c.k<=1){c.panX=0;c.panY=0;}return constrain(c);}
@@ -14,7 +15,7 @@ let context,texturePromise,cachedTerrain;
 const geometryCache=new WeakMap();
 function geometry(world){if(!geometryCache.has(world))geometryCache.set(world,world.map(f=>({type:'Feature',geometry:f.geometry,properties:{id:f.id},country:COUNTRIES.find(c=>c.iso===f.id)})));return geometryCache.get(world);}
 // Country names sit inside the land mass; city markers keep their own coordinates.
-const COUNTRY_LABEL_POS={FR:[2,46],US:[-102,39],CN:[103,34],IN:[78,22],RU:[78,59],GB:[-2,54],CA:[-105,57],BR:[-53,-11],DE:[11,51],TR:[34,40],ZA:[24,-29],JP:[138,37]};
+const COUNTRY_LABEL_POS={FR:[2,46],US:[-102,39],CN:[103,34],IN:[78,22],RU:[78,59],GB:[-2,54],CA:[-105,57],BR:[-53,-11],DE:[11,51],TR:[34,40],ZA:[24,-29],JP:[138,37],PT:[-8.1,40.1],AU:[134,-24]};
 const labelSize=width=>width<700?[146,67]:[156,69];
 const mapGlyph=id=>icon(id).replace('<svg class="icon"','<svg x="-7" y="-7" width="14" height="14" class="icon"');
 export function countryPin(s,c,plots,targets){
@@ -65,9 +66,9 @@ export function mountMap(camera,getSelected,rerender){
  const on=(el,t,fn,opts={})=>el.addEventListener(t,fn,{...opts,signal:abort.signal});
  const message=shell.querySelector('.globe-loading');
  if(!d3){message.textContent='Globe indisponible. Le sélecteur de pays reste accessible.';return ()=>abort.abort();}
- const paths=features.map(f=>`<path class="globe-country ${f.country?'strategic':''}" ${f.country?`data-cmd="map-country" data-id="${f.country.id}"`:''}><title>${esc(f.country?.name||f.properties.id)}</title></path>`).join('');
+ const paths=features.map(f=>{const active=f.country&&countryOnMap(s,f.country.id);return `<path class="globe-country ${active?'strategic':''}" ${active?`data-cmd="map-country" data-id="${f.country.id}"`:''}><title>${esc(f.country?.name||f.properties.id)}</title></path>`;}).join('');
  const plots=visiblePlots(s),targets=knownTargets(s);
- svg.innerHTML=`<path class="globe-outline"/><g class="globe-countries">${paths}</g><path class="globe-grid"/><g class="globe-routes"></g><g class="globe-pins">${COUNTRIES.map(c=>countryPin(s,c,plots,targets)).join('')}</g><g class="globe-agents">${agentMapMarkers(s)}</g>`;
+ svg.innerHTML=`<path class="globe-outline"/><g class="globe-countries">${paths}</g><path class="globe-grid"/><g class="globe-routes"></g><g class="globe-pins">${mapCountries(s).map(c=>countryPin(s,c,plots,targets)).join('')}</g><g class="globe-agents">${agentMapMarkers(s)}</g>`;
  const countryPaths=[...svg.querySelectorAll('.globe-country')],pins=[...svg.querySelectorAll('.map-pin-v2')],agents=[...svg.querySelectorAll('.agent-map-anchor')];
  function terrain(radius,fast){
   if(!source||!world.length)return;

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import * as E from '../dist/client/engine.js?v=228';
-import {ACTIONS,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js?v=228';
-import {weaponOpportunity} from '../dist/client/bot-weapon.js?v=228';
+import * as E from '../dist/client/engine.js?v=229';
+import {ACTIONS,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from '../dist/client/data.js?v=229';
+import {weaponOpportunity} from '../dist/client/bot-weapon.js?v=229';
 const affected=['sneak','arrest','findSafehouse','intimidate','rescue'];
 test('Armed Sang-froid actions get one bonus, with equip and automatic actions excluded',()=>{
  for(const r of DISPLAY_ROSTER)for(const fatigue of [0,55,80])for(const exposure of [0,25,65,90])for(const boost of [false,true]){
@@ -19,7 +19,7 @@ test('Armed Sang-froid actions get one bonus, with equip and automatic actions e
 });
 test('Actual successful clandestine travel retains an existing weapon, passport drops it',()=>{
  for(const weapon of [true,false])for(const type of ['travel','sneak']){
-  const s=E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,991);s.humanFactions=Object.keys(s.factions);const a=E.team(s)[0];a.weapon=weapon;a.exposure=43;
+  const s=E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,991,'bb2',{operationMap:false});s.humanFactions=Object.keys(s.factions);const a=E.team(s)[0];a.weapon=weapon;a.exposure=43;
   E.assign(s,a.id,type,'DE');a.task.chance=100;
   const loaded=E.validateSave(structuredClone(s));assert.equal(loaded.agents.find(b=>b.id===a.id).task.chance,100);
   while(a.task)E.advance(s);assert.equal(a.country,'DE');assert.equal(a.weapon,type==='sneak'&&weapon);if(type==='sneak')assert.equal(a.exposure,0);

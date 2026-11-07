@@ -10,7 +10,9 @@ export const COUNTRIES = [
  {id:'DE',iso:'DEU',name:'Allemagne',city:'Berlin',pos:[13.4,52.5],coop:80,sector:'Industrie'},
  {id:'TR',iso:'TUR',name:'Turquie',city:'Ankara',pos:[32.8,39.9],coop:50,sector:'Transit'},
  {id:'ZA',iso:'ZAF',name:'Afrique du Sud',city:'Pretoria',pos:[28.2,-25.7],coop:65,sector:'Approvisionnement'},
- {id:'JP',iso:'JPN',name:'Japon',city:'Tokyo',pos:[139.7,35.7],coop:75,sector:'Robotique'}
+ {id:'JP',iso:'JPN',name:'Japon',city:'Tokyo',pos:[139.7,35.7],coop:75,sector:'Robotique'},
+ {id:'PT',iso:'PRT',name:'Portugal',city:'Lisbonne',pos:[-9.14,38.72],coop:65,sector:'Câbles sous-marins',expansion:true,art:'lisbonne.webp'},
+ {id:'AU',iso:'AUS',name:'Australie',city:'Darwin',pos:[130.84,-12.46],coop:65,sector:'Surveillance maritime',expansion:true,art:'darwin.webp'}
 ];
 export const COUNTRY=Object.fromEntries(COUNTRIES.map(c=>[c.id,c]));
 export const TALENTS={

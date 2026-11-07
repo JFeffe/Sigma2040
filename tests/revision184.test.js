@@ -12,7 +12,7 @@ import {makeScreens} from '../dist/client/screens.js';
 import {PATCH_NOTES,balanceChangesMarkup,patchNotesPage} from '../dist/client/patch-notes.js';
 import {BUILD_VERSION} from '../dist/client/build-version.js';
 
-const fresh=()=>E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,184);
+const fresh=()=>E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,184,'bb2',{operationMap:false});
 const send=(r,m,kind,payload={})=>execute(r,m.token,{protocol:PROTOCOL,seq:m.lastSeq+1,turn:r.game?.turn,kind,payload});
 function room(observer=false){
  const r=newRoom('room-token-0000000000184','invite-token-0000000184','host-token-000000000184','Jean <Admin>');

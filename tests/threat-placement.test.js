@@ -5,7 +5,7 @@ import {tickFracture,observeProtection} from '../dist/client/fracture.js';
 import {COUNTRIES} from '../dist/client/data.js';
 import {relocationCountries,threatCountryClear} from '../dist/client/threat-placement.js';
 test('1000 seeded campaigns distribute all 17 threats across six countries with six-turn spacing',()=>{
- const countries=COUNTRIES.filter(c=>!c.power);
+ const countries=COUNTRIES.filter(c=>!c.power&&!c.expansion);
  for(let seed=1;seed<=1000;seed++){
   const s=E.createGame('FR',['p0','p12','p13','p14'],seed);assert.equal(s.plots.length,17);
   for(const c of countries){const plots=s.plots.filter(p=>p.country===c.id).sort((a,b)=>a.turn-b.turn);assert.ok(plots.length===2||plots.length===3);for(let i=1;i<plots.length;i++)assert.ok(plots[i].turn-plots[i-1].turn>=6);}

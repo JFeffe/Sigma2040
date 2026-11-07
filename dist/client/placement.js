@@ -1,8 +1,9 @@
-import {COUNTRIES,COUNTRY} from './data.js?v=228';
+import {COUNTRY} from './data.js?v=229';
+import {operationCountries,operationIds} from './operation-map.js?v=229';
 // Geographic distance on a sphere, including routes across the date line.
 const distance=(a,b)=>{const rad=Math.PI/180,p=a.pos[1]*rad,q=b.pos[1]*rad;return Math.acos(Math.max(-1,Math.min(1,Math.sin(p)*Math.sin(q)+Math.cos(p)*Math.cos(q)*Math.cos((a.pos[0]-b.pos[0])*rad))));};
 export function placeSuspects(s,random){
- const countries=COUNTRIES.filter(c=>!c.power).map(c=>c.id);
+ const countries=[...operationIds(s)];
  // One regular lead per secondary country guarantees nearby starting dossiers
  // for every power without favouring a country in the random distribution.
  for(let i=countries.length-1;i>0;i--){const j=Math.floor(random(s)*(i+1));[countries[i],countries[j]]=[countries[j],countries[i]];}
@@ -11,14 +12,14 @@ export function placeSuspects(s,random){
 }
 
 export function refuge(s,t,random){
- const available=COUNTRIES.filter(c=>!c.power&&c.id!==t.country&&s.suspects.filter(x=>!x.arrested&&x.country===c.id).length<2);
+ const available=operationCountries(s).filter(c=>c.id!==t.country&&s.suspects.filter(x=>!x.arrested&&x.country===c.id).length<2);
  return available[Math.floor(random(s)*available.length)].id;
 }
 
 // Upgrade only active campaigns; preserve solved cases and all collected evidence.
 export function restoreSecondaryCountries(s,write){
  if(s.ended)return;
- const destination=origin=>COUNTRIES.filter(c=>!c.power&&s.suspects.filter(t=>!t.arrested&&t.country===c.id).length<2).sort((a,b)=>distance(COUNTRY[origin],a)-distance(COUNTRY[origin],b))[0].id;
+ const destination=origin=>operationCountries(s).filter(c=>s.suspects.filter(t=>!t.arrested&&t.country===c.id).length<2).sort((a,b)=>distance(COUNTRY[origin],a)-distance(COUNTRY[origin],b))[0].id;
  const moved=new Set();
  for(const t of s.suspects.filter(t=>!t.arrested&&COUNTRY[t.country].power)){
   t.country=destination(t.country);moved.add(t.id);

@@ -1,13 +1,14 @@
-import {rescueTargets} from './cell-variants.js?v=228';
-import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=228';
-import {COUNTRIES,COUNTRY,ACTIONS} from './data.js?v=228';
-import {icon,esc} from './ui.js?v=228';
-import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=228';
+import {mapCountries} from './operation-map.js?v=229';
+import {rescueTargets} from './cell-variants.js?v=229';
+import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=229';
+import {COUNTRY,ACTIONS} from './data.js?v=229';
+import {icon,esc} from './ui.js?v=229';
+import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=229';
 const fieldOnly=new Set(['contacts','authorize','hide','influence','blackmail','drone','rescue']);
 export function locationActions(a,s=null){const home=a.country===a.faction,local=s?knownTargets(s,a.faction).some(t=>!t.arrested&&t.country===a.country):true;return Object.entries(ACTIONS).filter(([id,d])=>!d.disabled&&(home?!d.field&&!fieldOnly.has(id):!d.home)&&(id!=='rescue'||!!s&&rescueTargets(s,a.faction).some(b=>b.country===a.country))&&(id!=='findSafehouse'||!!s||!a.safehouses?.includes(a.country))&&(!['collect','surveil','prepare','arrest','hack','intimidate'].includes(id)||local));}
 export const CONTEXT_ACTIONS=new Set(['collect','surveil','prepare','arrest','hack','intimidate','protect']);
 export const agentMenuActions=(a,s)=>locationActions(a,s).filter(([id])=>!CONTEXT_ACTIONS.has(id));
-export function countryOptions(selected,exclude=null,secondaryOnly=false,home=null){if(secondaryOnly)return COUNTRIES.filter(c=>!c.power&&c.id!==exclude).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('');return [[true,'Superpuissances'],[false,'Autres pays']].map(([power,label])=>`<optgroup label="${label}">${COUNTRIES.filter(c=>!!c.power===power&&c.id!==exclude&&(!home||!c.power||c.id===home)).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('')}</optgroup>`).join('');}
+export function countryOptions(selected,exclude=null,secondaryOnly=false,home=null,s=null){if(secondaryOnly)return mapCountries(s).filter(c=>!c.power&&c.id!==exclude).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('');return [[true,'Superpuissances'],[false,'Autres pays']].map(([power,label])=>`<optgroup label="${label}">${mapCountries(s).filter(c=>!!c.power===power&&c.id!==exclude&&(!home||!c.power||c.id===home)).map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${c.name}</option>`).join('')}</optgroup>`).join('');}
 export function availability(a){
  if(a.status==='captured')return {kind:'detained',label:'EN DÉTENTION',icon:'lock'};
  if(a.task){const t=a.task,travel=['travel','sneak'].includes(t.type),rest=['rest','heal'].includes(t.type),label=travel?'EN VOYAGE':rest?(t.type==='heal'?'EN SOINS':'AU REPOS'):'EN MISSION';return {kind:'busy',label:t.queued?'ORDRE PLANIFIÉ':label,icon:travel?'plane':'clock'};}
@@ -29,7 +30,7 @@ export function actionOptions(allowed,selected,s=null,a=null,target=null){const 
 
 export function actionUnavailable(s,a,type){
  let targets=[null];
- if(['travel','sneak','cyberSupport'].includes(type))targets=COUNTRIES.filter(c=>c.id!==a.country&&(!c.power||c.id===a.faction)).map(c=>c.id);
+ if(['travel','sneak','cyberSupport'].includes(type))targets=mapCountries(s).filter(c=>c.id!==a.country&&(!c.power||c.id===a.faction)).map(c=>c.id);
  else if(['collect','surveil','hack','prepare','arrest','intimidate'].includes(type))targets=knownTargets(s,a.faction).filter(t=>!t.arrested&&t.country===a.country).map(t=>t.id);
  else if(type==='rescue')targets=rescueTargets(s,a.faction).filter(b=>b.country===a.country).map(b=>b.id);
  return !targets.length||targets.every(target=>!!options(s,a.id,type,target).error);

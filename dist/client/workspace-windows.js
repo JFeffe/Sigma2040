@@ -1,9 +1,10 @@
-import {createFloatingWindows} from './floating-windows.js?v=228';
-import {createCountryInquiryController} from './country-inquiry.js?v=228';
-import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=228';
-import {countryTargetButtons} from './country-inquiry.js?v=228';
-import {COUNTRY,ACTIONS} from './data.js?v=228';
-import {visibleTeam} from './cooperative.js?v=228';
+import {countryOnMap} from './operation-map.js?v=229';
+import {createFloatingWindows} from './floating-windows.js?v=229';
+import {createCountryInquiryController} from './country-inquiry.js?v=229';
+import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=229';
+import {countryTargetButtons} from './country-inquiry.js?v=229';
+import {COUNTRY,ACTIONS} from './data.js?v=229';
+import {visibleTeam} from './cooperative.js?v=229';
 
 export function createGameWorkspace(api){
  const windows=createFloatingWindows();let context=null;
@@ -19,7 +20,7 @@ export function createGameWorkspace(api){
   }
  }
  function country(id,preferred=null,agent=null){
-  if(!COUNTRY[id]||!api.active())return;if(COUNTRY[id].power&&id!==api.state().player){api.selectCountry(id);return;}
+  if(!api.active()||!countryOnMap(api.state(),id))return;if(COUNTRY[id].power&&id!==api.state().player){api.selectCountry(id);return;}
   api.showWorld();refresh();const key='country:'+id,r=windows.open(key,'Pays · '+COUNTRY[id].name,{width:440});r.kind='country';r.id=id;r.selection??={boost:false};
   if(preferred){r.selection.type=preferred;r.selection.agent=agent;r.selection.message='';}refresh();
  }

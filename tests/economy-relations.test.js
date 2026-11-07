@@ -17,7 +17,7 @@ test('Paid diplomatic support uses total cost, caps chance and refunds queued bu
  f.budget=20;E.assign(s,a.id,'authorize',null,true);a.task.queued=false;E.cancel(s,a.id);assert.equal(f.budget,14);assert.ok(E.options(s,a.id,'hide',null,true).error);
 });
 test('Each power keeps the requested cooperation distribution and saves preserve relations',()=>{
- const s=fresh(),minors=COUNTRIES.filter(c=>!c.power);for(const f of Object.values(s.factions))assert.deepEqual(minors.map(c=>f.cooperation[c.id]).sort(),[0,1,2,2,3,4]);
+ const s=fresh(),minors=COUNTRIES.filter(c=>!c.power&&!c.expansion);for(const f of Object.values(s.factions))assert.deepEqual(minors.map(c=>f.cooperation[c.id]).sort(),[0,1,2,2,3,4]);
  s.factions.FR.cooperation.TR=3;assert.equal(E.validateSave(structuredClone(s)).factions.FR.cooperation.TR,3);
 });
 test('Old influence disappears without charging existing missions or rewriting relationships',()=>{
