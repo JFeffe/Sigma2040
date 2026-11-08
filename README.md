@@ -1,3 +1,9 @@
+## Build 237 — Icône d’arme
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/25e456613ecb376036f6e2b53ced7802505e6cab...build-237)
+
+La fiche agent affiche une icône de pistolet à côté du statut de l’arme (« Avec » ou « Sans »).
+
 ## Build 232 — Plan B et Soutien médical
 
 Plan B remplace Secourisme. Après un échec, la prochaine mission avec jet lancée dans les deux tours suivants reçoit +5 points de réussite, avec un plafond de 90 %. Le Soutien médical rend jusqu’à 12 points d’énergie immédiatement à toute l’équipe et soigne ses blessés à la fin du tour. Il coûte 25 points de confiance et peut servir trois fois par équipe et par campagne.
