@@ -1,10 +1,9 @@
-import {countryOnMap} from './operation-map.js?v=232';
-import {createFloatingWindows} from './floating-windows.js?v=232';
-import {createCountryInquiryController} from './country-inquiry.js?v=232';
-import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=232';
-import {countryTargetButtons} from './country-inquiry.js?v=232';
-import {COUNTRY,ACTIONS} from './data.js?v=232';
-import {visibleTeam} from './cooperative.js?v=232';
+import {countryOnMap} from './operation-map.js?v=233';
+import {createFloatingWindows} from './floating-windows.js?v=233';
+import {createCountryInquiryController} from './country-inquiry.js?v=233';
+import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=233';
+import {COUNTRY,ACTIONS} from './data.js?v=233';
+import {visibleTeam} from './cooperative.js?v=233';
 
 export function createGameWorkspace(api){
  const windows=createFloatingWindows();let context=null;
@@ -14,15 +13,16 @@ export function createGameWorkspace(api){
   const active=api.active();windows.setVisible(active);if(!active||!s)return;
   for(const r of windows.values()){
    if(r.kind==='country')r.setHTML(countryOperationsMarkup(s,r.id,r.selection,r.pending?'Confirmation en cours…':api.readOnlyReason()));
-   if(r.kind==='territory')r.setHTML(countryTargetButtons(s,r.id));
    if(r.kind==='agent')r.setHTML(floatingAgentMarkup(s,r.id));
    if(r.controller)r.controller.refreshCountryInquiry();
   }
  }
- function country(id,preferred=null,agent=null){
+ function country(id,preferred=null,agent=null,group=null){
   if(!api.active()||!countryOnMap(api.state(),id))return;if(COUNTRY[id].power&&id!==api.state().player){api.selectCountry(id);return;}
-  api.showWorld();refresh();const key='country:'+id,r=windows.open(key,'Pays · '+COUNTRY[id].name,{width:440});r.kind='country';r.id=id;r.selection??={boost:false};
-  if(preferred){r.selection.type=preferred;r.selection.agent=agent;r.selection.message='';}refresh();
+  api.showWorld();refresh();const key=(group==='access'?'country-access:':'country:')+id,title=group==='access'?'Actions du pays':'Pays';
+  const r=windows.open(key,title+' · '+COUNTRY[id].name,{width:440});r.kind='country';r.id=id;r.selection??={group,boost:false};
+  if(preferred&&!r.pending)r.selection={group,type:preferred,agent,boost:false};
+  refresh();
  }
  function agent(id){api.openAgent(id);}
  function inquiry(id,threat=false){
@@ -33,16 +33,18 @@ export function createGameWorkspace(api){
   if(!r.el.querySelector('.country-inquiry'))r.close();
  }
  async function command(cmd,id,el){
-  if(cmd==='workspace-inquiry'){const r=windows.open('territory:'+id,'Enquête · '+COUNTRY[id].name,{width:440});r.kind='territory';r.id=id;refresh();return true;}
-  if(cmd==='workspace-country'){country(id,el?.dataset.type||null);return true;}
+  if(cmd==='workspace-country'){country(id,el?.dataset.type||null,null,el?.dataset.group||null);return true;}
   if(cmd==='country-inquiry'||cmd==='country-threat'||cmd==='suspect'){inquiry(id,cmd==='country-threat');return true;}
-  if(cmd==='workspace-deploy'){api.deploy(id);return true;}
+  if(cmd==='workspace-deploy'){if(!api.readOnlyReason())api.deploy(id);return true;}
   const root=el?.closest('[data-workspace-window]'),r=root&&windows.get(root.dataset.workspaceWindow);if(!r)return false;
   if(cmd.startsWith('inquiry-')){await r.controller?.handleInquiryCommand(cmd,id);return true;}
-  if(cmd==='workspace-deploy'){api.deploy(r.id);return true;}
   if(!cmd.startsWith('workspace-'))return false;
   if(r.pending)return true;
-  if(cmd==='workspace-action'){r.selection={type:id,boost:false};refresh();}
+  if(cmd==='workspace-action'){r.selection={group:r.selection.group,type:id,boost:false};refresh();}
+  if(cmd==='workspace-proof'){
+   r.selection.target=id;r.selection.message='';refresh();
+   r.el.querySelector('.country-proof-choice[aria-pressed="true"]')?.focus();
+  }
   if(cmd==='workspace-agent'){r.selection.agent=id;r.selection.message='';refresh();}
   if(cmd==='workspace-boost'){r.selection.boost=!r.selection.boost;refresh();}
   if(cmd==='workspace-confirm'){
@@ -55,6 +57,13 @@ export function createGameWorkspace(api){
   }
   return true;
  }
- function change(el){const root=el.closest('[data-workspace-window]'),r=root&&windows.get(root.dataset.workspaceWindow);if(!r)return false;if(el.matches('[data-country-target]')){r.selection.target=el.value;r.selection.message='';refresh();}else r.controller?.handleInquiryChange(el);return true;}
- return {country,agent,inquiry,command,change,refresh,clear:()=>windows.clear()};
+ function change(el){
+  const root=el.closest('[data-workspace-window]'),r=root&&windows.get(root.dataset.workspaceWindow);if(!r)return false;
+  if(el.matches('[data-country-target]')){
+   r.selection.target=el.value;r.selection.message='';refresh();
+   r.el.querySelector('[data-country-target]')?.focus({preventScroll:true});
+  }else r.controller?.handleInquiryChange(el);
+  return true;
+ }
+ return {country,agent,inquiry,command,change,refresh,readOnlyReason:api.readOnlyReason,clear:()=>windows.clear()};
 }

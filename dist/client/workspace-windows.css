@@ -31,7 +31,7 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .workspace-body{padding:10px;font-size:12px}.workspace-titlebar{min-height:36px;padding:4px 9px}.workspace-close{width:26px;height:26px;font-size:21px}.workspace-body h2{font-size:18px}.workspace-body h3{font-size:13px;margin:9px 0 6px}.workspace-body p{line-height:1.35}.workspace-window .btn{font-size:12px;min-height:28px;padding:5px 7px}.country-operation-types{gap:4px}.country-operation-types .btn{flex-basis:120px;min-height:29px}.country-operation-detail{margin-top:8px}.country-operations-cases{margin-top:7px;padding:6px 0}.country-operations-boost{margin:8px 0 5px}.country-chance-details{margin:7px 0;font-size:12px}.country-operation-agent .portrait{width:28px;height:34px}.country-operation-choice small{font-size:11px}.country-title-signals{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}.info-word{cursor:help;border-bottom:1px dotted #a7b7cb}.info-word:focus-visible{outline:1px solid #a7b7cb}
 .compact-country-signals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.compact-country-signal{display:inline-flex;align-items:center;gap:4px;border:1px solid #ffffff20;border-radius:4px;padding:4px 5px;font:11px/1.25 Arial,sans-serif;white-space:nowrap;cursor:help}.compact-country-signal b{margin-left:auto}.compact-country-signal.is-active{color:#a2e0bc}.compact-country-signal.is-inactive{color:#aaa7b2}.compact-country-signal .icon{width:12px!important;height:12px!important}
 .immersive-deck .map-dossier.country-sidebar{width:260px}.immersive-deck .country-sidebar>summary{padding:8px;font-size:12px}.immersive-deck .country-sidebar .country-dossier{padding:8px;gap:6px}.country-sidebar .country-case-button.btn{padding:6px;font-size:12px;gap:6px;min-height:35px}.country-sidebar .country-case-button small{font-size:10px}.country-sidebar .country-case-button .suspect-portrait{width:30px;height:36px;min-width:30px;flex-basis:30px}.country-sidebar .country-dossier>.btn{min-height:28px;padding:5px 7px;font-size:11px}.country-sidebar .power-sidebar-art{width:100%;height:140px;min-height:140px;border-radius:5px}.power-consultation{font-size:11px;line-height:1.4;margin:0}
-.immersive-deck .map-dossier.agent-sidebar{width:330px;max-height:calc(100dvh - var(--hud-top) - 158px)}.agent-sidebar .workspace-body{overflow:visible;padding:10px}.agent-sidebar .floating-agent-overview{grid-template-columns:38% minmax(0,1fr);gap:8px}.agent-sidebar .floating-agent-overview .full-body{height:180px}.agent-sidebar .floating-agent h2{font-size:17px}.agent-sidebar .floating-agent p{font-size:11px;margin:5px 0}.agent-sidebar .floating-agent-mission{margin:7px 0;padding-bottom:6px}.agent-sidebar .floating-agent .btn{font-size:11px;padding:5px;min-height:28px}.agent-sidebar .talents{font-size:11px;gap:4px}.agent-sidebar .floating-agent .statlines{font-size:11px}
+.immersive-deck .map-dossier.agent-sidebar{width:330px;max-height:calc(100dvh - var(--hud-top) - 200px)}.agent-sidebar .workspace-body{overflow:visible;padding:10px}.agent-sidebar .floating-agent-overview{grid-template-columns:38% minmax(0,1fr);gap:8px}.agent-sidebar .floating-agent-overview .full-body{height:180px}.agent-sidebar .floating-agent h2{font-size:17px}.agent-sidebar .floating-agent p{font-size:11px;margin:5px 0}.agent-sidebar .floating-agent-mission{margin:7px 0;padding-bottom:6px}.agent-sidebar .floating-agent .btn{font-size:11px;padding:5px;min-height:28px}.agent-sidebar .talents{font-size:11px;gap:4px}.agent-sidebar .floating-agent .statlines{font-size:11px}
 @media(max-width:600px){.immersive-deck .map-dossier.agent-sidebar,.immersive-deck .map-dossier.country-sidebar{width:min(300px,calc(100vw - 16px))}}
 
 /* Build 218: country popup actions, without the redundant country summary. */
@@ -44,3 +44,57 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .country-operations .country-operation-choice.btn{padding:4px 6px;gap:6px}
 .country-operations .country-operation-agent{gap:5px;margin:3px 0}
 .country-operations .country-chance-details{margin:5px 0}
+
+.country-sidebar-actions{display:grid;gap:4px}
+.country-sidebar .country-operation-button.btn,.country-operations .country-operation-button.btn{
+ display:flex;align-items:center;justify-content:flex-start;gap:6px;min-height:28px;padding:5px 7px;font-size:11px;line-height:1.2;text-align:left;white-space:normal
+}
+.country-case-buttons>.country-operation-button{flex-basis:100%}
+.country-operation-button .icon{flex:none;width:14px;height:14px}
+.country-sidebar .country-operation-button:not(:disabled),.country-operations .country-operation-button:not(:disabled){background:#1f354a;border-color:#537a9b;color:#d5edff}
+.country-operations .country-operation-button[aria-pressed=true]:not(:disabled){background:#2a5275;border-color:#8cc7f8}
+.country-sidebar .country-operation-button:not(:disabled):hover,.country-operations .country-operation-button:not(:disabled):hover{background:#2a5275;border-color:#8cc7f8}
+.country-sidebar .country-operation-button:disabled,.country-operations .country-operation-button:disabled{background:#24262b;border-color:#44464e;color:#a6a8b0;opacity:1}
+
+.country-proof-choices{display:grid;gap:4px;max-height:120px;min-width:0;overflow:auto;padding:4px;margin:4px 0;border:1px solid #ffffff20;border-radius:5px}
+.country-proof-choices .country-proof-choice{display:grid;justify-content:stretch;justify-items:start;gap:1px;padding:4px 7px;text-align:left;line-height:1.15}
+.country-proof-choice strong{font-size:13px}
+.country-proof-choice small{font-size:11px;font-weight:400;color:#bec5d1}
+.country-proof-choice[aria-pressed=true]{background:#203f60;border-color:#78b9f1;color:#d5edff}
+
+.immersive-deck .agent-sidebar>summary{justify-content:flex-start;gap:6px;padding:7px 10px}
+.immersive-deck .agent-sidebar>summary>.agent-nationality{margin:0}
+.immersive-deck .agent-sidebar>summary:after{margin-left:auto}
+.floating-agent>header{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin-bottom:6px}
+.floating-agent>header>h2{flex-basis:100%;margin:0}
+.floating-agent>header>.floating-agent-role{margin:0;color:#bac4d2}
+.floating-agent>header .agent-deployment{font-size:11px}
+.floating-agent>header .agent-deployment .country-code{width:20px;height:14px}
+.floating-agent-overview{align-items:start;gap:8px}
+.agent-sidebar .floating-agent-overview{grid-template-columns:minmax(78px,32%) minmax(0,1fr)}
+.agent-sidebar .floating-agent-overview .full-body{height:132px;padding:0}
+.floating-agent-facts{display:grid;justify-items:start;gap:5px;min-width:0}
+.floating-agent-facts .availability{padding:3px 6px;font-size:10px;line-height:1.2}
+.floating-agent-readings,.floating-agent-stats,.floating-agent-gear,.floating-agent-links{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.floating-agent-facts .icon{width:13px;height:13px;flex:none}
+.floating-agent-readings>span,.floating-agent-stats>span,.floating-agent-gear>span{display:inline-flex;align-items:center;gap:3px;font-size:11px}
+.floating-agent-readings .reading-green{color:#79dba4}
+.floating-agent-readings .reading-blue{color:#82bcfa}
+.floating-agent-readings .reading-yellow{color:#f4cf72}
+.floating-agent-readings .reading-orange{color:#f0a369}
+.floating-agent-readings .reading-red{color:#f48c93}
+.floating-agent-facts .talents{display:flex;gap:3px;margin:0}
+.floating-agent-facts .talents>span{font-size:10px;padding:2px 4px}
+.floating-agent .country-case-buttons{gap:4px;margin:8px 0 0}
+.floating-agent .country-case-button{flex-basis:100%}
+.floating-agent .country-case-button .suspect-portrait{width:28px;height:34px}
+.floating-agent .quick-action{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:7px 0}
+.floating-agent .quick-action .btn{width:100%;margin:0;line-height:1.2;white-space:normal}
+.floating-agent-links{margin-top:6px}
+.floating-agent>details{margin-top:5px}
+
+.country-operation-detail .info-word{display:inline-flex;align-items:center;gap:4px}
+.country-operation-detail .info-word>.icon:last-child{width:12px;height:12px}
+@media(max-width:760px){
+ .immersive-deck .map-dossier.agent-sidebar{max-height:calc(100dvh - var(--hud-top) - 282px)}
+}

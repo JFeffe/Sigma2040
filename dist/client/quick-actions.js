@@ -1,7 +1,8 @@
-import {locationActions} from './presentation.js?v=232';
-import * as E from './engine.js?v=232';
-import {ACTIONS} from './data.js?v=232';
-import {button,esc,icon} from './ui.js?v=232';
+import {locationActions} from './presentation.js?v=233';
+import * as E from './engine.js?v=233';
+import {operationIds} from './operation-map.js?v=233';
+import {ACTIONS} from './data.js?v=233';
+import {button,esc,icon} from './ui.js?v=233';
 export function quickAction(s,a){
  if(!a||a.task||['captured','dead','retired'].includes(a.status)||s.ended)return null;
  const candidates=[],add=(type,target,reason)=>candidates.push({type,target,reason});
@@ -17,8 +18,15 @@ export function quickAction(s,a){
  add(a.country===a.faction?'counter':'contacts',null,'Développez votre réseau et la Recherche.');
  const allowed=new Set(locationActions(a,s).map(([type])=>type));return candidates.find(c=>allowed.has(c.type)&&!E.options(s,a.id,c.type,c.target).error)||null;
 }
-export function quickActionMarkup(s,a){
+export function quickActionMarkup(s,a,locked=''){
  if(!a||a.faction!==s.player)return '';
- const types=[a.country===a.faction?'rest':'fieldRest','hide','protect',...(a.country===a.faction?['cyberSupport']:[])];
- return `<div class="quick-action">${types.map(type=>{const o=E.options(s,a.id,type),reason=type==='cyberSupport'?(!a.task&&!['captured','dead','retired'].includes(a.status)&&!s.ended?'':o.error||'Agent indisponible.'):o.error||'';return button(`${icon(ACTIONS[type].icon)}${ACTIONS[type].name} · ${o.chance} %`,'suggest-action','small wide',`data-id="${esc(a.id)}" data-type="${type}" title="${esc(reason||ACTIONS[type].desc)}" ${reason?'disabled':''}`);}).join('')}</div>`;
+ const home=a.country===a.faction,types=home?['rest','cyberSupport']:['fieldRest','hide'];
+ if(!home&&!E.visiblePlots(s).some(p=>p.country===a.country))types.push('protect');
+ return `<div class="quick-action">${types.map(type=>{
+  const targets=type==='cyberSupport'?operationIds(s):[null];
+  const options=targets.map(target=>E.options(s,a.id,type,target));
+  const o=options.find(row=>!row.error)??options[0];
+  const reason=locked||o.error;
+  return button(`${icon(ACTIONS[type].icon)}${ACTIONS[type].name} · ${o.chance} %`,'suggest-action','small wide',`data-id="${esc(a.id)}" data-type="${type}" title="${esc(reason||ACTIONS[type].desc)}" ${reason?'disabled':''}`);
+ }).join('')}</div>`;
 }

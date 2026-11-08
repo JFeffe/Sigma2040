@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
 import {DEFAULT_TEAM_IDS} from '../dist/client/data.js';
-import {countryOperationTypes,countryOperationModel,countryOperationsMarkup,floatingAgentMarkup} from '../dist/client/country-operations.js';
+import {countryOperationTypes,countryOperationModel,countryOperationsMarkup,countrySidebarActions,floatingAgentMarkup} from '../dist/client/country-operations.js';
 import {createCountryInquiryController} from '../dist/client/country-inquiry.js';
 import {clampWindowPosition} from '../dist/client/floating-windows.js';
 const fresh=()=>{const s=E.createGame('FR',DEFAULT_TEAM_IDS,42);s.humanFactions=Object.keys(s.factions);return s;};
@@ -15,10 +15,11 @@ test('Country operations expose general actions only and list exclusively own av
  const html=countryOperationsMarkup(s,'DE',{type:'equip'});assert.match(html,/Déployer un agent/);assert.match(html,/Agents disponibles sur place/);assert.ok(html.includes(m.selected.o.chance+' %'));
 });
 
-test('Country selection validates rescue targets, boosts, unavailable equipment and already assigned agents',()=>{
+test('Captured agents get a contextual extraction button and equipment respects boosts and availability',()=>{
  const s=fresh(),[a,b]=E.team(s);a.country=b.country='DE';a.weapon=false;b.status='captured';
- let m=countryOperationModel(s,'DE',{type:'rescue'});assert.equal(m.target,b.id);assert.equal(m.selected.a.id,a.id);
- m=countryOperationModel(s,'DE',{type:'equip',agent:a.id,boost:true});assert.equal(m.selected.o.chance,E.options(s,a.id,'equip',null,true).chance);
+ assert.match(countrySidebarActions(s,'DE'),new RegExp('data-cmd="rescue-captive"[^>]*data-id="'+b.id+'"'));
+ assert.equal(E.options(s,a.id,'rescue',b.id).error,null);
+ let m=countryOperationModel(s,'DE',{type:'equip',agent:a.id,boost:true});assert.equal(m.selected.o.chance,E.options(s,a.id,'equip',null,true).chance);
  E.assign(s,a.id,'equip');assert.equal(countryOperationModel(s,'DE',{type:'equip'}).rows.length,0);
  a.task=null;a.weapon=true;assert.ok(countryOperationModel(s,'DE',{type:'equip'}).rows[0].reason);
 });

@@ -12,6 +12,7 @@ test('Deployment mode switch preserves eligible checks, recalculates forecasts a
   const html=deploymentPickerMarkup(s,type,'JP',[a.id,b.id]);const plan=E.options(s,a.id,type,'JP');
   assert.match(html,new RegExp(`value="${type}" selected`));assert.match(html,new RegExp(`${plan.duration} tour\\(s\\) · ${plan.fatigue} énergie.*${plan.chance} %`));
   const inputs=[...html.matchAll(/<input[^>]+>/g)].map(m=>m[0]);assert.match(inputs.find(i=>i.includes(`value="${a.id}"`)),/checked/);assert.doesNotMatch(inputs.find(i=>i.includes(`value="${b.id}"`)),/checked/);
+  assert.match(html,/<option value="sneak"[^>]*>Passage clandestin<\/option>/);
   assert.match(html,/1 agent sélectionné/);assert.match(html,/Déployer 1 agent/);assert.equal(JSON.stringify(s),before);
  }
 });
