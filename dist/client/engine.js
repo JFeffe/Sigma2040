@@ -1,31 +1,31 @@
-import {incidentRates,incidentDescription} from './incident-rules.js?v=233';
-import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=233';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=233';
-import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=233';
-import {normalizePrestige} from './score-rules.js?v=233';
-import {protectionShare} from './balance-rules.js?v=233';
-import {planBB2Faction} from './bot-brillant-2.js?v=233';
-import {planBB1Faction} from './bot-brillant-1.js?v=233';
-import {operationIds,operationCountries,mapCountries,countryOnMap,validOperationMap,selectOperationMap,travelTurns} from './operation-map.js?v=233';
+import {incidentRates,incidentDescription} from './incident-rules.js?v=234';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRecruitment,tutorialParticipants} from './tutorial-mode.js?v=234';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=234';
+import {isTutorial,tutorialOrderError,tutorialObjective} from './tutorial-rules.js?v=234';
+import {normalizePrestige} from './score-rules.js?v=234';
+import {protectionShare} from './balance-rules.js?v=234';
+import {planBB2Faction} from './bot-brillant-2.js?v=234';
+import {planBB1Faction} from './bot-brillant-1.js?v=234';
+import {operationIds,operationCountries,mapCountries,countryOnMap,validOperationMap,selectOperationMap,travelTurns} from './operation-map.js?v=234';
 export {travelTurns};
-import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=233';
-import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=233';
-import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=233';
-import {balanceThreatCountries} from './threat-placement.js?v=233';
-import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=233';
-import {exposurePenalty} from './exposure.js?v=233';
-export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=233';
-import {selectCells,variantPlots,plotDamage,activeCaptives,rescueTargets,captureLiaison,captivityTick,validateCellVariants} from './cell-variants.js?v=233';
-export {rescueTargets} from './cell-variants.js?v=233';
-import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold} from './data.js?v=233';
-import {campaignRules} from './campaign-rules.js?v=233';
-import {stopClock} from './campaign-clock.js?v=233';
-import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=233';
-import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=233';
-import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=233';
-import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=233';
-import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=233';
-import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=233';
+import {isCooperative,usesSharedCoop,bindCooperativeIntel} from './cooperative.js?v=234';
+import {GAME_MODES,selectParticipants,usesDraft,participantCount} from './game-setup.js?v=234';
+import {CRIMINAL_POOL,selectCriminals} from './criminal-roster.js?v=234';
+import {balanceThreatCountries} from './threat-placement.js?v=234';
+import {AI_LEVELS,aiLevel,normalizeAI} from './ai-difficulty.js?v=234';
+import {exposurePenalty} from './exposure.js?v=234';
+export {exposurePenalty,exposureLabel,activeSightings} from './exposure.js?v=234';
+import {selectCells,variantPlots,plotDamage,activeCaptives,rescueTargets,captureLiaison,captivityTick,validateCellVariants} from './cell-variants.js?v=234';
+export {rescueTargets} from './cell-variants.js?v=234';
+import {cellName,namedCells,campaignSuspects,regularCells,architectEvidenceThreshold,PLAN_B_BONUS} from './data.js?v=234';
+import {campaignRules} from './campaign-rules.js?v=234';
+import {stopClock} from './campaign-clock.js?v=234';
+import {recordOperation,recordSupport,recordAgentCondition,validateCampaignDetails} from './campaign-stats.js?v=234';
+import {COOPERATION,initialCooperation,randomizedCooperation,legacyCooperation,cooperationInfo} from './cooperation.js?v=234';
+import {placeSuspects,restoreSecondaryCountries} from './placement.js?v=234';
+import {initFracture,observeFracture,observeProtection,tickFracture,validateFracture,threatAnnounced} from './fracture.js?v=234';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=234';
+import {STAT_NAMES,COUNTRIES,COUNTRY,ROSTER,DISPLAY_ROSTER,ACTIONS,SUSPECTS,TECH,TALENTS,LEGACY_TALENTS,DOCTRINE_ACTIONS,NATIONAL_BONUSES_ENABLED} from './data.js?v=234';
 export const VERSION=1;
 export const ECONOMY=Object.freeze({initial:6,income:2,cap:18,boostCost:6,boostPoints:10});
 export const funding=f=>({income:f.confidence<10?0:f.confidence>=50?3:ECONOMY.income,cap:ECONOMY.cap});
@@ -210,8 +210,8 @@ export function options(s,agentId,type,target,useCredits=false){
  const tactical=type==='arrest'&&k?.tacticalArrestBonus&&!s.agents.some(b=>b.faction===a.faction&&b.task?.type==='arrest'&&b.task.target===target&&b.task.tacticalBonus===5);if(tactical){bonus+=5;explanations.push('Planification tactique +5 · prochaine tentative');}
  const chief=!d.safe&&coordinationChief(s,a);if(chief){bonus+=5;explanations.push(`Coordination · ${chief.name} +5`);}
  const statChance=50+7*(a.stats[d.stat]-5);
- const planBonus=(!d.safe&&a.talents.includes('planB')&&a.planBExpires>=s.turn)?5:0;
- if(planBonus)explanations.push('Plan B +5');
+ const planBonus=(!d.safe&&a.talents.includes('planB')&&a.planBExpires>=s.turn)?PLAN_B_BONUS:0;
+ if(planBonus)explanations.push(`Plan B +${planBonus}`);
  const rawChance=statChance+bonus-penalty+planBonus;
  if(!d.safe){explanations.unshift(`Base · ${STAT_NAMES[d.stat]} ${a.stats[d.stat]} : 50 + 7 × (${a.stats[d.stat]} − 5) = ${statChance} %`);if(rawChance<10||rawChance>90)explanations.push(`Total avant limites : ${rawChance} % · ${rawChance<10?'minimum 10':'plafond 90'} %`);}
  const baseChance=d.safe?100:clamp(rawChance,10,90),boostGain=d.safe?0:Math.min(ECONOMY.boostPoints,90-baseChance);
@@ -263,7 +263,7 @@ function resolve(s,a,task){
  if(random(s)*100>=task.chance){
   if(!ACTIONS[type].safe&&a.talents.includes('planB')){
    a.planBExpires=s.turn+2;
-   log(s,`Plan B · ${a.name} : +5 points à la prochaine mission avec jet lancée d’ici le tour ${a.planBExpires} inclus.`,'info',a.faction);
+   log(s,`Plan B · ${a.name} : +${PLAN_B_BONUS} points à la prochaine mission avec jet lancée d’ici le tour ${a.planBExpires} inclus.`,'info',a.faction);
   }
   log(s,`${a.name} : ${ACTIONS[type].name.toLowerCase()}, échec. Aucune progression.`,'warning',a.faction);incident(s,a,task);if(t&&['collect','surveil','hack','prepare','arrest','drone','intimidate'].includes(type))observeFracture(s,t.cell,1);return;}
  const pressureTarget=t,exposedAtResolution=a.exposure>=80;
@@ -601,7 +601,7 @@ export function validateSave(s,{allowTutorial=false}={}){
   a.nationalities=[...new Set([...(a.nationalities||[]),...((a.templateId||a.id)==='p21'?['DE','US']:[]),a.faction])];
   if(a.talents.includes('secours'))a.talents=a.talents.map(t=>t==='secours'?'planB':t);
   if(a.planBExpires!==undefined&&(!a.talents.includes('planB')||!Number.isInteger(a.planBExpires)||!number(a.planBExpires,3,s.turn+2)))bad();
-  if(a.task?.planBonus!==undefined&&(a.task.planBonus!==5||!a.talents.includes('planB')||!Number.isInteger(a.planBExpires)||!a.task.chanceInputs))bad();
+  if(a.task?.planBonus!==undefined&&(![5,PLAN_B_BONUS].includes(a.task.planBonus)||!a.talents.includes('planB')||!Number.isInteger(a.planBExpires)||!a.task.chanceInputs))bad();
   if(a.talents.length!==3||new Set(a.talents).size!==3||a.talents.some(t=>!TALENTS[t]))bad();
  }
  for(const f of Object.values(s.factions))for(const k of Object.values(f.known))if(k.discovery&&(!number(k.discovery.turn,1,40)||!textSafe(k.discovery.source)))bad();

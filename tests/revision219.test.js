@@ -12,7 +12,7 @@ test('Protection stays contextual and outside the country action menus',()=>{
  assert.match(floatingAgentMarkup(s,agent.id),new RegExp('data-cmd="country-threat"[^>]*data-id="'+plot.id+'"'));
  assert.doesNotMatch(floatingAgentMarkup(s,agent.id),/data-type="protect"/);
  agent.country=COUNTRIES.find(c=>!c.power&&!c.expansion&&!E.visiblePlots(s).some(p=>p.country===c.id)).id;
- assert.match(floatingAgentMarkup(s,agent.id),/data-type="protect"/);
+ assert.doesNotMatch(floatingAgentMarkup(s,agent.id),/data-type="protect"/);
 });
 test('Dismissing an attack notice preserves threat data and shows a subsequent postponement',()=>{
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,21901),p=s.plots[0];p.announced=true;p.turn=7;

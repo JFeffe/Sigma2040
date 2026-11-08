@@ -15,6 +15,7 @@ export const COUNTRIES = [
  {id:'AU',iso:'AUS',name:'Australie',city:'Sydney',pos:[151.21,-33.87],coop:65,sector:'Surveillance maritime',expansion:true,art:'sydney.webp'}
 ];
 export const COUNTRY=Object.fromEntries(COUNTRIES.map(c=>[c.id,c]));
+export const PLAN_B_BONUS=7;
 export const TALENTS={
  chef:['Chef — Coordination',''],
  informatique:['Informatique','+10 à l’intrusion numérique et au hack d’un pays.'],
@@ -104,7 +105,7 @@ const talentPassives={
  chef:'Accorde +5 points de réussite aux autres agents de son équipe dans le même pays, dans la limite de 90 %. Le chef doit être vivant, libre et hors transit. Bonus fixé à la confirmation de l’ordre, sans effet sur ses propres actions ni les actions automatiques.',
  langues:'À l’étranger, annule le malus linguistique de −5 points pour Activer un contact, Obtenir un mandat et Chantage diplomatique. Bonus de +5 points pour Trouver une planque et Trouver une arme, cumulable avec les autres talents.',
  infiltration:'Réduit de 20 % tous les gains d’exposition des missions, en réussite comme en échec, y compris les voyages. Gain final arrondi au supérieur ; les baisses d’exposition sont inchangées.',
- planB:'Après une mission ratée, +5 points à la prochaine mission avec jet lancée dans les deux tours suivants. Le bonus est consommé au jet et ne se cumule pas.',
+ planB:`Après une mission ratée, +${PLAN_B_BONUS} points à la prochaine mission avec jet lancée dans les deux tours suivants. Le bonus est consommé au jet et ne se cumule pas.`,
  endurance:'Réduit de 25 % toutes les dépenses d’énergie des missions, chaque tour, quel que soit le résultat. Dépense finale arrondie au supérieur. Ne modifie pas la récupération d’énergie.'
 };
 for(const [id,talent] of Object.entries(TALENTS)){

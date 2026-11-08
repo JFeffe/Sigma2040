@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
+import {TALENTS} from '../dist/client/data.js';
 
 function fresh(seed=152){
  const s=E.createGame('FR',['p0','p16','p27','p14'],seed);
@@ -81,32 +82,41 @@ test('Plan B replaces Secourisme in existing saves and applies to the next rolle
  E.assign(s,a.id,'counter').chance=0;
  E.advance(s);
  assert.equal(a.planBExpires,s.turn+1);
- assert.equal(E.options(s,a.id,'protect').planBonus,5);
+ assert.match(TALENTS.planB[1],/\+7 points/);
+ assert.ok(E.options(s,a.id,'protect').explanations.includes('Plan B +7'));
+ assert.equal(E.options(s,a.id,'protect').planBonus,7);
  E.assign(s,a.id,'rest');
  E.advance(s);
- assert.equal(E.options(s,a.id,'protect').planBonus,5);
+ assert.equal(E.options(s,a.id,'protect').planBonus,7);
  const task=E.assign(s,a.id,'protect');
- assert.equal(task.planBonus,5);
+ assert.equal(task.planBonus,7);
  E.cancel(s,a.id);
- assert.equal(E.options(s,a.id,'protect').planBonus,5);
+ assert.equal(E.options(s,a.id,'protect').planBonus,7);
  E.advance(s);
  assert.equal(E.options(s,a.id,'protect').planBonus,0);
 });
 
-test('Plan B keeps an already queued bonus and consumes it on resolution',()=>{
- const s=fresh(),a=E.team(s)[1];
- E.assign(s,a.id,'counter').chance=0;
- E.advance(s);
- E.advance(s);
- const task=E.assign(s,a.id,'protect');
- assert.equal(task.planBonus,5);
- assert.ok(task.chance<=90);
- const restored=E.validateSave(structuredClone(s)),b=E.team(restored)[1];
- E.advance(restored);
- assert.equal(b.task.planBonus,5);
- b.task.chance=100;
- E.advance(restored);
- assert.equal(b.planBExpires,undefined);
+test('Plan B preserves queued +5 and +7 orders through saves and consumes their bonus at the roll',()=>{
+ for(const bonus of [5,7]){
+  const s=fresh(),a=E.team(s)[1];
+  E.assign(s,a.id,'counter').chance=0;
+  E.advance(s);
+  E.advance(s);
+  const task=E.assign(s,a.id,'protect');
+  assert.equal(task.planBonus,7);
+  if(bonus===5){
+   task.planBonus=5;
+   task.chanceInputs.raw-=2;
+   task.chance=Math.min(90,Math.max(10,task.chanceInputs.raw));
+  }
+  const chance=task.chance,restored=E.validateSave(structuredClone(s)),b=E.team(restored)[1];
+  E.advance(restored);
+  assert.equal(b.task.planBonus,bonus);
+  assert.equal(b.task.chance,chance);
+  b.task.chance=100;
+  E.advance(restored);
+  assert.equal(b.planBExpires,undefined);
+ }
 });
 
 test('An energy-only medical favor from an old save does not queue new healing',()=>{

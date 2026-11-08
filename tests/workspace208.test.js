@@ -24,7 +24,7 @@ test('Captured agents get a contextual extraction button and equipment respects 
  a.task=null;a.weapon=true;assert.ok(countryOperationModel(s,'DE',{type:'equip'}).rows[0].reason);
 });
 
-test('Agent sheets offer quick actions, preserve mission cancellation and keep allied controls read-only',()=>{
+test('Agent sheets offer local actions, preserve mission cancellation and keep allied controls read-only',()=>{
  const s=fresh(),[a]=E.team(s);let html=floatingAgentMarkup(s,a.id);assert.doesNotMatch(html,/data-cmd="(?:agent-rest|confirm-order|pick-agent)"|Affecter une opération/);assert.match(html,/workspace-country/);
  E.assign(s,a.id,'rest');html=floatingAgentMarkup(s,a.id);assert.match(html,/data-cmd="cancel"/);
  const ally=s.agents.find(x=>x.faction==='US');ally.task={...a.task};html=floatingAgentMarkup(s,ally.id);assert.match(html,/consultation uniquement/);assert.doesNotMatch(html,/data-cmd="cancel"/);

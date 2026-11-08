@@ -99,3 +99,23 @@ test('Access actions replace an empty dossier slot with or without a threat',()=
  assert.equal((html.match(/data-cmd="country-inquiry"/g)||[]).length,2);
  assert.doesNotMatch(html,/workspace-inquiry|<h2>/);
 });
+
+test('The agent menu shares the country actions but evaluates and assigns them to the selected agent only',()=>{
+ const s=E.createGame('FR',DEFAULT_TEAM_IDS,218),[a,b]=E.team(s);
+ a.country=b.country='DE';a.weapon=true;b.weapon=false;
+ let html=floatingAgentMarkup(s,a.id,{sidebar:true});
+ assert.match(html,/data-cmd="workspace-travel"[^>]*>[\s\S]*?Voyager<\/button>/);
+ assert.match(html,/data-type="equip"[^>]*disabled>/);
+ assert.match(html,/data-type="cyberSupport"[^>]*disabled>/);
+ assert.match(html,/data-type="fieldRest"[^>]*disabled>/);
+ assert.doesNotMatch(html,/floating-agent-role/);
+ assert.equal(new Map(sidebar(s,'DE')).get('equip'),true);
+ const pinned=countryOperationModel(s,'DE',{type:'equip',agentId:a.id});
+ assert.deepEqual(pinned.rows.map(r=>r.a.id),[a.id]);
+ assert.equal(pinned.selected,null);
+ a.weapon=false;
+ html=floatingAgentMarkup(s,a.id,{sidebar:true});
+ assert.doesNotMatch(html,/data-type="equip"[^>]*disabled>/);
+ assert.equal(countryOperationModel(s,'DE',{type:'equip',agentId:a.id}).selected.a.id,a.id);
+ assert.equal(countryOperationModel(s,'DE',{type:'equip',agentId:'invalid'}).selected,null);
+});

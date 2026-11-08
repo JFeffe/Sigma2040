@@ -1,15 +1,15 @@
-import {agentLocation} from './agent-location.js?v=233';
-import {quickActionMarkup} from './quick-actions.js?v=233';
-import * as E from './engine.js?v=233';
-import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=233';
-import {availability} from './presentation.js?v=233';
-import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=233';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=233';
-import {proofTitle} from './intelligence.js?v=233';
-import {fullBody} from './visuals.js?v=233';
-import {countryOnMap,operationCountries} from './operation-map.js?v=233';
-import {deploymentOptions} from './deployment.js?v=233';
-import {exposureLevel} from './exposure.js?v=233';
+import {agentLocation} from './agent-location.js?v=234';
+import * as E from './engine.js?v=234';
+import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=234';
+import {availability} from './presentation.js?v=234';
+import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=234';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=234';
+import {countryArtHeader} from './country-signals.js?v=234';
+import {proofTitle} from './intelligence.js?v=234';
+import {fullBody} from './visuals.js?v=234';
+import {countryOnMap,operationCountries} from './operation-map.js?v=234';
+import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=234';
+import {exposureLevel} from './exposure.js?v=234';
 
 const headquartersActions=['rest','cyberSupport','counter','analyze','heal'];
 const fieldActions=['cyberSupport','equip','findSafehouse','fieldRest','hide'];
@@ -43,13 +43,17 @@ function availableAgents(agents,country){
  return agents.filter(a=>a.country===country&&!a.task&&a.status!=='captured');
 }
 
-function actionAvailability(s,country,types,locked=''){
- const team=E.team(s);
+function operationTeam(s,country,agentId){
+ return E.team(s).filter(a=>!agentId||a.id===agentId&&a.country===country);
+}
+
+function actionAvailability(s,country,types,locked='',agentId=null){
+ const team=operationTeam(s,country,agentId);
  return new Map(types.map(type=>{
   if(locked)return [type,locked];
   if(type==='deploy'){
-   const available=['travel','sneak'].some(mode=>deploymentOptions(s,mode,country).some(row=>!row.error));
-   return [type,available?'':'Aucun agent disponible pour cette destination.'];
+   const available=agentId?agentTravelDestinations(s,agentId).some(row=>!row.travel.error||!row.sneak.error):['travel','sneak'].some(mode=>deploymentOptions(s,mode,country).some(row=>!row.error));
+   return [type,available?'':agentId?'Aucun déplacement disponible pour cet agent.':'Aucun agent disponible pour cette destination.'];
   }
   const location=operationLocation(s,country,type);
   const ready=availableAgents(team,location);
@@ -61,36 +65,40 @@ function actionAvailability(s,country,types,locked=''){
  }));
 }
 
-function actionName(s,country,type){
- return type==='deploy'?'Déployer un agent':type==='cyberSupport'?(country===s.player?'Hacker un pays':'Hack du pays'):ACTIONS[type].name;
+function actionName(s,country,type,agentId){
+ return type==='deploy'?(agentId?'Voyager':'Déployer un agent'):type==='cyberSupport'?(country===s.player?'Hacker un pays':'Hack du pays'):ACTIONS[type].name;
 }
 
-function countryActionButtons(s,country,types,availability,selection=null){
+function countryActionButtons(s,country,types,availability,selection=null,agentId=null){
  return types.map(type=>{
   const deploy=type==='deploy',action=ACTIONS[type],reason=availability.get(type);
-  const cmd=deploy?'workspace-deploy':selection?'workspace-action':'workspace-country';
-  const attrs=selection&&!deploy?`data-id="${type}" aria-pressed="${selection.type===type}"`:`data-id="${country}"${deploy?'':` data-type="${type}"`}`;
-  return button(icon(deploy?'plane':action.icon)+esc(actionName(s,country,type)),cmd,'small country-operation-button',`${attrs} title="${esc(reason||action?.desc||'Choisir les agents à déployer.')}" ${reason?'disabled':''}`);
+  const cmd=deploy?(agentId?'workspace-travel':'workspace-deploy'):selection?'workspace-action':'workspace-country';
+  const actor=agentId?` data-agent="${esc(agentId)}"`:'';
+  const attrs=selection&&!deploy?`data-id="${type}" aria-pressed="${selection.type===type}"`:`data-id="${deploy&&agentId?esc(agentId):country}"${deploy?'':` data-type="${type}"${actor}`}`;
+  const help=agentId?'Choisir la destination et le mode de déplacement.':'Choisir les agents à déployer.';
+  return button(icon(deploy?'plane':action.icon)+esc(actionName(s,country,type,agentId)),cmd,'small country-operation-button',`${attrs} title="${esc(reason||action?.desc||help)}" ${reason?'disabled':''}`);
  }).join('');
 }
 
-export function countrySidebarActions(s,country,locked=''){
- const actions=countryOperationTypes(s,country);
- if(!actions.length)return '';
- const types=['deploy',...actions],availability=actionAvailability(s,country,types,locked);
- const access=country===s.player?'':button(icon('file')+' Actions du pays','workspace-country','small country-operation-button',`data-id="${country}" data-group="access"`);
- return countryTargetButtons(s,country,{empty:access})+`<div class="country-sidebar-actions" aria-label="Actions du pays">${countryActionButtons(s,country,types,availability)}</div>`;
+export function countrySidebarActions(s,country,locked='',agent=null){
+ const actions=countryOperationTypes(s,country),agentId=agent?.id;
+ const actor=agentId?` data-agent="${esc(agentId)}"`:'';
+ const access=actions.length&&country!==s.player?button(icon('file')+' Actions du pays','workspace-country','small country-operation-button',`data-id="${country}" data-group="access"${actor}`):'';
+ const context=agent&&E.travelInProgress(agent)?'':countryTargetButtons(s,country,{empty:access,emptyLast:!!agent});
+ if(!actions.length)return agent?context:'';
+ const types=['deploy',...actions],availability=actionAvailability(s,country,types,locked,agentId);
+ return context+`<div class="country-sidebar-actions" aria-label="Actions du pays">${countryActionButtons(s,country,types,availability,null,agentId)}</div>`;
 }
 
-export function countryOperationModel(s,country,{type,agent,target,boost=false,group}={}){
+export function countryOperationModel(s,country,{type,agent,target,boost=false,group,agentId}={}){
  const types=countryOperationTypes(s,country,group);
  if(!types.includes(type)){
-  const availability=actionAvailability(s,country,types);
+  const availability=actionAvailability(s,country,types,'',agentId);
   type=types.find(id=>!availability.get(id))??types[0];
  }
  const targets=countryOperationTargets(s,country,type);
  const location=operationLocation(s,country,type);
- const local=E.team(s).filter(a=>a.country===location&&!E.travelInProgress(a)),ready=availableAgents(local,location);
+ const local=operationTeam(s,country,agentId).filter(a=>a.country===location&&!E.travelInProgress(a)),ready=availableAgents(local,location);
  if(!targets.some(([id])=>id===target)){
   target=targets.find(([id])=>ready.some(a=>!E.options(s,a.id,type,id).error))?.[0]??targets[0]?.[0]??null;
  }
@@ -106,12 +114,12 @@ export function countryOperationsMarkup(s,country,selection={},locked=''){
  if(selection.boost&&(!m.selected||m.selected.normal.boostGain===0||m.selected.reinforced.error)){selection.boost=false;m=countryOperationModel(s,country,selection);}
  const {type,types,targets,target,local,rows,selected}=m;selection.type=type;selection.agent=selected?.a.id;selection.target=target;
  const menuTypes=selection.group==='access'?types:types.length?['deploy',...types]:types;
- const availability=actionAvailability(s,country,menuTypes,locked);
+ const availability=actionAvailability(s,country,menuTypes,locked,selection.agentId);
  const d=ACTIONS[type],boostReason=locked||!selected||selected.normal.boostGain===0||selected.reinforced.error,blocked=locked||selected?.reason||availability.get(type)||(!selected?'Aucun agent disponible pour cette action.':'');
  const showDestination=type==='cyberSupport'&&country===s.player;
  const targetPicker=type==='analyze'&&targets.length?proofChoices(targets,target,locked):showDestination?`<label>Pays à hacker<select data-country-target ${locked?'disabled':''}>${targets.map(([id,name])=>`<option value="${id}" ${id===target?'selected':''}>${esc(name)}</option>`).join('')}</select></label>`:'';
- return `<section class="workspace-body country-operations"><header class="country-operations-heading"><h2>${flag(country)} ${esc(COUNTRY[country].name)}</h2></header>
- <h3>${selection.group==='access'?'Actions du pays':'Actions disponibles'}</h3><div class="country-operation-types">${countryActionButtons(s,country,menuTypes,availability,selection)}</div>
+ return `<section class="workspace-body country-operations"><header class="country-operations-heading"><h2>${flag(country)} ${esc(COUNTRY[country].name)}</h2>${countryArtHeader(s,country)}</header>
+ <h3>${selection.group==='access'?'Actions du pays':'Actions disponibles'}</h3><div class="country-operation-types">${countryActionButtons(s,country,menuTypes,availability,selection,selection.agentId)}</div>
  ${d?`<section class="country-operation-detail"><h3><span class="info-word" tabindex="0" title="${esc(d.desc)}">${icon(d.icon)} ${esc(actionName(s,country,type))} ${icon('help')}</span></h3>${targetPicker}
  <div class="country-operations-boost"><strong>${operationLocation(s,country,type)===s.player?'Agents disponibles au QG':'Agents disponibles sur place'}</strong>${button(icon('boost')+` +10 % · −${E.ECONOMY.boostCost} cr`,'workspace-boost','small',`aria-pressed="${!!selection.boost}" ${!selection.boost&&boostReason?'disabled':''}`)}</div>
  <div class="country-operation-agents">${rows.length?rows.map(r=>`<div class="country-operation-agent">${button(portrait(r.a),'agent','agent-photo',`data-id="${r.a.id}" aria-label="Consulter ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible')}</small></span><span><b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small></span>`,'workspace-agent','country-operation-choice',`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="muted">${operationLocation(s,country,type)===s.player?'Aucun agent disponible au QG.':'Aucun agent disponible sur place.'}</p>`}</div>
@@ -127,14 +135,15 @@ export function floatingAgentMarkup(s,id,{sidebar=false,locked=''}={}){
  const readings=[['bolt','Énergie',energy,energyTone],['eye','Exposition',a.exposure,exposureTone]];
  const weapon=a.weapon?'Arme équipée':'Sans arme';
  const stats=a.stats.map((n,i)=>`<span title="${STAT_NAMES[i]}">${icon(['scan','target','shield'][i])}<span class="sr-only">${STAT_NAMES[i]}</span> <strong>${n}</strong></span>`).join('');
- const countryContext=E.travelInProgress(a)?'':countryTargetButtons(s,a.country,{empty:''});
- return `<article class="workspace-body floating-agent ${own?'':'coop-ally'}"><header>${sidebar?'':`<h2>${esc(a.name)} <span class="agent-nationality">${nationalityFlags(a)}</span></h2>`}<p class="floating-agent-role">${esc(a.role)}${own?'':' · Partenaire — consultation uniquement'}</p>${agentLocation(a,{compact:true})}</header>
- <div class="floating-agent-overview">${fullBody(a)}<div class="floating-agent-facts"><span class="availability ${status.kind}">${esc(status.label)}</span>
+ const localActions=countrySidebarActions(s,a.country,own?locked:'Partenaire : consultation uniquement.',a);
+ const coverHelp=a.cover==='Légale'?'Couverture officielle au départ ou après un voyage avec passeport. +15 points pour trouver une planque.':'Couverture obtenue par un passage clandestin réussi.';
+ return `<article class="workspace-body floating-agent ${own?'':'coop-ally'}">${sidebar?'':`<header><h2>${esc(a.name)} <span class="agent-nationality">${nationalityFlags(a)}</span></h2></header>`}
+ <div class="floating-agent-overview">${fullBody(a)}<div class="floating-agent-facts">${agentLocation(a,{compact:true,pin:true})}${own?'':'<small>Partenaire : consultation uniquement</small>'}<span class="availability ${status.kind}">${esc(status.label)}</span>
  <div class="floating-agent-readings">${readings.map(([symbol,label,value,tone])=>`<span title="${label}">${icon(symbol)}<span class="sr-only">${label}</span><strong class="reading-${tone}">${value}/100</strong></span>`).join('')}</div>
  <div class="floating-agent-stats" aria-label="Statistiques">${stats}</div>
- <div class="floating-agent-gear"><span title="${weapon}">${icon(a.weapon?'target':'case')}${weapon}</span><span title="Couverture">${icon(a.cover==='Clandestine'?'ghost':'file')}${esc(a.cover)}</span></div>
+ <div class="floating-agent-gear"><span title="${weapon}">${icon(a.weapon?'target':'case')}${weapon}</span><span title="${coverHelp}">${icon(a.cover==='Clandestine'?'ghost':'file')}${esc(a.cover)}</span></div>
  ${talents(a)}</div></div>
- ${countryContext}
+ ${localActions}
  ${task||a.status==='captured'?`<section class="floating-agent-mission"><h3>${task?esc(ACTIONS[task.type].name):'Extraction nécessaire'}</h3>${task?`<p>${esc(target)} · ${task.remaining} tour(s) · ${task.chance} % de réussite</p>${own?button('Annuler la mission','cancel','small',`data-id="${id}" ${E.travelInProgress(a)||s.ended?'disabled':''}`):''}`:''}</section>`:''}
- ${own?quickActionMarkup(s,a,locked):''}<div class="floating-agent-links">${button(icon('world')+' Ouvrir le pays','workspace-country','small',`data-id="${a.country}"`)}${button(icon('clock')+' Journal','agent-journal','small',`data-id="${id}"`)}</div><details><summary>Parcours</summary><p>${esc(a.bio)}</p></details></article>`;
+ <div class="floating-agent-links">${button(icon('world')+' Ouvrir le pays','workspace-country','small',`data-id="${a.country}"`)}${button(icon('clock')+' Journal','agent-journal','small',`data-id="${id}"`)}</div><details><summary>Parcours</summary><p>${esc(a.bio)}</p></details></article>`;
 }

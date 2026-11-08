@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import * as E from '../dist/client/engine.js';
 import {DEFAULT_TEAM_IDS,COUNTRY} from '../dist/client/data.js';
-import {deploymentPickerMarkup,assignDeployment} from '../dist/client/deployment.js';
+import {agentTravelDestinations,agentTravelPickerMarkup,deploymentPickerMarkup,assignDeployment} from '../dist/client/deployment.js';
 const fresh=()=>E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,227);
 test('Deployment mode switch preserves eligible checks, recalculates forecasts and stages nothing',()=>{
  const s=fresh(),[a,b]=E.team(s);b.status='captured';const before=JSON.stringify(s);
@@ -17,7 +17,7 @@ test('Deployment mode switch preserves eligible checks, recalculates forecasts a
  }
 });
 test('Changing the dropdown rerenders the same destination with the selected agents',()=>{
- const source=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8');const handler=source.slice(source.indexOf(" if(event.target.id==='deploymentMode')"),source.indexOf(" if(event.target.name==='deployAgent')"));
+ const source=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8');const handler=source.slice(source.indexOf(" if(event.target.id==='deploymentMode'||"),source.indexOf(" if(event.target.name==='deployAgent')"));
  const s=fresh(),ids=E.team(s).slice(0,2).map(a=>a.id);let html='',focused=false;
  const picker={dataset:{deploymentTarget:'JP'},querySelectorAll:()=>ids.map(value=>({value}))};
  runInNewContext('(function(){'+handler+'})()', {state:s,event:{target:{id:'deploymentMode',value:'sneak',closest:()=>picker}},deploymentPickerMarkup,showModal:v=>html=v,modal:{querySelector:()=>({focus(){focused=true;}})}});
@@ -32,4 +32,21 @@ test('Both modes reach actual solo and multiplayer confirmation unchanged',async
   if(multi){assert.equal(commands[0].payload.type,type);assert.equal(commands[0].payload.target,'JP');}
   else for(const id of ids)assert.equal(s.agents.find(a=>a.id===id).task.type,type);
  }
+});
+
+test('Agent travel uses both existing modes for the selected agent and only active destinations',()=>{
+ const s=fresh(),[a,b]=E.team(s);a.country='JP';
+ const destinations=agentTravelDestinations(s,a.id);
+ assert.ok(destinations.some(x=>x.country.id==='FR'));
+ assert.ok(destinations.every(x=>x.country.id!=='JP'&&(!x.country.power||x.country.id==='FR')));
+ for(const type of ['travel','sneak']){
+  const html=agentTravelPickerMarkup(s,a.id,type,'FR');
+  assert.match(html,new RegExp(`data-deployment-agent="${a.id}" data-deployment-type="${type}" data-deployment-target="FR"`));
+  assert.match(html,/Avec passeport/);
+  assert.match(html,/Passage clandestin/);
+  assert.doesNotMatch(html,new RegExp(`name="deployAgent"|>${b.name}<`));
+ }
+ E.assign(s,a.id,'hide');
+ assert.match(agentTravelPickerMarkup(s,a.id),/Confirmer le voyage/);
+ assert.match(agentTravelPickerMarkup(s,a.id),/data-cmd="confirm-deployment" disabled/);
 });

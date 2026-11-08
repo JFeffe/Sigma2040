@@ -1,4 +1,4 @@
-import {npcTutorialObjective} from './tutorial-npc.js?v=233';
+import {npcTutorialObjective} from './tutorial-npc.js?v=234';
 export const COMPACT_IDS=['basics','inquiry','intervention','shield','recovery','simulation'];
 export const isCompactTutorial=s=>s?.tutorial?.version===1&&COMPACT_IDS.includes(s.tutorial.mission);
 export const COMPACT_BASE={basics:'contact',inquiry:'evidence',intervention:'arrest',shield:'countdown',recovery:'hostile',simulation:'allies'};

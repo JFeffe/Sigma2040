@@ -1,13 +1,35 @@
-import {COUNTRY} from './data.js?v=233';
-import * as E from './engine.js?v=233';
-import {button,esc,portrait} from './ui.js?v=233';
+import {COUNTRY} from './data.js?v=234';
+import {mapCountries} from './operation-map.js?v=234';
+import * as E from './engine.js?v=234';
+import {button,esc,portrait} from './ui.js?v=234';
 
 export function deploymentOptions(s,type,target){
  return E.team(s).filter(a=>!['dead','retired'].includes(a.status)).map(a=>({agent:a,...E.options(s,a.id,type,target)}));
 }
+export function agentTravelDestinations(s,id){
+ const agent=E.team(s).find(a=>a.id===id);
+ if(!agent)return [];
+ return mapCountries(s).filter(c=>c.id!==agent.country&&(!c.power||c.id===agent.faction)).map(country=>({
+  country,travel:E.options(s,id,'travel',country.id),sneak:E.options(s,id,'sneak',country.id)
+ }));
+}
+
+function deploymentMode(type){
+ return `<label class="deployment-mode">Mode de déplacement<select id="deploymentMode" aria-describedby="deploymentModeHelp"><option value="travel" ${type==='travel'?'selected':''}>Avec passeport</option><option value="sneak" ${type==='sneak'?'selected':''}>Passage clandestin</option></select></label><p id="deploymentModeHelp">${type==='travel'?'Voyage signalé, sans arme. Réussite automatique.':'Arme conservée. Réussite : exposition remise à zéro. Échec : voyage raté, exposition accrue et risque de blessure ou de capture.'}</p>`;
+}
+
+export function agentTravelPickerMarkup(s,id,type=null,target=null){
+ const destinations=agentTravelDestinations(s,id),agent=E.team(s).find(a=>a.id===id);
+ if(!agent)return '';
+ const choice=destinations.find(x=>x.country.id===target)??destinations.find(x=>!x.travel.error||!x.sneak.error);
+ type??=choice?.travel.error?'sneak':'travel';
+ const options=choice?.[type],country=choice?.country.id;
+ return `<div class="simple-modal deployment-picker" data-deployment-agent="${esc(id)}" data-deployment-type="${type}" data-deployment-target="${esc(country)}"><span class="eyebrow">DÉPLACEMENT</span><h2>Voyager · ${esc(agent.name)}</h2><label class="deployment-mode">Destination<select id="deploymentDestination" ${choice?'':'disabled'}>${destinations.map(row=>`<option value="${row.country.id}" ${row.country.id===country?'selected':''} ${row.travel.error&&row.sneak.error?'disabled':''}>${esc(row.country.name)}</option>`).join('')}</select></label>${deploymentMode(type)}<p role="status">${options?.error?esc(options.error):options?`${options.duration} tour(s) · ${options.fatigue} énergie · ${options.chance} % de réussite`:'Aucun déplacement disponible pour cet agent.'}</p>${button('Confirmer le voyage','confirm-deployment','primary wide',!options||options.error?'disabled':'')}</div>`;
+}
+
 export function deploymentPickerMarkup(s,type,target,selectedIds=[]){
  const rows=deploymentOptions(s,type,target),available=rows.some(o=>!o.error),selected=new Set(rows.filter(o=>!o.error&&selectedIds.includes(o.agent.id)).map(o=>o.agent.id)),count=selected.size;
- return `<div class="simple-modal deployment-picker" data-deployment-type="${esc(type)}" data-deployment-target="${esc(target)}"><span class="eyebrow">DÉPLOIEMENT</span><h2>Choisir un agent</h2><p>Destination : <strong>${esc(COUNTRY[target]?.name)}</strong></p><label class="deployment-mode">Mode de déplacement<select id="deploymentMode" aria-describedby="deploymentModeHelp"><option value="travel" ${type==='travel'?'selected':''}>Avec passeport</option><option value="sneak" ${type==='sneak'?'selected':''}>Passage clandestin</option></select></label><p id="deploymentModeHelp">${type==='travel'?'Voyage signalé, sans arme. Réussite automatique.':'Arme conservée. Réussite : exposition remise à zéro. Échec : voyage raté, exposition accrue et risque de blessure ou de capture.'}</p><p class="deployment-mode">${type==='travel'?'Voyage avec passeport':'Passage clandestin'}</p><p>Cochez les agents à envoyer, puis confirmez leur déploiement ensemble.</p><fieldset class="deployment-agents"><legend class="sr-only">Agents à déployer</legend>${rows.map(({agent:a,error,duration,fatigue,chance})=>`<label class="agent-picker deployment-agent ${error?'unavailable':''}"><input type="checkbox" name="deployAgent" value="${esc(a.id)}" ${error?'disabled':''} aria-label="Déployer ${esc(a.name)}" aria-describedby="deploy-${esc(a.id)}" ${selected.has(a.id)?'checked':''}>${portrait(a)}<div><strong>${esc(a.name)}</strong><span id="deploy-${esc(a.id)}">${esc(COUNTRY[a.country].city)} · ${error?esc(error):`${duration} tour(s) · ${fatigue} énergie`} · ${chance} % de réussite</span></div></label>`).join('')}</fieldset>${available?'':'<p class="notice warning">Aucun agent disponible pour cette destination.</p>'}<div class="deployment-confirm"><p id="deploymentCount" role="status">${count} agent${count>1?'s':''} sélectionné${count>1?'s':''}</p>${button(count?`Déployer ${count} agent${count>1?'s':''}`:'Déployer les agents','confirm-deployment','primary wide',count?'':'disabled')}</div></div>`;
+ return `<div class="simple-modal deployment-picker" data-deployment-type="${esc(type)}" data-deployment-target="${esc(target)}"><span class="eyebrow">DÉPLOIEMENT</span><h2>Choisir un agent</h2><p>Destination : <strong>${esc(COUNTRY[target]?.name)}</strong></p>${deploymentMode(type)}<p class="deployment-mode">${type==='travel'?'Voyage avec passeport':'Passage clandestin'}</p><p>Cochez les agents à envoyer, puis confirmez leur déploiement ensemble.</p><fieldset class="deployment-agents"><legend class="sr-only">Agents à déployer</legend>${rows.map(({agent:a,error,duration,fatigue,chance})=>`<label class="agent-picker deployment-agent ${error?'unavailable':''}"><input type="checkbox" name="deployAgent" value="${esc(a.id)}" ${error?'disabled':''} aria-label="Déployer ${esc(a.name)}" aria-describedby="deploy-${esc(a.id)}" ${selected.has(a.id)?'checked':''}>${portrait(a)}<div><strong>${esc(a.name)}</strong><span id="deploy-${esc(a.id)}">${esc(COUNTRY[a.country].city)} · ${error?esc(error):`${duration} tour(s) · ${fatigue} énergie`} · ${chance} % de réussite</span></div></label>`).join('')}</fieldset>${available?'':'<p class="notice warning">Aucun agent disponible pour cette destination.</p>'}<div class="deployment-confirm"><p id="deploymentCount" role="status">${count} agent${count>1?'s':''} sélectionné${count>1?'s':''}</p>${button(count?`Déployer ${count} agent${count>1?'s':''}`:'Déployer les agents','confirm-deployment','primary wide',count?'':'disabled')}</div></div>`;
 }
 // Validate the whole group before staging any order. Travel has no shared
 // resource cost; each agent keeps the engine's own duration and modifiers.

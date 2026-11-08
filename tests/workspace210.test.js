@@ -6,6 +6,7 @@ import {COUNTRIES,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
 import {countryOperationTypes} from '../dist/client/country-operations.js';
 import {countryOptions} from '../dist/client/presentation.js';
 import {assignDeployment} from '../dist/client/deployment.js';
+import {countryOperationsMarkup} from '../dist/client/country-operations.js';
 import {makeScreens} from '../dist/client/screens.js';
 import {createCamera} from '../dist/client/globe.js';
 const fresh=()=>{const s=E.createGame('FR',DEFAULT_TEAM_IDS,42);s.humanFactions=Object.keys(s.factions);return s;};
@@ -31,4 +32,28 @@ test('Sidebar shows agent details on selection, superpower artwork without actio
 test('Cooperative diplomacy other countries exclude all six superpowers, even inactive ones',()=>{
  const d=D.createDraft(['FR','US'],42,'cooperative');while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);const s=E.createGame('FR',d.teams.FR,42,'normal',{gameMode:'cooperative',participants:d.countries,teams:d.teams});const html=makeScreens(s,'FR',null,null,createCamera()).diplomacy().split('diplomacy-countries')[1].split('diplomacy-followup')[0];
  for(const c of COUNTRIES.filter(c=>!c.power&&!c.expansion))assert.ok(html.includes(c.name));for(const c of COUNTRIES.filter(c=>c.power))assert.ok(!html.includes('<h3>'+c.name+'</h3>'));
+});
+
+test('The globe shows both victory objectives and only the foreign agents map toggle',()=>{
+ const camera=createCamera(),regular=fresh();
+ const html=makeScreens(regular,'FR',null,null,camera).world();
+ assert.match(html,/L’Architecte à arrêter/);
+ assert.match(html,/0 \/ 2<\/strong> cellules démantelées/);
+ assert.doesNotMatch(html,/arrestations|data-map="(?:dome|globe|routes|intel)"/);
+ assert.match(html,/data-map="foreign"/);
+ const d=D.createDraft(['FR','US'],42,'cooperative');
+ while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);
+ const coop=E.createConfiguredGame('FR',d.teams.FR,42,'bb2',{gameMode:'cooperative',participants:d.countries,teams:d.teams});
+ coop.suspects.find(t=>t.id==='s6').arrested=true;
+ assert.match(makeScreens(coop,'FR',null,null,camera).world(),/L’Architecte arrêté.*0 \/ 3<\/strong> cellules démantelées/);
+});
+
+test('Country panels put artwork and live status ahead of the scrolling actions',()=>{
+ const s=fresh(),camera=createCamera();camera.panelOpen=true;
+ s.factions.FR.access.BR=true;
+ const html=makeScreens(s,'BR',null,null,camera).world();
+ assert.doesNotMatch(html,/world-window-shortcut|Ouvrir Brésil/);
+ assert.match(html,/country-art-header is-secondary.*Brasília.*compact-country-signals.*Accès : actif.*country-sidebar-scroll/s);
+ assert.match(countryOperationsMarkup(s,'BR',{group:'access'}),/country-operations-heading.*country-art-header is-secondary.*Brasília.*Accès : actif.*<\/header>/s);
+ assert.match(makeScreens(s,'US',null,null,camera).world(),/country-art-header is-power.*Washington/s);
 });

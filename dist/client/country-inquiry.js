@@ -1,23 +1,24 @@
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=233';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=233';
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=233';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=233';
-import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=233';
-import * as E from './engine.js?v=233';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=233';
-import {esc,icon,button,flag,portrait} from './ui.js?v=233';
-import {suspectPortrait} from './fracture-profiles.js?v=233';
-import {countrySignals} from './country-signals.js?v=233';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=233';
+import {cellInfoButton,captiveMarkup} from './cell-info.js?v=234';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=234';
+import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=234';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=234';
+import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=234';
+import * as E from './engine.js?v=234';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=234';
+import {esc,icon,button,flag,portrait} from './ui.js?v=234';
+import {suspectPortrait} from './fracture-profiles.js?v=234';
+import {countrySignals} from './country-signals.js?v=234';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=234';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
 export const INQUIRY_ACTIONS=ACTION_GROUPS.flatMap(([,ids])=>ids).filter(id=>relevant.has(id)&&!ACTIONS[id].disabled);
-export function countryTargetButtons(s,country,{empty='<p class="muted">Aucune cible connue dans ce pays.</p>'}={}){
+export function countryTargetButtons(s,country,{empty='<p class="muted">Aucune cible connue dans ce pays.</p>',emptyLast=false}={}){
  const targets=E.knownTargets(s).filter(t=>t.country===country&&!t.arrested);
  const dossiers=targets.map(t=>button(`${suspectPortrait(t)}<span><strong>${esc(t.name)}</strong><small>${t.locationUntil>=s.turn?'Localisé · fin T'+t.locationUntil:'Position à confirmer'}</small></span>`,'country-inquiry','country-case-button',`data-id="${t.id}"`)).join('');
  const captives=E.team(s).filter(a=>a.status==='captured'&&a.country===country).map(a=>button(`${portrait(a)}<span><strong>${esc(a.name)}</strong><small>Extraire un agent</small></span>`,'rescue-captive','country-case-button',`data-id="${esc(a.id)}"`)).join('');
- const content=(dossiers||empty)+countryThreatButtons(s,country)+captives+captiveMarkup(s,country);
+ const local=countryThreatButtons(s,country)+captives+captiveMarkup(s,country);
+ const content=emptyLast?dossiers+local+(dossiers?'':empty):(dossiers||empty)+local;
  return content?`<div class="country-case-buttons" aria-label="Dossiers, menaces et actions locales">${content}</div>`:'';
 }
 export function countryThreatButtons(s,country){return E.visiblePlots(s).filter(p=>p.country===country).sort((a,b)=>a.turn-b.turn).map(p=>{

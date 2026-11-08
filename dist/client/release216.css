@@ -3,12 +3,16 @@
 
 .agent-deployment .country-code img{width:27px;height:19px;object-fit:cover}
 .immersive-deck .attack-delay-banner{position:fixed;top:calc(var(--hud-top,150px) + 44px);left:110px;right:auto;width:min(430px,calc(100vw - 130px));max-height:35vh;overflow:auto;margin:0;z-index:24;padding:9px}
-.immersive-deck .field-team .agent-card{height:auto;min-height:96px;padding:7px 8px}
-.immersive-deck .field-team .agent-brief{display:flex;flex-direction:column;align-items:flex-start;gap:3px}
+.immersive-deck .field-team .agent-card{height:auto;min-height:68px;padding:4px 8px}
+.immersive-deck .field-team .agent-brief{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
 .immersive-deck .field-team .agent-brief>.agent-deployment{white-space:normal;overflow:visible;font-size:11px}
-.immersive-deck .field-team .agent-deployment .country-code{width:25px!important;height:18px!important;min-width:25px;flex-shrink:0}
-.immersive-deck .field-team .agent-deployment .country-code img{width:25px!important;height:18px!important}
-@media(max-width:700px){.immersive-deck .attack-delay-banner{left:8px;right:8px;width:auto;max-height:27vh}.immersive-deck .field-team .agent-card{min-height:105px}}
+.immersive-deck .field-team .agent-deployment .country-code{width:19px!important;height:13px!important;min-width:19px;flex-shrink:0}
+.immersive-deck .field-team .agent-deployment .country-code img{width:19px!important;height:13px!important}
+@media(max-width:700px){.immersive-deck .attack-delay-banner{left:8px;right:8px;width:auto;max-height:27vh}.immersive-deck .field-team .agent-card{min-height:72px}}
+
+.immersive-deck .field-team .agent-card h3,.immersive-deck .field-team .agent-card .availability{margin-bottom:1px}
+.agent-deployment>.icon{width:13px;height:13px;flex:none;color:#a9c8e2}
+.immersive-deck .map-dossier .agent-deployment>.icon{width:13px;height:13px}
 
 /* Build 218: flags stay beside the name; current deployment keeps its own line. */
 .agent-card-copy>h3,.immersive-deck .field-team .agent-card-copy>h3,.floating-agent>header>h2{display:flex;align-items:center;justify-content:flex-start;gap:5px;flex-wrap:wrap}
