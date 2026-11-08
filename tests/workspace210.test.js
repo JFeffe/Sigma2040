@@ -6,7 +6,8 @@ import {COUNTRIES,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
 import {countryOperationTypes} from '../dist/client/country-operations.js';
 import {countryOptions} from '../dist/client/presentation.js';
 import {assignDeployment} from '../dist/client/deployment.js';
-import {countryOperationsMarkup} from '../dist/client/country-operations.js';
+import {countryOperationsMarkup,floatingAgentMarkup} from '../dist/client/country-operations.js';
+import {icon} from '../dist/client/ui.js';
 import {makeScreens} from '../dist/client/screens.js';
 import {createCamera} from '../dist/client/globe.js';
 const fresh=()=>{const s=E.createGame('FR',DEFAULT_TEAM_IDS,42);s.humanFactions=Object.keys(s.factions);return s;};
@@ -32,6 +33,19 @@ test('Sidebar shows agent details on selection, superpower artwork without actio
 test('Cooperative diplomacy other countries exclude all six superpowers, even inactive ones',()=>{
  const d=D.createDraft(['FR','US'],42,'cooperative');while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);const s=E.createGame('FR',d.teams.FR,42,'normal',{gameMode:'cooperative',participants:d.countries,teams:d.teams});const html=makeScreens(s,'FR',null,null,createCamera()).diplomacy().split('diplomacy-countries')[1].split('diplomacy-followup')[0];
  for(const c of COUNTRIES.filter(c=>!c.power&&!c.expansion))assert.ok(html.includes(c.name));for(const c of COUNTRIES.filter(c=>c.power))assert.ok(!html.includes('<h3>'+c.name+'</h3>'));
+});
+
+test('The agent fiche pairs weapon availability with a color-coded discretion meter',()=>{
+ const s=fresh(),a=E.team(s)[0];
+ for(const [exposure,weapon,tone,label,bars] of [[0,true,'green','Discret',1],[84,false,'red','Très exposé',5]]){
+  Object.assign(a,{exposure,weapon});
+  const html=floatingAgentMarkup(s,a.id),gear=html.match(/<div class="floating-agent-gear">(.*?)<\/div>/s)[1];
+  assert.ok(gear.includes(icon('rifle')+`<span class="sr-only">Arme</span>${weapon?'Avec':'Sans'}`));
+  assert.ok(gear.includes(`discretion-meter reading-${tone}`));
+  assert.equal([...gear.matchAll(/opacity="1"/g)].length,bars);
+  assert.ok(gear.endsWith(`</svg>${label}</span>`));
+  assert.equal(html.split(label).length,2);
+ }
 });
 
 test('The globe shows both victory objectives and only the foreign agents map toggle',()=>{

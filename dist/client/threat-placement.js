@@ -1,4 +1,4 @@
-import {operationIds} from './operation-map.js?v=235';
+import {operationIds} from './operation-map.js?v=236';
 export const PLANNED_THREAT_GAP=6;
 export const LIVE_THREAT_GAP=4;
 // All cells, including the Architect, share one country quota and timeline.

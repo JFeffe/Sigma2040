@@ -75,12 +75,12 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .floating-agent-readings,.floating-agent-stats,.floating-agent-gear{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
 .floating-agent-facts .icon{width:13px;height:13px;flex:none}
 .floating-agent-readings>span,.floating-agent-stats>span,.floating-agent-gear>span{display:inline-flex;align-items:center;gap:3px;font-size:11px}
-.floating-agent-readings small{font-size:10px;color:#bac4d2}
-.floating-agent-readings .reading-green{color:#79dba4}
-.floating-agent-readings .reading-blue{color:#82bcfa}
-.floating-agent-readings .reading-yellow{color:#f4cf72}
-.floating-agent-readings .reading-orange{color:#f0a369}
-.floating-agent-readings .reading-red{color:#f48c93}
+.floating-agent-gear .discretion-meter{width:13px;height:11px;fill:currentColor}
+.floating-agent .reading-green{color:#79dba4}
+.floating-agent .reading-blue{color:#82bcfa}
+.floating-agent .reading-yellow{color:#f4cf72}
+.floating-agent .reading-orange{color:#f0a369}
+.floating-agent .reading-red{color:#f48c93}
 .floating-agent-facts .talents{display:flex;gap:3px;margin:0}
 .floating-agent-facts .talents>span{font-size:10px;padding:2px 4px}
 .floating-agent .country-case-buttons{margin:7px 0 0}

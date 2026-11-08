@@ -1,10 +1,10 @@
-import {RELEASE_LINK,unreadPatchCount} from './patch-notes.js?v=235';
-import {AI_LEVELS} from './ai-difficulty.js?v=235';
-import {BUILD_VERSION} from './build-version.js?v=235';
-import {campaignRules} from './campaign-rules.js?v=235';
-import {renderRatio} from './graphics.js?v=235';
-import {brand,button,esc} from './ui.js?v=235';
-import {COUNTRY} from './data.js?v=235';
+import {RELEASE_LINK,unreadPatchCount} from './patch-notes.js?v=236';
+import {AI_LEVELS} from './ai-difficulty.js?v=236';
+import {BUILD_VERSION} from './build-version.js?v=236';
+import {campaignRules} from './campaign-rules.js?v=236';
+import {renderRatio} from './graphics.js?v=236';
+import {brand,button,esc} from './ui.js?v=236';
+import {COUNTRY} from './data.js?v=236';
 export function mainMenu(s){return `<main class="main-menu"><a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer">BUILD ${BUILD_VERSION} · MISE À JOUR GITHUB ↗</a><canvas class="menu-particles" aria-hidden="true"></canvas><div class="menu-earth" aria-hidden="true"><canvas id="menuEarth" width="1024" height="1024"></canvas><canvas id="menuOrbits"></canvas></div><section class="menu-panel"><div class="menu-brand">${brand()}</div><p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1><nav aria-label="Menu principal">${button(`<span>${s?.ended?'Consulter la campagne':'Continuer'}</span><small class="continue-details">${s?`${esc(COUNTRY[s.player].name)} · IA ${AI_LEVELS[s.aiDifficulty||'bb1']} · Tour ${s.turn} / ${campaignRules(s).maxTurns}${s.ended?' · Campagne terminée':''}`:'Aucune campagne enregistrée'}</small>`,'continue-game','primary continue-button',s?'':'disabled')}${button('Nouvelle partie','new','')}${button('Apprendre à jouer · Filigrane','tutorial-menu','')}${button('Multijoueur','mp-entry','')}${button('Patch notes'+(unreadPatchCount()?' · '+unreadPatchCount()+' non lues':''),'patch-notes',unreadPatchCount()?'patch-unread':'')}${button('Mods','mods','')}${button('Paramètres','settings','')}${button('Règles et sauvegarde','help','menu-help')}</nav></section><footer>SIGMA NETWORK / 2040 <span>La musique démarre à votre première interaction.</span></footer></main>`;}
 
 // GPU sphere and separate orbital/particle layers: no flattened background image.

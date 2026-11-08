@@ -34,19 +34,32 @@ test('Both modes reach actual solo and multiplayer confirmation unchanged',async
  }
 });
 
-test('Agent travel uses both existing modes for the selected agent and only active destinations',()=>{
+test('Agent travel opens the common deployment picker with the agent already checked',()=>{
  const s=fresh(),[a,b]=E.team(s);a.country='JP';
  const destinations=agentTravelDestinations(s,a.id);
  assert.ok(destinations.some(x=>x.country.id==='FR'));
  assert.ok(destinations.every(x=>x.country.id!=='JP'&&(!x.country.power||x.country.id==='FR')));
- for(const type of ['travel','sneak']){
-  const html=agentTravelPickerMarkup(s,a.id,type,'FR');
-  assert.match(html,new RegExp(`data-deployment-agent="${a.id}" data-deployment-type="${type}" data-deployment-target="FR"`));
-  assert.match(html,/Avec passeport/);
-  assert.match(html,/Passage clandestin/);
-  assert.doesNotMatch(html,new RegExp(`name="deployAgent"|>${b.name}<`));
- }
+ const choice=destinations.find(row=>!row.travel.error||!row.sneak.error);
+ const html=agentTravelPickerMarkup(s,a.id);
+ assert.equal(html,deploymentPickerMarkup(s,choice.travel.error?'sneak':'travel',choice.country.id,[a.id],a.id));
+ assert.match(html,/Choisir un agent.*id="deploymentDestination".*Avec passeport.*Passage clandestin/);
+ assert.match(html,new RegExp(`name="deployAgent" value="${a.id}" [^>]*checked`));
+ assert.match(html,new RegExp(`name="deployAgent" value="${b.id}"`));
  E.assign(s,a.id,'hide');
- assert.match(agentTravelPickerMarkup(s,a.id),/Confirmer le voyage/);
  assert.match(agentTravelPickerMarkup(s,a.id),/data-cmd="confirm-deployment" disabled/);
+});
+
+test('Changing the destination from agent travel keeps eligible agents selected',()=>{
+ const source=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8');
+ const handler=source.slice(source.indexOf(" if(event.target.id==='deploymentMode'||"),source.indexOf(" if(event.target.name==='deployAgent')"));
+ const s=fresh(),[a,b]=E.team(s);b.country='JP';
+ const picker={dataset:{deploymentAgent:a.id,deploymentType:'sneak'},querySelectorAll:()=>[a,b].map(({id})=>({value:id}))};
+ let html='';
+ runInNewContext('(function(){'+handler+'})()', {state:s,event:{target:{id:'deploymentDestination',value:'JP',closest:()=>picker}},deploymentPickerMarkup,showModal:v=>html=v,modal:{querySelector:()=>null}});
+ assert.match(html,/data-deployment-type="sneak" data-deployment-target="JP"/);
+ assert.match(html,/value="JP" selected/);
+ assert.match(html,new RegExp(`name="deployAgent" value="${a.id}" [^>]*checked`));
+ assert.match(html,new RegExp(`name="deployAgent" value="${b.id}" disabled[^>]*(?<!checked)>`));
+ assert.match(html,/1 agent sélectionné/);
+ assert.ok(E.team(s).every(agent=>!agent.task));
 });
