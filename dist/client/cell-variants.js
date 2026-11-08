@@ -1,4 +1,4 @@
-import {COUNTRY,cellName} from './data.js?v=236';
+import {COUNTRY,cellName} from './data.js?v=237';
 export const CELL_RULES=Object.freeze({
  0:{count:6,damage:25,turns:[3,8,13,18,23,28],theme:'Finance et corruption',kinds:['Déstabilisation financière','Corruption institutionnelle'],effect:'Pression constante : six attaques, sans pénalité supplémentaire.'},
  1:{count:5,damage:30,turns:[5,11,17,23,29],theme:'Technologie et désinformation',kinds:['Cyberattaque','Sabotage automatisé'],effect:'Peut déplacer une attaque face à une protection établie, avec au moins quatre tours de préavis.'},

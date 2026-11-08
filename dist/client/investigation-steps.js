@@ -1,5 +1,5 @@
-import * as E from './engine.js?v=236';
-import {esc,icon,button} from './ui.js?v=236';
+import * as E from './engine.js?v=237';
+import {esc,icon,button} from './ui.js?v=237';
 
 export const INVESTIGATION_SUBSTEPS={
  access:{open:['contacts','influence','drone'],mandate:['authorize']},

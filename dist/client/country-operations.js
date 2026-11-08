@@ -1,15 +1,15 @@
-import {agentLocation} from './agent-location.js?v=236';
-import * as E from './engine.js?v=236';
-import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=236';
-import {availability} from './presentation.js?v=236';
-import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=236';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=236';
-import {countryArtHeader} from './country-signals.js?v=236';
-import {proofTitle} from './intelligence.js?v=236';
-import {fullBody} from './visuals.js?v=236';
-import {countryOnMap,operationCountries} from './operation-map.js?v=236';
-import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=236';
-import {exposureLevel} from './exposure.js?v=236';
+import {agentLocation} from './agent-location.js?v=237';
+import * as E from './engine.js?v=237';
+import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=237';
+import {availability} from './presentation.js?v=237';
+import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=237';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=237';
+import {countryArtHeader} from './country-signals.js?v=237';
+import {proofTitle} from './intelligence.js?v=237';
+import {fullBody} from './visuals.js?v=237';
+import {countryOnMap,operationCountries} from './operation-map.js?v=237';
+import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=237';
+import {exposureLevel} from './exposure.js?v=237';
 
 const headquartersActions=['rest','cyberSupport','counter','analyze','heal'];
 const fieldActions=['cyberSupport','equip','findSafehouse','fieldRest','hide'];
@@ -140,7 +140,7 @@ export function floatingAgentMarkup(s,id,{sidebar=false,locked=''}={}){
  <div class="floating-agent-overview"><div class="floating-agent-portrait">${fullBody(a,{alignTop:true})}</div><div class="floating-agent-facts">${agentLocation(a,{compact:true,pin:true})}${own?'':'<small>Partenaire : consultation uniquement</small>'}<span class="availability ${status.kind}">${esc(status.label)}</span>
  <div class="floating-agent-readings">${readings.map(([symbol,label,value,tone])=>`<span title="${label}">${icon(symbol)}<span class="sr-only">${label}</span><strong class="reading-${tone}">${value}/100</strong></span>`).join('')}</div>
  <div class="floating-agent-stats" aria-label="Statistiques">${stats}</div>
- <div class="floating-agent-gear"><span title="${weapon} arme">${icon('rifle')}<span class="sr-only">Arme</span>${weapon}</span><span title="Niveau de discrétion"><span class="sr-only">Discrétion</span><svg class="icon discretion-meter reading-${exposureTone}" viewBox="0 0 18 14" aria-hidden="true">${Array.from({length:5},(_,i)=>`<rect x="${i*4}" y="${10-i*2}" width="2" height="${4+i*2}" rx=".5" opacity="${i<=exposure?1:.25}"/>`).join('')}</svg>${esc(discretion)}</span></div>
+ <div class="floating-agent-gear"><span title="${weapon} arme">${icon('pistol')}<span class="sr-only">Arme</span>${weapon}</span><span title="Niveau de discrétion"><span class="sr-only">Discrétion</span><svg class="icon discretion-meter reading-${exposureTone}" viewBox="0 0 18 14" aria-hidden="true">${Array.from({length:5},(_,i)=>`<rect x="${i*4}" y="${10-i*2}" width="2" height="${4+i*2}" rx=".5" opacity="${i<=exposure?1:.25}"/>`).join('')}</svg>${esc(discretion)}</span></div>
  ${talents(a)}</div></div>
  ${task||a.status==='captured'?`<section class="floating-agent-mission"><h3>${task?esc(ACTIONS[task.type].name):'Extraction nécessaire'}</h3>${task?`<p>${esc(target)} · ${task.remaining} tour(s) · ${task.chance} % de réussite</p>${own?button('Annuler la mission','cancel','small',`data-id="${id}" ${E.travelInProgress(a)||s.ended?'disabled':''}`):''}`:''}</section>`:''}
  ${localActions}</article>`;

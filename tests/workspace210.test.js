@@ -40,7 +40,7 @@ test('The agent fiche pairs weapon availability with a color-coded discretion me
  for(const [exposure,weapon,tone,label,bars] of [[0,true,'green','Discret',1],[84,false,'red','Très exposé',5]]){
   Object.assign(a,{exposure,weapon});
   const html=floatingAgentMarkup(s,a.id),gear=html.match(/<div class="floating-agent-gear">(.*?)<\/div>/s)[1];
-  assert.ok(gear.includes(icon('rifle')+`<span class="sr-only">Arme</span>${weapon?'Avec':'Sans'}`));
+  assert.ok(gear.includes(icon('pistol')+`<span class="sr-only">Arme</span>${weapon?'Avec':'Sans'}`));
   assert.ok(gear.includes(`discretion-meter reading-${tone}`));
   assert.equal([...gear.matchAll(/opacity="1"/g)].length,bars);
   assert.ok(gear.endsWith(`</svg>${label}</span>`));
