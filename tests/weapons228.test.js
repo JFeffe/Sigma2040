@@ -27,7 +27,7 @@ test('Actual successful clandestine travel retains an existing weapon, passport 
 });
 test('NPC weapon valuation includes intimidation and planque, respects urgency, horizon, cap and hidden information',()=>{
  const s=E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,92),a=E.team(s)[0],f=s.factions.FR,t=s.suspects[0];
- a.country='JP';a.weapon=false;a.stats=[6,6,6];a.talents=[];a.fatigue=a.exposure=0;a.cover='Clandestine';
+ a.country='JP';a.weapon=false;a.stats=[6,6,6];a.talents=[];a.fatigue=a.exposure=0;
  const targets=[{id:t.id,country:'JP',prepared:false,intimidated:false,locationUntil:0,cell:0}],proofs=()=>[];
  const value=()=>weaponOpportunity(s,a,E,targets,proofs);const full=value();assert.ok(full>0);
  targets[0].intimidated=true;assert.ok(value()<full);targets[0].intimidated=false;

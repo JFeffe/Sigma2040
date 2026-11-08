@@ -17,7 +17,7 @@ export const COUNTRIES = [
 export const COUNTRY=Object.fromEntries(COUNTRIES.map(c=>[c.id,c]));
 export const PLAN_B_BONUS=7;
 export const TALENTS={
- chef:['Chef — Coordination',''],
+ chef:['Chef',''],
  informatique:['Informatique','+10 à l’intrusion numérique et au hack d’un pays.'],
  enquete:['Enquête','+10 à la collecte et à la vérification des preuves.'],
  surveillance:['Surveillance','+10 à la localisation, au contre-espionnage et à la protection d’infrastructure.'],
@@ -74,7 +74,7 @@ export const ROSTER=cast.map((c,i)=>({id:'p'+i,name:c[0],role:c[1],stats:c[2],ta
 export const DISPLAY_ROSTER=['p0','p12','p13','p14','p15','p16','p17','p18','p19','p20','p21','p22','p23','p24','p25','p26','p27','p29','p30','p28'].map(id=>ROSTER.find(a=>a.id===id));
 export const DEFAULT_TEAM_IDS=Object.freeze(DISPLAY_ROSTER.slice(0,4).map(a=>a.id));
 export const ACTIONS={
- travel:{name:'Voyager sous passeport',icon:'plane',stat:2,duration:1,cost:0,fatigue:6,talents:[],safe:true,desc:'Voyage sans arme. Arrivée signalée dans les renseignements du pays et en Diplomatie (nom, pays, tour), sans portrait sur le globe ; la mission reste secrète. Au retour au QG, votre arme de service est récupérée.'},
+ travel:{name:'Voyager sous passeport',icon:'plane',stat:2,duration:1,cost:0,fatigue:6,talents:[],safe:true,desc:'Départ sans arme. +10 points d’exposition de base à l’arrivée, signalée dans les renseignements du pays et en Diplomatie (nom, pays, tour), sans portrait sur le globe ; la mission reste secrète. Au retour au QG, votre arme de service est récupérée.'},
  sneak:{name:'Passage clandestin',icon:'ghost',stat:2,duration:2,cost:0,fatigue:12,talents:['infiltration'],desc:'Permet de conserver votre arme. Remet votre exposition à 0 en cas de réussite ; +10 en cas d’échec. Durée de base identique au voyage sous passeport. Un échec fait rater le voyage : 50 % sans nouvelle blessure ni capture, 35 % blessure, 15 % capture à destination. Aucun décès.'},
  contacts:{name:'Activer un contact',icon:'people',stat:1,duration:1,cost:0,fatigue:8,talents:['contacts'],desc:'Ouvre l’accès local et ajoute 1 point de Recherche. Tous les gains se cumulent ; 3 points découvrent un dossier, surplus conservé.'},
  collect:{name:'Recueillir une preuve',icon:'file',stat:0,duration:2,cost:0,fatigue:8,talents:['enquete'],desc:'Récupère une pièce brute sur une cible connue. Nécessite un accès local. Indisponible dès que deux preuves non écartées sont réunies pour cette cible. Si la cible quitte le pays, la mission est interrompue immédiatement et l’agent est libéré.'},
@@ -85,7 +85,7 @@ export const ACTIONS={
  prepare:{name:'Préparer une arrestation',icon:'target',stat:0,duration:1,cost:0,fatigue:8,talents:['tactique'],desc:'Prépare le dossier, les accès et l’extraction. Nécessite deux preuves, dont une vérifiée. Avec Planification tactique : +5 à la prochaine tentative d’arrestation de votre équipe sur cette cible.'},
  arrest:{name:'Procéder à l’arrestation',icon:'cuffs',stat:2,duration:1,cost:0,fatigue:18,talents:['combat'],desc:'Capture une cible préparée et localisée. Intervention clandestine possible sans mandat, avec davantage de risques et une perte d’un niveau de coopération après la tentative, réussite ou échec. Avec mandat, la coopération modifie les chances. En cas d’échec : avec mandat, 50 % sans nouvelle blessure ni capture, 40 % blessure, 10 % capture ; sans mandat, 50 %, 35 %, 15 % respectivement. Aucun décès.'},
  hide:{name:'Faire profil bas',icon:'ghost',stat:2,duration:1,cost:0,fatigue:0,safe:true,talents:[],desc:'Réduit l’exposition de 35 et récupère 10 d’énergie.'},
- findSafehouse:{name:'Trouver une planque',icon:'ghost',stat:2,duration:1,cost:0,fatigue:8,talents:['contacts', 'infiltration', 'langues'],field:true,desc:'Cherche un refuge partagé par tous les agents de votre équipe et, dans les nouvelles campagnes coop, par l’équipe alliée. Couverture légale : +15 points de réussite. Permet ensuite le repos sur place. En cas d’échec : 75 % sans nouvelle blessure ni capture, 20 % blessure, 5 % capture. Aucun décès.'},
+ findSafehouse:{name:'Trouver une planque',icon:'ghost',stat:2,duration:1,cost:0,fatigue:8,talents:['contacts', 'infiltration', 'langues'],field:true,desc:'Cherche un refuge partagé par tous les agents de votre équipe et, dans les nouvelles campagnes coop, par l’équipe alliée. Permet ensuite le repos sur place. En cas d’échec : 75 % sans nouvelle blessure ni capture, 20 % blessure, 5 % capture. Aucun décès.'},
  fieldRest:{name:'Se reposer dans la planque',icon:'moon',stat:2,duration:1,cost:0,fatigue:0,safe:true,field:true,talents:[],desc:'Nécessite une planque de votre équipe dans ce pays. Récupère 30 d’énergie et réduit l’exposition de 15.'},
  rest:{name:'Se reposer au QG',icon:'moon',stat:2,duration:1,cost:0,fatigue:0,safe:true,home:true,talents:[],desc:'Récupère 50 d’énergie et réduit l’exposition de 20.'},
  heal:{name:'Recevoir des soins',icon:'plus',stat:2,duration:2,cost:0,fatigue:0,safe:true,home:true,talents:[],desc:'Soigne une blessure et rend 40 d’énergie.'},

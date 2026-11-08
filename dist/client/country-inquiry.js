@@ -1,14 +1,14 @@
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=234';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=234';
-import {INVESTIGATION_STEPS,INTERVENTION_ACTIONS,investigationSteps,investigationRail,interventionMarkup,stepForAction,interventionForAction} from './investigation-steps.js?v=234';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=234';
-import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=234';
-import * as E from './engine.js?v=234';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=234';
-import {esc,icon,button,flag,portrait} from './ui.js?v=234';
-import {suspectPortrait} from './fracture-profiles.js?v=234';
-import {countrySignals} from './country-signals.js?v=234';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=234';
+import {cellInfoButton,captiveMarkup} from './cell-info.js?v=235';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=235';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=235';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=235';
+import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=235';
+import * as E from './engine.js?v=235';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=235';
+import {esc,icon,button,flag,portrait} from './ui.js?v=235';
+import {suspectPortrait} from './fracture-profiles.js?v=235';
+import {countrySignals} from './country-signals.js?v=235';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=235';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -85,7 +85,7 @@ function openCountryInquiry(id,threat=false){
  if(threat){if(!threatInquiryModel(api.state(),id))return;selection={id,threat:true,type:'protect',agent:null,proof:null,boost:false,message:''};paint(true);return;}
  const s=api.state(),t=E.knownTargets(s).find(t=>t.id===id);if(!t)return;
  const next=E.nextOperation(s,t);selection={id,type:INQUIRY_ACTIONS.includes(next.type)?next.type:'contacts',agent:null,proof:null,boost:false,message:''};
- selection.step=stepForAction(selection.type);selection.substep=interventionForAction(selection.type);paint(true);
+ selection.step=stepForAction(selection.type);selection.substep=substepForAction(selection.step,selection.type);paint(true);
 }
 function refreshCountryInquiry(){if(api?.modal.open&&api.modal.classList.contains('country-inquiry-modal'))paint();}
 function selectionModel(s,current){return current.threat?threatInquiryModel(s,current.id,current.agent,current.boost):inquiryModel(s,current.id,current.type,current.agent,current.proof,current.boost);}
@@ -99,8 +99,9 @@ function paint(open=false){
  const {t,type,rows,selected,proofs,requirements,plot}=m;selection.agent=selected?.a.id||null;selection.proof=selected?.target&&type==='analyze'?selected.target:proofs[0]?.id||null;
  const locked=readOnly(),done=inquiryCompleted(s,t,type),e=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player],preview=selected,boostReason=boostUnavailable(selected,locked);
  const progress=plot?null:investigationSteps(s,t),stage=INVESTIGATION_STEPS.find(x=>x.id===selection.step)||INVESTIGATION_STEPS[0];
- const actionKeys=stage.id==='intervention'?INTERVENTION_ACTIONS[selection.substep||'prepare']:stage.actions;
- const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3></div>${stage.id==='intervention'?`<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle. Le mandat est facultatif.</p>${interventionMarkup(s,t,true,selection.substep)}`:''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
+ const substeps=INVESTIGATION_SUBSTEPS[stage.id],substep=selection.substep??substepForAction(stage.id,stage.actions[0]);
+ const actionKeys=substeps?.[substep]??stage.actions;
+ const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3></div>${stage.id==='intervention'?'<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle.</p>':''}${substeps?investigationSubsteps(s,t,stage.id,true,substep):''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
  const running=E.team(s).filter(a=>a.task&&(a.task.target===t.id||a.task.type==='analyze'&&s.proofs.find(p=>p.id===a.task.target)?.suspect===t.id||a.country===t.country&&['contacts','influence','authorize','drone',...(plot?['protect']:[])].includes(a.task.type)));
  const missions=running.length?`<section class="inquiry-running"><h3>Missions affectées · ${running.length}</h3>${running.map(a=>`<div>${button(portrait(a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${a.id}" aria-label="Consulter la fiche de ${esc(a.name)}"`)}<span><strong>${esc(a.name)}</strong><small>${esc(ACTIONS[a.task.type].name)} · ${a.task.remaining} tour(s)${a.task.queued?' · planifiée':''}</small></span></div>`).join('')}</section>`:'';
 
@@ -130,9 +131,9 @@ async function handleInquiryCommand(cmd,id){
  if(!selection||!api.modal.open||!api.modal.classList.contains('country-inquiry-modal'))return;
  if(pending)return;
  if(cmd==='inquiry-open-agent'){const m=selectionModel(api.state(),selection);if(!E.team(api.state()).some(a=>a.id===id))return;api.openAgent(id);return;}
- if(cmd==='inquiry-step'&&!selection.threat){const st=INVESTIGATION_STEPS.find(x=>x.id===id);if(!st)return;selection.step=id;selection.substep='prepare';selection.type=st.actions[0];selection.agent=null;selection.boost=false;selection.message='';paint();}
- if(cmd==='inquiry-substep'&&!selection.threat&&INTERVENTION_ACTIONS[id]){selection.step='intervention';selection.substep=id;selection.type=INTERVENTION_ACTIONS[id][0];selection.agent=null;selection.boost=false;selection.message='';paint();}
- if(cmd==='inquiry-action'&&!selection.threat&&INQUIRY_ACTIONS.includes(id)){selection.type=id;selection.step=stepForAction(id,selection.step);if(selection.step==='intervention')selection.substep=interventionForAction(id);selection.agent=null;selection.boost=false;selection.message='';paint();}
+ if(cmd==='inquiry-step'&&!selection.threat){const st=INVESTIGATION_STEPS.find(x=>x.id===id);if(!st)return;selection.step=id;selection.type=st.actions[0];selection.substep=substepForAction(id,selection.type);selection.agent=null;selection.boost=false;selection.message='';paint();}
+ if(cmd==='inquiry-substep'&&!selection.threat){const choices=INVESTIGATION_SUBSTEPS[selection.step]?.[id];if(!choices)return;selection.substep=id;selection.type=choices[0];selection.agent=null;selection.boost=false;selection.message='';paint();}
+ if(cmd==='inquiry-action'&&!selection.threat&&INQUIRY_ACTIONS.includes(id)){selection.type=id;selection.step=stepForAction(id,selection.step);selection.substep=substepForAction(selection.step,id);selection.agent=null;selection.boost=false;selection.message='';paint();}
  if(cmd==='inquiry-agent'){selection.agent=id;selection.message='';paint();}
  if(cmd==='inquiry-effects'){selection.effectsOpen=!selection.effectsOpen;paint();}
  if(cmd==='inquiry-boost'){

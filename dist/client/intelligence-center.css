@@ -81,3 +81,9 @@
 .command-deck .deck-tab.nav-inquiry .nav-availability-badge{width:auto;min-width:17px;padding:0 4px;white-space:nowrap}
 
 .postponement-reveal .mission-placeholder{height:auto;inset:24px 24px 48%;z-index:1;font-size:clamp(18px,3vw,26px);background:#1b243480}
+
+.immersive-deck .deck-header .crisis-block>span{display:flex;justify-content:space-between;align-items:baseline;gap:2px;white-space:nowrap}
+.immersive-deck .deck-header .crisis-block>span>small{font-size:.85em}
+.immersive-deck .deck-header .crisis-block>i{margin-top:4px}
+.immersive-deck .deck-header>.campaign-clock{gap:2px}
+.government-medical .medical-heal{margin-top:5px}

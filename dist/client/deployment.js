@@ -1,7 +1,7 @@
-import {COUNTRY} from './data.js?v=234';
-import {mapCountries} from './operation-map.js?v=234';
-import * as E from './engine.js?v=234';
-import {button,esc,portrait} from './ui.js?v=234';
+import {COUNTRY} from './data.js?v=235';
+import {mapCountries} from './operation-map.js?v=235';
+import * as E from './engine.js?v=235';
+import {button,esc,portrait} from './ui.js?v=235';
 
 export function deploymentOptions(s,type,target){
  return E.team(s).filter(a=>!['dead','retired'].includes(a.status)).map(a=>({agent:a,...E.options(s,a.id,type,target)}));
@@ -15,7 +15,7 @@ export function agentTravelDestinations(s,id){
 }
 
 function deploymentMode(type){
- return `<label class="deployment-mode">Mode de déplacement<select id="deploymentMode" aria-describedby="deploymentModeHelp"><option value="travel" ${type==='travel'?'selected':''}>Avec passeport</option><option value="sneak" ${type==='sneak'?'selected':''}>Passage clandestin</option></select></label><p id="deploymentModeHelp">${type==='travel'?'Voyage signalé, sans arme. Réussite automatique.':'Arme conservée. Réussite : exposition remise à zéro. Échec : voyage raté, exposition accrue et risque de blessure ou de capture.'}</p>`;
+ return `<label class="deployment-mode">Mode de déplacement<select id="deploymentMode" aria-describedby="deploymentModeHelp"><option value="travel" ${type==='travel'?'selected':''}>Avec passeport</option><option value="sneak" ${type==='sneak'?'selected':''}>Passage clandestin</option></select></label><p id="deploymentModeHelp">${type==='travel'?'Départ sans arme. Arrivée signalée et +10 points d’exposition de base. Réussite automatique.':'Arme conservée. Réussite : exposition remise à zéro. Échec : voyage raté, exposition accrue et risque de blessure ou de capture.'}</p>`;
 }
 
 export function agentTravelPickerMarkup(s,id,type=null,target=null){

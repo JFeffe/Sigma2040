@@ -23,7 +23,7 @@ test('Analysis rejects a forged piece and recommends new evidence; no phantom su
 });
 test('Cooperation requests no longer generate or grant protection',()=>{const s=fresh();E.updateRequests(s);assert.equal((s.requests||[]).length,0);const before=JSON.stringify(s);assert.throws(()=>E.answerRequest(s,'joint',true),/désactivées/);assert.equal(JSON.stringify(s),before);});
 test('Counter-intelligence reveals presence without revealing orders; old saves remain compatible',()=>{
- const s=fresh(),foreign=s.agents.find(a=>a.faction==='US');foreign.country='FR';foreign.exposure=20;foreign.cover='Clandestine';E.assign(s,'p0','counter');s.agents[0].task.chance=100;advance(s);
+ const s=fresh(),foreign=s.agents.find(a=>a.faction==='US');foreign.country='FR';foreign.exposure=20;E.assign(s,'p0','counter');s.agents[0].task.chance=100;advance(s);
  assert.ok(s.factions.FR.publicAgents[foreign.id]);assert.equal(s.factions.FR.publicAgents[foreign.id].task,undefined);assert.match(s.operationReports[0].notes.join(' '),/mission inconnue/);
  delete s.requests;delete s.operationReports;E.validateSave(JSON.parse(JSON.stringify(s)));const bad=structuredClone(s);bad.requests=[{plot:'missing',from:'US',status:'pending'}];assert.throws(()=>E.validateSave(bad));
 });

@@ -5,7 +5,7 @@ import {newRoom,joinRoom,startRoom,restoreRoom,playerView} from '../dist/client/
 const ids=['p12','p0','p13','p14'];
 const fresh=()=>{const s=E.createGame('FR',ids,42);const [chief,a]=E.team(s);a.stats=[5,5,5];a.talents=['enquete','combat','planB'];return {s,chief,a};};
 test('First selected agent is chief; coordination helps colleagues only and obeys location, status, transit and cap',()=>{
- const {s,chief,a}=fresh();assert.equal(chief.id,'p12');assert.ok(chief.chief);assert.equal(chief.talents.length,3);assert.ok(sortedTalents(chief).includes('chef'));assert.match(talents(chief),/Chef — Coordination/);
+ const {s,chief,a}=fresh();assert.equal(chief.id,'p12');assert.ok(chief.chief);assert.equal(chief.talents.length,3);assert.ok(sortedTalents(chief).includes('chef'));assert.match(talents(chief),/Chef/);
  for(const f of Object.keys(s.factions))assert.equal(E.team(s,f).filter(a=>a.chief).length,1);
  chief.chief=false;const base=E.options(s,a.id,'counter').chance;const own=E.options(s,chief.id,'counter').chance;chief.chief=true;
  assert.equal(E.options(s,a.id,'counter').chance,base+5);assert.equal(E.options(s,chief.id,'counter').chance,own);assert.match(E.options(s,a.id,'counter').explanations.join(' '),/Coordination/);

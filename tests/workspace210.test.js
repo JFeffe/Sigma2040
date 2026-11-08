@@ -37,15 +37,15 @@ test('Cooperative diplomacy other countries exclude all six superpowers, even in
 test('The globe shows both victory objectives and only the foreign agents map toggle',()=>{
  const camera=createCamera(),regular=fresh();
  const html=makeScreens(regular,'FR',null,null,camera).world();
- assert.match(html,/L’Architecte à arrêter/);
- assert.match(html,/0 \/ 2<\/strong> cellules démantelées/);
+ assert.match(html,/L’Architecte<span class="sr-only"> à arrêter/);
+ assert.match(html,/0\/2<\/strong> cellules/);
  assert.doesNotMatch(html,/arrestations|data-map="(?:dome|globe|routes|intel)"/);
  assert.match(html,/data-map="foreign"/);
  const d=D.createDraft(['FR','US'],42,'cooperative');
  while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);
  const coop=E.createConfiguredGame('FR',d.teams.FR,42,'bb2',{gameMode:'cooperative',participants:d.countries,teams:d.teams});
  coop.suspects.find(t=>t.id==='s6').arrested=true;
- assert.match(makeScreens(coop,'FR',null,null,camera).world(),/L’Architecte arrêté.*0 \/ 3<\/strong> cellules démantelées/);
+ assert.match(makeScreens(coop,'FR',null,null,camera).world(),/L’Architecte<span class="sr-only"> arrêté.*0\/3<\/strong> cellules/);
 });
 
 test('Country panels put artwork and live status ahead of the scrolling actions',()=>{
@@ -54,6 +54,8 @@ test('Country panels put artwork and live status ahead of the scrolling actions'
  const html=makeScreens(s,'BR',null,null,camera).world();
  assert.doesNotMatch(html,/world-window-shortcut|Ouvrir Brésil/);
  assert.match(html,/country-art-header is-secondary.*Brasília.*compact-country-signals.*Accès : actif.*country-sidebar-scroll/s);
+ assert.match(html,/data-rich-tooltip aria-label="Coopération : /);
+ assert.match(html,/Hostile.*Réticente.*Neutre.*Favorable.*Soutien total.*country-sidebar-scroll/s);
  assert.match(countryOperationsMarkup(s,'BR',{group:'access'}),/country-operations-heading.*country-art-header is-secondary.*Brasília.*Accès : actif.*<\/header>/s);
  assert.match(makeScreens(s,'US',null,null,camera).world(),/country-art-header is-power.*Washington/s);
 });

@@ -10,8 +10,26 @@ const add=(s,id,verified=false)=>{s.proofs.find(p=>p.id===id).foundBy='FR';s.fac
 test('Recovery orders restore requested energy while retaining different exposure reductions',()=>{
  for(const [type,country,recovery,exposure] of [['rest','FR',50,20],['fieldRest','DE',30,15],['hide','DE',10,35]]){const s=fresh(),a=s.agents[0];a.country=country;a.safehouses=['DE'];a.fatigue=80;a.exposure=70;E.assign(s,a.id,type);finish(s,a);assert.equal(a.fatigue,80-recovery);assert.equal(a.exposure,70-exposure);assert.equal(s.operationReports[0].fatigue,-recovery);}
 });
-test('Legal safehouse bonus, armed action filtering and exposure acquisition are consistent',()=>{
- const s=fresh(),a=s.agents[1];a.country='DE';a.stats[2]=5;a.cover='Clandestine';const base=E.options(s,a.id,'findSafehouse').chance;a.cover='Légale';assert.equal(E.options(s,a.id,'findSafehouse').chance,base+15);
+test('Legacy cover is discarded without altering a committed safehouse order',()=>{
+ const s=E.createGame('FR',['p0','p12','p13','p14'],47),[a]=E.team(s);
+ assert.ok(!Object.hasOwn(a,'cover'));
+ a.country='DE';a.weapon=false;a.stats[2]=5;
+ const before=E.options(s,a.id,'findSafehouse');
+ for(const legacy of ['Légale','Clandestine']){
+  a.cover=legacy;
+  assert.equal(E.options(s,a.id,'findSafehouse').chance,before.chance);
+ }
+ a.cover='Légale';
+ const task=E.assign(s,a.id,'findSafehouse');
+ task.chanceInputs.raw+=15;task.chance=Math.min(90,task.chance+15);
+ const saved=structuredClone(task),loaded=E.validateSave(structuredClone(s)),agent=E.team(loaded)[0];
+ assert.ok(!Object.hasOwn(agent,'cover'));
+ assert.deepEqual(agent.task,saved);
+ E.cancel(loaded,agent.id);
+ assert.equal(E.options(loaded,agent.id,'findSafehouse').chance,before.chance);
+});
+test('Armed action filtering and exposure acquisition are consistent',()=>{
+ const s=fresh(),a=s.agents[1];a.country='DE';a.stats[2]=5;
  assert.ok(locationActions(a,s).some(([id])=>id==='equip'));assert.match(E.options(s,a.id,'equip').error,/arme/);assert.throws(()=>E.assign(s,a.id,'equip'));a.weapon=false;a.exposure=7;assert.ok(locationActions(a,s).some(([id])=>id==='equip'));E.assign(s,a.id,'equip');finish(s,a);assert.equal(a.weapon,true);assert.equal(a.exposure,15);
 });
 test('Field targets constrain both UI and engine; drone explores without one',()=>{

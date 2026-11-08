@@ -1,6 +1,6 @@
-import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=234';
-import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=234';
-import {fullBody} from './visuals.js?v=234';
+import {DISPLAY_ROSTER,STAT_NAMES,TALENTS,ACTIONS} from './data.js?v=235';
+import {esc,icon,nationalityFlags,talentIcon,portrait,sortedTalents} from './ui.js?v=235';
+import {fullBody} from './visuals.js?v=235';
 // Selection-only categories: never attached to agent profiles or saved games.
 const RECRUIT_TYPES=[
  ['protecteur','Protecteur',['p20','p28','p16','p27']],

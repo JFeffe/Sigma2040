@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
-import {INVESTIGATION_STEPS,investigationSteps,investigationProgressMarkup} from '../dist/client/investigation-steps.js';
+import {INVESTIGATION_STEPS,investigationSteps,investigationProgressMarkup,investigationRail} from '../dist/client/investigation-steps.js';
 import {ACTION_GROUPS} from '../dist/client/presentation.js';
 import {INQUIRY_ACTIONS,countryTargetButtons,inquiryCandidate,inquiryModel,inquiryRequirements,inquiryCompleted,threatInquiryModel,countryThreatButtons,initCountryInquiry,openCountryInquiry,handleInquiryCommand,handleInquiryChange} from '../dist/client/country-inquiry.js';
 const fresh=()=>E.createGame('FR',['p0','p12','p13','p14'],42);
@@ -30,10 +30,13 @@ test('Compact controller switches actions, opens portraits, and assigns only pro
   initCountryInquiry({state:()=>s,modal,readOnlyReason:()=>readOnly,notify(){},showModal(h,c){html=h;modal.className=c;modal.open=true;},openAgent(id){assert.equal(modal.open,true);opened=id;},async assign(p){assigned=p;E.assign(s,p.id,p.type,p.target,p.useCredits);}});
   openCountryInquiry(t.id);assert.match(html,/inquiry-step-rail/);assert.doesNotMatch(html,/id="inquiryAction"/);
   await handleInquiryCommand('inquiry-step','intervention');
-  assert.match(html,/data-id="prepare"/);assert.match(html,/Optionnel · une fois par pays/);
+  assert.match(html,/data-id="prepare"/);assert.doesNotMatch(html,/Optionnel · une fois par pays/);
   await handleInquiryCommand('inquiry-substep','locate');assert.match(html,/data-id="surveil" aria-pressed="true"/);
   await handleInquiryCommand('inquiry-step','proofs');assert.match(html,/data-id="collect"/);assert.doesNotMatch(html,/data-id="analyze"/);
   await handleInquiryCommand('inquiry-step','access');assert.match(html,/data-id="contacts"/);assert.match(html,/data-id="drone"/);assert.doesNotMatch(html,/data-id="intimidate"/);
+  assert.match(html,/Optionnel · une fois par pays/);
+  await handleInquiryCommand('inquiry-substep','mandate');assert.match(html,/data-id="authorize" aria-pressed="true"/);
+  assert.doesNotMatch(html,/data-id="contacts" aria-pressed=/);
   await handleInquiryCommand('inquiry-action','analyze');assert.match(html,/data-id="validation" aria-pressed="true"/);assert.match(html,/vérifier la deuxième/);
   await handleInquiryCommand('inquiry-step','access');
   await handleInquiryCommand('inquiry-open-agent',a.id);assert.equal(opened,a.id);
@@ -88,7 +91,8 @@ test('Arrest prerequisites allow the engine’s clandestine path without a manda
 
 test('Five-stage path keeps optional second verification and mandate independent of completion',()=>{
  assert.deepEqual(INVESTIGATION_STEPS.map(x=>x.id),['access','proofs','validation','intervention','arrest']);
- assert.deepEqual(INVESTIGATION_STEPS[0].actions,['contacts','influence','drone']);
+ assert.deepEqual(INVESTIGATION_STEPS[0].actions,['contacts','influence','drone','authorize']);
+ assert.ok(!INVESTIGATION_STEPS[3].actions.includes('authorize'));
  const s=fresh(),{t,a,f}=local(s);f.access[t.country]=true;
  f.evidence=[{id:t.id+'-e0',verified:true},{id:t.id+'-e1',verified:false}];
  Object.assign(f.known[t.id],{identified:false,prepared:true,locationUntil:8});
@@ -123,4 +127,28 @@ test('Dossier stays on the chosen mission for two consecutive agent assignments'
  assert.match(html,/Missions affectées · 2/);
  }finally{globalThis.document=previous;}
  }
+});
+
+
+test('Access and intervention display the right partial states with optional mandate and expiring location',()=>{
+ const s=fresh(),{t,f}=local(s);
+ const rail=()=>investigationRail(s,t,'access');
+ const stage=(id)=>rail().match(new RegExp(`<button class="btn inquiry-step [^"]+"[^>]+data-id="${id}"[^>]*>[\\s\\S]*?<\\/button>`))?.[0];
+ const check='M4 12l5 5L20 6';
+ f.authorized[t.country]=true;
+ assert.match(stage('access'),/inquiry-step available/);
+ assert.ok(!stage('access').includes(check));
+ f.access[t.country]=true;delete f.authorized[t.country];
+ assert.match(stage('access'),/inquiry-step partial/);
+ assert.ok(stage('access').includes(check));
+ f.authorized[t.country]=true;
+ assert.match(stage('access'),/inquiry-step complete/);
+ for(const [prepared,locationUntil] of [[true,s.turn-1],[false,s.turn],[true,s.turn]]){
+  Object.assign(t,{prepared,locationUntil});
+  const complete=prepared&&locationUntil>=s.turn;
+  assert.match(stage('intervention'),complete?/inquiry-step complete/:/inquiry-step partial/);
+  assert.equal(stage('intervention').includes(check),complete);
+ }
+ const markup=investigationProgressMarkup(s,t);
+ assert.ok(markup.indexOf('Obtenir un mandat')<markup.indexOf('Recueillir deux preuves'));
 });

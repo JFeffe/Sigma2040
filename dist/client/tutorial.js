@@ -1,10 +1,10 @@
-import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=234';
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=234';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=234';
-import * as E from './engine.js?v=234';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=234';
-import {SUSPECTS} from './data.js?v=234';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=234';
+import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=235';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=235';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=235';
+import * as E from './engine.js?v=235';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=235';
+import {SUSPECTS} from './data.js?v=235';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=235';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='sigma2040-filigrane-v1';
 export const LEGACY_TUTORIAL_MISSIONS=Object.freeze([

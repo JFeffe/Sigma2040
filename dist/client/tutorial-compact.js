@@ -1,4 +1,4 @@
-import {npcTutorialObjective} from './tutorial-npc.js?v=234';
+import {npcTutorialObjective} from './tutorial-npc.js?v=235';
 export const COMPACT_IDS=['basics','inquiry','intervention','shield','recovery','simulation'];
 export const isCompactTutorial=s=>s?.tutorial?.version===1&&COMPACT_IDS.includes(s.tutorial.mission);
 export const COMPACT_BASE={basics:'contact',inquiry:'evidence',intervention:'arrest',shield:'countdown',recovery:'hostile',simulation:'allies'};
@@ -18,7 +18,7 @@ export function compactObjective(s){
  if(id==='simulation'){
   if(s.turn>10||s.ended)return result('Dix tours · Bilan de formation',`${s.suspects.filter(t=>t.arrested).length} suspect(s) arrêté(s) collectivement. Prestige de votre cellule : ${f.score||0}. Crise : ${s.crisis}/100. Consultez Archives pour les performances des agents. Ce bilan termine l’exercice, sans déclarer une victoire de campagne.`,true);
   const suggestion=npcTutorialObjective(s);
-  return {...suggestion,title:`Mini-partie · Tour ${s.turn}/10`,unguided:s.turn>2,text:s.turn<=2?'Gardez APÉRO au QG ; enquêtez à Ankara et préparez la protection de Berlin. Affectez les agents disponibles puis terminez le tour.':s.turn<=5?'Enquête et protection avancent en parallèle. Consultez les échéances dans Menaces.':s.turn<=8?'Préparez une arrestation et surveillez énergie, exposition et couverture. Les suggestions restent dans Instructions.':'Terminez vos opérations : le bilan arrive après la résolution du tour 10.'};
+  return {...suggestion,title:`Mini-partie · Tour ${s.turn}/10`,unguided:s.turn>2,text:s.turn<=2?'Gardez APÉRO au QG ; enquêtez à Ankara et préparez la protection de Berlin. Affectez les agents disponibles puis terminez le tour.':s.turn<=5?'Enquête et protection avancent en parallèle. Consultez les échéances dans Menaces.':s.turn<=8?'Préparez une arrestation et surveillez l’énergie et l’exposition. Les suggestions restent dans Instructions.':'Terminez vos opérations : le bilan arrive après la résolution du tour 10.'};
  }
  if(id==='basics'){
   if(s.agents[0].country!=='DE')add('p0','travel','DE');else if(!f.access.DE)add('p0','contacts');

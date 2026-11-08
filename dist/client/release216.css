@@ -3,12 +3,13 @@
 
 .agent-deployment .country-code img{width:27px;height:19px;object-fit:cover}
 .immersive-deck .attack-delay-banner{position:fixed;top:calc(var(--hud-top,150px) + 44px);left:110px;right:auto;width:min(430px,calc(100vw - 130px));max-height:35vh;overflow:auto;margin:0;z-index:24;padding:9px}
-.immersive-deck .field-team .agent-card{height:auto;min-height:68px;padding:4px 8px}
+.immersive-deck .field-team .agent-card,.immersive-deck .field-team .empty-slot{height:64px;min-height:64px;padding:3px 7px}
 .immersive-deck .field-team .agent-brief{display:flex;flex-direction:column;align-items:flex-start;gap:1px}
-.immersive-deck .field-team .agent-brief>.agent-deployment{white-space:normal;overflow:visible;font-size:11px}
+.immersive-deck .field-team .agent-brief>.agent-deployment{max-width:100%;font-size:11px}
+.immersive-deck .field-team .agent-deployment>span:last-child{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .immersive-deck .field-team .agent-deployment .country-code{width:19px!important;height:13px!important;min-width:19px;flex-shrink:0}
 .immersive-deck .field-team .agent-deployment .country-code img{width:19px!important;height:13px!important}
-@media(max-width:700px){.immersive-deck .attack-delay-banner{left:8px;right:8px;width:auto;max-height:27vh}.immersive-deck .field-team .agent-card{min-height:72px}}
+@media(max-width:700px){.immersive-deck .attack-delay-banner{left:8px;right:8px;width:auto;max-height:27vh}}
 
 .immersive-deck .field-team .agent-card h3,.immersive-deck .field-team .agent-card .availability{margin-bottom:1px}
 .agent-deployment>.icon{width:13px;height:13px;flex:none;color:#a9c8e2}
@@ -33,3 +34,8 @@
 dialog.cell-info-dialog{width:min(440px,calc(100vw - 32px));max-height:80vh;}
 .cell-info-dialog .simple-modal{padding:24px;max-width:100%;}
 .captive-card{padding:16px;margin-block:12px;}
+
+.immersive-deck .field-team .agent-card>.portrait{height:38px}
+.immersive-deck .field-team .agent-card-copy{padding:0}
+.immersive-deck .field-team .compact-progress{margin-top:2px}
+.immersive-deck .objective-strip .objective-divider{color:#a9a4b0}

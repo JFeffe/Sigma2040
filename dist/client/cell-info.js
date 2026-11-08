@@ -1,6 +1,6 @@
-import {CELL_RULES,cellKnown,activeCaptives} from './cell-variants.js?v=234';
-import {cellName,COUNTRY} from './data.js?v=234';
-import {esc,button,flag} from './ui.js?v=234';
+import {CELL_RULES,cellKnown,activeCaptives} from './cell-variants.js?v=235';
+import {cellName,COUNTRY} from './data.js?v=235';
+import {esc,button,flag} from './ui.js?v=235';
 export function cellInfoButton(s,cell){return button(cellKnown(s,cell)?esc(cellName(cell))+' ⓘ':'Cellule inconnue','cell-info','small',`data-id="${cell}" ${cellKnown(s,cell)?'':'disabled'}`);}
 export function cellInfoMarkup(s,cell){
  if(!cellKnown(s,cell))return '<div class="simple-modal"><h2>Cellule inconnue</h2><p>Découvrez un dossier ou une menace pour identifier cette cellule.</p></div>';

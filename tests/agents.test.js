@@ -9,14 +9,14 @@ test('Twelve talents, three unique specialties each and approved Iris identity',
  assert.deepEqual(ROSTER[0].stats,[9,4,7]);assert.deepEqual(ROSTER[0].nationalities,['GB']);
 });
 test('Best base talent plus cumulative languages, homeland bonus and cap',()=>{
- const s=fresh(),a=s.agents[0];a.country='GB';a.stats=[5,5,5];a.cover='Clandestine';a.weapon=false;
+ const s=fresh(),a=s.agents[0];a.country='GB';a.stats=[5,5,5];a.weapon=false;
  assert.equal(E.options(s,a.id,'findSafehouse').chance,70);
  a.nationalities=[];assert.equal(E.options(s,a.id,'findSafehouse').chance,70);
  a.talents=['langues'];assert.equal(E.options(s,a.id,'findSafehouse').chance,60);
  a.talents=['diplomatie','langues'];const good=E.options(s,a.id,'authorize').chance;
  a.talents=['diplomatie'];assert.equal(E.options(s,a.id,'authorize').chance,good-5);
  a.nationalities=['GB','DE'];a.talents=['contacts','infiltration','langues'];assert.equal(E.options(s,a.id,'findSafehouse').chance,70);
- a.stats[2]=10;a.cover='Légale';assert.equal(E.options(s,a.id,'findSafehouse').chance,90);
+ a.stats[2]=10;assert.equal(E.options(s,a.id,'findSafehouse').chance,90);
  assert.equal(E.options(s,a.id,'travel','FR').chance,100);
 });
 test('Nationality applies at clandestine destination and physical operation site for remote support',()=>{

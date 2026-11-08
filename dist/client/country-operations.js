@@ -1,15 +1,15 @@
-import {agentLocation} from './agent-location.js?v=234';
-import * as E from './engine.js?v=234';
-import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=234';
-import {availability} from './presentation.js?v=234';
-import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=234';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=234';
-import {countryArtHeader} from './country-signals.js?v=234';
-import {proofTitle} from './intelligence.js?v=234';
-import {fullBody} from './visuals.js?v=234';
-import {countryOnMap,operationCountries} from './operation-map.js?v=234';
-import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=234';
-import {exposureLevel} from './exposure.js?v=234';
+import {agentLocation} from './agent-location.js?v=235';
+import * as E from './engine.js?v=235';
+import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=235';
+import {availability} from './presentation.js?v=235';
+import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=235';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=235';
+import {countryArtHeader} from './country-signals.js?v=235';
+import {proofTitle} from './intelligence.js?v=235';
+import {fullBody} from './visuals.js?v=235';
+import {countryOnMap,operationCountries} from './operation-map.js?v=235';
+import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=235';
+import {exposureLevel} from './exposure.js?v=235';
 
 const headquartersActions=['rest','cyberSupport','counter','analyze','heal'];
 const fieldActions=['cyberSupport','equip','findSafehouse','fieldRest','hide'];
@@ -132,18 +132,16 @@ export function floatingAgentMarkup(s,id,{sidebar=false,locked=''}={}){
  const status=availability(a),task=a.task,target=COUNTRY[task?.target]?.name||s.suspects.find(t=>t.id===task?.target)?.name||COUNTRY[a.country].name,own=a.faction===s.player;
  const energy=100-a.fatigue,energyTone=energy>50?'green':energy>25?'yellow':'red';
  const exposureTone=['green','blue','yellow','orange','red'][exposureLevel(a)];
- const readings=[['bolt','Énergie',energy,energyTone],['eye','Exposition',a.exposure,exposureTone]];
+ const readings=[['bolt','Énergie',energy,energyTone],['eye','Exposition',a.exposure,exposureTone,E.exposureLabel(a)]];
  const weapon=a.weapon?'Arme équipée':'Sans arme';
  const stats=a.stats.map((n,i)=>`<span title="${STAT_NAMES[i]}">${icon(['scan','target','shield'][i])}<span class="sr-only">${STAT_NAMES[i]}</span> <strong>${n}</strong></span>`).join('');
  const localActions=countrySidebarActions(s,a.country,own?locked:'Partenaire : consultation uniquement.',a);
- const coverHelp=a.cover==='Légale'?'Couverture officielle au départ ou après un voyage avec passeport. +15 points pour trouver une planque.':'Couverture obtenue par un passage clandestin réussi.';
  return `<article class="workspace-body floating-agent ${own?'':'coop-ally'}">${sidebar?'':`<header><h2>${esc(a.name)} <span class="agent-nationality">${nationalityFlags(a)}</span></h2></header>`}
- <div class="floating-agent-overview">${fullBody(a)}<div class="floating-agent-facts">${agentLocation(a,{compact:true,pin:true})}${own?'':'<small>Partenaire : consultation uniquement</small>'}<span class="availability ${status.kind}">${esc(status.label)}</span>
- <div class="floating-agent-readings">${readings.map(([symbol,label,value,tone])=>`<span title="${label}">${icon(symbol)}<span class="sr-only">${label}</span><strong class="reading-${tone}">${value}/100</strong></span>`).join('')}</div>
+ <div class="floating-agent-overview"><div class="floating-agent-portrait">${fullBody(a,{alignTop:true})}</div><div class="floating-agent-facts">${agentLocation(a,{compact:true,pin:true})}${own?'':'<small>Partenaire : consultation uniquement</small>'}<span class="availability ${status.kind}">${esc(status.label)}</span>
+ <div class="floating-agent-readings">${readings.map(([symbol,label,value,tone,level])=>`<span title="${label}${level?': '+level:''}">${icon(symbol)}<span class="sr-only">${label}</span><strong class="reading-${tone}">${value}/100</strong>${level?`<small>${esc(level)}</small>`:""}</span>`).join('')}</div>
  <div class="floating-agent-stats" aria-label="Statistiques">${stats}</div>
- <div class="floating-agent-gear"><span title="${weapon}">${icon(a.weapon?'target':'case')}${weapon}</span><span title="${coverHelp}">${icon(a.cover==='Clandestine'?'ghost':'file')}${esc(a.cover)}</span></div>
+ <div class="floating-agent-gear"><span title="${weapon}">${icon(a.weapon?'target':'case')}${weapon}</span></div>
  ${talents(a)}</div></div>
- ${localActions}
  ${task||a.status==='captured'?`<section class="floating-agent-mission"><h3>${task?esc(ACTIONS[task.type].name):'Extraction nécessaire'}</h3>${task?`<p>${esc(target)} · ${task.remaining} tour(s) · ${task.chance} % de réussite</p>${own?button('Annuler la mission','cancel','small',`data-id="${id}" ${E.travelInProgress(a)||s.ended?'disabled':''}`):''}`:''}</section>`:''}
- <div class="floating-agent-links">${button(icon('world')+' Ouvrir le pays','workspace-country','small',`data-id="${a.country}"`)}${button(icon('clock')+' Journal','agent-journal','small',`data-id="${id}"`)}</div><details><summary>Parcours</summary><p>${esc(a.bio)}</p></details></article>`;
+ ${localActions}</article>`;
 }

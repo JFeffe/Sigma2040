@@ -1,9 +1,9 @@
-import {weaponOpportunity} from './bot-weapon.js?v=234';
-import {activeCaptives,rescueTargets} from './cell-variants.js?v=234';
-import {incidentRates} from './incident-rules.js?v=234';
-import {protectionShare} from './balance-rules.js?v=234';
-import {TECH,COUNTRY} from './data.js?v=234';
-import {campaignRules} from './campaign-rules.js?v=234';
+import {weaponOpportunity} from './bot-weapon.js?v=235';
+import {activeCaptives,rescueTargets} from './cell-variants.js?v=235';
+import {incidentRates} from './incident-rules.js?v=235';
+import {protectionShare} from './balance-rules.js?v=235';
+import {TECH,COUNTRY} from './data.js?v=235';
+import {campaignRules} from './campaign-rules.js?v=235';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.
@@ -34,7 +34,7 @@ export function planBB2Faction(s,id,E){
  const caseArrival=(a,t,mode,route)=>{
   // Compare the whole remaining field work, not just arrival odds. The view
   // contains only this agent's projection and the faction's public dossier.
-  const b={...a,country:t.country,task:null,cover:mode==='sneak'?'Clandestine':'Légale',weapon:mode==='sneak'&&a.weapon,fatigue:Math.min(100,a.fatigue+route.fatigue*route.duration),exposure:Math.min(100,a.exposure+E.missionExposure(a,mode,true))};
+  const b={...a,country:t.country,task:null,weapon:mode==='sneak'&&a.weapon,fatigue:Math.min(100,a.fatigue+route.fatigue*route.duration),exposure:Math.min(100,a.exposure+E.missionExposure(a,mode,true))};
   const stages=[],count=proofs(t).length;let missing=Math.max(0,2-count);
   if(missing&&!t.intimidated){stages.push('intimidate');missing--;}
   for(let i=0;i<missing;i++)stages.push('collect');

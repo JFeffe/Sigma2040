@@ -20,3 +20,26 @@ test('Recruitment grants the current campaign passport too',()=>{
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,11);E.recruit(s,'p16','p13');E.advance(s);E.advance(s);
  assert.deepEqual(E.team(s).find(a=>a.id==='p16').nationalities,['IN','FR']);
 });
+
+test('Travel modes set exposure and weapon state and only passports announce arrival',()=>{
+ for(const [mode,exposure,weapon,announced] of [['travel',43,false,true],['sneak',0,true,false]]){
+  const s=E.createGame('FR',DEFAULT_TEAM_IDS,42),[a]=E.team(s);
+  s.humanFactions=Object.keys(s.factions);s.plots=[];s.fracture.cells.forEach(c=>c.resources=0);
+  a.exposure=33;a.weapon=true;
+  const task=E.assign(s,a.id,mode,'JP');
+  assert.ok(task.total>1);
+  a.task.chance=100;
+  E.advance(s);
+  assert.equal(a.weapon,weapon);
+  assert.equal(a.country,'FR');
+  assert.ok(Object.values(s.factions).every(f=>!f.publicAgents[a.id]));
+  while(a.task)E.advance(s);
+  assert.equal(a.country,'JP');
+  assert.equal(a.weapon,weapon);
+  assert.equal(a.exposure,exposure);
+  assert.ok(!Object.hasOwn(a,'cover'));
+  for(const f of Object.values(s.factions).filter(f=>f.id!=='FR')){
+   assert.equal(f.publicAgents[a.id]?.country,announced?'JP':undefined);
+  }
+ }
+});

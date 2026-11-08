@@ -23,9 +23,9 @@ test('Infiltration reduces every positive mission exposure gain, including autom
  E.assign(s,a.id,'travel','FR');E.advance(s);assert.equal(a.exposure,40);
 });
 test('Languages stacks five points with other talents for safehouse and weapon only; cap stays ninety',()=>{
- const s=fresh(),a=E.team(s)[0];a.country='DE';a.stats=[5,5,5];a.cover='Clandestine';a.weapon=false;a.talents=['contacts','combat','endurance'];
+ const s=fresh(),a=E.team(s)[0];a.country='DE';a.stats=[5,5,5];a.weapon=false;a.talents=['contacts','combat','endurance'];
  for(const type of ['findSafehouse','equip']){const base=E.options(s,a.id,type).chance;a.talents[2]='langues';assert.equal(E.options(s,a.id,type).chance,base+5);a.talents[2]='endurance';}
- a.talents=['contacts','infiltration','langues'];a.stats[2]=10;a.cover='Légale';assert.equal(E.options(s,a.id,'findSafehouse').chance,90);
+ a.talents=['contacts','infiltration','langues'];a.stats[2]=10;assert.equal(E.options(s,a.id,'findSafehouse').chance,90);
 });
 test('Tactical preparation bonus is team-specific, one-use, cancellable, saveable, and consumed on a failed roll',()=>{
  const s=fresh(),{a,b,t,f}=caseReady(s);a.talents=['tactique','enquete','endurance'];b.stats=[5,5,5];

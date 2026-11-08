@@ -39,7 +39,7 @@ test('Country inquiry steps use status icons and preserve selection and completi
  const s=fresh(),t=E.knownTargets(s)[0];let html=investigationRail(s,t,'access');
  assert.doesNotMatch(html,/<span>[1-5]<\/span>/);assert.ok(html.includes(icon('unlock')));assert.ok(html.includes(icon('lock')));
  assert.match(html,/data-id="access" aria-pressed="true"/);assert.match(html,/inquiry-step pending/);
- s.factions.FR.access[t.country]=true;html=investigationRail(s,t,'proofs');assert.match(html,/inquiry-step complete/);assert.ok(html.includes(icon('check')));
+ s.factions.FR.access[t.country]=true;html=investigationRail(s,t,'proofs');assert.match(html,/inquiry-step partial/);assert.ok(html.includes(icon('check')));
  assert.match(html,/data-id="proofs" aria-pressed="true"/);
 });
 
