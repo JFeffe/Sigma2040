@@ -1,3 +1,9 @@
+## Build 238 — Langues étrangères et Drones
+
+[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/8e69aaba47f3e110bfedd719c292270ad148917f...build-238)
+
+Le malus linguistique disparaît. Le talent Langues étrangères donne +5 points cumulables à sept actions à l’étranger. Les porteurs du talent Drones peuvent lancer une reconnaissance sans réserver de place de module et bénéficient de +10 points au jet.
+
 ## Build 237 — Icône d’arme
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/25e456613ecb376036f6e2b53ced7802505e6cab...build-237)

@@ -1,14 +1,14 @@
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=237';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=237';
-import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=237';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=237';
-import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=237';
-import * as E from './engine.js?v=237';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=237';
-import {esc,icon,button,flag,portrait} from './ui.js?v=237';
-import {suspectPortrait} from './fracture-profiles.js?v=237';
-import {countrySignals} from './country-signals.js?v=237';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=237';
+import {cellInfoButton,captiveMarkup} from './cell-info.js?v=238';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=238';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=238';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=238';
+import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=238';
+import * as E from './engine.js?v=238';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=238';
+import {esc,icon,button,flag,portrait} from './ui.js?v=238';
+import {suspectPortrait} from './fracture-profiles.js?v=238';
+import {countrySignals} from './country-signals.js?v=238';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=238';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -67,10 +67,15 @@ export function inquiryModel(s,id,type,agentId=null,proof=null,useCredits=false)
 export function inquiryActionInputs(type,candidate){
  const d=ACTIONS[type],a=candidate?.a,o=candidate?.normal;
  const stat=`<span title="Stat utilisée">${icon(['scan','case','shield'][d.stat])} ${esc(STAT_NAMES[d.stat])}${a?' '+a.stats[d.stat]:''}</span>`;
- const talents=d.talents.map(id=>{const applied=o?.talents.includes(id);return `<span class="${a&&!applied?'is-inactive':''}" title="${a?applied?'Talent utilisé : +10 points de réussite':'Talent absent chez cet agent':'Talent donnant +10 points de réussite'}">${esc(TALENTS[id][0])}${a?applied?' +10':' · absent':''}</span>`;}).join('');
+ const talents=d.talents.map(id=>{
+  const applied=o?.talents.includes(id),language=id==='langues',bonus=language?5:10;
+  const effect=`+${bonus} points de réussite${language?' à l’étranger (cumulable)':''}`;
+  const status=!a?'':applied?` +${bonus}`:a.talents.includes(id)?' · à l’étranger seulement':' · absent';
+  return `<span class="${a&&!applied?'is-inactive':''}" title="${effect}">${esc(TALENTS[id][0])}${status}</span>`;
+ }).join('');
  const effects=type==='hack'?[{icon:'terminal',text:'Hack +1 tour'}]:[];
- const modifiers=(o?.explanations||[]).filter(x=>x!=='Talents +10');
- return `<div class="inquiry-action-inputs" aria-label="Stat, talent et effets associés">${stat}${talents}${actionResourceBadges(type)}${effects.map(x=>`<span${x.title?` title="${x.title}"`:''}>${icon(x.icon)} ${esc(x.text)}</span>`).join('')}${modifiers.map(x=>`<span class="inquiry-modifier">${esc(x)}</span>`).join('')}</div>`;
+ const modifiers=(o?.explanations||[]).filter(x=>x!=='Talents +10'&&!x.startsWith('Langues étrangères +5'));
+ return `<div class="inquiry-action-inputs" aria-label="Stat, talent et effets associés">${stat}${talents}${actionResourceBadges(type,a)}${effects.map(x=>`<span${x.title?` title="${x.title}"`:''}>${icon(x.icon)} ${esc(x.text)}</span>`).join('')}${modifiers.map(x=>`<span class="inquiry-modifier">${esc(x)}</span>`).join('')}</div>`;
 }
 export function inquiryActionCosts(type,candidate){
  if(!candidate)return '<p class="inquiry-costs-empty">Choisissez un agent pour voir l’énergie et l’exposition.</p>';

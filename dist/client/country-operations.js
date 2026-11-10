@@ -1,15 +1,15 @@
-import {agentLocation} from './agent-location.js?v=237';
-import * as E from './engine.js?v=237';
-import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=237';
-import {availability} from './presentation.js?v=237';
-import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=237';
-import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=237';
-import {countryArtHeader} from './country-signals.js?v=237';
-import {proofTitle} from './intelligence.js?v=237';
-import {fullBody} from './visuals.js?v=237';
-import {countryOnMap,operationCountries} from './operation-map.js?v=237';
-import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=237';
-import {exposureLevel} from './exposure.js?v=237';
+import {agentLocation} from './agent-location.js?v=238';
+import * as E from './engine.js?v=238';
+import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=238';
+import {availability,actionResources} from './presentation.js?v=238';
+import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=238';
+import {countryTargetButtons,inquiryActionCosts} from './country-inquiry.js?v=238';
+import {countryArtHeader} from './country-signals.js?v=238';
+import {proofTitle} from './intelligence.js?v=238';
+import {fullBody} from './visuals.js?v=238';
+import {countryOnMap,operationCountries} from './operation-map.js?v=238';
+import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=238';
+import {exposureLevel} from './exposure.js?v=238';
 
 const headquartersActions=['rest','cyberSupport','counter','analyze','heal'];
 const fieldActions=['cyberSupport','equip','findSafehouse','fieldRest','hide'];
@@ -120,7 +120,7 @@ export function countryOperationsMarkup(s,country,selection={},locked=''){
  const targetPicker=type==='analyze'&&targets.length?proofChoices(targets,target,locked):showDestination?`<label>Pays à hacker<select data-country-target ${locked?'disabled':''}>${targets.map(([id,name])=>`<option value="${id}" ${id===target?'selected':''}>${esc(name)}</option>`).join('')}</select></label>`:'';
  return `<section class="workspace-body country-operations"><header class="country-operations-heading"><h2>${flag(country)} ${esc(COUNTRY[country].name)}</h2>${countryArtHeader(s,country)}</header>
  <h3>${selection.group==='access'?'Actions du pays':'Actions disponibles'}</h3><div class="country-operation-types">${countryActionButtons(s,country,menuTypes,availability,selection,selection.agentId)}</div>
- ${d?`<section class="country-operation-detail"><h3><span class="info-word" tabindex="0" title="${esc(d.desc)}">${icon(d.icon)} ${esc(actionName(s,country,type))} ${icon('help')}</span></h3>${targetPicker}
+ ${d?`<section class="country-operation-detail"><h3><span class="info-word" tabindex="0" title="${esc(d.desc)}">${icon(d.icon)} ${esc(actionName(s,country,type))} ${icon('help')}</span></h3>${type==='drone'?actionResources(type,selected?.a):''}${targetPicker}
  <div class="country-operations-boost"><strong>${operationLocation(s,country,type)===s.player?'Agents disponibles au QG':'Agents disponibles sur place'}</strong>${button(icon('boost')+` +10 % · −${E.ECONOMY.boostCost} cr`,'workspace-boost','small',`aria-pressed="${!!selection.boost}" ${!selection.boost&&boostReason?'disabled':''}`)}</div>
  <div class="country-operation-agents">${rows.length?rows.map(r=>`<div class="country-operation-agent">${button(portrait(r.a),'agent','agent-photo',`data-id="${r.a.id}" aria-label="Consulter ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible')}</small></span><span><b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small></span>`,'workspace-agent','country-operation-choice',`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="muted">${operationLocation(s,country,type)===s.player?'Aucun agent disponible au QG.':'Aucun agent disponible sur place.'}</p>`}</div>
  ${selected?`<details class="country-chance-details"><summary title="Formule, talents, bonus et malus de cette action">Chances · ${selected.o.chance} % ⓘ</summary>${selected.o.explanations.map(x=>`<p>${esc(x)}</p>`).join('')||'<p>Réussite automatique.</p>'}</details>${inquiryActionCosts(type,selected)}`:''}

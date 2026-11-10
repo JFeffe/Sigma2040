@@ -1,9 +1,9 @@
-import {mapCountries} from './operation-map.js?v=237';
-import {rescueTargets} from './cell-variants.js?v=237';
-import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=237';
-import {COUNTRY,ACTIONS} from './data.js?v=237';
-import {icon,esc} from './ui.js?v=237';
-import {evidenceFor,knownTargets,hasSafehouse,options} from './engine.js?v=237';
+import {mapCountries} from './operation-map.js?v=238';
+import {rescueTargets} from './cell-variants.js?v=238';
+import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=238';
+import {COUNTRY,ACTIONS} from './data.js?v=238';
+import {icon,esc} from './ui.js?v=238';
+import {evidenceFor,knownTargets,hasSafehouse,options,requiresModule} from './engine.js?v=238';
 const fieldOnly=new Set(['contacts','authorize','hide','influence','blackmail','drone','rescue']);
 export function locationActions(a,s=null){const home=a.country===a.faction,local=s?knownTargets(s,a.faction).some(t=>!t.arrested&&t.country===a.country):true;return Object.entries(ACTIONS).filter(([id,d])=>!d.disabled&&(home?!d.field&&!fieldOnly.has(id):!d.home)&&(id!=='rescue'||!!s&&rescueTargets(s,a.faction).some(b=>b.country===a.country))&&(id!=='findSafehouse'||!!s||!a.safehouses?.includes(a.country))&&(!['collect','surveil','prepare','arrest','hack','intimidate'].includes(id)||local));}
 export const CONTEXT_ACTIONS=new Set(['collect','surveil','prepare','arrest','hack','intimidate','protect']);
@@ -40,13 +40,19 @@ export const ACTION_EFFECTS={
  influence:['Activer un contact : accès local','Coopération +1 niveau'],
  intimidate:['Recueillir une preuve disponible','Localiser jusqu’à la fin du tour suivant','Exposition +20 (16 avec Infiltration)'],
  hack:['Preuve disponible à vérifier · falsification possible','Hack du pays +1 tour · Recherche +1','Sans localisation · accès requis'],
- drone:['Ouvre l’accès local','Découvre et localise tous les suspects du pays','Sauf l’Architecte encore inconnu · aucune preuve','1 tour · 12 énergie · 1 module pendant la mission']
+ drone:['Ouvre l’accès local','Découvre et localise tous les suspects du pays','Sauf l’Architecte encore inconnu · aucune preuve','1 tour · 12 énergie']
 };
-export function actionResourceBadges(type){
- const research={contacts:1,hack:1,counter:2}[type]||0,module=ACTIONS[type]?.tech;
- return `${research?`<span class="research-requirement">${icon('research')} Recherche +${research}</span>`:''}${module?`<span class="module-requirement" title="Une place réservée pendant la mission, libérée à la fin ou à l’annulation">${icon('module')} Module · 1 place</span>`:''}`;
+export function actionResourceBadges(type,agent){
+ const research={contacts:1,hack:1,counter:2}[type]||0;
+ let module='';
+ if(requiresModule(type,agent)){
+  module=`<span class="module-requirement" title="Une place réservée pendant la mission, libérée à la fin ou à l’annulation">${icon('module')} Module · 1 place${type==='drone'&&!agent?' (0 avec Drones)':''}</span>`;
+ }else if(type==='drone'){
+  module=`<span class="module-requirement">${icon('module')} Aucun module requis · Drones</span>`;
+ }
+ return `${research?`<span class="research-requirement">${icon('research')} Recherche +${research}</span>`:''}${module}`;
 }
-export function actionResources(type){const badges=actionResourceBadges(type);return badges?`<div class="action-resources" aria-label="Recherche et Module">${badges}</div>`:'';}
+export function actionResources(type,agent){const badges=actionResourceBadges(type,agent);return badges?`<div class="action-resources" aria-label="Recherche et Module">${badges}</div>`:'';}
 export function actionEffects(type){return ACTION_EFFECTS[type]?`<div class="action-effects" aria-label="Effets clés">${ACTION_EFFECTS[type].map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:'';}
 
 export function sortedCaseTargets(s){

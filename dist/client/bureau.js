@@ -1,14 +1,14 @@
 // Bureau des enquêtes : portage de la maquette validée (module.js / style.css),
 // branché sur le moteur réel. Même structure et mêmes interactions ; seules la source
 // des données, la palette et les demandes de suivi changent.
-import {COOPERATION} from './cooperation.js?v=237';
-import * as E from './engine.js?v=237';
-import {mapCountries} from './operation-map.js?v=237';
-import {ACTIONS as GAME_ACTIONS, COUNTRY, STAT_NAMES} from './data.js?v=237';
-import {proofTitle} from './intelligence.js?v=237';
-import {actionResources} from './presentation.js?v=237';
-import {portraitAsset, portraitBackgroundAsset, icon} from './ui.js?v=237';
-import {suspectPortrait} from './fracture-profiles.js?v=237';
+import {COOPERATION} from './cooperation.js?v=238';
+import * as E from './engine.js?v=238';
+import {mapCountries} from './operation-map.js?v=238';
+import {ACTIONS as GAME_ACTIONS, COUNTRY, STAT_NAMES} from './data.js?v=238';
+import {proofTitle} from './intelligence.js?v=238';
+import {actionResources} from './presentation.js?v=238';
+import {portraitAsset, portraitBackgroundAsset, icon} from './ui.js?v=238';
+import {suspectPortrait} from './fracture-profiles.js?v=238';
 
 const asset = p => new URL(p, location.href).href;
 const opened = new Set();
@@ -80,7 +80,6 @@ function blocked(s, t, step, type) {
   if (key === 'collect' && ['collect', 'hack'].includes(type) && !f.access[t.country]) return 'Accès local requis';
   if (type === 'contacts' && t.country && f.access[t.country]) return 'Accès déjà ouvert : utilise une autre piste';
   if (type === 'intimidate' && t.intimidated) return 'Déjà utilisé pour ce dossier';
-  if (GAME_ACTIONS[type].tech && E.getTechSlots(s, s.player) >= 2) return 'Les deux modules technologiques sont occupés';
   if (key === 'collect' && t.proofs.filter(Boolean).length >= 2) return 'Deux preuves déjà réunies';
   if (key === 'verify' && !t.proofs[slotOf(step)]) return 'Recueillir cette preuve d’abord';
   if (key === 'prepare' && !(t.proofs.filter(Boolean).length >= 2 && t.proofs.some(p => p?.verified))) return 'Deux preuves, dont une vérifiée, requises';
@@ -128,7 +127,7 @@ export async function openBureau(caseId = null) {
   if (!s || !ctx.ready()) return;
   mountBureau();
   try {
-    stylePromise ||= fetch(asset('./bureau.css?v=237')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
+    stylePromise ||= fetch(asset('./bureau.css?v=238')).then(r => {if (!r.ok) throw Error('Styles du bureau indisponibles.'); return r.text();});
     styles = await stylePromise;
   } catch (error) { stylePromise = null; ctx.notify?.(error.message); return; }
   if (!ctx.ready()) return;
@@ -309,7 +308,7 @@ function drawPopover() {
    <header class="tt-head"><span class="tt-kicker">${esc(d.name)}</span><button class="tooltip-close" aria-label="Fermer la fiche">×</button></header>
    <div class="tt-target"><strong>${esc(a.name)} · Énergie ${100-a.fatigue}/100 · Exposition ${a.exposure}</strong><strong>${what}</strong><small>${sub}</small></div>
    ${d.safe ? '<div class="tt-odds high"><b>Auto</b><span>réussite garantie</span></div>' : `<div class="tt-odds ${level}"><b data-count="${o.chance}">${p.shown ?? o.chance}</b><span>%</span><i class="bar"><b style="width:${o.chance}%"></b></i></div>`}
-   <p class="tt-effect">${esc(d.desc)}</p>${actionResources(p.type)}
+   <p class="tt-effect">${esc(d.desc)}</p>${actionResources(p.type,a)}
    <ul class="tt-factors">${factors.map(([x, c]) => `<li class="${c}">${esc(x)}</li>`).join('')}</ul>
    <dl class="tt-costs">${costs.map(([ic, k, v, c]) => `<div class="${c}"><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
    ${o.clandestine ? '<p class="tt-warn">Sans mandat : −15 et risque de capture</p>' : ''}

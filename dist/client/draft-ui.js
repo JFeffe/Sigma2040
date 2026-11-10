@@ -1,9 +1,9 @@
-import {selectOperationMap} from './operation-map.js?v=237';
-import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=237';
-import {GAME_MODES,draftCountry} from './game-setup.js?v=237';
-import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=237';
-import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=237';
-import {teamBalanceMarkup} from './team-balance.js?v=237';
+import {selectOperationMap} from './operation-map.js?v=238';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=238';
+import {GAME_MODES,draftCountry} from './game-setup.js?v=238';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=238';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=238';
+import {teamBalanceMarkup} from './team-balance.js?v=238';
 
 export function operationMapMarkup(ids){return ids?.length?`<section class="operation-map-brief panel" aria-label="Pays d’opération"><strong>Carte de la campagne · ${ids.length} pays d’opération</strong><ul>${ids.map(id=>`<li>${flag(id)} ${esc(COUNTRY[id].name)}</li>`).join('')}</ul></section>`:'';}
 

@@ -1,21 +1,21 @@
-import * as E from './engine.js?v=237';
-import {COUNTRY,TECH,ACTIONS} from './data.js?v=237';
-import {icon,button,esc,portrait} from './ui.js?v=237';
-import {countryOptions} from './presentation.js?v=237';
+import * as E from './engine.js?v=238';
+import {COUNTRY,TECH,ACTIONS} from './data.js?v=238';
+import {icon,button,esc,portrait} from './ui.js?v=238';
+import {countryOptions} from './presentation.js?v=238';
 let selected=null,scope='';
 export function selectTechnology(type){selected=['ai','guard','drone'].includes(type)?type:null;}
 const modules={...TECH,protect:{name:'Protection d’infrastructure',icon:'shield',duration:2},drone:{name:'Reconnaissance par drone',icon:'drone',duration:1}};
 const ticks=(left,total)=>`<div class="console-ticks" aria-label="${left} tour(s) restant(s)">${Array.from({length:Math.min(6,total)},(_,i)=>`<span class="${i<left?'remaining':''}"></span>`).join('')}</div>`;
 export function technologyPanel(s,selectedCountry){
  const key=`${s.seed}:${s.player}`;if(scope!==key){scope=key;selected=null;}
- const f=s.factions[s.player],drones=E.team(s).filter(a=>['drone','protect'].includes(a.task?.type)),supports=f.tech.filter(t=>t.until>=s.turn),used=E.getTechSlots(s,s.player);
- const occupants=[...drones.map(a=>({kind:a.task.type,a})),...supports.map(t=>({kind:t.type,t}))];
+ const f=s.factions[s.player],missions=E.team(s).filter(a=>E.requiresModule(a.task?.type,a)),supports=f.tech.filter(t=>t.until>=s.turn),used=E.getTechSlots(s,s.player);
+ const occupants=[...missions.map(a=>({kind:a.task.type,a})),...supports.map(t=>({kind:t.type,t}))];
  const slots=Array.from({length:Math.max(2,occupants.length)},(_,i)=>{const o=occupants[i];if(!o)return `<article class="console-slot free" data-tech-drop><div class="console-slot-heading"><span>${icon('module')} MODULE 0${i+1}</span><strong>Disponible</strong></div><div><h3>${icon('plus')} Module disponible</h3><p>Déposez un module ici pour l’activer immédiatement.</p></div><div class="console-slot-footer"><small>1 module = 1 place</small></div></article>`;
  const a=o.a,t=a?.task||o.t,d=modules[o.kind],remaining=a?t.remaining:t.until-s.turn+1,until=a?s.turn+remaining-1:t.until;
  return `<article class="console-slot occupied"><div class="console-slot-heading"><span>${icon('module')} MODULE 0${i+1}</span><strong>${a?t.queued?'Réservé':'En mission':o.kind==='guard'?'Protection active':'Module actif'}</strong></div><h3>${icon(d.icon)} ${d.name}</h3><div class="console-occupant">${a?portrait(a):''}<p>${a?`<b>${esc(a.name)}</b> · ${COUNTRY[a.country].name}`:o.kind!=='guard'?'Toute votre équipe · aucun opérateur dédié':`${COUNTRY[t.country].name} · aucun agent mobilisé`}</p></div>${ticks(remaining,a?t.total:d.duration)}<div class="console-slot-footer"><div><b>${remaining} tour(s) restant(s)</b><small>Libre après T${until} inclus</small>${!a?`<small>Annulation : ${E.techRefund(s,t)} crédit(s) remboursé(s)</small>`:''}</div><div class="console-actions">${a?button('Voir la mission','agent','small',`data-id="${a.id}"`):''}${button('Annuler',a?'cancel':'cancel-tech','small',`data-id="${a?a.id:t.id}" ${s.ended?'disabled':''}`)}</div></div></article>`;}).join('');
  const cards=['ai','relay','logistics'].map(id=>{const d=TECH[id],error=s.ended?'Campagne terminée.':used>=2?'Les deux places sont occupées.':supports.some(t=>t.type===id)?'Ce module est déjà actif.':f.budget<d.cost?'Crédits insuffisants.':'';return `<article class="console-tech-card console-direct-card" data-tech-drag="${id}" draggable="${!error}"><div class="console-card-art"><img src="./assets/missions/${d.art}.webp" alt="${d.name}" loading="lazy">${button('Confirmer · '+d.cost+' crédits','tech','primary',`data-id="${id}" ${error?'disabled':''} ${!s.ended&&used>=2?'aria-describedby="moduleCapacity"':''}`)}</div><div class="console-card-copy"><strong>${icon(d.icon)} ${d.name}</strong><span class="console-effect">${d.effect}</span><small>${d.desc}</small><span class="console-card-cost"><b>${d.cost} crédits</b><span class="module-requirement">${icon('module')} Module · 1 place · ${d.duration} tours</span></span>${error&&(s.ended||used<2)?`<p class="console-warning" role="status">${error}</p>`:''}</div></article>`;}).join('');
 
- return `<section class="panel technology-hub operation-console"><div class="section-title"><h2>${icon('module')} Modules d’opération</h2><span id="moduleCapacity" class="console-capacity ${used>=2?'is-full':'is-available'}" role="status" aria-label="Capacité des Modules : ${used} / 2">${used>=2?'Les deux places sont occupées.':`${2-used} place${used===0?'s':''} disponible${used===0?'s':''}.`}</span></div><p class="console-intro">Deux places partagées entre vos modules et les missions de drone ou de protection.</p><div class="console-slots">${slots}</div><div class="console-tech-cards console-direct-cards">${cards}</div></section>`;
+ return `<section class="panel technology-hub operation-console"><div class="section-title"><h2>${icon('module')} Modules d’opération</h2><span id="moduleCapacity" class="console-capacity ${used>=2?'is-full':'is-available'}" role="status" aria-label="Capacité des Modules : ${used} / 2">${used>=2?'Les deux places sont occupées.':`${2-used} place${used===0?'s':''} disponible${used===0?'s':''}.`}</span></div><p class="console-intro">Deux places partagées entre vos modules et les missions de protection ou de reconnaissance par drone sans le talent Drones.</p><div class="console-slots">${slots}</div><div class="console-tech-cards console-direct-cards">${cards}</div></section>`;
 }
 export function technologyCancellationMarkup(s,t){
  const affected=E.logisticsCancellationAgents(s,t),sameTurn=(t.activatedTurn??t.until-TECH[t.type].duration+1)===s.turn;
