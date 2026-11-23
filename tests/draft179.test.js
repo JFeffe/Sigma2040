@@ -14,7 +14,7 @@ import {missionCards,missionRevealMarkup} from '../dist/client/mission-reveal.js
 import {gameShell} from '../dist/client/shell.js';
 
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id),token=i=>'draft-player-token-0000000'+i;
-function lobby(count=2,observer=false){const r=newRoom('draft-room-00000000000179','draft-invite-00000000179',token(0),'Hôte','FR');if(observer)send(r,r.members[0],'observer',{observer:true});for(let i=1;i<count+(observer?1:0);i++)joinRoom(r,{invite:r.invite,token:token(i),name:'Joueur '+i});return r;}
+function lobby(count=2,observer=false,gameMode='regular'){const r=newRoom('draft-room-00000000000179','draft-invite-00000000179',token(0),'Hôte','FR',gameMode);if(observer)send(r,r.members[0],'observer',{observer:true});for(let i=1;i<count+(observer?1:0);i++)joinRoom(r,{invite:r.invite,token:token(i),name:'Joueur '+i});return r;}
 function send(r,m,kind,payload={}){return execute(r,m.token,{protocol:PROTOCOL,seq:m.lastSeq+1,turn:r.game?.turn,kind,payload});}
 function begin(r){send(r,r.members[0],'game-mode',{mode:'advanced'});for(const m of r.members.filter(m=>!m.observer))send(r,m,'confirm-country');send(r,r.members[0],'begin-draft');return r;}
 function finish(r){while(r.phase==='draft'){const c=draftCountry(r.draft),m=r.members.find(m=>m.country===c);assert.ok(m);send(r,m,'draft-pick',{id:availableDraftAgents(r.draft)[0].id});}return r;}
@@ -26,7 +26,7 @@ test('Four participants include every human country, random unused NPCs and all 
  assert.ok(combinations.size>3);
  for(let count=2;count<=4;count++){const humans=powers.slice(0,count),selected=selectParticipants(humans,82);assert.ok(humans.every(c=>selected.includes(c)));assert.equal(selected.filter(c=>!humans.includes(c)).length,4-count);}
  for(const bad of [[],['FR','FR'],['DE'],powers])assert.throws(()=>selectParticipants(bad));
- const html=setupScreen('FR',[],false);for(const c of powers)assert.match(html,new RegExp('data-id="'+c+'"'));assert.match(html,/id="gameMode"/);assert.match(html,/value="regular" selected/);
+ const html=setupScreen('FR',[],false);for(const c of powers)assert.match(html,new RegExp('data-id="'+c+'"'));assert.doesNotMatch(html,/id="gameMode"/);
 });
 
 test('New solo campaigns have four factions; six-country historical campaigns remain loadable',()=>{
@@ -112,10 +112,10 @@ test('Regular and Advanced four-country campaigns remain valid through all bot d
 });
 
 test('Advanced setup shows country selection first, disabled taken draft agents, ordered team controls and no Agents-menu relief button',()=>{
- const initial=setupScreen('FR',[],false,null,'normal','advanced');assert.match(initial,/solo-confirm-country/);assert.doesNotMatch(initial,/data-cmd="select-recruit"|class="recruit-grid"/);assert.match(initial,/id="gameMode"/);
+ const initial=setupScreen('FR',[],false,null,'normal','advanced');assert.match(initial,/solo-confirm-country/);assert.doesNotMatch(initial,/data-cmd="select-recruit"|class="recruit-grid"/);assert.doesNotMatch(initial,/id="gameMode"/);
  const d=advanceNpcDraft(createDraft(['FR'],42)),html=draftScreen(d,'FR');assert.match(html,/solo-draft-preview/);if(d.picks.length)assert.match(html,/draft-owner/);
  while(draftCountry(d)){pickDraftAgent(d,'FR',availableDraftAgents(d)[0].id);advanceNpcDraft(d);}const final=draftScreen(d,'FR');assert.match(final,/solo-draft-chief/);assert.match(final,/solo-confirm-team/);assert.match(final,/data-cmd="start" disabled/);
- const s=advancedGame();const shell=gameShell(s,'agents','');assert.doesNotMatch(shell,/Renforts & relève/);assert.match(shell,/Retour à la carte/);
+ const s=advancedGame();const shell=gameShell(s,'agents','');assert.doesNotMatch(shell,/Renforts & relève|Retour à la carte/);assert.match(shell,/data-id="agents" aria-current="page"/);
 });
 
 test('Actual solo setup handlers draft four agents, reorder chief and launch the complete exclusive game',()=>{
@@ -125,8 +125,8 @@ test('Actual solo setup handlers draft four agents, reorder chief and launch the
 });
 
 test('Actual multiplayer controller renders all draft phases and confirms a reordered team without losing picks',async()=>{
- const original={document:globalThis.document,location:globalThis.location,localStorage:globalThis.localStorage};let html='';globalThis.document={querySelector:()=>null};globalThis.location={href:'https://sigma.test/'};globalThis.localStorage={getItem:()=>null,setItem:()=>{}};
+ const original={document:globalThis.document,location:globalThis.location,localStorage:globalThis.localStorage};let html='';globalThis.document={querySelector:()=>null};globalThis.location={href:'https://shadow-mandate.test/'};globalThis.localStorage={getItem:()=>null,setItem:()=>{}};
  const mp=new Multiplayer({lobby:value=>{html=value;},close:()=>{},render:()=>mp.panel(),state:()=>{},toast:()=>{}});
- try{mp.room=lobby(2);mp.active=true;mp.token=mp.room.members[0].token;mp.details={id:mp.room.id,invite:mp.room.invite};mp.publish();assert.match(html,/id="mpGameMode"/);await mp.command('game-mode',{mode:'advanced'});assert.match(html,/mp-confirm-country/);assert.doesNotMatch(html,/data-cmd="mp-select"/);await mp.handle('mp-confirm-country');send(mp.room,mp.room.members[1],'confirm-country');await mp.handle('mp-begin-draft');assert.match(html,/mp-draft-preview/);finish(mp.room);mp.publish();assert.match(html,/mp-draft-chief/);const chief=mp.draft[3];await mp.handle('mp-draft-chief',chief);await mp.handle('mp-team');assert.equal(mp.room.members[0].agents[0],chief);assert.equal(mp.room.members[0].confirmed,true);await mp.handle('mp-draft-after',chief);assert.equal(mp.room.members[0].confirmed,false);await mp.handle('mp-team');send(mp.room,mp.room.members[1],'team',{agents:mp.room.members[1].agents});await mp.handle('mp-start');assert.equal(mp.room.phase,'playing');assert.equal(E.team(mp.room.game).find(a=>a.chief).templateId,mp.draft[0]);}
+ try{mp.room=lobby(2,false,'advanced');mp.active=true;mp.token=mp.room.members[0].token;mp.details={id:mp.room.id,invite:mp.room.invite};mp.publish();assert.doesNotMatch(html,/id="mp(?:Entry)?GameMode"/);assert.match(html,/<strong>Standard Avancé<\/strong>/);assert.match(html,/mp-confirm-country/);assert.doesNotMatch(html,/data-cmd="mp-select"/);await mp.handle('mp-confirm-country');send(mp.room,mp.room.members[1],'confirm-country');await mp.handle('mp-begin-draft');assert.match(html,/mp-draft-preview/);finish(mp.room);mp.publish();assert.match(html,/mp-draft-chief/);const chief=mp.draft[3];await mp.handle('mp-draft-chief',chief);await mp.handle('mp-team');assert.equal(mp.room.members[0].agents[0],chief);assert.equal(mp.room.members[0].confirmed,true);await mp.handle('mp-draft-after',chief);assert.equal(mp.room.members[0].confirmed,false);await mp.handle('mp-team');send(mp.room,mp.room.members[1],'team',{agents:mp.room.members[1].agents});await mp.handle('mp-start');assert.equal(mp.room.phase,'playing');assert.equal(E.team(mp.room.game).find(a=>a.chief).templateId,mp.draft[0]);}
  finally{clearInterval(mp.timer);Object.assign(globalThis,original);}
 });

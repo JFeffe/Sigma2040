@@ -1,60 +1,61 @@
-import {mapCountries,countryOnMap,selectOperationMap} from './operation-map.js?v=238';
-import {cellInfoMarkup} from './cell-info.js?v=238';
-import {isCompactTutorial} from './tutorial-compact.js?v=238';
-import {dismissAttackDelays} from './attack-delay-ui.js?v=238';
-import {createGameWorkspace} from './workspace-windows.js?v=238';
-import {isNpcTutorial,tutorialGuaranteed,tutorialRiskNote} from './tutorial-mode.js?v=238';
-import {readPreference,writePreference} from './browser-preferences.js?v=238';
-import {tutorialPendingOrders,tutorialHint} from './tutorial-rules.js?v=238';
-import {isTutorial,createTutorialGame,tutorialObjective,tutorialMission,readTutorialProgress,saveTutorialProgress} from './tutorial.js?v=238';
-import {tutorialMenu,tutorialGuide,markTutorialControls} from './tutorial-ui.js?v=238';
-import {createMapAgentActivation} from './map-agent-activation.js?v=238';
-import {GAME_MODES,usesDraft,createDraft,selectParticipants,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam} from './game-setup.js?v=238';
-import {draftScreen,gameModeControl,draftCandidate} from './draft-ui.js?v=238';
-import {agentTravelPickerMarkup,deploymentPickerMarkup,assignDeployment} from './deployment.js?v=238';
-import {initCountryInquiry,refreshCountryInquiry,handleInquiryCommand,handleInquiryChange} from './country-inquiry.js?v=238';
-import {setRecruitFilter,resetRecruitFilters,toggleRecruitSelection,updateRecruitFaces,isRecruitPortrait,recruitDetails} from './recruit-selection.js?v=238';
-import {bureauEnabled,setBureauEnabled,modsMarkup} from './mod-settings.js?v=238';
-import {initBureau,openBureau,refreshBureau,closeBureau} from './bureau.js?v=238';
-import {aiDifficultyControl,AI_LEVELS} from './ai-difficulty.js?v=238';
+import {gameLanguage,setGameLanguage,translateText,localizeContent,setLocalizedHTML} from './localization.js?v=242';
+import {mapCountries,countryOnMap,selectOperationMap} from './operation-map.js?v=242';
+import {cellInfoMarkup} from './cell-info.js?v=242';
+import {isCompactTutorial} from './tutorial-compact.js?v=242';
+import {dismissAttackDelays} from './attack-delay-ui.js?v=242';
+import {createGameWorkspace} from './workspace-windows.js?v=242';
+import {isNpcTutorial,tutorialGuaranteed,tutorialRiskNote} from './tutorial-mode.js?v=242';
+import {readPreference,writePreference} from './browser-preferences.js?v=242';
+import {tutorialPendingOrders,tutorialHint} from './tutorial-rules.js?v=242';
+import {isTutorial,createTutorialGame,tutorialObjective,tutorialMission,readTutorialProgress,saveTutorialProgress} from './tutorial.js?v=242';
+import {newGameMenu} from './new-game-menu.js?v=242';
+import {tutorialMenu,tutorialGuide,markTutorialControls} from './tutorial-ui.js?v=242';
+import {createMapAgentActivation} from './map-agent-activation.js?v=242';
+import {GAME_MODES,usesDraft,createDraft,selectParticipants,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam} from './game-setup.js?v=242';
+import {draftScreen,draftCandidate} from './draft-ui.js?v=242';
+import {agentTravelDestinations,deploymentPickerMarkup,assignDeployment} from './deployment.js?v=242';
+import {initCountryInquiry,refreshCountryInquiry,handleInquiryCommand,handleInquiryChange} from './country-inquiry.js?v=242';
+import {setRecruitFilter,resetRecruitFilters,toggleRecruitSelection,updateRecruitFaces,isRecruitPortrait,recruitDetails} from './recruit-selection.js?v=242';
+import {aiDifficultyControl,AI_LEVELS} from './ai-difficulty.js?v=242';
 let setupDifficulty='bb2',setupMode='regular',setupDraft=null,setupConfirmed=false,setupDraftCandidate=null,setupMap=null;
-import {selectOrderTarget} from './order-targets.js?v=238';
-import {patchNotesPage} from './patch-notes.js?v=238';
-let menuPage='home';
-import './report-tooltips.js?v=238';
-import {createInquiryTracker} from './inquiry-notifications.js?v=238';
-import {campaignRules} from './campaign-rules.js?v=238';
-import {patchOrderDialog} from './order-dialog.js?v=238';
-import {setGraphicsQuality} from './graphics.js?v=238';
-import {CAMPAIGN_KEY,ECONOMY_BACKUP_KEY,readCampaign} from './save-compat.js?v=238';
-import {endingScreen,mountEnding} from './ending-ui.js?v=238';
-import {wikiPanel,wikiResults} from './wiki.js?v=238';
-import {sortTable} from './data-tables.js?v=238';
-import {startClock,elapsedMs,formatDuration,clockMarkup} from './campaign-clock.js?v=238';
-import {selectTechnology,technologyCancellationMarkup} from './technology-ui.js?v=238';
-import {campaignSummary} from './campaign-stats.js?v=238';
-import {missionCards,missionRevealMarkup,revealDelay} from './mission-reveal.js?v=238';
-import {cooperationRules} from './cooperation.js?v=238';
-import {bindBackdropDismiss} from './dialog-behavior.js?v=238';
-import {eventsGuide} from './events-ui.js?v=238';
-import {prestigeHistory} from './prestige.js?v=238';
-import {Multiplayer} from './multiplayer.js?v=238';
-import {mainMenu,mountMenuEarth} from './main-menu.js?v=238';
-import {initMusic,setMusic,nextTrack} from './music.js?v=238';
-import {suspectProfile} from './fracture-profiles.js?v=238';
-import {investigationSnapshot,investigationHighlights,milestoneBanner} from './milestones.js?v=238';
-import {trackExperience,resetExperience,paintResourceFeedback,reportUpdates,settingsMarkup,applyPreferences,updatePreference,playCue,dismissNotices} from './experience.js?v=238';
-import {stageSignal,turnSignals,orderFeedback,paintSignals,clearSignals} from './feedback.js?v=238';
-import {energyHelp,exposureMarkup,nationalPanel} from './command-ui.js?v=238';
-import {proofTitle} from './intelligence.js?v=238';
-import {missionCostsMarkup,forecastMarkup,caseBrief,reportCards} from './operations-ui.js?v=238';
-import {agentMenuActions,locationActions,actionOptions,actionEffects,actionResources,actionUnavailable,countryOptions,progressMarkup} from './presentation.js?v=238';
-import {syncCameraTurn,createCamera,mountMap,focusCountry,renderMap} from './map.js?v=238';
-import {gameShell} from './shell.js?v=238';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,DEFAULT_TEAM_IDS,TALENTS,STAT_NAMES,ACTIONS,CELLS,TECH} from './data.js?v=238';
-import * as E from './engine.js?v=238';
-import {esc,icon,button,flag,nationalities,nationalityFlags,portrait,statlines,talents,fatigue,brand,formatScore} from './ui.js?v=238';
-import {setupScreen,makeScreens} from './screens.js?v=238';
+import {selectOrderTarget} from './order-targets.js?v=242';
+import {patchNotesPage} from './patch-notes.js?v=242';
+let menuPage='home',multiplayerPage='';
+import './report-tooltips.js?v=242';
+import {createInquiryTracker} from './inquiry-notifications.js?v=242';
+import {campaignRules} from './campaign-rules.js?v=242';
+import {patchOrderDialog} from './order-dialog.js?v=242';
+import {setGraphicsQuality} from './graphics.js?v=242';
+import {CAMPAIGN_KEY,ECONOMY_BACKUP_KEY,readCampaign} from './save-compat.js?v=242';
+import {readStorageItem} from './storage-keys.js?v=242';
+import {endingScreen,mountEnding} from './ending-ui.js?v=242';
+import {wikiPanel,wikiResults} from './wiki.js?v=242';
+import {sortTable} from './data-tables.js?v=242';
+import {startClock,elapsedMs,formatDuration,clockMarkup} from './campaign-clock.js?v=242';
+import {selectTechnology,technologyCancellationMarkup} from './technology-ui.js?v=242';
+import {campaignSummary} from './campaign-stats.js?v=242';
+import {missionCards,missionRevealMarkup,revealDelay} from './mission-reveal.js?v=242';
+import {cooperationRules} from './cooperation.js?v=242';
+import {bindBackdropDismiss,confirmInGame} from './dialog-behavior.js?v=242';
+import {eventsGuide} from './events-ui.js?v=242';
+import {prestigeHistory} from './prestige.js?v=242';
+import {Multiplayer} from './multiplayer.js?v=242';
+import {mainMenu,mountMenuEarth} from './main-menu.js?v=242';
+import {initMusic,setMusic,nextTrack} from './music.js?v=242';
+import {suspectProfile} from './fracture-profiles.js?v=242';
+import {investigationSnapshot,investigationHighlights,milestoneBanner} from './milestones.js?v=242';
+import {trackExperience,resetExperience,paintResourceFeedback,reportUpdates,settingsMarkup,applyPreferences,updatePreference,playCue,dismissNotices} from './experience.js?v=242';
+import {stageSignal,turnSignals,orderFeedback,paintSignals,clearSignals} from './feedback.js?v=242';
+import {nationalPanel} from './command-ui.js?v=242';
+import {proofTitle} from './intelligence.js?v=242';
+import {missionCostsMarkup,missionTimingMarkup,missionBoostLabel,forecastMarkup,caseBrief,reportCards} from './operations-ui.js?v=242';
+import {agentMenuActions,locationActions,actionOptions,actionEffects,actionResources,actionUnavailable,countryOptions,progressMarkup} from './presentation.js?v=242';
+import {syncCameraTurn,createCamera,mountMap,focusCountry,renderMap} from './map.js?v=242';
+import {gameShell} from './shell.js?v=242';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,DEFAULT_TEAM_IDS,TALENTS,STAT_NAMES,ACTIONS,CELLS,TECH} from './data.js?v=242';
+import * as E from './engine.js?v=242';
+import {esc,icon,button,flag,nationalities,nationalityFlags,portrait,statlines,talents,fatigue,brand,formatScore} from './ui.js?v=242';
+import {setupScreen,makeScreens} from './screens.js?v=242';
 let inquiryStorage;try{inquiryStorage=localStorage;}catch{}
 const inquiryTracker=createInquiryTracker(inquiryStorage);
 const inquiryRoom=()=>isTutorial(state)?'tutorial:'+state.tutorial.mission:multiplayer.active?multiplayer.details?.id||'multi':'solo';
@@ -62,34 +63,103 @@ const camera=createCamera();let stopMap=()=>{},stopHud=()=>{},stopMenu=()=>{},st
 const $=s=>document.querySelector(s),app=$('#app'),modal=$('#modal'),SAVE=CAMPAIGN_KEY;
 let workspace=null;
 let wikiCategory='qg',wikiQuery='',reportTab='overview',reportCountry=null;
-let tutorialProgress=readTutorialProgress(inquiryStorage),campaignBeforeTutorial=null,tutorialGuideCollapsed=readPreference('sigma2040-tutorial-minimized','false')==='true';
+let tutorialProgress=readTutorialProgress(inquiryStorage),campaignBeforeTutorial=null,tutorialGuideCollapsed=readPreference('shadow-mandate-2040-tutorial-minimized','false')==='true';
 let state=null,view='world',selectedCountry='DE',selectedAgent=null,setupCountry='FR',setupAgents=[],setup=true,world=[],order={},saveWarning=false;
 try{state=readCampaign(localStorage,E.validateSave);if(state)setup=false;}catch(e){saveWarning=true;}
 const multiplayer=new Multiplayer({
  modal:showModal,toast,render,close:()=>modal.close(),
- lobby(html){workspace?.clear();stopMap();stopHud();stopMenu();modal.close();document.body.classList.remove('map-open');app.innerHTML=html;},
+ openEntry(html){
+  const changing=menuOpen&&menuPage==='multiplayer';
+  multiplayerPage=html;modal.close();menuPage='multiplayer';menuOpen=true;render();window.scrollTo(0,0);
+  app.querySelector(changing?'.mp-entry-tabs [aria-pressed="true"]':'#multiplayerTitle')?.focus({preventScroll:true});
+ },
+ lobby(html){workspace?.clear();stopMap();stopHud();stopMenu();modal.close();document.body.classList.remove('map-open');setLocalizedHTML(app,html);},
  state(next,previous){const before=previous?investigationSnapshot(previous):null;state=next;menuOpen=false;setup=false;if(!previous){view='world';selectedCountry=next.player;selectedAgent=null;camera.k=1.65;focusCountry(camera,next.player);resetExperience();clearSignals();}if(previous&&next.player!==previous.player){selectedAgent=null;selectedCountry=next.player;clearSignals();modal.close();}if(next.ended&&!previous){ending();return;}render();if(next.multiplayer?.observer&&!next.ended){if(previous&&next.turn!==previous.turn)modal.close();return;}if(previous&&(next.turn!==previous.turn||next.ended!==previous.ended)){modal.close();lastHighlights=investigationHighlights(before,next);turnSignals(next,previous.turn);showReveals(()=>showHighlights(lastHighlights,()=>report(previous.logId)));}},
- leave(){try{state=readCampaign(localStorage,E.validateSave);}catch{state=null;}menuOpen=true;setup=!state;render();}
+ leave(){try{state=readCampaign(localStorage,E.validateSave);}catch{state=null;}setup=!state;showMainMenu();}
 });
+function showMainMenu(){
+ modal.close();menuPage='home';menuOpen=true;render();window.scrollTo(0,0);
+ app.querySelector('.main-menu [data-cmd="new"]')?.focus({preventScroll:true});
+}
 function persist(){if(multiplayer.active)return;if(isTutorial(state)){try{tutorialProgress=saveTutorialProgress(inquiryStorage,state,tutorialProgress);saveWarning=false;}catch{saveWarning=true;toast('Progression de formation non enregistrée. Gardez cette page ouverte.');}return;}try{localStorage.setItem(SAVE,JSON.stringify(state));saveWarning=false;}catch(e){saveWarning=true;toast('Sauvegarde locale indisponible. Exportez la campagne depuis le menu Aide.');}}
-function leaveTutorial(){if(!isTutorial(state))return;persist();clearTimeout(showReveals.timer);revealSession=null;cinematic=null;closeBureau();state=campaignBeforeTutorial;campaignBeforeTutorial=null;setup=!state;view='world';selectedAgent=null;saveWarning=false;clearSignals();resetExperience();}
-function launchTutorial(id,restart=false){workspace?.clear();clearTimeout(toast.timer);$('#toast').classList.remove('show');if(multiplayer.active){toast('Quittez le salon pour commencer une formation.');return;}if(!tutorialMission(id))return;if(isTutorial(state))persist();else campaignBeforeTutorial=state;const saved=tutorialProgress.sessions[id];state=!restart&&saved&&!tutorialObjective(saved).done&&!tutorialObjective(saved).failed?structuredClone(saved):createTutorialGame(id);if(isCompactTutorial(state)&&!saved)tutorialGuideCollapsed=false;menuOpen=false;setup=false;view='world';selectedCountry=state.tutorial.mission==='contact'&&state.agents[0].country==='FR'?'FR':(state.factions.FR.known.s0?.country||Object.values(state.factions.FR.known)[0]?.country||'FR');selectedAgent=null;Object.assign(camera,{mode:'globe',k:1.65,panelOpen:true});focusCountry(camera,selectedCountry);resetExperience();clearTimeout(showReveals.timer);revealSession=null;cinematic=null;modal.close();closeBureau();clearSignals();persist();render();window.scrollTo(0,0);}
-function toast(msg){clearTimeout(orderFeedback.timer);$('#toast').textContent=msg;$('#toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').classList.remove('show'),4500);}
+function leaveTutorial(){if(!isTutorial(state))return;persist();clearTimeout(showReveals.timer);revealSession=null;cinematic=null;state=campaignBeforeTutorial;campaignBeforeTutorial=null;setup=!state;view='world';selectedAgent=null;saveWarning=false;clearSignals();resetExperience();}
+function launchTutorial(id,restart=false){workspace?.clear();clearTimeout(toast.timer);$('#toast').classList.remove('show');if(multiplayer.active){toast('Quittez le salon pour commencer une formation.');return;}if(!tutorialMission(id))return;if(isTutorial(state))persist();else campaignBeforeTutorial=state;const saved=tutorialProgress.sessions[id];state=!restart&&saved&&!tutorialObjective(saved).done&&!tutorialObjective(saved).failed?structuredClone(saved):createTutorialGame(id);if(isCompactTutorial(state)&&!saved)tutorialGuideCollapsed=false;menuOpen=false;setup=false;view='world';selectedCountry=state.tutorial.mission==='contact'&&state.agents[0].country==='FR'?'FR':(state.factions.FR.known.s0?.country||Object.values(state.factions.FR.known)[0]?.country||'FR');selectedAgent=null;Object.assign(camera,{mode:'globe',k:1.65,panelOpen:true});focusCountry(camera,selectedCountry);resetExperience();clearTimeout(showReveals.timer);revealSession=null;cinematic=null;modal.close();clearSignals();persist();render();window.scrollTo(0,0);}
+function toast(msg){clearTimeout(orderFeedback.timer);$('#toast').textContent=translateText(msg);$('#toast').classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('#toast').classList.remove('show'),4500);}
 function change(fn){try{fn();persist();render();return true;}catch(e){toast(e.message);return false;}}
-function render(){workspace?.refresh();refreshBureau();refreshCountryInquiry();stopMap();stopHud();stopMenu();stopEnding();if(state){if(!countryOnMap(state,selectedCountry))selectedCountry=state.player;syncCameraTurn(camera,state,inquiryRoom());}if(multiplayer.active&&multiplayer.snapshot?.phase!=='playing'){multiplayer.panel();return;}if(menuOpen){document.body.classList.remove('map-open');app.innerHTML=menuPage==='tutorials'?tutorialMenu(tutorialProgress):menuPage==='patch-notes'?patchNotesPage():mainMenu(state);if(menuPage==='home')stopMenu=mountMenuEarth();return;}document.body.classList.toggle('map-open',camera.expanded&&!setup&&view==='world');if(setup){app.innerHTML=button('← Menu principal','main-menu','setup-menu-return')+(setupDraft?draftScreen(setupDraft,setupCountry,{agents:setupAgents,confirmed:setupConfirmed,candidate:setupDraftCandidate,controls:`<div class="setup-game-options">${gameModeControl(setupMode,false,false)}${aiDifficultyControl(setupDifficulty,false,false)}</div>`}):setupScreen(setupCountry,setupAgents,!!state,null,setupDifficulty,setupMode,setupMap?.countries??false));return;}if(!multiplayer.active&&!state.campaignClock){startClock(state,Date.now(),state.turn>1||!!state.ended);persist();}if(!isTutorial(state))trackExperience(state);if(view==='ending'&&state.ended){clearTimeout(showReveals.timer);revealSession=null;cinematic=null;modal.close();document.body.classList.remove('map-open');app.innerHTML=endingScreen(state,{tab:reportTab,country:reportCountry||state.player});stopEnding=mountEnding(app);return;}app.innerHTML=gameShell(state,view,(view==='bureau'?'':view==='archives'?`<h1>Archives · statistiques des agents</h1><div class="archive-actions">${state.ended?button('Retour au bilan','ending'):''}${button('Journal des événements','nav','','data-id="journal"')}</div><div id="campaign-report">${campaignSummary(state,{country:reportCountry||state.player,tab:reportTab})}</div>`:view==='wiki'?wikiPanel(wikiCategory,wikiQuery)+wikiUtilities():makeScreens(state,selectedCountry,selectedAgent,world,camera,workspace.readOnlyReason())[view]()),saveWarning,view==='world'?'':renderMap(state,selectedCountry,world,camera),inquiryTracker.count(state,inquiryRoom()),inquiryTracker.dismissed(state,inquiryRoom()));if(isTutorial(state)){app.querySelector('.immersive-deck').insertAdjacentHTML('beforeend',tutorialGuide(state,tutorialGuideCollapsed));markTutorialControls(app,state,{selectedCountry});}multiplayer.decorate();stopMap=mountMap(camera,()=>selectedCountry,render);paintResourceFeedback();const header=app.querySelector('.deck-header'),deck=app.querySelector('.immersive-deck');const ticker=header.querySelector('.news-ticker');const status=app.querySelector('.mp-status');const positionHud=()=>{const top=Math.ceil(Math.max(header.getBoundingClientRect().bottom,ticker?.getBoundingClientRect().bottom||0)+12);deck.style.setProperty('--mp-top',top+'px');const guide=app.querySelector('.tutorial-guide');if(guide)guide.style.top=top+'px';const hudTop=Math.max(top,status?Math.ceil(status.getBoundingClientRect().bottom)+12:0,guide?Math.ceil(guide.getBoundingClientRect().bottom)+10:0);deck.style.setProperty('--hud-top',hudTop+'px');document.documentElement.style.setProperty('--bureau-top',(hudTop+48)+'px');};positionHud();const resizeHud=new ResizeObserver(positionHud);resizeHud.observe(header);if(ticker)resizeHud.observe(ticker);if(status)resizeHud.observe(status);const guide=app.querySelector('.tutorial-guide');if(guide)resizeHud.observe(guide);stopHud=()=>resizeHud.disconnect();}
-function showModal(html,cls=''){if(view==='bureau'){closeBureau();view='world';render();}else closeBureau();delete modal.dataset.orderAgent;modal.className=cls;modal.innerHTML=`${revealSession||cinematic?'':button(icon('close'),'close','modal-close','aria-label="Fermer"')}${html}`;if(!modal.open)modal.showModal();}
+function render(){workspace?.refresh();refreshCountryInquiry();stopMap();stopHud();stopMenu();stopEnding();if(state){if(!countryOnMap(state,selectedCountry))selectedCountry=state.player;syncCameraTurn(camera,state,inquiryRoom());}if(multiplayer.active&&multiplayer.snapshot?.phase!=='playing'){multiplayer.panel();return;}if(menuOpen){document.body.classList.remove('map-open');app.innerHTML=menuPage==='tutorials'?tutorialMenu(tutorialProgress):menuPage==='patch-notes'?patchNotesPage():menuPage==='new-game'?newGameMenu():menuPage==='multiplayer'?multiplayerPage:mainMenu(state);localizeContent(app);if(menuPage==='home'||menuPage==='new-game')stopMenu=mountMenuEarth();return;}document.body.classList.toggle('map-open',camera.expanded&&!setup&&view==='world');if(setup){app.innerHTML=button('← Nouvelle partie','new','setup-menu-return')+(setupDraft?draftScreen(setupDraft,setupCountry,{agents:setupAgents,confirmed:setupConfirmed,candidate:setupDraftCandidate,controls:`<div class="setup-game-options">${aiDifficultyControl(setupDifficulty,false,false)}</div>`}):setupScreen(setupCountry,setupAgents,!!state,null,setupDifficulty,setupMode,setupMap?.countries??false));localizeContent(app);return;}if(!multiplayer.active&&!state.campaignClock){startClock(state,Date.now(),state.turn>1||!!state.ended);persist();}if(!isTutorial(state))trackExperience(state);if(view==='ending'&&state.ended){clearTimeout(showReveals.timer);revealSession=null;cinematic=null;modal.close();document.body.classList.remove('map-open');app.innerHTML=endingScreen(state,{tab:reportTab,country:reportCountry||state.player});localizeContent(app);stopEnding=mountEnding(app);return;}app.innerHTML=gameShell(state,view,(view==='archives'?`<h1>Archives · statistiques des agents</h1><div class="archive-actions">${state.ended?button('Retour au bilan','ending'):''}${button('Journal des événements','nav','','data-id="journal"')}</div><div id="campaign-report">${campaignSummary(state,{country:reportCountry||state.player,tab:reportTab})}</div>`:view==='wiki'?wikiPanel(wikiCategory,wikiQuery)+wikiUtilities():makeScreens(state,selectedCountry,selectedAgent,world,camera,workspace.readOnlyReason())[view]()),saveWarning,view==='world'?'':renderMap(state,selectedCountry,world,camera),inquiryTracker.count(state,inquiryRoom()),inquiryTracker.dismissed(state,inquiryRoom()));if(isTutorial(state)){app.querySelector('.immersive-deck').insertAdjacentHTML('beforeend',tutorialGuide(state,tutorialGuideCollapsed));markTutorialControls(app,state,{selectedCountry});}localizeContent(app);multiplayer.decorate();stopMap=mountMap(camera,()=>selectedCountry,render);paintResourceFeedback();const header=app.querySelector('.deck-header'),deck=app.querySelector('.immersive-deck');const ticker=header.querySelector('.news-ticker');const status=app.querySelector('.mp-status'),fieldTeam=app.querySelector('.field-team');const positionHud=()=>{const top=Math.ceil(Math.max(header.getBoundingClientRect().bottom,ticker?.getBoundingClientRect().bottom||0)+12);deck.style.setProperty('--mp-top',top+'px');const guide=app.querySelector('.tutorial-guide');if(guide)guide.style.top=top+'px';const hudTop=Math.max(top,status?Math.ceil(status.getBoundingClientRect().bottom)+12:0,guide?Math.ceil(guide.getBoundingClientRect().bottom)+10:0);deck.style.setProperty('--hud-top',hudTop+'px');
+ if(fieldTeam){
+  const clearance=Math.ceil(window.innerHeight-fieldTeam.getBoundingClientRect().top)+8;
+  deck.style.setProperty('--map-controls-bottom',clearance+'px');
+ }
+};positionHud();const resizeHud=new ResizeObserver(positionHud);resizeHud.observe(header);if(ticker)resizeHud.observe(ticker);if(status)resizeHud.observe(status);const guide=app.querySelector('.tutorial-guide');if(guide)resizeHud.observe(guide);
+ if(fieldTeam){resizeHud.observe(fieldTeam);window.addEventListener('resize',positionHud);}
+ stopHud=()=>{resizeHud.disconnect();if(fieldTeam)window.removeEventListener('resize',positionHud);};}
+function showModal(html,cls=''){delete modal.dataset.orderAgent;modal.className=cls;modal.innerHTML=`${revealSession||cinematic?'':button(icon('close'),'close','modal-close','aria-label="Fermer"')}${html}`;localizeContent(modal);if(!modal.open)modal.showModal();}
 const mapCountryActivation=createMapAgentActivation(id=>{if(!state||!countryOnMap(state,id)||setup||menuOpen)return;selectedAgent=null;selectedCountry=id;camera.panelOpen=true;focusCountry(camera,id);view='world';render();},id=>workspace?.country(id));
 const mapAgentActivation={click:id=>openAgent(id),cancel(){}};
 function agentPager(id){const team=E.team(state),i=team.findIndex(a=>a.id===id);return `<nav class="agent-pager" aria-label="Comparer les agents">${button('‹','agent','',`data-id="${team[(i+team.length-1)%team.length].id}" aria-label="Agent précédent"`)}<span>${i+1} / ${team.length}</span>${button('›','agent','',`data-id="${team[(i+1)%team.length].id}" aria-label="Agent suivant"`)}</nav>`;}
-function openAgent(id,type=null,target=null){if(type){openOrder(id,type,target);return;}const a=state?.agents.find(a=>a.id===id);if(!a||setup||menuOpen)return;if(multiplayer.observer&&a.faction!==state.player)multiplayer.observe(a.faction);camera.panelOpen=true;modal.close();selectedAgent=id;selectedCountry=a.country;focusCountry(camera,selectedCountry);view='world';render();}
-function openOrder(id,type=null,target=null){if(multiplayer.observer){agentJournal(id);return;}selectedAgent=id;const a=state.agents.find(a=>a.id===id);if(!a)return;if(a.faction!==state.player){view='agents';render();return;}if(view==='agents')render();if(a.status==='captured'){showModal(`<div class="simple-modal">${agentPager(a.id)}<span class="eyebrow">AGENT RETENU</span><h2>${a.name} ${nationalityFlags(a)}</h2><p>Votre agent est détenu en ${COUNTRY[a.country].name}. Envoyez un coéquipier dans ce pays, puis choisissez « Extraire un agent capturé ».</p><p>Le poste reste occupé jusqu’à sa libération.</p>${button('Voir le pays','map-country','primary','data-id="'+a.country+'"')}</div>`);return;}
+function openAgent(id,type=null,target=null,useCredits=false){if(type){openOrder(id,type,target,useCredits);return;}const a=state?.agents.find(a=>a.id===id);if(!a||setup||menuOpen)return;if(multiplayer.observer&&a.faction!==state.player)multiplayer.observe(a.faction);camera.panelOpen=true;modal.close();selectedAgent=id;selectedCountry=a.country;focusCountry(camera,selectedCountry);view='world';render();}
+function openOrder(id,type=null,target=null,useCredits=false){if(multiplayer.observer){agentJournal(id);return;}selectedAgent=id;const a=state.agents.find(a=>a.id===id);if(!a)return;if(a.faction!==state.player){view='agents';render();return;}if(view==='agents')render();if(a.status==='captured'){showModal(`<div class="simple-modal">${agentPager(a.id)}<span class="eyebrow">AGENT RETENU</span><h2>${a.name} ${nationalityFlags(a)}</h2><p>Votre agent est détenu en ${COUNTRY[a.country].name}. Envoyez un coéquipier dans ce pays, puis choisissez « Extraire un agent capturé ».</p><p>Le poste reste occupé jusqu’à sa libération.</p>${button('Voir le pays','map-country','primary','data-id="'+a.country+'"')}</div>`);return;}
  if(a.task){showModal(`<div class="simple-modal">${agentPager(a.id)}<span class="eyebrow">OPÉRATION ${a.task.queued?'PLANIFIÉE':'EN COURS'}</span><h2>${a.name} ${nationalityFlags(a)}</h2><h3>${ACTIONS[a.task.type].name}</h3><p><strong>${a.task.chance} % de réussite</strong></p><p>${a.task.remaining} tour(s) restant(s). ${E.travelInProgress(a)?'Le déplacement est commencé : il ne peut plus être annulé.':'Une annulation abandonne la progression et libère l’agent.'}</p>${(E.travelInProgress(a)?'<span class="muted">Déplacement en cours · non annulable</span>':button('Annuler cette opération','cancel','primary','data-id="'+a.id+'"'))}</div>`);return;}
- const preferred=a.country===selectedCountry?'contacts':'travel',allowed=agentMenuActions(a,state),suggested=allowed.some(([key])=>key===preferred)&&!actionUnavailable(state,a,preferred)?preferred:allowed.find(([key])=>!actionUnavailable(state,a,key))?.[0]||preferred;order={useCredits:false,id,contextType:type,type:type||suggested,target:target||selectedCountry};orderModal();}
-function showOrderModal(html,agentId){if(patchOrderDialog(modal,html,agentId))return;showModal(html,'order-modal');modal.dataset.orderAgent=agentId;}
+ const preferred=a.country===selectedCountry?'contacts':'travel',allowed=agentMenuActions(a,state),suggested=allowed.some(([key])=>key===preferred)&&!actionUnavailable(state,a,preferred)?preferred:allowed.find(([key])=>!actionUnavailable(state,a,key))?.[0]||preferred;order={useCredits,id,contextType:type,type:type||suggested,target:target||selectedCountry};orderModal();}
+function showOrderModal(html,agentId){
+ if(patchOrderDialog(modal,html,agentId))return;
+ showModal(html,'order-modal');modal.dataset.orderAgent=agentId;
+ modal.querySelector('[autofocus]')?.focus({preventScroll:true});
+}
 function orderModal(){const a=state.agents.find(a=>a.id===order.id),allowed=locationActions(a,state).filter(([id])=>id===order.contextType||agentMenuActions(a,state).some(([key])=>key===id));if(!allowed.some(([id])=>id===order.type))order.type=allowed[0][0];const d=ACTIONS[order.type];let list=[];if(['travel','sneak','cyberSupport'].includes(order.type))list=mapCountries(state).filter(c=>c.id!==a.country&&(!c.power||c.id===a.faction)&&(order.type!=='cyberSupport'||!c.power)).map(c=>[c.id,c.name]);else if(['collect','surveil','hack','prepare','arrest','intimidate'].includes(order.type))list=E.knownTargets(state).filter(t=>!t.arrested&&t.country===a.country).map(t=>[t.id,`${t.name} · ${COUNTRY[t.country].name}${order.type==='intimidate'?' · '+(t.intimidated?'0/1 restante':'1/1 restante'):order.type==='prepare'&&t.prepared?' · Déjà préparée':''}`]);else if(order.type==='analyze')list=E.evidenceQueue(state,state.player).filter(e=>!E.analysisAgent(state,state.player,e.id)).map(e=>{const p=state.proofs.find(p=>p.id===e.id),t=state.suspects.find(t=>t.id===p.suspect);return [e.id,proofTitle(p)+' · '+t.name];});else if(order.type==='rescue')list=E.rescueTargets(state,state.player).filter(b=>b.country===a.country).map(b=>[b.id,b.name]);
  if(order.type==='drone')list=[['','Tous les suspects du pays']];
  ({list,target:order.target}=selectOrderTarget(state,a.id,order.type,list,order.target));
- const normal=E.options(state,a.id,order.type,order.target),reinforced=E.options(state,a.id,order.type,order.target,true);if(d.safe||normal.boostGain===0||tutorialGuaranteed(state))order.useCredits=false;const o=order.useCredits?reinforced:normal;showOrderModal(`<div class="order-layout"><aside class="order-agent">${portrait(a)}<div><span class="eyebrow">AGENT ${a.id.toUpperCase()}</span><h2>${a.name} ${nationalityFlags(a)}</h2><p>${COUNTRY[a.country].city} · ${a.role}</p>${statlines(a)}${fatigue(a)}${energyHelp(a)}${exposureMarkup(a)}${talents(a)}<p class="field-equipment">${a.weapon?'Arme équipée':'Sans arme'} · ${a.country===a.faction?'Au QG':E.hasSafehouse(state,a.faction,a.country)?'Planque disponible':'Sans planque'}</p></div></aside><section class="order-form">${agentPager(a.id)}<span class="eyebrow">NOUVEL ORDRE / TOUR ${state.turn}</span><h2>Affecter une opération</h2>${isTutorial(state)?`<p class="training-order-note">${tutorialGuaranteed(state)?'Formation scénarisée : cette opération réussira à 100 %. En campagne, les chances dépendent des agents et de la situation.':'Formation en conditions réelles : les chances affichées s’appliquent. Un échec et ses conséquences restent possibles.'}</p>`:''}<p class="order-budget">Crédits disponibles <strong>${state.factions[a.faction].budget}</strong></p><p class="action-location">${a.country===a.faction?'AU QUARTIER GÉNÉRAL':'SUR LE TERRAIN'} · ${COUNTRY[a.country].name}</p><label>Action<select id="orderType">${actionOptions(allowed,order.type,state,a,order.target)}</select></label>${list.length?`<label>${order.type==='analyze'?'Pièce à vérifier · '+(state.suspects.find(t=>t.id===state.proofs.find(p=>p.id===order.target)?.suspect)?.name||''):order.type==='cyberSupport'?'Pays soutenu':['travel','sneak'].includes(order.type)?'Destination':'Cible'}<select id="orderTarget">${['travel','sneak'].includes(order.type)?countryOptions(order.target,a.country,false,a.faction,state):list.map(([id,name,blocked])=>`<option value="${id}" ${blocked?'disabled':''} ${id===order.target?'selected':''}>${name}${blocked?' · '+esc(blocked):''}</option>`).join('')}</select></label>`:''}${o.error?`<div class="notice warning" id="orderBlockReason">${icon('lock')} ${esc(o.error)}</div>`:''}${button(`${icon('check')} Confirmer l’ordre`,'confirm-order','primary wide',o.error||state.ended?'disabled aria-describedby="orderBlockReason" title="'+esc(o.error||'Campagne terminée.')+'"':'')}${actionResources(order.type,a)}${actionEffects(order.type)}${!d.safe&&!tutorialGuaranteed(state)?`<label class="influence-choice"><input type="checkbox" id="orderCredits" ${order.useCredits?'checked':''} ${!order.useCredits&&reinforced.error?'disabled':''}> Renforcer l’opération · ${E.ECONOMY.boostCost} crédits · ${normal.chance} % → ${reinforced.chance} % (+${normal.boostGain} points)</label>${!order.useCredits&&reinforced.error?`<p class="muted">${esc(normal.boostGain===0?'Chances déjà au plafond.':state.factions[a.faction].budget<E.ECONOMY.boostCost?'Crédits insuffisants pour le renfort. L’action de base reste gratuite.':reinforced.error)}</p>`:''}`:''}<section class="briefing-metrics" aria-label="Prévision de la mission"><div class="briefing-metric metric-duration" title="Durée de la mission" aria-label="Durée : ${o.duration} tour(s)"><span class="metric-symbol">${icon('clock')}</span><div class="metric-value"><strong>${o.duration}</strong><small>${o.duration===1?'tour':'tours'}</small></div></div><div class="briefing-metric metric-chance ${o.chance>=70?'high':'moderate'}" title="Chances de réussite" aria-label="Chances de réussite : ${o.chance} %"><span class="metric-symbol">${icon('target')}</span><div class="metric-value"><strong>${o.chance}<small>%</small></strong></div><span class="metric-track" aria-hidden="true"><i style="width:${o.chance}%"></i></span></div>${missionCostsMarkup(state,a.id,order.type,order.target)}</section><div class="order-checks"><p>${icon('scan')} Stat mobilisée <strong>${d.safe?'Aucune · réussite automatique':STAT_NAMES[o.stat]+' · '+a.stats[o.stat]}</strong></p>${o.explanations.map(x=>`<p class="modifier">${icon('plus')} ${x}</p>`).join('')}</div>${forecastMarkup(state,a.id,order.type,order.target)}${o.clandestine?'<div class="notice warning">Intervention sans mandat : risque de blessure, capture ou décès accru.</div>':''}${o.error?'':tutorialGuaranteed(state)?'<p class="muted">L’ordre commencera lorsque vous terminerez le tour. Dans cette formation, aucun renfort n’est nécessaire.</p>':'<p class="muted">L’ordre commencera lorsque vous terminerez le tour. Le renfort facultatif est payé immédiatement, puis remboursé si vous annulez l’ordre avant le début de la mission.</p>'}<p class="action-description">${d.desc}</p></section></div>`,a.id);}
+ const normal=E.options(state,a.id,order.type,order.target),reinforced=E.options(state,a.id,order.type,order.target,true);
+ const guaranteed=tutorialGuaranteed(state),canShowBoost=!d.safe&&!guaranteed;
+ if(!canShowBoost||normal.boostGain===0||reinforced.error)order.useCredits=false;
+ const o=order.useCredits?reinforced:normal,blocked=workspace?.readOnlyReason()||o.error;
+ const travel=['travel','sneak'].includes(order.type);
+ const compact=!!order.contextType&&!travel;
+ const actionPicker=`<label>Action<select id="orderType" ${!compact&&!list.length?'autofocus':''}>${actionOptions(allowed,order.type,state,a,order.target)}</select></label>`;
+ const proof=state.proofs.find(p=>p.id===order.target);
+ const targetLabel=order.type==='analyze'?'Pièce à vérifier · '+(state.suspects.find(t=>t.id===proof?.suspect)?.name||''):order.type==='cyberSupport'?'Pays soutenu':travel?'Destination':'Cible';
+ const targetOptions=travel?countryOptions(order.target,a.country,false,a.faction,state):list.map(([id,name,reason])=>`<option value="${esc(id)}" ${reason?'disabled':''} ${id===order.target?'selected':''}>${esc(name)}${reason?' · '+esc(reason):''}</option>`).join('');
+ const boost=canShowBoost?`<div class="mission-boost-control"><label class="mission-boost-toggle">
+  <input type="checkbox" id="orderCredits" ${order.useCredits?'checked':''} ${reinforced.error||normal.boostGain===0||blocked?'disabled':''}>
+  ${missionBoostLabel(normal,reinforced,state.factions[state.player].budget)}</label>
+  ${reinforced.error&&!blocked?`<small class="mission-boost-reason">${esc(reinforced.error)}</small>`:''}</div>`:'';
+ const training=isTutorial(state)?`<p class="training-order-note">${guaranteed?'Formation scénarisée : cette opération réussira à 100 %. En campagne, les chances dépendent des agents et de la situation.':'Formation en conditions réelles : les chances affichées s’appliquent. Un échec et ses conséquences restent possibles.'}</p>`:'';
+ const feedback=blocked?`<p class="notice warning express-order-feedback" id="orderBlockReason" role="status">${icon('lock')} ${esc(blocked)}</p>`:'';
+ showOrderModal(`<div class="order-layout"><section class="order-form" aria-labelledby="expressOrderTitle">
+  <header class="express-order-heading">
+   <div><span class="eyebrow">Ordre express · ${esc(COUNTRY[a.country].city)}</span><h2 id="expressOrderTitle">${esc(d.name)}</h2></div>
+   <div class="express-order-agent">${portrait(a)}<strong>${esc(a.name)}</strong></div>
+  </header>
+  <div class="express-order-body">
+   ${training}
+   ${!compact||list.length?`<div class="express-order-fields">
+    ${compact?'':actionPicker}
+    ${list.length?`<label>${esc(targetLabel)}<select id="orderTarget" autofocus>${targetOptions}</select></label>`:''}
+   </div>`:''}
+   ${actionResources(order.type,a)}
+   ${o.clandestine?'<div class="notice warning">Intervention sans mandat : risque de blessure, capture ou décès accru.</div>':''}
+   <div class="mission-quick-metrics">${missionCostsMarkup(state,a.id,order.type,order.target)}</div>
+   <details class="mission-briefing" id="orderDetails">
+    <summary id="orderDetailsSummary" ${compact&&!list.length?'autofocus':''}>Détails</summary>
+    <div class="mission-briefing-content">
+     ${compact?actionPicker:''}
+     ${actionEffects(order.type)}
+     <div class="order-checks"><p>${icon('scan')} Stat mobilisée <strong>${d.safe?'Aucune · réussite automatique':STAT_NAMES[o.stat]+' · '+a.stats[o.stat]}</strong></p>${o.explanations.map(x=>`<p class="modifier">${icon('plus')} ${esc(x)}</p>`).join('')}</div>
+     ${forecastMarkup(state,a.id,order.type,order.target)}
+     <p class="action-description">${esc(d.desc)}</p>
+     ${canShowBoost?'<p class="muted">L’ordre commencera lorsque vous terminerez le tour. Le renfort facultatif est payé immédiatement, puis remboursé si vous annulez l’ordre avant le début de la mission.</p>':''}
+    </div>
+   </details>
+  </div>
+  <footer class="express-order-footer">
+   ${feedback}
+   <div class="express-order-estimate" aria-label="Prévision de la mission"><span><strong aria-label="Chances de réussite : ${o.chance} %">${o.chance} %</strong> <small>de réussite</small></span>${missionTimingMarkup(a,order.type,o,{showEnergy:false})}${o.cost?`<small class="mission-credit-cost">${o.cost} crédits</small>`:''}</div>
+   ${boost}
+   ${button(`${icon('check')} Confirmer l’ordre`,'confirm-order','primary',`id="orderConfirm" ${blocked?'disabled aria-describedby="orderBlockReason"':''}`)}
+  </footer>
+ </section></div>`,a.id);
+}
 function deploy(type='travel',target=selectedCountry){if(['travel','sneak'].includes(type)){showModal(deploymentPickerMarkup(state,type,target));return;}const location=E.rescueTargets(state,state.player).find(t=>t.id===target)?.country||E.knownTargets(state).find(t=>t.id===target)?.country||COUNTRY[target]?.id,ready=E.team(state).filter(a=>!a.task&&a.status!=='captured'&&locationActions(a,state).some(([id])=>id===type)&&(!location||['analyze','cyberSupport'].includes(type)||a.country===location));showModal(`<div class="simple-modal"><span class="eyebrow">AFFECTATION</span><h2>Choisir un agent</h2><p class="order-budget">Crédits disponibles <strong>${state.factions[state.player].budget}</strong></p><p>Sélectionnez un agent disponible.</p>${ready.length?ready.map(a=>`<button class="agent-picker" data-cmd="pick-agent" data-id="${a.id}" data-type="${type}" data-target="${target||''}">${portrait(a)}<div><strong>${a.name}</strong><span>${COUNTRY[a.country].city} · ${E.fatigueName(a.fatigue)}</span></div>${icon('chevron')}</button>`).join(''):'<p>Aucun agent disponible au lieu requis. Déployez un agent dans le pays de la cible, ou libérez un analyste au QG pour vérifier une pièce.</p>'}</div>`);}
 async function confirmDeployment(){
  if(multiplayer.observer)throw Error('Observateur : consultation uniquement.');
@@ -104,13 +174,42 @@ function proofModal(id){const entry=state.factions[state.player].evidence.find(e
 
 let revealSession=null;
 function showReveals(done){const items=missionCards(state);if(!items.length){done();return;}clearTimeout(showReveals.timer);revealSession={items,index:0,done,revealed:false};paintReveal();}
-function paintReveal(revealed=false){clearTimeout(showReveals.timer);const r=revealSession;if(!r)return;const delay=revealDelay(r.items[r.index]);revealed=revealed||delay===0;r.revealed=revealed;showModal(debriefNavigation(['cell','attack','threat','postponement'].includes(r.items[r.index].type)?'Bilan mondial':'Bilan de votre équipe')+missionRevealMarkup(r.items[r.index],r.index,r.items.length,revealed,state.agents.find(a=>a.id===r.items[r.index].agentId),state),'mission-reveal-dialog');if(!revealed)showReveals.timer=setTimeout(()=>{if(revealSession===r&&modal.open&&modal.classList.contains('mission-reveal-dialog'))paintReveal(true);},delay);}
+function paintReveal(revealed=false){
+ clearTimeout(showReveals.timer);
+ const r=revealSession;if(!r)return;
+ const current=r.items[r.index],delay=revealDelay(current),automatic=current.type==='automatic-summary';
+ revealed=revealed||delay===0;r.revealed=revealed;
+ const scope=['cell','attack','threat','postponement'].includes(current.type)?'Bilan mondial':'Bilan de votre équipe';
+ showModal((automatic?'':debriefNavigation(scope))+missionRevealMarkup(current,r.index,r.items.length,revealed,state.agents.find(a=>a.id===current.agentId),state),
+  automatic?'mission-reveal-dialog automatic-reveal-dialog':'mission-reveal-dialog');
+ if(!revealed)showReveals.timer=setTimeout(()=>{if(revealSession===r&&modal.open&&modal.classList.contains('mission-reveal-dialog'))paintReveal(true);},delay);
+}
 function finishReveals(){clearTimeout(showReveals.timer);const done=revealSession?.done;revealSession=null;done?.();}
 let cinematic=null,lastHighlights=[];
 function showHighlights(items,done,index=0){if(!items.length){done();return;}cinematic={items,index,done};playCue('discovery');showModal(debriefNavigation('Temps forts')+milestoneBanner(items[index],index,items.length),'milestone-dialog');}
 function finishHighlights(){if(!cinematic)return;const done=cinematic.done;cinematic=null;done();}
-function debriefNavigation(scope){return `<div class="debrief-navigation"><strong>${scope}</strong>${button('Skip','debrief-skip','small','title="Passer le débriefing"')}</div>`;}
-function report(previous){playCue('transmission');const entries=E.visibleLogs(state).filter(l=>l.id>previous),turn=state.ended?state.turn:state.turn-1;const logs=items=>items.length?items.map(l=>`<p class="${l.type}">${esc(l.text)}</p>`).join(''):'<p class="muted">Aucun nouvel événement.</p>';showModal(`<div class="simple-modal report-modal">${debriefNavigation('DÉBRIEFING · TOUR '+turn)}<h2>${state.ended?'L’opération est terminée.':'Bilan du tour'}</h2><div class="debrief-columns"><section class="debrief-section"><span class="eyebrow">01 · VOTRE ÉQUIPE</span><h3>Bilan du joueur · ${COUNTRY[state.player].name}</h3>${reportUpdates(state,'player')}${reportCards(state,turn,true)}<details><summary>Journal de votre équipe</summary>${logs(entries.filter(l=>l.faction===state.player))}</details></section><section class="debrief-section debrief-world"><span class="eyebrow">02 · SITUATION MONDIALE</span><h3>Bilan mondial</h3>${reportUpdates(state,'world')}<div class="world-report-summary">${logs(entries.filter(l=>!l.faction).slice(0,3))}</div>${entries.filter(l=>!l.faction).length>3?`<details><summary>Autres événements mondiaux (${entries.filter(l=>!l.faction).length-3})</summary>${logs(entries.filter(l=>!l.faction).slice(3))}</details>`:''}</section></div>${lastHighlights.length?button('Revoir les temps forts','milestone-replay','small','data-id="'+previous+'"'):''}${button(state.ended?'Consulter le bilan':state.event?'Ouvrir la communication':'Retour au commandement','after-report','primary wide')}</div>`,'compact-report-dialog');}
+function debriefNavigation(scope){return `<div class="debrief-navigation"><strong>${scope}</strong>${button('Passer','debrief-skip','small','title="Passer le débriefing"')}</div>`;}
+function report(previous){
+ playCue('transmission');
+ const entries=E.visibleLogs(state).filter(l=>l.id>previous),turn=state.ended?state.turn:state.turn-1;
+ const teamEntries=entries.filter(l=>l.faction===state.player),worldEntries=entries.filter(l=>!l.faction);
+ const worldAlert=worldEntries.find(l=>l.type==='danger');
+ const logs=items=>items.length?items.map(l=>`<p class="${esc(l.type)}">${esc(l.text)}</p>`).join(''):'<p>Aucun nouvel événement.</p>';
+ const after=state.ended?'Consulter le bilan':state.event?'Ouvrir la communication':'Retour au commandement';
+ showModal(`<div class="simple-modal report-modal">
+  <header class="turn-report-heading"><span class="eyebrow">Tour ${turn}</span><h2>${state.ended?'L’opération est terminée.':'Bilan du tour'}</h2></header>
+  <div class="turn-brief">
+   <section class="turn-brief-topic"><h3>${flag(state.player)} <span>${esc(COUNTRY[state.player].name)}</span></h3>${reportUpdates(state,'player')}</section>
+   <section class="turn-brief-topic turn-world-brief"><h3>${icon('world')} <span>Situation mondiale</span></h3>${reportUpdates(state,'world')}${worldAlert?`<p class="turn-world-alert">${esc(worldAlert.text)}</p>`:''}</section>
+  </div>
+  <section class="turn-mission-results"><h3>Résultats de votre équipe</h3>${reportCards(state,turn,true)||'<p>Aucune opération terminée.</p>'}</section>
+  <div class="turn-report-journals">
+   <details class="campaign-disclosure"><summary>Journal de votre équipe</summary>${logs(teamEntries)}</details>
+   <details class="campaign-disclosure"><summary>Événements mondiaux</summary>${logs(worldEntries)}</details>
+  </div>
+  <footer class="turn-report-actions">${lastHighlights.length?button('Revoir les temps forts','milestone-replay','small',`data-id="${previous}"`):''}${button(after,'after-report','primary')}</footer>
+ </div>`,'compact-report-dialog');
+}
 function eventModal(){const ev=state.event;if(!ev)return;showModal(`<div class="dialogue-modal"><div class="dialogue-portrait">${portrait(ROSTER[0])}<span>CANAL PRIVÉ / 04</span></div><div class="dialogue-copy"><span class="eyebrow">COMMUNICATION ENTRANTE</span><h2>${ev.title}</h2><div class="speech-bubble"><strong>${ev.speaker}</strong><p>${ev.text}</p></div><div class="dialogue-consult">${button(icon('world')+' Consulter le jeu avant de répondre','consult-game','wide')}<small>La communication reste en attente. Le tour n’avance pas.</small></div><div class="dialogue-options">${ev.choices.map((c,i)=>{const reason=E.eventChoiceUnavailable(state,i);return `<button data-cmd="event" data-id="${i}" ${reason?'disabled':''}><span>0${i+1}</span><div><strong>${c.label}</strong><small>${c.detail}</small>${reason?`<small class="disabled-reason">${esc(reason)}</small>`:''}</div>${icon('chevron')}</button>`;}).join('')}</div></div></div>`,'dialogue-shell');}
 function ending(){clearTimeout(showReveals.timer);revealSession=null;cinematic=null;modal.close();view='ending';reportTab='overview';reportCountry=state.player;render();}
 function recruitModal(){
@@ -121,8 +220,12 @@ function recruitModal(){
  const blocked=!!state.ended||needsReplace&&!relievable.length;
  showModal(`<div class="simple-modal"><span class="eyebrow">BUREAU DE RECRUTEMENT</span><h2>Renforts & relève</h2><p>Le recrutement est gratuit et prend deux tours. Votre unité reste limitée à quatre postes.</p>${pending.map(r=>`<p class="notice">${icon('clock')} ${esc(FULL_ROSTER.find(a=>a.id===(r.templateId||r.id))?.name||r.id)} est recruté · arrivée dans ${r.remaining} tour(s).</p>`).join('')}${needsReplace?`<label>Agent relevé au QG<select id="replaceAgent"><option value="">Choisir un agent disponible au QG</option>${relievable.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select></label><p class="muted">La relève est définitive. Les agents capturés conservent leur poste.</p>`:''}${state.ended?'<p class="notice warning">La campagne est terminée.</p>':needsReplace&&!relievable.length?'<p class="notice warning">Aucun agent disponible au QG pour une relève.</p>':''}${candidates.length?candidates.map(a=>`<div class="recruit-option">${portrait(a)}<div><h3>${esc(a.name)} ${nationalityFlags(a)}</h3><p>${esc(a.role)}</p>${statlines(a)}${button('Recruter · gratuit','hire','small',`data-id="${a.id}" ${blocked?'disabled':''}`)}</div></div>`).join(''):'<p>La réserve disponible est épuisée.</p>'}<p id="recruitError" class="notice warning" role="alert" hidden></p></div>`);
 }
-function recruitFailure(error){const message=$('#recruitError');if(message){message.textContent=error.message;message.hidden=false;}else toast(error.message);}
-function help(){showModal(`<div class="simple-modal settings-modal"><span class="eyebrow">PRÉFÉRENCES DU JEU</span><h2>Paramètres</h2>${settingsMarkup()}</div>`);}
+function recruitFailure(error){const message=$('#recruitError');if(message){message.textContent=translateText(error.message);message.hidden=false;}else toast(error.message);}
+function beginSoloSetup(mode){
+ modal.close();menuOpen=false;resetRecruitFilters('solo');setupAgents=[];setupMode=mode;
+ setupMap=null;setupDraft=null;setupConfirmed=false;setupDraftCandidate=null;setup=true;render();window.scrollTo(0,0);
+}
+function help(){showModal(settingsMarkup(),'settings-dialog');}
 function wikiUtilities(){if(isTutorial(state))return `<section class="panel wiki-utilities"><h2>Votre formation</h2><div class="command-shortcuts">${button('Briefing de la mission','tutorial-help','small')}${button('Dernier débriefing','reveal-replay','small')}${button('Choisir une mission','tutorial-menu','small')}</div><p>Progression enregistrée séparément. Votre campagne est conservée.</p></section>`;return `<section class="panel wiki-utilities"><h2>Votre campagne</h2><div class="command-shortcuts">${button('Briefing','briefing','small')}${(state?.turnActivities?.length||state?.cellReports?.length||state?.attackReports?.length||state?.threatReports?.length||state?.attackDelayReports?.length)?button('Dernier débriefing','reveal-replay','small'):''}${button('Exporter la sauvegarde','export','small')}${button('Importer une sauvegarde','import','small')}${button('Copie avant refonte des crédits','export-economy-backup','small')}</div><input type="file" id="saveFile" accept="application/json,.json" hidden></section>`;}
 
 function nextTurn(){if(state.ended){ending();return;}if(isTutorial(state)){const pending=tutorialPendingOrders(state);if(!tutorialObjective(state).unguided&&pending.length&&state.agents.some(a=>a.task)){showModal(`<div class="simple-modal"><h2>Des actions peuvent avancer en parallèle</h2><p>Affectez les autres agents disponibles avant de terminer le tour.</p><ul>${pending.map(o=>`<li>${esc(state.agents.find(a=>a.id===o.agentId).name)} · ${esc(ACTIONS[o.type].name)}${o.optional?' (soutien facultatif)':''}</li>`).join('')}</ul><div class="suspect-actions">${button('Compléter les ordres','close','primary')}${button('Terminer quand même','advance-confirm')}</div></div>`);return;}finishTurn();return;}if(state.ended){ending();return;}if(multiplayer.active&&multiplayer.me?.ready){multiplayer.command('ready',{ready:false}).catch(e=>toast(e.message));return;}if(state.ended){ending();return;}if(state.event){eventModal();return;}const idle=E.team(state).filter(a=>!a.task&&a.status!=='captured');if(idle.length){showModal(`<div class="simple-modal"><span class="eyebrow">CONFIRMER LA FIN DU TOUR</span><h2>${idle.length} agent(s) sans ordre</h2><p>${idle.map(a=>a.name).join(', ')} resteront inactifs. Ils ne récupéreront pas de fatigue sans ordre de repos.</p><div class="suspect-actions">${button('Revenir aux ordres','close')}${button('Terminer quand même','advance-confirm','primary')}</div></div>`);}else finishTurn();}
@@ -138,12 +241,12 @@ document.addEventListener('click',event=>{
 // Route every multiplayer mutation through the authoritative host, including host UI actions.
 document.addEventListener('click',event=>{
  const el=event.target.closest('[data-cmd]');if(!el||el.disabled)return;const cmd=el.dataset.cmd,id=el.dataset.id;
- if(isTutorial(state)&&['mp-entry','new','new-confirm','start','import','export','export-economy-backup'].includes(cmd)){event.stopImmediatePropagation();toast('Revenez au menu principal pour gérer votre campagne ou le multijoueur.');return;}
+ if(isTutorial(state)&&['mp-entry','new','new-mode','new-confirm','start','import','export','export-economy-backup'].includes(cmd)){event.stopImmediatePropagation();toast('Revenez au menu principal pour gérer votre campagne ou le multijoueur.');return;}
  if(cmd.startsWith('mp-')){event.stopImmediatePropagation();multiplayer.handle(cmd,id).catch(e=>toast(e.message));return;}
  if(cmd==='confirm-deployment'){event.stopImmediatePropagation();confirmDeployment().catch(e=>toast(e.message));return;}
  if(!multiplayer.active)return;
  if(multiplayer.observer){if(['deploy','travel','agent-rest','recruit','confidence','government-favor','tech','tech-drone','confirm-order','cancel','confirm-cancel','cancel-tech','confirm-cancel-tech','cancel-cyber','confirm-cancel-cyber','hire','event','request-accept','request-decline','advance-confirm'].includes(cmd)){event.stopImmediatePropagation();toast('Observateur : consultation uniquement.');return;}}
- if(['new','new-confirm','start','resume','import'].includes(cmd)){event.stopImmediatePropagation();toast('Quittez la session depuis le salon pour ouvrir une campagne solo.');return;}
+ if(['new','new-mode','new-confirm','start','resume','import'].includes(cmd)){event.stopImmediatePropagation();toast('Quittez la session depuis le salon pour ouvrir une campagne solo.');return;}
  if(cmd==='export'){event.stopImmediatePropagation();try{multiplayer.export();}catch(e){toast(e.message);}return;}
  const mutations={
   'confirm-order':['assign',()=>({id:order.id,type:order.type,target:order.target||null,useCredits:!!order.useCredits})],
@@ -166,31 +269,34 @@ document.addEventListener('change',event=>{
   modal.querySelector('#'+event.target.id)?.focus();return;
  }
 
- if(event.target.name==='deployAgent'){const picker=event.target.closest('.deployment-picker'),count=picker.querySelectorAll('[name="deployAgent"]:checked').length;picker.querySelector('#deploymentCount').textContent=`${count} agent${count>1?'s':''} sélectionné${count>1?'s':''}`;const confirm=picker.querySelector('[data-cmd="confirm-deployment"]');confirm.disabled=!count;confirm.textContent=count?`Déployer ${count} agent${count>1?'s':''}`:'Déployer les agents';return;}
- if(event.target.id==='gameMode'&&setup&&!setupDraft&&Object.hasOwn(GAME_MODES,event.target.value)){setupMode=event.target.value;setupMap=null;setupAgents=[];setupConfirmed=false;resetRecruitFilters('solo');render();return;}
- if(event.target.id==='mpGameMode'){multiplayer.command('game-mode',{mode:event.target.value}).catch(e=>toast(e.message));return;}
+ if(event.target.name==='deployAgent'){const picker=event.target.closest('.deployment-picker'),count=picker.querySelectorAll('[name="deployAgent"]:checked').length;picker.querySelector('#deploymentCount').textContent=translateText(`${count} agent${count>1?'s':''} sélectionné${count>1?'s':''}`);const confirm=picker.querySelector('[data-cmd="confirm-deployment"]');confirm.disabled=!count;confirm.textContent=translateText(count?`Déployer ${count} agent${count>1?'s':''}`:'Déployer les agents');return;}
  if(event.target.dataset.recruitFilter){const {recruitMode,recruitFilter}=event.target.dataset,id=event.target.id;setRecruitFilter(recruitMode,recruitFilter,event.target.type==='checkbox'?event.target.checked:event.target.value);render();document.getElementById(id)?.focus();return;}
- if(event.target.name==='mpAgent'){const count=document.querySelectorAll('[name="mpAgent"]:checked').length;document.querySelector('#mpTeamCount').textContent=`${count} / 4 agents sélectionnés`;document.querySelector('[data-cmd="mp-team"]').disabled=count!==4;}
+ if(event.target.name==='mpAgent'){const count=document.querySelectorAll('[name="mpAgent"]:checked').length;document.querySelector('#mpTeamCount').textContent=translateText(`${count} / 4 agents sélectionnés`);document.querySelector('[data-cmd="mp-team"]').disabled=count!==4;}
  if(event.target.id==='mpObserveCountry')multiplayer.observe(event.target.value);
  if(event.target.id==='mpChooseCountry')multiplayer.command('country',{country:event.target.value}).catch(e=>toast(e.message));
- if(event.target.id==='mpImport'){const file=event.target.files[0];if(!file)return;if(file.size>5000000){toast('Fichier trop volumineux.');return;}file.text().then(text=>{if(multiplayer.hasSave()&&!confirm('Remplacer la sauvegarde multijoueur locale par ce fichier ?'))return;return multiplayer.resume(JSON.parse(text));}).catch(e=>toast(e.message));}
+ if(event.target.id==='mpImport'){const file=event.target.files[0];if(!file)return;if(file.size>5000000){toast('Fichier trop volumineux.');return;}file.text().then(async text=>{if(multiplayer.hasSave()&&!await confirmInGame('Remplacer la sauvegarde multijoueur locale par ce fichier ?'))return;return multiplayer.resume(JSON.parse(text));}).catch(e=>toast(e.message));}
 });
 document.addEventListener('click',event=>{const el=event.target.closest('[data-cmd]');if(!el||el.disabled)return;const cmd=el.dataset.cmd,id=el.dataset.id;if(cmd!=='map-agent')mapAgentActivation.cancel();if(cmd!=='map-country')mapCountryActivation.cancel();if(cmd.startsWith('workspace-')||['country-inquiry','country-threat','suspect'].includes(cmd)||cmd.startsWith('inquiry-')&&el.closest('[data-workspace-window]')){workspace.command(cmd,id,el).catch(e=>toast(e.message));return;}switch(cmd){
  case 'cell-info':showModal(cellInfoMarkup(state,Number(id)),'cell-info-dialog');break;
  case 'rescue-captive':deploy('rescue',id);break;
  case 'dismiss-attack-delays':dismissAttackDelays(state);render();break;
- case 'inquiry-step':case 'inquiry-substep':case 'country-threat':case 'inquiry-open-agent':case 'country-inquiry':case 'inquiry-action':case 'inquiry-agent':case 'inquiry-boost':case 'inquiry-effects':case 'inquiry-confirm':handleInquiryCommand(cmd,id);break;
+ case 'inquiry-step':case 'inquiry-substep':case 'country-threat':case 'inquiry-open-agent':case 'country-inquiry':case 'inquiry-action':case 'inquiry-agent':case 'inquiry-boost':case 'inquiry-effects':case 'inquiry-express':case 'inquiry-confirm':handleInquiryCommand(cmd,id);break;
  case 'patch-notes':modal.close();menuPage='patch-notes';menuOpen=true;render();window.scrollTo(0,0);app.scrollTop=0;break;
  case 'tutorial-menu':if(isTutorial(state))leaveTutorial();modal.close();menuPage='tutorials';menuOpen=true;render();window.scrollTo(0,0);break;
  case 'tutorial-start':launchTutorial(id);break;
- case 'tutorial-guide-toggle':tutorialGuideCollapsed=!tutorialGuideCollapsed;writePreference('sigma2040-tutorial-minimized',String(tutorialGuideCollapsed));render();break;
+ case 'tutorial-guide-toggle':tutorialGuideCollapsed=!tutorialGuideCollapsed;writePreference('shadow-mandate-2040-tutorial-minimized',String(tutorialGuideCollapsed));render();break;
  case 'tutorial-restart':showModal(`<div class="simple-modal"><h2>Recommencer cette mission ?</h2><p>Seul cet exercice revient à son état de départ. Vos autres missions et votre campagne sont conservées.</p><div class="suspect-actions">${button('Continuer l’exercice','close')}${button('Recommencer','tutorial-restart-confirm','primary')}</div></div>`);break;
  case 'tutorial-restart-confirm':if(isTutorial(state))launchTutorial(state.tutorial.mission,true);break;
  case 'tutorial-help':if(isTutorial(state))showModal(`<div class="simple-modal"><span class="eyebrow">FORMATION / FILIGRANE</span><h2>${esc(tutorialMission(state.tutorial.mission).title)}</h2><p>${esc(tutorialMission(state.tutorial.mission).brief)}</p><h3>À faire maintenant</h3><p>${esc(tutorialHint(state))}</p><h3>À retenir</h3><p>${esc(tutorialMission(state.tutorial.mission).lesson)}</p><p>Affectez les agents disponibles en parallèle, confirmez leurs ordres, puis terminez le tour. Les missions de plusieurs tours continuent automatiquement. Vous pouvez annuler un ordre avant son départ.</p><p>${esc(tutorialRiskNote(state))}</p>${button('Reprendre','close','primary')}</div>`);break;
- case 'main-menu':if(isTutorial(state))leaveTutorial();modal.close();menuPage='home';menuOpen=true;render();break;
+ case 'main-menu':if(multiplayer.active){multiplayer.handle('mp-leave').catch(e=>toast(e.message));break;}if(isTutorial(state))leaveTutorial();showMainMenu();break;
  case 'continue-game':if(state){menuOpen=false;setup=false;if(state.ended)ending();else render();}break;
- case 'mods':showModal(`<div class="simple-modal settings-modal"><h2>Mods</h2>${modsMarkup()}${button('Fermer','close')}</div>`);break;
  case 'settings':help();break;
+ case 'settings-tab':{
+  if(!modal.querySelector('[data-settings-panel="'+id+'"]'))break;
+  for(const panel of modal.querySelectorAll('[data-settings-panel]'))panel.hidden=panel.dataset.settingsPanel!==id;
+  for(const tab of modal.querySelectorAll('[data-cmd="settings-tab"]'))tab.setAttribute('aria-pressed',String(tab.dataset.id===id));
+  break;
+ }
  case 'music-next':nextTrack();break;
  case 'ai-difficulty':if(!setupDraft&&Object.hasOwn(AI_LEVELS,id)){setupDifficulty=id;render();}break;
  case 'country':if(!setupDraft&&setupCountry!==id){setupCountry=id;setupMap=null;setupAgents=[];render();}break;
@@ -205,14 +311,20 @@ document.addEventListener('click',event=>{const el=event.target.closest('[data-c
  case 'recruit-view':updateRecruitFaces(document,el.dataset.recruitMode,null,id==='portrait');break;
  case 'start':if(!setupDraft&&(!setupMap||setupAgents.length!==4))break;workspace?.clear();if(usesDraft(setupMode)&&(!setupDraft||draftCountry(setupDraft)||!setupConfirmed)){toast('Terminez le repêchage et confirmez votre équipe.');break;}menuOpen=false;resetExperience();clearSignals();state=E.createConfiguredGame(setupCountry,setupAgents,setupDraft?.seed??setupMap.seed,setupDifficulty,setupDraft?{gameMode:setupMode,participants:setupDraft.countries,teams:{...setupDraft.teams,[setupCountry]:[...setupAgents]}}:{gameMode:'regular',participants:setupMap.participants});setup=false;view='world';selectedCountry=state.player;selectedAgent=null;camera.k=1.65;focusCountry(camera,state.player);persist();render();toast('Commandement établi. Le briefing est disponible depuis le bouton « ? ».');break;
  case 'resume':menuOpen=false;setup=false;render();break;
- case 'new':modal.close();if(state&&!state.ended){showModal(`<div class="simple-modal"><h2>Préparer une nouvelle campagne ?</h2><p>Votre sauvegarde actuelle sera remplacée au lancement de la nouvelle opération. Vous pouvez l’exporter avant de continuer.</p><div class="suspect-actions">${button('Exporter','export')}${button('Choisir une nouvelle équipe','new-confirm','primary')}</div></div>`);}else{menuOpen=false;resetRecruitFilters('solo');setupAgents=[];setupMode='regular';setupMap=null;setupDraft=null;setupConfirmed=false;setupDraftCandidate=null;setup=true;render();}break;
- case 'new-confirm':modal.close();menuOpen=false;resetRecruitFilters('solo');setupAgents=[];setupMode='regular';setupMap=null;setupDraft=null;setupConfirmed=false;setupDraftCandidate=null;setup=true;render();break;
- case 'bureau':if(bureauEnabled()){view='bureau';inquiryTracker.read(state,inquiryRoom());render();openBureau();}break;
- case 'nav':closeBureau();view=id;inquiryTracker.read(state,inquiryRoom(),id);render();break;
+ case 'new':modal.close();menuPage='new-game';menuOpen=true;render();window.scrollTo(0,0);$('#newGameTitle')?.focus({preventScroll:true});break;
+ case 'new-mode':if(!Object.hasOwn(GAME_MODES,id))break;if(state&&!state.ended){showModal(`<div class="simple-modal"><h2>Préparer une nouvelle campagne ?</h2><p>Votre sauvegarde actuelle sera remplacée au lancement de la nouvelle opération. Vous pouvez l’exporter avant de continuer.</p><div class="suspect-actions">${button('Exporter','export')}${button('Choisir une nouvelle équipe','new-confirm','primary','data-id="'+id+'"')}</div></div>`);}else beginSoloSetup(id);break;
+ case 'new-confirm':if(Object.hasOwn(GAME_MODES,id))beginSoloSetup(id);break;
+ case 'nav':{
+  const tab=el.classList.contains('deck-tab');
+  view=tab&&id===view?'world':id;
+  inquiryTracker.read(state,inquiryRoom(),view);render();
+  if(tab)app.querySelector(`.deck-tab[data-id="${CSS.escape(id)}"]`)?.focus({preventScroll:true});
+  break;
+ }
  case 'map-agent':mapAgentActivation.click(id);break;
  case 'map-country':mapCountryActivation.click(id);break;
  case 'agent':openAgent(id);break;
- case 'suggest-action':{const a=state.agents.find(a=>a.id===id);if(a){const type=el.dataset.type;if(type==='protect')openOrder(id,type);else workspace.country(a.country,type,id);}break;}
+ case 'suggest-action':openOrder(id,el.dataset.type);break;
  case 'agent-rest':{const a=state.agents.find(a=>a.id===id);if(a)openAgent(id,a.country===a.faction?'rest':E.hasSafehouse(state,a.faction,a.country)?'fieldRest':'hide');break;}
  case 'agent-journal':agentJournal(id);break;
  case 'select-agent':selectedAgent=id;render();document.querySelector('.personnel-member.selected')?.focus({preventScroll:true});break;
@@ -254,7 +366,7 @@ document.addEventListener('click',event=>{const el=event.target.closest('[data-c
  case 'reveal-skip':finishReveals();break;
  case 'reveal-replay':{const turn=state.turnActivities?.[0]?.turn||state.turn-1,previous=Math.max(0,...E.visibleLogs(state).filter(l=>l.turn<turn).map(l=>l.id));showReveals(()=>report(previous));break;}
  case 'ending-report':clearTimeout(showReveals.timer);revealSession=null;cinematic=null;modal.close();$('#campaign-report')?.scrollIntoView({behavior:globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});$('#campaign-report')?.focus({preventScroll:true});break;
- case 'campaign-archives':modal.close();closeBureau();menuOpen=false;setup=false;view='archives';reportTab='agents';reportCountry=state.player;render();break;
+ case 'campaign-archives':modal.close();menuOpen=false;setup=false;view='archives';reportTab='agents';reportCountry=state.player;render();break;
  case 'ending':ending();break;
  case 'recruit':recruitModal();break;
  case 'hire':try{E.recruit(state,id,$('#replaceAgent')?.value||null);persist();render();if(revealSession)paintReveal();else modal.close();toast('Recrutement confirmé. Le poste affichera la recrue en attente pendant deux tours.');}catch(e){recruitFailure(e);}break;
@@ -264,11 +376,11 @@ document.addEventListener('click',event=>{const el=event.target.closest('[data-c
  case 'test-sound':playCue('discovery');break;
  case 'dismiss-feedback':dismissNotices();render();break;
  case 'proof':proofModal(id);break;
- case 'export-economy-backup':{const raw=localStorage.getItem(ECONOMY_BACKUP_KEY);if(!raw){toast('Aucune ancienne campagne conservée dans ce navigateur.');break;}const url=URL.createObjectURL(new Blob([raw],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='sigma2040-avant-economie-v82.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Copie antérieure exportée.');break;}
- case 'export':{const blob=new Blob([JSON.stringify(state)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`sigma2040-tour-${state.turn}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Sauvegarde exportée.');break;}
+ case 'export-economy-backup':{const raw=readStorageItem(localStorage,ECONOMY_BACKUP_KEY);if(!raw){toast('Aucune ancienne campagne conservée dans ce navigateur.');break;}const url=URL.createObjectURL(new Blob([raw],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='shadow-mandate-2040-avant-economie-v82.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Copie antérieure exportée.');break;}
+ case 'export':{const blob=new Blob([JSON.stringify(state)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`shadow-mandate-2040-tour-${state.turn}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Sauvegarde exportée.');break;}
  case 'import':$('#saveFile').click();break;
  }});
-document.addEventListener('change',async event=>{if(workspace?.change(event.target))return;handleInquiryChange(event.target);if(event.target.id==='modBureau'){setBureauEnabled(event.target.checked);if(!bureauEnabled()){closeBureau();if(view==='bureau')view='world';}render();}if(event.target.id==='graphicsQuality')setGraphicsQuality(event.target.value);if(event.target.id==='musicEnabled'){setMusic('enabled',event.target.checked);$('#musicVolume').disabled=!event.target.checked;modal.querySelector('[data-cmd="music-next"]').disabled=!event.target.checked;}if(event.target.id==='feedbackSound'){updatePreference('sound',event.target.checked);$('#feedbackVolume').disabled=!event.target.checked;modal.querySelector('[data-cmd="test-sound"]').disabled=!event.target.checked;if(event.target.checked)playCue();}if(event.target.id==='feedbackMotion')updatePreference('motion',event.target.value);if(event.target.id==='mapSelect'){camera.panelOpen=true;selectedAgent=null;selectedCountry=event.target.value;focusCountry(camera,selectedCountry);render();}if(event.target.id==='orderType'){order.type=event.target.value;order.useCredits=false;orderModal();}if(event.target.id==='orderCredits'){order.useCredits=event.target.checked;orderModal();}if(event.target.id==='orderTarget'){order.target=event.target.value;orderModal();}if(event.target.id==='saveFile'){try{const file=event.target.files[0];if(!file)return;if(file.size>2000000)throw Error('Fichier trop volumineux.');const imported=E.validateSave(JSON.parse(await file.text()));showModal(`<div class="simple-modal"><h2>Importer cette campagne ?</h2><p>${COUNTRY[imported.player].name} · tour ${imported.turn}. La campagne actuelle sera remplacée.</p><div class="suspect-actions">${button('Annuler','close')}<button class="btn primary" id="confirmImport">Importer</button></div></div>`);$('#confirmImport').onclick=()=>{resetExperience();clearSignals();state=imported;menuOpen=false;setup=false;view='world';persist();modal.close();render();};}catch(e){toast(e.message);}}});
+document.addEventListener('change',async event=>{if(workspace?.change(event.target))return;handleInquiryChange(event.target);if(event.target.id==='graphicsQuality')setGraphicsQuality(event.target.value);if(event.target.id==='musicEnabled'){setMusic('enabled',event.target.checked);$('#musicVolume').disabled=!event.target.checked;modal.querySelector('[data-cmd="music-next"]').disabled=!event.target.checked;}if(event.target.id==='feedbackSound'){updatePreference('sound',event.target.checked);$('#feedbackVolume').disabled=!event.target.checked;modal.querySelector('[data-cmd="test-sound"]').disabled=!event.target.checked;if(event.target.checked)playCue();}if(event.target.id==='feedbackMotion')updatePreference('motion',event.target.value);if(event.target.id==='mapSelect'){camera.panelOpen=true;selectedAgent=null;selectedCountry=event.target.value;focusCountry(camera,selectedCountry);render();}if(event.target.id==='orderType'){order.type=event.target.value;order.useCredits=false;orderModal();}if(event.target.id==='orderCredits'){order.useCredits=event.target.checked;orderModal();}if(event.target.id==='orderTarget'){order.target=event.target.value;orderModal();}if(event.target.id==='saveFile'){try{const file=event.target.files[0];if(!file)return;if(file.size>2000000)throw Error('Fichier trop volumineux.');const imported=E.validateSave(JSON.parse(await file.text()));showModal(`<div class="simple-modal"><h2>Importer cette campagne ?</h2><p>${COUNTRY[imported.player].name} · tour ${imported.turn}. La campagne actuelle sera remplacée.</p><div class="suspect-actions">${button('Annuler','close')}<button class="btn primary" id="confirmImport">Importer</button></div></div>`);$('#confirmImport').onclick=()=>{resetExperience();clearSignals();state=imported;menuOpen=false;setup=false;view='world';persist();modal.close();render();};}catch(e){toast(e.message);}}});
 document.addEventListener('toggle',event=>{if(event.target.matches?.('.map-dossier'))camera.panelOpen=event.target.open;},true);
 document.addEventListener('input',event=>{if(event.target.id==='musicVolume'){setMusic('volume',event.target.value);$('#musicVolumeValue').textContent=event.target.value+'%';}if(event.target.id==='feedbackVolume'){updatePreference('volume',event.target.value);$('#feedbackVolumeValue').textContent=event.target.value+'%';}});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('.map-pin-v2')){e.preventDefault();selectedCountry=e.target.dataset.id;render();}});
@@ -276,14 +388,24 @@ modal.addEventListener('cancel',e=>{if(revealSession||cinematic)e.preventDefault
 modal.addEventListener('close',()=>{if(cinematic){finishHighlights();return;}const svg=document.querySelector('#strategicMap');if(svg)paintSignals(svg);});
 bindBackdropDismiss(modal,()=>{if(!revealSession&&!cinematic)modal.close();});
 async function loadMap(){try{const r=await fetch('./assets/world.json');if(!r.ok)throw Error('Carte indisponible.');world=await r.json();render();}catch(e){toast('Fond cartographique indisponible. Utilisez le sélecteur de pays.');}}
-function registerTools(){const context=document.modelContext;if(!context?.registerTool)return;const lifecycle=new AbortController();const common={type:'object',properties:{},additionalProperties:false};const entries=[{name:'read_sigma_multiplayer',title:'Lire le salon Sigma',description:'Lire les places, connexions et états prêts ; uniquement les renseignements du pays courant.',inputSchema:common,annotations:{readOnlyHint:true},execute(){return multiplayer.snapshot||{active:multiplayer.active,status:multiplayer.status};}},{name:'open_sigma_multiplayer',title:'Ouvrir une session multijoueur Sigma',description:'Créer un salon avec sauvegarde chez l’hôte, rejoindre une invitation ou reprendre la sauvegarde multijoueur locale. Ne démarre pas la campagne.',inputSchema:{type:'object',properties:{mode:{type:'string',enum:['host','join','resume']},name:{type:'string'},country:{type:'string',enum:COUNTRIES.filter(c=>c.power).map(c=>c.id)},invitation:{type:'string'}},required:['mode'],additionalProperties:false},annotations:{readOnlyHint:false},async execute(input){if(isTutorial(state))throw Error('Quittez la formation depuis le menu avant d’ouvrir un salon.');if(multiplayer.active)throw Error('Une session est déjà ouverte.');if(input.mode==='host'){if(multiplayer.hasSave())throw Error('Une sauvegarde multijoueur existe : reprenez-la ou confirmez son remplacement dans le menu.');await multiplayer.create(input.name||'Joueur',input.country||'FR');}else if(input.mode==='resume')await multiplayer.resume();else if(input.mode==='join')await multiplayer.connect(null,multiplayer.parseInvitation(input.invitation),input.name||'Joueur');else throw Error('Mode invalide.');return {active:multiplayer.active,status:multiplayer.status};}},{name:'start_sigma_multiplayer',title:'Lancer la campagne multijoueur',description:'L’hôte lance le salon avec au moins deux humains connectés ayant tous confirmé leur équipe ; les places restantes deviennent des PNJ.',inputSchema:common,annotations:{readOnlyHint:false},async execute(){return await multiplayer.command('start');}},{name:'read_sigma_campaign',title:'Lire la campagne Sigma',description:'Lire le tour, les agents et les renseignements connus du joueur. Ne révèle pas les secrets adverses.',inputSchema:common,annotations:{readOnlyHint:true},execute(){if(!state)throw Error('Aucune campagne commencée.');return E.publicState(state);}},{name:'stage_sigma_operation',title:'Affecter une opération',description:'Affecter gratuitement un ordre ; renfort facultatif de 6 crédits pour +10 points. Ne termine pas le tour.',inputSchema:{type:'object',properties:{agentId:{type:'string'},action:{type:'string',enum:Object.keys(ACTIONS).filter(id=>!ACTIONS[id].disabled)},target:{type:'string'},useCredits:{type:'boolean'}},required:['agentId','action'],additionalProperties:false},annotations:{readOnlyHint:false},async execute(input){if(!state||typeof input?.agentId!=='string'||!ACTIONS[input.action]||state.agents.find(a=>a.id===input.agentId)?.faction!==state.player)throw Error('Agent ou action invalide.');if(multiplayer.active){await multiplayer.command('assign',{id:input.agentId,type:input.action,target:input.target||null,useCredits:!!input.useCredits});return E.publicState(state);}E.assign(state,input.agentId,input.action,input.target||null,!!input.useCredits);stageSignal(state.agents.find(a=>a.id===input.agentId));persist();render();clearTimeout(toast.timer);orderFeedback(state,input.agentId);return E.publicState(state);}},{name:'advance_sigma_turn',title:'Terminer le tour',description:'En solo, termine le tour. En multijoueur, déclare le pays prêt ; la journée avance uniquement quand tous les humains sont prêts. Des agents peuvent rester inactifs.',inputSchema:common,annotations:{readOnlyHint:false},async execute(){if(!state)throw Error('Aucune campagne commencée.');if(isTutorial(state)){finishTurn();return E.publicState(state);}if(multiplayer.active){await multiplayer.command('ready',{ready:true});return E.publicState(state);}const old=state.logId,turn=state.turn;clearSignals();E.advance(state);persist();render();report(old);turnSignals(state,turn);return E.publicState(state);}}];for(const tool of entries){try{Promise.resolve(context.registerTool(tool,{signal:lifecycle.signal})).catch(()=>{});}catch(e){}}window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});}
-applyPreferences();initMusic();render();loadMap();registerTools();queueMicrotask(async()=>{try{if(!await multiplayer.restoreSession()&&multiplayer.invitation())multiplayer.entry();}catch(e){toast(e.message);multiplayer.entry('host');}});
+function registerTools(){const context=document.modelContext;if(!context?.registerTool)return;const lifecycle=new AbortController();const common={type:'object',properties:{},additionalProperties:false};const entries=[{name:'read_shadow_mandate_multiplayer',title:'Lire le salon Shadow Mandate',description:'Lire les places, connexions et états prêts ; uniquement les renseignements du pays courant.',inputSchema:common,annotations:{readOnlyHint:true},execute(){return multiplayer.snapshot||{active:multiplayer.active,status:multiplayer.status};}},{name:'open_shadow_mandate_multiplayer',title:'Ouvrir une session multijoueur Shadow Mandate',description:'Créer un salon avec sauvegarde chez l’hôte, rejoindre une invitation ou reprendre la sauvegarde multijoueur locale. Ne démarre pas la campagne.',inputSchema:{type:'object',properties:{mode:{type:'string',enum:['host','join','resume']},name:{type:'string'},country:{type:'string',enum:COUNTRIES.filter(c=>c.power).map(c=>c.id)},invitation:{type:'string'}},required:['mode'],additionalProperties:false},annotations:{readOnlyHint:false},async execute(input){if(isTutorial(state))throw Error('Quittez la formation depuis le menu avant d’ouvrir un salon.');if(multiplayer.active)throw Error('Une session est déjà ouverte.');if(input.mode==='host'){if(multiplayer.hasSave())throw Error('Une sauvegarde multijoueur existe : reprenez-la ou confirmez son remplacement dans le menu.');await multiplayer.create(input.name||'Joueur',input.country||'FR');}else if(input.mode==='resume')await multiplayer.resume();else if(input.mode==='join')await multiplayer.connect(null,multiplayer.parseInvitation(input.invitation),input.name||'Joueur');else throw Error('Mode invalide.');return {active:multiplayer.active,status:multiplayer.status};}},{name:'start_shadow_mandate_multiplayer',title:'Lancer la campagne multijoueur',description:'L’hôte lance le salon avec au moins deux humains connectés ayant tous confirmé leur équipe ; les places restantes deviennent des PNJ.',inputSchema:common,annotations:{readOnlyHint:false},async execute(){return await multiplayer.command('start');}},{name:'read_shadow_mandate_campaign',title:'Lire la campagne Shadow Mandate',description:'Lire le tour, les agents et les renseignements connus du joueur. Ne révèle pas les secrets adverses.',inputSchema:common,annotations:{readOnlyHint:true},execute(){if(!state)throw Error('Aucune campagne commencée.');return E.publicState(state);}},{name:'stage_shadow_mandate_operation',title:'Affecter une opération',description:'Affecter gratuitement un ordre ; renfort facultatif de 6 crédits pour +10 points. Ne termine pas le tour.',inputSchema:{type:'object',properties:{agentId:{type:'string'},action:{type:'string',enum:Object.keys(ACTIONS).filter(id=>!ACTIONS[id].disabled)},target:{type:'string'},useCredits:{type:'boolean'}},required:['agentId','action'],additionalProperties:false},annotations:{readOnlyHint:false},async execute(input){if(!state||typeof input?.agentId!=='string'||!ACTIONS[input.action]||state.agents.find(a=>a.id===input.agentId)?.faction!==state.player)throw Error('Agent ou action invalide.');if(multiplayer.active){await multiplayer.command('assign',{id:input.agentId,type:input.action,target:input.target||null,useCredits:!!input.useCredits});return E.publicState(state);}E.assign(state,input.agentId,input.action,input.target||null,!!input.useCredits);stageSignal(state.agents.find(a=>a.id===input.agentId));persist();render();clearTimeout(toast.timer);orderFeedback(state,input.agentId);return E.publicState(state);}},{name:'advance_shadow_mandate_turn',title:'Terminer le tour',description:'En solo, termine le tour. En multijoueur, déclare le pays prêt ; la journée avance uniquement quand tous les humains sont prêts. Des agents peuvent rester inactifs.',inputSchema:common,annotations:{readOnlyHint:false},async execute(){if(!state)throw Error('Aucune campagne commencée.');if(isTutorial(state)){finishTurn();return E.publicState(state);}if(multiplayer.active){await multiplayer.command('ready',{ready:true});return E.publicState(state);}const old=state.logId,turn=state.turn;clearSignals();E.advance(state);persist();render();report(old);turnSignals(state,turn);return E.publicState(state);}}];for(const tool of entries){try{Promise.resolve(context.registerTool(tool,{signal:lifecycle.signal})).catch(()=>{});}catch(e){}}window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});}
+const pageTitle=document.title,pageDescription=$('meta[name="description"]'),description=pageDescription.content;
+function applyLanguage(){
+ document.documentElement.lang=gameLanguage();
+ document.title=translateText(pageTitle);
+ pageDescription.content=translateText(description);
+}
+document.addEventListener('change',event=>{
+ if(event.target.id!=='gameLanguage'||!setGameLanguage(event.target.value))return;
+ applyLanguage();render();help();$('#gameLanguage')?.focus();
+});
+applyLanguage();applyPreferences();initMusic();render();loadMap();registerTools();queueMicrotask(async()=>{try{if(!await multiplayer.restoreSession()&&multiplayer.invitation())multiplayer.entry();}catch(e){toast(e.message);multiplayer.entry('host');}});
 
-app.addEventListener('dragstart',event=>{const card=event.target.closest('[data-tech-drag]');if(!card||card.draggable===false||state?.ended||!event.dataTransfer)return;event.dataTransfer.setData('text/x-sigma-tech',card.dataset.techDrag);event.dataTransfer.effectAllowed='copy';});
-app.addEventListener('dragover',event=>{const slot=event.target.closest('[data-tech-drop]');if(!slot||state?.ended||!event.dataTransfer?.types.includes('text/x-sigma-tech'))return;event.preventDefault();slot.classList.add('drag-over');});
+app.addEventListener('dragstart',event=>{const card=event.target.closest('[data-tech-drag]');if(!card||card.draggable===false||state?.ended||!event.dataTransfer)return;event.dataTransfer.setData('text/x-shadow-mandate-tech',card.dataset.techDrag);event.dataTransfer.effectAllowed='copy';});
+app.addEventListener('dragover',event=>{const slot=event.target.closest('[data-tech-drop]');if(!slot||state?.ended||!event.dataTransfer?.types.includes('text/x-shadow-mandate-tech'))return;event.preventDefault();slot.classList.add('drag-over');});
 app.addEventListener('dragleave',event=>{const slot=event.target.closest('[data-tech-drop]');if(slot&&!slot.contains(event.relatedTarget))slot.classList.remove('drag-over');});
 app.addEventListener('dragend',()=>app.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over')));
-app.addEventListener('drop',event=>{const slot=event.target.closest('[data-tech-drop]');if(!slot||state?.ended)return;event.preventDefault();slot.classList.remove('drag-over');const type=event.dataTransfer?.getData('text/x-sigma-tech');if(!['ai','relay','logistics'].includes(type))return;const confirm=app.querySelector('.console-direct-card [data-cmd="tech"][data-id="'+type+'"]');if(confirm&&!confirm.disabled)confirm.click();});
+app.addEventListener('drop',event=>{const slot=event.target.closest('[data-tech-drop]');if(!slot||state?.ended)return;event.preventDefault();slot.classList.remove('drag-over');const type=event.dataTransfer?.getData('text/x-shadow-mandate-tech');if(!['ai','relay','logistics'].includes(type))return;const confirm=app.querySelector('[data-tech-drag="'+type+'"] [data-cmd="tech"]');if(confirm&&!confirm.disabled)confirm.click();});
 
 setInterval(()=>{if(state)document.querySelectorAll('[data-campaign-clock]').forEach(el=>{el.textContent=formatDuration(elapsedMs(state));});},1000);
 
@@ -292,45 +414,31 @@ document.addEventListener('click',event=>{
  const wikiTab=event.target.closest('[data-wiki-tab]');if(wikiTab){wikiCategory=wikiTab.dataset.wikiTab;wikiQuery='';render();document.getElementById('wiki-search')?.focus();return;}
  const report=event.target.closest('[data-report-tab]');if(report){reportTab=report.dataset.reportTab;document.querySelectorAll('[data-report-panel]').forEach(el=>el.hidden=el.dataset.reportPanel!==reportTab);document.querySelectorAll('[data-report-tab]').forEach(el=>el.setAttribute('aria-pressed',String(el===report)));}
 });
-document.addEventListener('input',event=>{if(event.target.id==='wiki-search'){wikiQuery=event.target.value;document.getElementById('wiki-results').innerHTML=wikiResults(wikiCategory,wikiQuery);}});
+document.addEventListener('input',event=>{if(event.target.id==='wiki-search'){wikiQuery=event.target.value;setLocalizedHTML(document.getElementById('wiki-results'),wikiResults(wikiCategory,wikiQuery));}});
 document.addEventListener('change',event=>{
-if(event.target.id==='report-country'){reportCountry=event.target.value;document.getElementById('campaign-report').innerHTML=campaignSummary(state,{country:reportCountry,tab:reportTab});}});
+if(event.target.id==='report-country'){reportCountry=event.target.value;setLocalizedHTML(document.getElementById('campaign-report'),campaignSummary(state,{country:reportCountry,tab:reportTab}));}});
 
 // Access the manual without changing campaign state or issuing an order.
 document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.code==='Space'&&!e.repeat&&!revealSession&&!cinematic&&state&&!setup&&!menuOpen&&!(multiplayer.active&&multiplayer.snapshot?.phase!=='playing')){e.preventDefault();modal.close();view='wiki';render();}});
 document.addEventListener('change',e=>{const id=e.target.dataset.timelineToggle;if(id)document.querySelectorAll('[data-timeline-team]').forEach(row=>{if(row.dataset.timelineTeam===id)row.hidden=!e.target.checked;});});
 
 document.addEventListener('change',event=>{
-if(event.target.id!=='governmentCountry'||!state)return;const o=E.governmentOptions(state,'diplomacy',event.target.value),card=document.querySelector('.government-diplomacy');if(!card)return;card.querySelector('[data-government-cost]').textContent=o.cost??'—';card.querySelector('[data-cmd="government-favor"]').disabled=!!o.error;card.querySelector('.government-card-action>small').textContent=o.error||'Immédiat · aucun agent mobilisé';});
+if(event.target.id!=='governmentCountry'||!state)return;const o=E.governmentOptions(state,'diplomacy',event.target.value),card=document.querySelector('.government-diplomacy');if(!card)return;card.querySelector('[data-government-cost]').textContent=o.cost??'—';card.querySelector('[data-cmd="government-favor"]').disabled=!!o.error;card.querySelector('.government-card-action>small').textContent=translateText(o.error||'');});
 
-document.addEventListener('click',event=>{const mark=event.target.closest('[data-timeline-detail]');if(mark){const detail=document.getElementById('timeline-detail');if(detail){detail.textContent=mark.dataset.timelineLabel+' — '+mark.dataset.timelineDetail;document.querySelectorAll('.timeline-mark').forEach(b=>b.setAttribute('aria-pressed',String(b===mark)));}}});
+document.addEventListener('click',event=>{const mark=event.target.closest('[data-timeline-detail]');if(mark){const detail=document.getElementById('timeline-detail');if(detail){detail.textContent=translateText(mark.dataset.timelineLabel)+' — '+translateText(mark.dataset.timelineDetail);document.querySelectorAll('.timeline-mark').forEach(b=>b.setAttribute('aria-pressed',String(b===mark)));}}});
 
 document.addEventListener('click',event=>{const button=event.target.closest('[data-report-agent]');if(button){document.querySelectorAll('[data-agent-report]').forEach(card=>card.hidden=card.dataset.agentReport!==button.dataset.reportAgent);document.querySelectorAll('[data-report-agent]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));}});
-
-// Optional interface mod: all orders use the normal validated solo/host path.
-initBureau({
- state:()=>state,
- exit:()=>{closeBureau();view='world';render();},
- ready:()=>bureauEnabled()&&!!state&&!menuOpen&&!setup&&view==='bureau'&&!(multiplayer.active&&multiplayer.snapshot?.phase!=='playing'),
- observer:()=>!!(multiplayer.active&&multiplayer.observer),
- readOnlyReason:()=>multiplayer.active?(multiplayer.observer?'Observateur : consultation uniquement':multiplayer.me?.ready?'Tour confirmé : modifiez vos ordres pour agir':multiplayer.pending?'Confirmation de l’hôte en attente':multiplayer.status?'Connexion au salon indisponible':''):'',
- notify:toast,
- async assign(p){
-  if(!bureauEnabled()||!state)throw Error('Le Bureau des enquêtes est désactivé.');
-  if(multiplayer.active){await multiplayer.command('assign',p);if(p.type==='drone')selectTechnology(null);render();return;}
-  E.assign(state,p.id,p.type,p.target||null,p.useCredits);
-  if(p.type==='drone')selectTechnology(null);
-  stageSignal(state.agents.find(a=>a.id===p.id));persist();render();
- }
-});
 
 workspace=createGameWorkspace({
  state:()=>state,notify:toast,openAgent,selectCountry:id=>{selectedAgent=null;selectedCountry=id;camera.panelOpen=true;view='world';focusCountry(camera,id);render();},
  active:()=>!!state&&!setup&&!menuOpen&&!state.ended&&(!multiplayer.active||multiplayer.snapshot?.phase==='playing'),
  context:()=>inquiryRoom()+':'+state.seed+':'+state.player,
  deploy:id=>deploy('travel',id),
- travel:id=>{const markup=agentTravelPickerMarkup(state,id);if(markup)showModal(markup);},
- showWorld:()=>{if(view!=='world'){closeBureau();view='world';render();}},
+ travel:id=>{
+  const choice=agentTravelDestinations(state,id).find(row=>!row.travel.error||!row.sneak.error);
+  if(choice)openOrder(id,choice.travel.error?'sneak':'travel',choice.country.id);
+ },
+ showWorld:()=>{if(view!=='world'){view='world';render();}},
  readOnlyReason:()=>!state||setup||menuOpen?'Campagne inactive':state.ended?'Campagne terminée':multiplayer.active?(multiplayer.observer?'Observateur : consultation uniquement':multiplayer.me?.ready?'Tour confirmé : modifiez vos ordres pour agir':multiplayer.pending?'Confirmation de l’hôte en attente':multiplayer.status?'Connexion au salon indisponible':''):'',
  async assign(p){
   if(!state||state.agents.find(a=>a.id===p.id)?.faction!==state.player)throw Error('Agent indisponible.');

@@ -54,7 +54,15 @@ test('Legacy paid tasks, reserves and chance survive migration; only an unstarte
  const {s,a,f}=fixture('authorize');delete s.economyRules;f.budget=37;a.task={type:'authorize',target:null,remaining:1,total:1,cost:3,chance:73,fatigue:8,queued:true,origin:'TR',bonusCredits:2};const t=structuredClone(a.task),loaded=E.validateSave(structuredClone(s));assert.equal(loaded.factions.FR.budget,37);assert.deepEqual(loaded.agents[0].task,{...t,fatigue:E.missionFatigue(a,t.type),energyRules:2});assert.deepEqual(E.validateSave(structuredClone(loaded)),loaded);E.cancel(loaded,a.id);assert.equal(loaded.factions.FR.budget,39);E.cancel(loaded,a.id);assert.equal(loaded.factions.FR.budget,39);tick(loaded);assert.equal(loaded.factions.FR.budget,39);
 });
 test('Original solo save is preserved byte-for-byte once before migration and never overwritten',()=>{
- const s=fresh();delete s.economyRules;const raw=JSON.stringify(s),m=new Map([[CAMPAIGN_KEY,raw]]),storage={getItem:k=>m.get(k)||null,setItem:(k,v)=>m.set(k,v)};
- const loaded=readCampaign(storage,E.validateSave);assert.equal(loaded.economyRules,1);assert.equal(m.get(ECONOMY_BACKUP_KEY),raw);storage.setItem(CAMPAIGN_KEY,JSON.stringify(loaded));readCampaign(storage,E.validateSave);assert.equal(m.get(ECONOMY_BACKUP_KEY),raw);
+ const legacyKey='sigma2040-campaign-v1';
+ const s=fresh();delete s.economyRules;
+ const raw=JSON.stringify(s),m=new Map([[legacyKey,raw]]),storage={getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,v)};
+ const loaded=readCampaign(storage,E.validateSave);
+ assert.equal(loaded.economyRules,1);
+ assert.equal(m.get(ECONOMY_BACKUP_KEY),raw);
+ storage.setItem(CAMPAIGN_KEY,JSON.stringify({...loaded,turn:2}));
+ assert.equal(readCampaign(storage,E.validateSave).turn,2);
+ assert.equal(m.get(legacyKey),raw);
+ assert.equal(m.get(ECONOMY_BACKUP_KEY),raw);
  assert.throws(()=>readCampaign({getItem:k=>k===CAMPAIGN_KEY?raw:null,setItem:()=>{throw Error('Full');}},E.validateSave),/Full/);
 });

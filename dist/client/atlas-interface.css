@@ -1,0 +1,278 @@
+/* Atlas surfaces for menus, campaign panels and mission windows. */
+:root {
+ --atlas-ink: #f1f4ed;
+ --atlas-muted: #c0ced0;
+ --atlas-accent: #bdd89b;
+ --atlas-accent-ink: #172319;
+ --atlas-edge: #536a74;
+ --atlas-line: #536870;
+ --atlas-radius: 14px;
+ --atlas-control-radius: 9px;
+ --atlas-grain: url("data:image/png;base64,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");
+ --atlas-chrome: var(--atlas-grain), linear-gradient(120deg,#243842,#131f29 79%);
+ --atlas-surface: var(--atlas-grain), radial-gradient(ellipse at 8% 0%,#ecf9dc23,transparent 59%), linear-gradient(145deg,#243943,#14232c);
+ --atlas-card: linear-gradient(145deg,#233640,#192831);
+ --atlas-control: linear-gradient(180deg,#344a54,#263942);
+ --atlas-primary: linear-gradient(180deg,#d0e4b2,var(--atlas-accent));
+ --atlas-selected: linear-gradient(110deg,#455e54,#293f46 78%);
+ --atlas-shadow: 0 14px 35px #03080c64,inset 0 1px #ecf9dc1c;
+ --atlas-display: 'Barlow Condensed','Arial Narrow',sans-serif;
+}
+
+/* Keep command colors consistent across the menu, campaign and dialogs. */
+#app .btn,#modal .btn,dialog.workspace-window .btn {
+ border-radius:var(--atlas-control-radius);
+}
+#app .btn.primary:not(:disabled),#modal .btn.primary:not(:disabled),
+dialog.workspace-window .btn.primary:not(:disabled) {
+ background:var(--atlas-primary);border-color:var(--atlas-accent);color:var(--atlas-accent-ink);
+ box-shadow:inset 0 1px #f7f8e653,0 2px 5px #080d1538;text-shadow:none;
+}
+#app .btn.primary:not(:disabled):hover,#modal .btn.primary:not(:disabled):hover,
+dialog.workspace-window .btn.primary:not(:disabled):hover {
+ background:linear-gradient(180deg,#e3efcb,#c9e3aa);border-color:#deedc5;
+}
+#app .btn.primary:disabled,#modal .btn.primary:disabled,dialog.workspace-window .btn.primary:disabled {
+ background:#273942;border-color:#52636c;color:#b4c1c5;box-shadow:none;text-shadow:none;
+}
+#app .btn:focus-visible,#modal .btn:focus-visible,dialog.workspace-window .btn:focus-visible,
+.immersive-deck .deck-nav .deck-tab:focus-visible {
+ outline:2px solid #d4e9ae;outline-offset:2px;
+}
+.deck-system>.btn:not(.primary),#modal>.modal-close,.workspace-window .workspace-close,
+#app .command-back.btn,.settings-content select,dialog.workspace-window select {
+ background:var(--atlas-control);border-color:#607680;color:var(--atlas-ink);
+ border-radius:var(--atlas-control-radius);
+}
+.deck-system>.btn:not(.primary):hover,#modal>.modal-close:hover,.workspace-window .workspace-close:hover,
+#app .command-back.btn:hover {
+ background:linear-gradient(180deg,#45606a,#2d424b);border-color:#a0b6b6;
+}
+
+/* Landing screen and game setup. */
+.main-menu {
+ background:radial-gradient(ellipse at 10% 12%,#32443b,#121c26 42%,#070f19 76%);
+ color:var(--atlas-ink);
+}
+.main-menu .menu-panel {
+ width:min(480px,calc(100% - 56px));padding-block:12px;
+}
+.main-menu .menu-brand .brand {
+ align-items:flex-start;gap:clamp(11px,1.7vw,23px);
+ font:700 clamp(49px,min(7.5vw,11vh),105px)/.9 var(--atlas-display);
+ letter-spacing:-.015em;white-space:normal;color:var(--atlas-ink);text-shadow:0 3px 16px #03080cb3;
+}
+.main-menu .menu-brand .brand-wordmark {max-inline-size:5em;line-height:.88;}
+.main-menu .menu-brand .brand-wordmark>span {
+ color:#d5e0d4;font-size:.34em;letter-spacing:.21em;margin-top:.42em;
+}
+.main-menu .menu-brand .brand>svg {width:clamp(30px,4vw,50px);height:auto;color:#c4d6be;}
+.main-menu .menu-eyebrow {letter-spacing:.17em;color:#b9ccc6;font-family:Barlow,sans-serif;font-weight:700;}
+.main-menu .menu-panel h1 {font:600 clamp(17px,2vw,23px)/1.25 Barlow,sans-serif;margin-bottom:13px;}
+.main-menu .menu-panel nav {gap:5px;max-width:370px;}
+#app .main-menu nav .btn:not(.primary) {
+ min-height:37px;padding:7px 12px;text-align:left;color:var(--atlas-ink);text-shadow:none;
+ background:#23333bb0;border-color:#536a746d;box-shadow:inset 0 1px #f0f9ef0e;
+}
+#app .main-menu nav .btn:not(.primary):hover {background:var(--atlas-control);border-color:#869e9f;}
+#app .main-menu nav .btn.menu-help {
+ background:#101f258f;color:#d0dfdc;margin-top:0;box-shadow:none;
+}
+#app .main-menu nav .patch-unread {color:#ffddb6;}
+#app .main-menu nav .continue-button {padding:10px 13px;min-height:51px;gap:2px;}
+.main-menu .continue-details {color:inherit;opacity:.9;}
+.main-menu .menu-build,.main-menu footer {color:#a9bcbf;}
+
+.command-menu,.setup-shell {
+ background:radial-gradient(ellipse at 72% -12%,#30434a,#18242f 46%,#0f1721 81%);
+ color:var(--atlas-ink);
+}
+.command-menu-header {border-color:var(--atlas-line);}
+.command-menu-header .brand,.setup-shell .brand {color:var(--atlas-ink);}
+.new-game-hero,.mp-entry-card,.mp-entry-saves,.mp-lobby-header,
+.setup-shell :is(.setup-selection,.setup-country,.draft-summary,.draft-country) {
+ border-color:var(--atlas-edge);border-radius:var(--atlas-radius);background:var(--atlas-surface);
+ box-shadow:var(--atlas-shadow);
+}
+.new-game-sky::after {
+ background:var(--atlas-grain),linear-gradient(90deg,#1e3038f5 4%,#1a2a33d9 42%,#1a27394a 76%,transparent),
+  linear-gradient(0deg,#0f1c277d,transparent 35%);
+}
+#app .new-game-content .game-choice.btn,#app .mp-entry-tabs .btn {
+ background:var(--atlas-card);color:var(--atlas-ink);border-color:var(--atlas-edge);
+}
+#app .new-game-content .game-choice.btn:hover,#app .mp-entry-tabs .btn:hover {background:var(--atlas-control);border-color:#95aaa6;}
+#app .new-game-content .game-choice-featured.btn {
+ background:var(--atlas-primary);color:var(--atlas-accent-ink);border-color:var(--atlas-accent);
+ box-shadow:inset 0 1px #ffffff66,0 4px 12px #080d154a;
+}
+#app .new-game-content .game-choice-featured.btn:hover {background:#dbecc1;border-color:#e6f3d1;}
+.game-choice-icon {background:#314651;color:#d4e2de;border-color:#607680;border-radius:8px;}
+.game-choice-arrow {color:#c3d6ce;}
+.game-choice-copy small {color:var(--atlas-muted);}
+.game-choice-featured .game-choice-icon {background:#3b592a26;color:#25412a;border-color:#546b4777;}
+.game-choice-featured .game-choice-arrow,.game-choice-featured .game-choice-copy small {color:#2d4b31;}
+.new-game-utilities {border-color:#536870;}
+#app .mp-entry-tabs [aria-pressed="true"] {background:var(--atlas-selected);border-bottom-color:var(--atlas-accent);color:var(--atlas-ink);}
+
+/* Campaign chrome and navigation. Map projection and artwork use their existing rules. */
+.immersive-deck :is(.deck-header,.deck-nav,.map-dossier,.field-team,.intel-rail) {
+ border-color:var(--atlas-edge);border-radius:var(--atlas-radius);background:var(--atlas-chrome);
+ color:var(--atlas-ink);box-shadow:var(--atlas-shadow);
+}
+.immersive-deck .deck-header .brand {
+ font-family:var(--atlas-display);font-weight:700;text-transform:uppercase;color:var(--atlas-ink);
+}
+.immersive-deck .deck-header .brand-wordmark>span {color:#d5e0d4;}
+.immersive-deck .deck-nav {
+ gap:4px;padding:7px;scrollbar-width:thin;scrollbar-color:#4e666e transparent;
+}
+.immersive-deck .deck-nav .deck-tab {
+ color:#d9e6e6;background:none;border:1px solid transparent;border-radius:var(--atlas-control-radius);
+ box-shadow:none;text-shadow:none;
+}
+.immersive-deck .deck-tab.nav-available::before {content:none;}
+.immersive-deck .deck-nav .deck-tab:hover {
+ background:var(--atlas-control);border-color:#5e7780;color:#f6f8ef;transform:none;
+}
+.immersive-deck .deck-nav .deck-tab.active {
+ background:var(--atlas-selected);border-color:#91ab81;color:#f6f8ef;
+ box-shadow:inset 3px 0 var(--atlas-accent),0 3px 7px #0b131b5c;
+}
+.immersive-deck .deck-nav .deck-tab>.icon {
+ display:block;width:25px;height:25px;padding:4px;flex:none;
+ border-radius:7px;background:linear-gradient(150deg,#354b57,#23333e);color:#c6d7dc;filter:none;
+ box-shadow:inset 0 1px #edf6f31a;
+}
+.immersive-deck .deck-nav .deck-tab.active>.icon {background:var(--atlas-accent);color:var(--atlas-accent-ink);}
+.immersive-deck .deck-nav .deck-tab.nav-threats:not(.active)>.icon {color:#ffd5b4;}
+.immersive-deck .deck-nav .deck-tab .nav-availability-badge {
+ min-width:17px;width:auto;height:17px;padding:0 4px;border-radius:20px;
+ background:#405862;color:#f0f6ee;font:700 11px/1 Barlow,sans-serif;
+ font-variant-numeric:tabular-nums;box-shadow:none;
+}
+.immersive-deck .deck-nav .deck-tab.nav-threats .nav-availability-badge {background:#724c39;color:#ffe5d0;}
+.immersive-deck .deck-nav .deck-tab.nav-favors .nav-availability-badge {background:#605132;color:#ffe7b6;}
+.immersive-deck .deck-nav .deck-tab.nav-inquiry .nav-availability-badge {background:#4b4964;color:#f0e6ff;}
+.immersive-deck .deck-nav .deck-tab.nav-modules .nav-availability-badge {background:#365b53;color:#d7f2e5;}
+@media (min-width:761px) {
+ .immersive-deck {--atlas-rail-width:168px;--atlas-rail-end:calc(var(--atlas-rail-width) + 18px);}
+ .immersive-deck .deck-nav {width:var(--atlas-rail-width);left:8px;}
+ .immersive-deck .deck-nav .deck-tab {
+  display:grid;grid-template-columns:25px minmax(0,1fr);align-content:center;
+  gap:6px;min-height:41px;padding:5px 7px;text-align:left;
+ }
+ .immersive-deck .deck-nav .deck-tab:has(.nav-availability-badge) {grid-template-columns:25px minmax(0,1fr) auto;}
+ .immersive-deck .deck-nav .deck-tab>.icon {grid-area:1 / 1;}
+ .immersive-deck .deck-nav .deck-tab>span {grid-area:1 / 2;min-width:0;white-space:nowrap;font:700 13px/1.15 Barlow,sans-serif;}
+ .immersive-deck .deck-nav .deck-tab .nav-availability-badge {grid-area:1 / 3;position:static;}
+ .immersive-deck .deck-nav .deck-tab[data-id="government"] {margin-top:8px;}
+ .immersive-deck .deck-nav .deck-tab[data-id="government"]::after {
+  content:'';display:block;position:absolute;inset:-7px 0 auto;height:1px;
+  border:0;background:#849a9e45;box-shadow:none;pointer-events:none;
+ }
+ .immersive-deck .deck-main:not(.view-world) {left:var(--atlas-rail-end);}
+ .immersive-deck :is(.map-bottom,.objective-strip,.intel-rail,.feedback-notices,.pending-communication,.tutorial-guide) {left:var(--atlas-rail-end);}
+ .immersive-deck .field-team {
+  left:max(var(--atlas-rail-end),calc((100vw - 960px) / 2));right:auto;
+  width:min(960px,calc(100vw - var(--atlas-rail-end) - 12px));transform:none;
+ }
+}
+@media (min-width:761px) and (max-height:680px) {
+ .immersive-deck .deck-nav .deck-tab {min-height:37px;padding-block:3px;}
+ .immersive-deck .deck-nav .deck-tab[data-id="government"] {margin-top:6px;}
+ .immersive-deck .deck-nav .deck-tab[data-id="government"]::after {top:-6px;}
+}
+@media (max-width:760px) {
+ .immersive-deck .deck-nav {gap:2px;padding:3px;}
+ .immersive-deck .deck-nav .deck-tab {min-height:42px;gap:3px;padding:3px 1px;}
+ .immersive-deck .deck-nav .deck-tab>.icon {width:18px;height:18px;padding:2px;border-radius:4px;}
+ .immersive-deck .deck-nav .deck-tab>span {font:600 10px/1.08 Barlow,sans-serif;overflow-wrap:anywhere;}
+ .immersive-deck .deck-nav .deck-tab .nav-availability-badge {min-width:13px;height:13px;padding:0 3px;font-size:9px;top:2px;right:2px;}
+ .main-menu .menu-panel {width:calc(100% - 48px);}
+}
+
+.immersive-deck .map-dossier>summary {border-radius:var(--atlas-radius) var(--atlas-radius) 0 0;}
+.immersive-deck .map-dossier .country-dossier {border-color:var(--atlas-line);}
+.immersive-deck .field-team .agent-card {
+ background:var(--atlas-card);border-radius:var(--atlas-control-radius);
+}
+.immersive-deck .field-team .agent-card[aria-pressed="true"] {
+ background:var(--atlas-selected);border-color:#8ca57f;
+}
+.immersive-deck .map-layers button,.immersive-deck .objective-strip {
+ background:var(--atlas-chrome);border-radius:var(--atlas-control-radius);
+}
+
+/* Activity panels, dossiers and windows. */
+.immersive-deck .deck-main:not(.view-world),#modal,#modal[class],dialog.workspace-window {
+ background:var(--atlas-surface);color:var(--atlas-ink);border-color:var(--atlas-edge);
+ border-radius:var(--atlas-radius);box-shadow:var(--atlas-shadow);
+}
+.workspace-window .workspace-titlebar,#modal.order-modal .express-order-heading {
+ background:var(--atlas-chrome);border-color:var(--atlas-line);color:var(--atlas-ink);
+}
+.workspace-window .inquiry-footer,.workspace-window .country-order-footer,#modal.order-modal .express-order-footer {
+ background:linear-gradient(115deg,#213139,#14222b);border-color:var(--atlas-line);
+}
+#modal.order-modal {width:min(747px,calc(100vw - 24px));}
+#modal.order-modal .express-order-estimate strong {color:#d6eaba;}
+#modal.order-modal .order-form .mission-boost-toggle,
+.workspace-window .mission-boost-toggle.btn {
+ background:var(--atlas-card);border-color:#607b85;color:var(--atlas-ink);border-radius:var(--atlas-control-radius);
+}
+#modal.order-modal .order-form .mission-boost-toggle:has(:checked),
+.workspace-window .mission-boost-toggle.btn[aria-pressed="true"] {
+ background:var(--atlas-selected);border-color:#9bb38c;
+}
+#modal.order-modal .order-form .mission-boost-toggle:has(:disabled),
+.workspace-window .mission-boost-toggle.btn:disabled {background:#26343c;border-color:#506169;color:#bac6c9;}
+#modal.order-modal .order-form .mission-boost-toggle input,.settings-content input {accent-color:var(--atlas-accent);}
+.mission-briefing,.workspace-window .inquiry-action-context>.mission-briefing-content {
+ background:var(--atlas-card);border-color:var(--atlas-line);border-radius:var(--atlas-control-radius);
+}
+.mission-briefing>summary {color:#d9e8df;}
+#modal.order-modal .mission-quick-metrics .briefing-metric,dialog.workspace-window .mission-quick-metrics .briefing-metric {
+ background:var(--atlas-card);border-color:#536b73;border-radius:var(--atlas-control-radius);
+}
+.map-dossier .country-operation-button.btn:not(:disabled),
+.country-operations .country-operation-button.btn:not(:disabled) {
+ background:var(--atlas-control);border-color:#607984;color:#edf5f0;
+}
+.country-operations .country-operation-button.btn[aria-pressed="true"]:not(:disabled),
+.country-operation-choice.btn[aria-pressed="true"]:not(:disabled),
+.country-inquiry :is(.inquiry-step,.inquiry-action,.inquiry-agent).btn[aria-pressed="true"] {
+ background:var(--atlas-selected);border-color:#aec296;color:#f0f6e9;
+}
+.map-dossier .country-operation-button.btn:not(:disabled):hover,
+.country-operations .country-operation-button.btn:not(:disabled):hover {border-color:#b4c8b9;filter:brightness(1.08);}
+.case-inquiry .dossier-sheet,.case-overview-card .dossier-sheet {
+ background:var(--atlas-grain),repeating-linear-gradient(0deg,transparent 0 19px,#6c5d4116 19px 20px),linear-gradient(112deg,#f5ecd6,#e0d2b6);
+ border-color:#b8a47c;border-radius:10px;
+}
+.case-overview-card .case-folder {background:var(--atlas-card);border-radius:12px;}
+.case-tab {border-radius:9px 12px 0 0;}
+.case-overview-open::after {border-radius:12px;}
+.government-heading,.campaign-panel-heading {
+ background:var(--atlas-chrome);border-color:var(--atlas-edge);border-radius:var(--atlas-radius);
+}
+.campaign-panel-heading h1>.icon,.government-heading .country-code {color:#c5d9cb;}
+.campaign-card,.government-overview>section,.technology-hub .console-slot,.technology-hub .console-slot.free,
+.inquiry-overview .investigation-summary,.crew-workspace .crew-list,.crew-workspace .crew-sheet {
+ background:var(--atlas-card);border-radius:12px;
+}
+.government-card,.campaign-disclosure {border-radius:11px;}
+.campaign-disclosure {background:#172933;border-color:#526970;}
+.campaign-disclosure>summary:hover {background:#293f46;}
+.turn-brief-topic,.turn-mission-results,#modal.automatic-reveal-dialog .automatic-result,#modal.compact-report-dialog .compact-mission-reports .result-card {
+ background:var(--atlas-card);border-radius:11px;
+}
+#modal.settings-dialog .settings-header h2 {font:700 clamp(27px,4vw,38px)/1.05 var(--atlas-display);}
+#modal.settings-dialog .settings-tabs {border-color:var(--atlas-line);}
+#modal.settings-dialog .settings-tabs>.btn[aria-pressed="true"] {
+ background:var(--atlas-selected);border-bottom-color:var(--atlas-accent);color:var(--atlas-ink);
+}
+#modal.settings-dialog .settings-content :is(.feedback-settings,.music-settings) {
+ background:var(--atlas-card);border-color:var(--atlas-edge);border-radius:11px;
+}
+#modal.settings-dialog :is(.settings-volume output,.music-now-playing p,.settings-header p) {color:var(--atlas-muted);}

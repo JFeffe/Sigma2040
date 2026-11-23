@@ -1,23 +1,18 @@
 /* Agents: four comparable portrait cards and one compact operational dossier. */
-.personnel-command{--personnel-accent:#d5aac2;--personnel-ink:#f3edf4;--personnel-muted:#b6a9bc;color:var(--personnel-ink)}
-.command-deck .personnel-command{display:flex;flex-direction:column;flex:1;min-height:0}
-.command-deck .personnel-command>.page-heading{flex:none;margin:0 0 10px;padding:0 185px 0 0;min-height:48px;gap:8px}
-.command-deck .personnel-command>.page-heading h1{font-size:23px;margin:2px 0 3px}
-.command-deck .personnel-command>.page-heading p{font-size:12px}
-.command-deck .personnel-workspace{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(420px,1fr);gap:14px;flex:1;min-height:0;align-items:stretch;width:100%}
-.immersive-deck .view-agents .personnel-toolbar{position:absolute;top:14px;right:14px;display:flex;align-items:center;gap:8px;z-index:8}
-.immersive-deck .personnel-toolbar .btn{min-height:32px;padding:6px 10px;font-size:12px;white-space:nowrap}
-.immersive-deck .personnel-toolbar .overlay-return{position:static;margin:0;align-self:auto}
+.personnel-command{--personnel-accent:#a9d6f5;--personnel-muted:#a9c1d6}
+.command-deck .personnel-workspace{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(420px,1fr);gap:12px;align-items:start;width:100%}
+.personnel-empty{padding:12px}
+.personnel-empty>p{margin:0 0 10px}
 
 .command-deck .personnel-roster{display:flex;flex-direction:column;gap:8px;min-width:0;align-self:start;grid-column:auto}
-.personnel-roster-heading{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px;border-bottom:1px solid #544252}
+.personnel-roster-heading{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px;border-bottom:1px solid #365169}
 .personnel-roster-heading>span{font-size:11px;letter-spacing:.12em;color:var(--personnel-muted)}
 .personnel-roster-heading>strong{font-size:19px;line-height:1}
 .personnel-roster-heading small{font-size:12px;font-weight:400;color:var(--personnel-muted)}
-.command-deck .personnel-member{position:relative;display:grid;grid-template-columns:76px minmax(135px,1fr) minmax(220px,1.12fr);grid-template-rows:auto auto;gap:6px 12px;align-items:center;min-height:96px;width:100%;padding:9px 12px;box-sizing:border-box;border:1px solid #443745;border-radius:8px;background:#1c1821;text-align:left;color:#e6dce8;cursor:pointer;font:inherit}
-.command-deck .personnel-member.selected{background:linear-gradient(120deg,#483246,#241e2b);border-color:#cc9fbd;box-shadow:inset 3px 0 #d5aac2}
-.command-deck .personnel-member:hover{border-color:#d5aac2}
-.command-deck .personnel-member:focus-visible{outline:2px solid #f6e4f2;outline-offset:2px}
+.command-deck .personnel-member{position:relative;display:grid;grid-template-columns:76px minmax(135px,1fr) minmax(220px,1.12fr);grid-template-rows:auto auto;gap:6px 12px;align-items:center;min-height:96px;width:100%;padding:9px 12px;box-sizing:border-box;border:1px solid #365169;border-radius:8px;background:#121e2d;text-align:left;color:#e8f3ff;cursor:pointer;font:inherit}
+.command-deck .personnel-member.selected{background:linear-gradient(120deg,#213e56,#152638);border-color:#7db6e0;box-shadow:inset 3px 0 var(--personnel-accent)}
+.command-deck .personnel-member:hover{border-color:#7db6e0}
+.command-deck .personnel-member:focus-visible{outline:2px solid #a9d6f5;outline-offset:2px}
 .command-deck .personnel-member>.portrait{grid-column:1;grid-row:1/3;width:76px;height:86px;margin:0;flex:none;border:1px solid #635063;border-radius:6px}
 .command-deck .personnel-member>.portrait img{width:100%;height:100%;object-fit:cover;object-position:center top}
 .personnel-member-copy{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -51,11 +46,11 @@
 .personnel-pending small{margin-left:auto;color:var(--personnel-muted);font-size:12px}
 .personnel-recruit{min-height:34px}
 
-.command-deck .personnel-dossier{min-width:0;min-height:0;padding:12px;display:flex;flex-direction:column;gap:10px;border:1px solid #514157;border-radius:10px;background:linear-gradient(140deg,#2b202e,#181720 75%)}
-.personnel-identity{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid #514157;flex:none;min-width:0}
+.command-deck .personnel-dossier{min-width:0;min-height:0;padding:12px;display:flex;flex-direction:column;gap:10px;border:1px solid #365169;border-radius:8px;background:#121e2d}
+.personnel-identity{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid #365169;flex:none;min-width:0}
 .personnel-identity>div:first-child{min-width:0}
-.personnel-identity h2{margin:0;font:600 28px/1.05 var(--display);letter-spacing:.04em;overflow-wrap:anywhere}
-.personnel-identity p{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:5px 0 0!important;font-size:12px!important;line-height:1.3!important;color:#d5aac2}
+.personnel-identity h2{margin:0;font:700 30px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.04em;overflow-wrap:anywhere}
+.personnel-identity p{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:5px 0 0!important;font-size:12px!important;line-height:1.3!important;color:var(--personnel-accent)}
 .personnel-identity .origin-nationalities{display:inline-flex;gap:4px}
 .personnel-identity .origin-nationalities img{width:22px;height:16px}
 .personnel-condition{display:flex;flex-direction:column;gap:6px;flex:none;min-width:145px;font-variant-numeric:tabular-nums}
@@ -69,10 +64,10 @@
 .personnel-condition .reading-orange{color:#d97926}
 .personnel-condition .reading-red{color:#f3838e}
 .personnel-dossier-layout{display:grid;grid-template-columns:minmax(110px,.52fr) minmax(0,1fr);gap:10px;flex:1;min-height:0}
-.command-deck .personnel-portrait-stage{position:relative;min-width:0;min-height:220px;height:auto;max-height:none;margin:0;border:1px solid #514157;border-radius:7px;overflow:hidden;background:#101523;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.command-deck .personnel-portrait-stage{position:relative;min-width:0;min-height:220px;height:auto;max-height:none;margin:0;border:1px solid #365169;border-radius:7px;overflow:hidden;background:#0e1927;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .command-deck .personnel-portrait-stage>.full-body{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:0!important;max-height:none!important;max-width:100%!important;min-height:0!important;margin:0!important;padding:0!important;object-fit:contain;flex:1 1 0;filter:none!important}
 .personnel-portrait-stage figcaption{width:100%;box-sizing:border-box;padding:8px 5px;border-top:1px solid #3a3549;background:#111724;color:#bfb2ca;font-size:11px;text-align:center;flex:none}
-.personnel-dossier-content{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding-right:3px}
+.personnel-dossier-content{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0}
 .personnel-status{display:inline-flex;align-items:center;align-self:flex-start;gap:5px;padding:4px 6px;border:1px solid #635268;border-radius:4px;color:#e2cadd;font-size:10px;line-height:1.3}
 .personnel-status>.icon{width:13px;height:13px;flex:none}
 .personnel-status.free{color:#a2d0bf;border-color:#496d64}
@@ -85,14 +80,14 @@
 .personnel-capabilities .personnel-stat strong{font-size:20px}
 .personnel-capabilities .personnel-stat strong small{display:none}
 .personnel-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;flex:none}
-.personnel-facts>div{padding:6px 7px;border:1px solid #453849;border-radius:5px;background:#11182288;min-width:0}
+.personnel-facts>div{padding:6px 7px;border:1px solid #365169;border-radius:5px;background:#101a28;min-width:0}
 .personnel-facts>div:last-child{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .personnel-facts dt{display:flex;align-items:center;gap:5px;font-size:10px;line-height:1.3;color:#aeb2c4}
 .personnel-facts dt>.icon{width:12px;height:12px;flex:none}
 .personnel-facts dd{margin:3px 0 0;font-size:12px;line-height:1.25;color:#e0d9e7;overflow-wrap:anywhere}
 .personnel-facts>div:last-child dd{margin:0}
 .personnel-facts .condition-warning dd{color:#f19aac}
-.personnel-mission{padding:8px;border:1px solid #514255;border-left:3px solid #a88baa;border-radius:6px;background:#11151f;flex:none}
+.personnel-mission{padding:8px;border:1px solid #415b70;border-left:3px solid #87b9de;border-radius:6px;background:#101b2a;flex:none}
 .personnel-mission.engaged{border-left-color:#e4bd82}
 .personnel-mission-heading{display:flex;justify-content:space-between;gap:8px;font-size:10px;line-height:1.3;color:#c3adca}
 .personnel-mission-heading strong{color:#efc98e;white-space:nowrap}
@@ -106,7 +101,7 @@
 .personnel-talents{margin:0;flex:none}
 .personnel-talents>h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#baacc6;margin:0 0 5px}
 .personnel-talents>div{display:flex;flex-wrap:wrap;gap:5px}
-.personnel-talents details{min-width:0;max-width:100%;flex:1 1 auto;background:#211b29;border:1px solid #46364e;border-radius:5px}
+.personnel-talents details{min-width:0;max-width:100%;flex:1 1 auto;background:#102032;border:1px solid #365169;border-radius:5px}
 .personnel-talents details[open]{flex-basis:100%}
 .personnel-talents summary{padding:6px;display:flex;align-items:center;gap:5px;cursor:pointer;list-style:none;font-size:11px;line-height:1.25}
 .personnel-talents summary strong{font-weight:500;flex:1;overflow-wrap:anywhere}
@@ -124,12 +119,11 @@
 .personnel-footer>div{display:flex;gap:6px;flex-wrap:wrap}
 .command-deck .personnel-footer .btn{font-size:11px;padding:5px 8px;min-height:30px}
 
-@media(min-width:1101px){.immersive-deck .deck-main.view-agents{padding:14px}}
 @media(min-width:1700px){.command-deck .personnel-member{grid-template-columns:92px minmax(160px,1fr) minmax(240px,1.1fr);min-height:120px;padding:12px 15px;gap:8px 16px}.command-deck .personnel-member>.portrait{width:92px;height:104px}.personnel-member-copy>strong{font-size:25px}.personnel-member-role{font-size:14px}.personnel-member-state{font-size:12px}.personnel-member-talents>span{font-size:13px}.personnel-stat strong{font-size:27px}.command-deck .personnel-dossier{padding:16px}.personnel-dossier-content{gap:10px}.personnel-facts dd{font-size:13px}.personnel-talents summary{font-size:12px}}
 @media(min-width:981px) and (max-width:1200px){.command-deck .personnel-workspace{grid-template-columns:minmax(0,1.3fr) minmax(400px,1fr);gap:10px}.command-deck .personnel-member{grid-template-columns:60px minmax(115px,1fr) minmax(150px,.9fr);gap:6px 8px;padding:8px}.command-deck .personnel-member>.portrait{width:60px;height:78px}.personnel-member-copy>strong{font-size:19px}.personnel-member-role{font-size:11px}.personnel-member-stats .personnel-stat-name{display:none}.personnel-member-stats .personnel-stat-label abbr{display:inline}.personnel-member-talents>span{font-size:11px;padding:3px 5px}}
-@media(min-width:981px) and (max-height:760px){.command-deck .personnel-member{min-height:88px;padding:7px 10px;gap:5px 10px;grid-template-columns:64px minmax(115px,1fr) minmax(150px,1.1fr)}.command-deck .personnel-member>.portrait{width:64px;height:74px}.personnel-member-copy>strong{font-size:19px}.personnel-member-talents>span{font-size:11px;padding:3px 5px}.personnel-stat{padding:4px 5px}.personnel-stat strong{font-size:21px}.personnel-roster-heading{padding-bottom:5px}.command-deck .personnel-roster{gap:6px}.command-deck .personnel-command>.page-heading{min-height:42px}.command-deck .personnel-dossier{gap:8px;padding:10px}.personnel-identity{padding-bottom:8px}.personnel-identity h2{font-size:25px}}
-@media(max-width:980px){.command-deck .personnel-workspace{grid-template-columns:minmax(0,1fr);flex:none;gap:14px}.command-deck .personnel-command>.page-heading{padding-right:180px}.command-deck .personnel-member{grid-template-columns:64px minmax(150px,1fr) minmax(220px,1fr);min-height:94px}.command-deck .personnel-member>.portrait{width:64px;height:80px}.personnel-dossier-layout{grid-template-columns:minmax(130px,.45fr) minmax(0,1fr);flex:none}.command-deck .personnel-portrait-stage{height:410px}.personnel-dossier-content{overflow:visible}.personnel-capabilities .personnel-stat-name{display:inline}.personnel-capabilities .personnel-stat-label abbr{display:none}.personnel-capabilities .personnel-stat strong small{display:inline}.personnel-talents details{flex-basis:28%}}
-@media(max-width:600px){.immersive-deck .view-agents .personnel-toolbar{position:static;justify-content:flex-end;margin-bottom:8px}.command-deck .personnel-command>.page-heading{padding:0}.command-deck .personnel-member{grid-template-columns:54px minmax(105px,1fr) minmax(120px,.85fr);padding:8px;gap:6px;min-height:90px}.command-deck .personnel-member>.portrait{width:54px;height:70px}.personnel-member-copy>strong{font-size:18px}.personnel-member-role{font-size:11px}.personnel-member-state{font-size:9px}.personnel-member-stats{gap:4px}.personnel-member-stats .personnel-stat-name{display:none}.personnel-member-stats .personnel-stat-label abbr{display:inline}.personnel-member-stats .personnel-stat{padding:4px 2px}.personnel-stat strong{font-size:20px}.personnel-stat strong small{display:none}.personnel-member-talents>span{font-size:11px;padding:3px 5px}.personnel-dossier-layout{grid-template-columns:100px minmax(0,1fr);gap:8px}.command-deck .personnel-portrait-stage{height:360px}.personnel-capabilities .personnel-stat-name{display:none}.personnel-capabilities .personnel-stat-label abbr{display:inline}.personnel-capabilities .personnel-stat strong small{display:none}.personnel-talents details{flex-basis:100%}.personnel-condition{min-width:135px}.personnel-condition>span{font-size:11px}.personnel-condition strong{font-size:13px}}
+@media(min-width:981px) and (max-height:760px){.command-deck .personnel-member{min-height:88px;padding:7px 10px;gap:5px 10px;grid-template-columns:64px minmax(115px,1fr) minmax(150px,1.1fr)}.command-deck .personnel-member>.portrait{width:64px;height:74px}.personnel-member-copy>strong{font-size:19px}.personnel-member-talents>span{font-size:11px;padding:3px 5px}.personnel-stat{padding:4px 5px}.personnel-stat strong{font-size:21px}.personnel-roster-heading{padding-bottom:5px}.command-deck .personnel-roster{gap:6px}.command-deck .personnel-dossier{gap:8px;padding:10px}.personnel-identity{padding-bottom:8px}.personnel-identity h2{font-size:25px}}
+@media(max-width:980px){.command-deck .personnel-workspace{grid-template-columns:minmax(0,1fr);flex:none;gap:14px}.command-deck .personnel-member{grid-template-columns:64px minmax(150px,1fr) minmax(220px,1fr);min-height:94px}.command-deck .personnel-member>.portrait{width:64px;height:80px}.personnel-dossier-layout{grid-template-columns:minmax(130px,.45fr) minmax(0,1fr);flex:none}.command-deck .personnel-portrait-stage{height:410px}.personnel-dossier-content{overflow:visible}.personnel-capabilities .personnel-stat-name{display:inline}.personnel-capabilities .personnel-stat-label abbr{display:none}.personnel-capabilities .personnel-stat strong small{display:inline}.personnel-talents details{flex-basis:28%}}
+@media(max-width:600px){.command-deck .personnel-member{grid-template-columns:54px minmax(105px,1fr) minmax(120px,.85fr);padding:8px;gap:6px;min-height:90px}.command-deck .personnel-member>.portrait{width:54px;height:70px}.personnel-member-copy>strong{font-size:18px}.personnel-member-role{font-size:11px}.personnel-member-state{font-size:9px}.personnel-member-stats{gap:4px}.personnel-member-stats .personnel-stat-name{display:none}.personnel-member-stats .personnel-stat-label abbr{display:inline}.personnel-member-stats .personnel-stat{padding:4px 2px}.personnel-stat strong{font-size:20px}.personnel-stat strong small{display:none}.personnel-member-talents>span{font-size:11px;padding:3px 5px}.personnel-dossier-layout{grid-template-columns:100px minmax(0,1fr);gap:8px}.command-deck .personnel-portrait-stage{height:360px}.personnel-capabilities .personnel-stat-name{display:none}.personnel-capabilities .personnel-stat-label abbr{display:inline}.personnel-capabilities .personnel-stat strong small{display:none}.personnel-talents details{flex-basis:100%}.personnel-condition{min-width:135px}.personnel-condition>span{font-size:11px}.personnel-condition strong{font-size:13px}}
 @media(max-width:420px){.personnel-identity{gap:8px;align-items:flex-start}.personnel-identity h2{font-size:24px}.personnel-dossier-layout{grid-template-columns:minmax(0,1fr)}.command-deck .personnel-portrait-stage{height:280px}.personnel-talents details{flex-basis:45%}.personnel-member-role .origin-nationalities img{width:18px;height:13px}.personnel-stat-label{font-size:10px}.personnel-stat-label>.icon{width:12px;height:12px}.personnel-member-stats .personnel-stat-label{gap:2px}.personnel-member-talents{gap:4px}.personnel-member-copy{gap:4px}.personnel-member-state{flex-wrap:wrap}}
 
 /* Threats retain the same card geometry regardless of active count. */

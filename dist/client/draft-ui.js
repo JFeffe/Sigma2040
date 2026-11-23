@@ -1,13 +1,13 @@
-import {selectOperationMap} from './operation-map.js?v=238';
-import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=238';
-import {GAME_MODES,draftCountry} from './game-setup.js?v=238';
-import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=238';
-import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=238';
-import {teamBalanceMarkup} from './team-balance.js?v=238';
+import {gameLanguage,translateText} from './localization.js?v=242';
+import {selectOperationMap} from './operation-map.js?v=242';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=242';
+import {draftCountry} from './game-setup.js?v=242';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=242';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=242';
+import {teamBalanceMarkup} from './team-balance.js?v=242';
 
 export function operationMapMarkup(ids){return ids?.length?`<section class="operation-map-brief panel" aria-label="Pays d’opération"><strong>Carte de la campagne · ${ids.length} pays d’opération</strong><ul>${ids.map(id=>`<li>${flag(id)} ${esc(COUNTRY[id].name)}</li>`).join('')}</ul></section>`:'';}
 
-export function gameModeControl(mode='regular',multi=false,enabled=true){return `<label class="game-mode-control">Mode de jeu<select id="${multi?'mpGameMode':'gameMode'}" ${enabled?'':'disabled'}>${Object.entries(GAME_MODES).map(([id,label])=>`<option value="${id}" ${mode===id?'selected':''}>${label}</option>`).join('')}</select></label>`;}
 export function orderedTeamMarkup(ids,{multi=false,editable=true}={}){
  const prefix=multi?'mp-draft':'solo-draft';
  return `<div class="draft-team-order" aria-label="Ordre de votre équipe ; premier agent chef">${ids.map((id,i)=>{const a=DISPLAY_ROSTER.find(a=>a.id===id);return `<article class="draft-team-agent">${portrait(a)}<div class="draft-agent-info"><strong>${esc(a.name)}</strong><small>${i===0?'Chef · Coordination +5':'Agent '+(i+1)}</small><dl class="draft-agent-stats" aria-label="Statistiques de ${esc(a.name)}">${a.stats.map((n,j)=>`<div class="stat-${j}" title="${esc(statHelp(j))}"><dt>${icon(['scan','target','shield'][j])}${STAT_NAMES[j]}</dt><dd>${n}<span>/10</span></dd></div>`).join('')}</dl><div class="draft-agent-talents" aria-label="Talents de ${esc(a.name)}">${sortedTalents(a).map(t=>`<span data-rich-tooltip tabindex="0" title="${esc(TALENTS[t][1])}">${talentIcon(t)}<span>${esc(TALENTS[t][0])}</span><template><strong>${esc(TALENTS[t][0])}</strong><p>${esc(TALENTS[t][1])}</p></template></span>`).join('')}</div></div><div class="draft-order-actions">${button(icon('crown'),prefix+'-chief','small',`data-id="${id}" aria-label="Désigner ${esc(a.name)} chef" ${!editable||i===0?'disabled':''}`)}${button('↑',prefix+'-before','small',`data-id="${id}" aria-label="Avancer ${esc(a.name)}" ${!editable||i===0?'disabled':''}`)}${button('↓',prefix+'-after','small',`data-id="${id}" aria-label="Reculer ${esc(a.name)}" ${!editable||i===3?'disabled':''}`)}</div></article>`;}).join('')}</div>`;
@@ -16,7 +16,7 @@ export function draftCandidate(d,country,id){return d&&country&&draftCountry(d)=
 export function draftTeamSummary(ids,country,{previewId=null,multi=false,canConfirm=true}={}){
  const picked=ids.map(id=>DISPLAY_ROSTER.find(a=>a.id===id)).filter(Boolean),preview=DISPLAY_ROSTER.find(a=>a.id===previewId&&!ids.includes(a.id)),agents=preview?[...picked,preview]:picked,counts=new Map();
  for(const a of agents)for(const t of a.talents)counts.set(t,(counts.get(t)||0)+1);
- const selectedTalents=[...counts].sort(([a],[b])=>TALENTS[a][0].localeCompare(TALENTS[b][0],'fr',{sensitivity:'base'}));
+ const selectedTalents=[...counts].sort(([a],[b])=>translateText(TALENTS[a][0]).localeCompare(translateText(TALENTS[b][0]),gameLanguage(),{sensitivity:'base'}));
  return `<aside class="draft-summary panel" aria-label="Composition et valeurs de votre équipe"><h2>Votre équipe · ${esc(COUNTRY[country].name)}</h2><p class="draft-summary-count" role="status">${picked.length} / 4 agents repêchés</p><div class="draft-summary-agents">${Array.from({length:4},(_,i)=>{const a=agents[i];return a?`<div class="draft-summary-agent ${a.id===preview?.id?'is-preview':''}">${portrait(a)}<strong>${esc(a.name)}</strong><small>${a.id===preview?.id?'À confirmer':esc(a.role)}</small></div>`:`<div class="draft-summary-agent empty"><span>${i+1}</span><small>À choisir</small></div>`;}).join('')}</div>${preview?`<div class="draft-confirm-candidate"><p>Agent présélectionné : <strong>${esc(preview.name)}</strong></p>${button(icon('check')+' Confirmer l’agent',multi?'mp-draft-confirm':'solo-draft-confirm','primary wide',`data-id="${preview.id}" ${canConfirm?'':'disabled'}`)}</div>`:''}${teamBalanceMarkup(ids,preview?.id)}<section class="draft-summary-talents"><h3>${preview?'Talents avec cet agent':'Talents repêchés'} · ${counts.size}</h3>${selectedTalents.length?`<div class="talents">${selectedTalents.map(([id,count])=>`<span title="${esc(TALENTS[id][1])}" data-talent="${id}">${talentIcon(id)}${esc(TALENTS[id][0])}${count>1?` <b>×${count}</b>`:''}</span>`).join('')}</div>`:'<p>Aucun talent pour le moment.</p>'}</section></aside>`;
 }
 export function draftScreen(d,country,{multi=false,header='',agents=d.teams[country]||[],confirmed=false,editable=true,controls='',candidate=null}={}){

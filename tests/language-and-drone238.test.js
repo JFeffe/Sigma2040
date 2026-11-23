@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
 import {ACTIONS, TALENTS} from '../dist/client/data.js';
 import {cooperationInfo} from '../dist/client/cooperation.js';
-import {agentReason, caseOf} from '../dist/client/bureau.js';
 import {countryOperationsMarkup} from '../dist/client/country-operations.js';
 import {inquiryActionInputs, inquiryCandidate} from '../dist/client/country-inquiry.js';
 import {actionResources} from '../dist/client/presentation.js';
@@ -64,8 +63,6 @@ test('Drone specialists can launch at full capacity and use zero slots in the en
  E.assign(s, ordinary.id, 'drone', t.id);
  assert.equal(E.getTechSlots(s, s.player), 2);
 
- const target = caseOf(s, t.id);
- assert.equal(agentReason(s, target, 'locate', 'drone', specialist), '');
  const regular = E.options(s, ordinary.id, 'drone', t.id);
  const expert = E.options(s, specialist.id, 'drone', t.id);
  assert.equal(expert.error, null);

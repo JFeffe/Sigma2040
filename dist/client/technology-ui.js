@@ -1,22 +1,70 @@
-import * as E from './engine.js?v=238';
-import {COUNTRY,TECH,ACTIONS} from './data.js?v=238';
-import {icon,button,esc,portrait} from './ui.js?v=238';
-import {countryOptions} from './presentation.js?v=238';
+import * as E from './engine.js?v=242';
+import {COUNTRY,TECH} from './data.js?v=242';
+import {icon,button,esc,portrait,campaignHeading} from './ui.js?v=242';
 let selected=null,scope='';
 export function selectTechnology(type){selected=['ai','guard','drone'].includes(type)?type:null;}
 const modules={...TECH,protect:{name:'Protection d’infrastructure',icon:'shield',duration:2},drone:{name:'Reconnaissance par drone',icon:'drone',duration:1}};
 const ticks=(left,total)=>`<div class="console-ticks" aria-label="${left} tour(s) restant(s)">${Array.from({length:Math.min(6,total)},(_,i)=>`<span class="${i<left?'remaining':''}"></span>`).join('')}</div>`;
-export function technologyPanel(s,selectedCountry){
- const key=`${s.seed}:${s.player}`;if(scope!==key){scope=key;selected=null;}
- const f=s.factions[s.player],missions=E.team(s).filter(a=>E.requiresModule(a.task?.type,a)),supports=f.tech.filter(t=>t.until>=s.turn),used=E.getTechSlots(s,s.player);
- const occupants=[...missions.map(a=>({kind:a.task.type,a})),...supports.map(t=>({kind:t.type,t}))];
- const slots=Array.from({length:Math.max(2,occupants.length)},(_,i)=>{const o=occupants[i];if(!o)return `<article class="console-slot free" data-tech-drop><div class="console-slot-heading"><span>${icon('module')} MODULE 0${i+1}</span><strong>Disponible</strong></div><div><h3>${icon('plus')} Module disponible</h3><p>Déposez un module ici pour l’activer immédiatement.</p></div><div class="console-slot-footer"><small>1 module = 1 place</small></div></article>`;
- const a=o.a,t=a?.task||o.t,d=modules[o.kind],remaining=a?t.remaining:t.until-s.turn+1,until=a?s.turn+remaining-1:t.until;
- return `<article class="console-slot occupied"><div class="console-slot-heading"><span>${icon('module')} MODULE 0${i+1}</span><strong>${a?t.queued?'Réservé':'En mission':o.kind==='guard'?'Protection active':'Module actif'}</strong></div><h3>${icon(d.icon)} ${d.name}</h3><div class="console-occupant">${a?portrait(a):''}<p>${a?`<b>${esc(a.name)}</b> · ${COUNTRY[a.country].name}`:o.kind!=='guard'?'Toute votre équipe · aucun opérateur dédié':`${COUNTRY[t.country].name} · aucun agent mobilisé`}</p></div>${ticks(remaining,a?t.total:d.duration)}<div class="console-slot-footer"><div><b>${remaining} tour(s) restant(s)</b><small>Libre après T${until} inclus</small>${!a?`<small>Annulation : ${E.techRefund(s,t)} crédit(s) remboursé(s)</small>`:''}</div><div class="console-actions">${a?button('Voir la mission','agent','small',`data-id="${a.id}"`):''}${button('Annuler',a?'cancel':'cancel-tech','small',`data-id="${a?a.id:t.id}" ${s.ended?'disabled':''}`)}</div></div></article>`;}).join('');
- const cards=['ai','relay','logistics'].map(id=>{const d=TECH[id],error=s.ended?'Campagne terminée.':used>=2?'Les deux places sont occupées.':supports.some(t=>t.type===id)?'Ce module est déjà actif.':f.budget<d.cost?'Crédits insuffisants.':'';return `<article class="console-tech-card console-direct-card" data-tech-drag="${id}" draggable="${!error}"><div class="console-card-art"><img src="./assets/missions/${d.art}.webp" alt="${d.name}" loading="lazy">${button('Confirmer · '+d.cost+' crédits','tech','primary',`data-id="${id}" ${error?'disabled':''} ${!s.ended&&used>=2?'aria-describedby="moduleCapacity"':''}`)}</div><div class="console-card-copy"><strong>${icon(d.icon)} ${d.name}</strong><span class="console-effect">${d.effect}</span><small>${d.desc}</small><span class="console-card-cost"><b>${d.cost} crédits</b><span class="module-requirement">${icon('module')} Module · 1 place · ${d.duration} tours</span></span>${error&&(s.ended||used<2)?`<p class="console-warning" role="status">${error}</p>`:''}</div></article>`;}).join('');
-
- return `<section class="panel technology-hub operation-console"><div class="section-title"><h2>${icon('module')} Modules d’opération</h2><span id="moduleCapacity" class="console-capacity ${used>=2?'is-full':'is-available'}" role="status" aria-label="Capacité des Modules : ${used} / 2">${used>=2?'Les deux places sont occupées.':`${2-used} place${used===0?'s':''} disponible${used===0?'s':''}.`}</span></div><p class="console-intro">Deux places partagées entre vos modules et les missions de protection ou de reconnaissance par drone sans le talent Drones.</p><div class="console-slots">${slots}</div><div class="console-tech-cards console-direct-cards">${cards}</div></section>`;
+function moduleSlot(s,occupant,index){
+ const heading=`<span>${icon('module')} <span>Emplacement ${index+1}</span></span>`;
+ if(!occupant)return `<article class="console-slot free" data-tech-drop>
+  <div class="console-slot-heading">${heading}<strong>${icon('plus')} Disponible</strong></div>
+ </article>`;
+ const {a,kind}=occupant,t=a?.task||occupant.t,d=modules[kind];
+ const remaining=a?t.remaining:t.until-s.turn+1,until=a?s.turn+remaining-1:t.until;
+ const status=a?t.queued?'Réservé':'En mission':kind==='guard'?'Protection active':'Module actif';
+ return `<article class="console-slot occupied">
+  <div class="console-slot-heading">${heading}<strong>${status}</strong></div>
+  <div class="console-slot-main">
+   <div class="console-occupant">${a?portrait(a):''}<div>
+    <h2 class="module-occupant-name">${icon(d.icon)} ${d.name}</h2>
+    <p>${a?`<b>${esc(a.name)}</b> · ${COUNTRY[a.country].name}`:kind==='guard'?COUNTRY[t.country].name:'Toute votre équipe'}</p>
+   </div></div>
+   <div class="console-actions">${a?button('Voir la mission','agent','small',`data-id="${a.id}"`):''}${button('Annuler',a?'cancel':'cancel-tech','small',`data-id="${a?a.id:t.id}" ${s.ended?'disabled':''}`)}</div>
+  </div>
+  <div class="console-slot-duration">
+   <b>${remaining} ${remaining===1?'tour restant':'tours restants'}</b><small>Libre après T${until} inclus</small>
+   ${ticks(remaining,a?t.total:d.duration)}
+  </div>
+ </article>`;
 }
+
+export function technologyPanel(s){
+ const key=`${s.seed}:${s.player}`;if(scope!==key){scope=key;selected=null;}
+ const f=s.factions[s.player],missions=E.team(s).filter(a=>E.requiresModule(a.task?.type,a));
+ const supports=f.tech.filter(t=>t.until>=s.turn),used=E.getTechSlots(s,s.player);
+ const occupants=[...missions.map(a=>({kind:a.task.type,a})),...supports.map(t=>({kind:t.type,t}))];
+ const slots=Array.from({length:Math.max(2,occupants.length)},(_,i)=>moduleSlot(s,occupants[i],i)).join('');
+ const cards=['ai','relay','logistics'].map(id=>{
+  const d=TECH[id],error=s.ended?'Campagne terminée.':used>=2?'Les deux places sont occupées.':supports.some(t=>t.type===id)?'Ce module est déjà actif.':f.budget<d.cost?'Crédits insuffisants.':'';
+  return `<article class="console-tech-card campaign-card module-card" data-tech-drag="${id}" draggable="${!error}">
+   <div class="campaign-card-art">
+    <img src="./assets/missions/${d.art}.webp" alt="" loading="lazy">
+    <h2>${icon(d.icon)} <span>${d.name}</span></h2>
+   </div>
+   <div class="module-card-body">
+    <p class="console-effect">${d.effect}</p>
+    <div class="module-meta"><span>${icon('clock')} ${d.duration} tours</span><span>${icon('module')} <span>1 emplacement</span></span></div>
+    <details class="campaign-disclosure module-details"><summary>Effets du module</summary><p>${d.desc}</p></details>
+    <div class="module-activation">${button('Activer · '+d.cost+' crédits','tech','primary',`data-id="${id}" ${error?'disabled':''} ${!s.ended&&used>=2?'aria-describedby="moduleCapacity"':error?`aria-describedby="module-${id}-status"`:''}`)}
+     ${error&&(s.ended||used<2)?`<p class="console-warning" id="module-${id}-status" role="status">${error}</p>`:''}
+    </div>
+   </div>
+  </article>`;
+ }).join('');
+ const room=Math.max(0,2-used);
+ const capacity=`<span id="moduleCapacity" class="console-capacity ${room?'is-available':'is-full'}" role="status" aria-label="Capacité des Modules : ${used} / 2">${room?`${room} place${room===1?'':'s'} disponible${room===1?'':'s'}.`:'Les deux places sont occupées.'}</span>`;
+ return `<section class="campaign-panel technology-hub operation-console${occupants.length?' has-occupied-slots':''}" aria-labelledby="moduleTitle">
+  ${campaignHeading('moduleTitle','module','Modules d’opération',capacity)}
+  <div class="console-slots">${slots}</div>
+  <div class="campaign-grid module-catalog">${cards}</div>
+  <details class="campaign-disclosure module-help"><summary>Fonctionnement des emplacements</summary>
+   <p>Deux places partagées entre vos modules et les missions de protection ou de reconnaissance par drone sans le talent Drones.</p>
+   <p>Activez un module depuis sa carte ou déposez-le dans un emplacement libre.</p>
+  </details>
+ </section>`;
+}
+
 export function technologyCancellationMarkup(s,t){
  const affected=E.logisticsCancellationAgents(s,t),sameTurn=(t.activatedTurn??t.until-TECH[t.type].duration+1)===s.turn;
  const effect=t.type==='logistics'?`${affected.length?`<p>La désactivation annulera le voyage accéléré de ${affected.length} agent(s) :</p><ul class="cancel-travel-list">${affected.map(a=>`<li><strong>${esc(a.name)}</strong> · ${esc(COUNTRY[a.task.origin].name)} → ${esc(COUNTRY[a.task.target].name)}</li>`).join('')}</ul><p>Ces agents resteront dans leur pays de départ et seront disponibles pour un nouvel ordre.</p>`:'<p>Aucun voyage planifié ne dépend de ce module.</p>'}<p>Les nouveaux voyages ne recevront plus le bonus. Un voyage accéléré encore en cours retrouve sa durée normale.</p>`:t.type==='relay'?'<p>Les prolongations de position accordées par ce relais seront retirées. Localiser une cible reste une action de 1 tour.</p>':t.type==='guard'?'<p>La protection de cette sentinelle sera retirée. Les autres sources de protection resteront actives.</p>':'<p>Le bonus IA sera retiré des vérifications encore en cours, qui continueront sans ce bonus. La recherche non encore résolue est annulée.</p>';

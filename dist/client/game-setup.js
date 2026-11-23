@@ -1,7 +1,7 @@
-import {selectOperationMap} from './operation-map.js?v=238';
-import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=238';
+import {selectOperationMap} from './operation-map.js?v=242';
+import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=242';
 
-export const GAME_MODES=Object.freeze({regular:'Régulier',advanced:'Avancé',cooperative:'Coopératif'});
+export const GAME_MODES=Object.freeze({regular:'Standard Normal',advanced:'Standard Avancé',cooperative:'Coop'});
 export const PARTICIPANT_COUNT=4;
 export const usesDraft=mode=>mode==='advanced'||mode==='cooperative';
 export const participantCount=mode=>mode==='cooperative'?2:4;

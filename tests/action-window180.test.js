@@ -32,12 +32,16 @@ test('Dossier separates mechanical effects from stat, talent, hack and Research;
  }finally{d.restore();}
 });
 
-test('Boost sits above agent chances, toggles both ways and charges only the confirmed boosted order',async()=>{
+test('Boost is visible beside confirmation with the actual odds and only charges a confirmed boosted order',async()=>{
  const s=fresh(),a=E.team(s)[0],t=E.knownTargets(s)[0],f=s.factions.FR;a.country=t.country;a.stats=[5,5,5];a.talents=[];f.access[t.country]=true;
  const base=E.options(s,a.id,'collect',t.id),boosted=E.options(s,a.id,'collect',t.id,true),budget=f.budget,d=dialog(s);
  try{
   openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');
-  assert.ok(d.html().indexOf('id="inquiryBoost"')<d.html().indexOf('<div class="inquiry-agents">'));assert.ok(d.html().includes(icon('boost')));assert.match(d.html(),new RegExp('\\+10% -6cr/<b[^>]*>'+budget+'</b>'));assert.doesNotMatch(d.html(),/crédits disponibles/);
+  const footer=d.html().match(/<footer class="inquiry-footer">([\s\S]*?)<\/footer>/)[1];
+  assert.match(footer,/id="inquiryBoost"[\s\S]*data-cmd="inquiry-confirm"/);
+  assert.ok(footer.includes(icon('boost')));
+  assert.ok(footer.includes(`6 crédits · ${base.chance} % → ${boosted.chance} %`));
+  assert.ok(footer.includes(`<span>Solde</span> <b>${budget}</b>`));
   await handleInquiryCommand('inquiry-boost');assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="true"/);assert.match(d.html(),new RegExp('<b>'+boosted.chance+' %</b>'));assert.equal(f.budget,budget);
   await handleInquiryCommand('inquiry-boost');assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="false"/);await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.chance,base.chance);assert.equal(a.task.bonusCredits,0);assert.equal(f.budget,budget);
   E.cancel(s,a.id);openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');await handleInquiryCommand('inquiry-boost');await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.chance,boosted.chance);assert.equal(a.task.bonusCredits,6);assert.equal(f.budget,budget-6);
@@ -49,23 +53,23 @@ test('Budget loss clears and disables boost without blocking a free base action;
  const d=dialog(s);
  try{
   openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');await handleInquiryCommand('inquiry-boost');f.budget=0;refreshCountryInquiry();
-  assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="false"/);assert.match(d.html(),/inquiry-boost-balance is-insufficient">0<\/b>/);assert.match(d.html(),/Budget insuffisant/);await handleInquiryCommand('inquiry-boost');assert.equal(a.task,null);await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.bonusCredits,0);assert.equal(f.budget,0);E.cancel(s,a.id);
+  assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="false"/);assert.match(d.html(),/mission-boost-balance is-insufficient"><span>Solde<\/span> <b>0<\/b>/);assert.match(d.html(),/Budget insuffisant/);await handleInquiryCommand('inquiry-boost');assert.equal(a.task,null);await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.bonusCredits,0);assert.equal(f.budget,0);E.cancel(s,a.id);
   f.budget=18;a.stats[0]=10;a.talents=['enquete'];refreshCountryInquiry();assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.match(d.html(),/plafond de 90 %/);await handleInquiryCommand('inquiry-boost');await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.bonusCredits,0);assert.equal(f.budget,18);
   E.cancel(s,a.id);f.access[t.country]=false;openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');assert.match(d.html(),/accès local/i);assert.match(d.html(),/is-missing/);
   d.lock('Tour confirmé');refreshCountryInquiry();assert.match(d.html(),/Tour confirmé/);assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);await handleInquiryCommand('inquiry-confirm');assert.equal(a.task,null);
  }finally{d.restore();}
 });
 
-test('Threat boost shows only the current balance, disables below six and re-enables at six without charging the preview',async()=>{
+test('Threat boost shows the current balance and re-enables at six without charging the preview',async()=>{
  const s=fresh(),a=E.team(s)[0],p=E.visiblePlots(s)[0],f=s.factions.FR;
  a.country=p.country;a.stats=[5,5,5];a.talents=[];f.budget=5;
  const d=dialog(s);
  try{
   await handleInquiryCommand('country-threat',p.id);await handleInquiryCommand('inquiry-agent',a.id);
-  assert.match(d.html(),/\+10% -6cr\/<b class="inquiry-boost-balance is-insufficient">5<\/b>/);
-  assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.doesNotMatch(d.html(),/crédits disponibles/);
+  assert.match(d.html(),/mission-boost-balance is-insufficient"><span>Solde<\/span> <b>5<\/b>/);
+  assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);
   await handleInquiryCommand('inquiry-boost');assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="false"/);assert.equal(f.budget,5);
-  f.budget=6;refreshCountryInquiry();assert.doesNotMatch(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.doesNotMatch(d.html(),/inquiry-boost-balance is-insufficient/);
+  f.budget=6;refreshCountryInquiry();assert.doesNotMatch(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.doesNotMatch(d.html(),/mission-boost-balance is-insufficient/);
   const boosted=E.options(s,a.id,'protect',p.country,true).chance;
   await handleInquiryCommand('inquiry-boost');assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="true"/);assert.equal(f.budget,6);
   await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.type,'protect');assert.equal(a.task.chance,boosted);assert.equal(a.task.bonusCredits,6);assert.equal(f.budget,0);

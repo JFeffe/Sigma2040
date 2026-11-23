@@ -1,12 +1,13 @@
-import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=238';
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=238';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=238';
-import * as E from './engine.js?v=238';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=238';
-import {SUSPECTS} from './data.js?v=238';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=238';
+import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=242';
+import {readStorageItem} from './storage-keys.js?v=242';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=242';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=242';
+import * as E from './engine.js?v=242';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=242';
+import {SUSPECTS} from './data.js?v=242';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=242';
 export {isTutorial,tutorialObjective};
-export const TUTORIAL_KEY='sigma2040-filigrane-v1';
+export const TUTORIAL_KEY='shadow-mandate-2040-filigrane-v1';
 export const LEGACY_TUTORIAL_MISSIONS=Object.freeze([
  {id:'contact',number:'01',title:'Premier contact',place:'Paris → Berlin',duration:'3–5 min',agents:1,skills:'Choisir un agent · Voyager · Ouvrir un accès',brief:'Une archiviste de Berlin a repéré des transferts sous le nom de « Filigrane ». Elle ne parlera qu’à IRIS. Rejoignez-la et activez le contact.',goals:['Rejoindre Berlin','Activer le contact'],lesson:'Un ordre confirmé est planifié. Il ne commence qu’à la fin du tour. L’accès local permet ensuite la collecte de preuves.',next:'Les archives sont ouvertes. Deux documents nous attendent.'},
  {id:'evidence',number:'02',title:'La pièce suspecte',place:'Berlin / QG de Paris',duration:'6–9 min',agents:2,skills:'Collecter · Vérifier au QG · Écarter un faux',brief:'Les archives lient Vesper au réseau Filigrane, mais deux documents se contredisent. BISHOP poursuit l’enquête à Berlin pendant qu’APÉRO vérifie les pièces au QG.',goals:['Première collecte','Collecte et vérification en parallèle','Planque et seconde vérification','Remplacement et récupération','Dernière vérification'],lesson:'Les preuves sont partagées par votre équipe. Vérifiez la première pendant la deuxième collecte. Pendant les autres attentes, préparez une planque et récupérez l’énergie dépensée. Un faux écarté doit être remplacé.',next:'Vesper prépare son départ. Il reste une courte fenêtre pour intervenir.'},
@@ -142,7 +143,7 @@ export function validateTutorialGame(value){
 export function readTutorialProgress(storage){
  const empty={version:1,completed:[],sessions:{},warning:false};
  try{
-  const raw=storage?.getItem(TUTORIAL_KEY);if(!raw)return empty;
+  const raw=readStorageItem(storage,TUTORIAL_KEY);if(!raw)return empty;
   const p=JSON.parse(raw);if(p.version!==1||!Array.isArray(p.completed)||!p.sessions||typeof p.sessions!=='object')throw Error();
   const result={...empty,completed:TUTORIAL_IDS.filter(id=>p.completed.includes(id)),sessions:{}};
   for(const id of TUTORIAL_IDS)if(p.sessions[id]){try{const s=validateTutorialGame(p.sessions[id]);if(s.tutorial.mission!==id)throw Error();result.sessions[id]=s;if(tutorialObjective(s).done&&!result.completed.includes(id))result.completed.push(id);}catch{result.warning=true;}}

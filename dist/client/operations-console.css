@@ -54,19 +54,12 @@ dialog.order-modal .metric-exposure strong{font-size:21px}
 dialog.order-modal .metric-exposure small{margin-top:3px;gap:3px}
 dialog.order-modal .metric-chance{padding-bottom:15px}
 dialog.order-modal .metric-track{bottom:6px;left:12px;right:12px;height:3px}
-dialog.order-modal .order-form>.action-description{margin:16px 0 0;padding-top:12px;border-top:1px solid var(--line);min-height:0;line-height:1.5}
 
 .console-direct-cards{grid-template-columns:minmax(0,400px)}.console-card-art{position:relative}.console-card-art img{display:block;width:100%;height:190px;object-fit:cover}.console-card-art .btn{position:absolute;bottom:12px;left:12px;right:12px;width:calc(100% - 24px);box-shadow:0 3px 14px #0008}.console-direct-card[draggable="false"]{cursor:default}@media(max-width:760px){.console-direct-card{display:block}.console-direct-cards{grid-template-columns:1fr}}
 
 .console-direct-cards{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:900px){.console-direct-cards{grid-template-columns:1fr}}
 
-/* Government: decisions first, explanations below. */
-.government-console{display:grid;gap:18px}.government-overview{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:28px;align-items:center;padding:26px}.government-country,.government-availability{display:flex;align-items:center;gap:12px}.government-country>span{font-size:18px;font-weight:650}.government-country small,.government-availability small{display:block;font-size:12px;color:var(--muted);margin-top:5px}.government-confidence>div{display:flex;align-items:center;gap:8px}.government-confidence strong{margin-left:auto;font-size:30px}.government-confidence strong small{font-size:13px;color:var(--muted)}.government-confidence meter{display:block;width:100%;height:12px;margin-top:10px;accent-color:var(--ob-accent,#74d6c1)}.government-confidence meter::-webkit-meter-bar{background:#25353d;border:0}.government-confidence meter::-webkit-meter-optimum-value{background:var(--ob-accent,#74d6c1)}.government-availability{justify-self:end}.government-availability.available{color:var(--ob-accent,#74d6c1)}.government-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.government-card{display:flex;flex-direction:column;padding:24px;min-width:0;border-top:2px solid var(--ob-accent,#74d6c1);background:linear-gradient(145deg,rgba(95,174,158,.08),transparent 65%),var(--panel,#111a20)}.government-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.government-symbol{display:grid;place-items:center;width:52px;height:52px;border:1px solid #42635e;border-radius:14px;color:#a2e6d8;background:#243b37}.government-symbol .icon{width:28px;height:28px}.government-cost{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:12px}.government-card h2{font-size:19px;margin:24px 0 14px}.government-effect{display:flex;gap:10px;align-items:baseline}.government-effect strong{font-size:48px;line-height:1.1;letter-spacing:-2px;color:#b5eee2}.government-effect span{font-size:16px;color:var(--muted)}.government-card p{font-size:13px;color:var(--muted);margin:12px 0 20px}.government-target{font-size:12px;display:flex;align-items:center;gap:6px;margin-bottom:7px}.government-card select{width:100%;font-size:12px;padding:10px;min-width:0}.government-note{color:var(--muted);font-size:12px}.government-card-action{margin-top:auto;padding-top:22px}.government-card-action .btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px}.government-card-action>small{display:block;text-align:center;font-size:11px;color:var(--muted);min-height:28px;margin-top:10px}.government-footer{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:18px 24px;color:var(--muted);font-size:12px}.government-footer>div{display:flex;align-items:center;gap:18px}.government-footer strong{color:var(--text);font-size:21px}.government-footer p{display:flex;align-items:center;gap:8px;margin:0}.government-help{padding:18px 24px;color:var(--muted);font-size:13px}.government-help summary{cursor:pointer;color:var(--text)}.government-help summary .icon{vertical-align:middle;margin-right:8px}.government-help p{line-height:1.7;max-width:950px}.government-console .icon{flex-shrink:0}.government-diplomacy{border-top-color:#8eabe0}.government-diplomacy .government-symbol{color:#b7d0fc;background:#273344;border-color:#465d80}.government-medical{border-top-color:#e2ba82}.government-medical .government-symbol{color:#f2cf9d;background:#3c3429;border-color:#786044}
-@media(max-width:1050px){.government-overview{grid-template-columns:1fr 1fr}.government-availability{grid-column:1/-1;justify-self:start}.government-card{padding:18px}.government-cost{font-size:11px}.government-card-top{flex-wrap:wrap}.government-footer{align-items:flex-start;flex-direction:column}}
-@media(max-width:700px){.government-cards{grid-template-columns:1fr}.government-overview{grid-template-columns:1fr;gap:20px;padding:20px}.government-card-top{flex-wrap:nowrap}.government-card h2{margin-top:16px}.government-effect strong{font-size:40px}.government-footer>div{flex-wrap:wrap;gap:12px}}
-/* Compact government cards and visible income threshold. */
-.government-console{gap:12px}.government-overview{padding:18px 22px;gap:20px}.government-card{padding:16px 20px}.government-symbol{width:38px;height:38px;border-radius:10px}.government-symbol .icon{width:23px;height:23px}.government-card h2{margin:14px 0 8px;font-size:17px}.government-effect strong{font-size:36px}.government-card p{margin:8px 0 12px}.government-card-action{padding-top:12px}.government-card-action>small{min-height:16px;margin-top:6px}.government-card select{padding:8px}.government-footer,.government-help{padding:12px 20px}.government-income{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}.government-income.active{color:#a2e6d8}.government-income .icon{width:16px;height:16px}.government-income strong{font-size:12px}
-.confidence-track{position:relative;height:12px;background:#26313b;border-radius:5px;margin-top:12px;overflow:visible}.confidence-fill{display:block;height:100%;border-radius:5px}.confidence-track.low .confidence-fill{background:#ef6868}.confidence-track.normal .confidence-fill{background:#66c892}.confidence-track.high .confidence-fill{background:#5ea9f5}.confidence-tick{position:absolute;top:-3px;height:18px;width:2px;background:#e0e8ef}.tick-ten{left:10%}.tick-fifty{left:50%}.confidence-thresholds{height:19px;position:relative;font-size:10px;color:var(--muted)}.confidence-thresholds span{position:absolute;transform:translateX(-50%);top:5px}.confidence-income-rules{display:flex;flex-wrap:wrap;gap:5px 12px;font-size:10px;color:var(--muted)}.confidence-income-rules .selected{color:var(--text);font-weight:700}.government-card-action>.government-cost{display:flex;justify-content:center;margin-bottom:7px;color:var(--text)}.government-card-top:empty{display:none}.power-compact{padding:14px 16px!important}.power-compact header{display:flex;align-items:center;gap:10px}.power-compact h3{font-size:16px;margin:0 0 3px}.power-compact small{font-size:11px;color:var(--muted)}.power-score{margin-left:auto;font-size:22px;text-align:right}.power-score small{display:block;font-size:10px;font-weight:400}.power-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap}.power-controls .relation-signals{margin:0}.power-controls .btn{font-size:11px;padding:7px 10px}
+.power-compact{padding:14px 16px!important}.power-compact header{display:flex;align-items:center;gap:10px}.power-compact h3{font-size:16px;margin:0 0 3px}.power-compact small{font-size:11px;color:var(--muted)}.power-score{margin-left:auto;font-size:22px;text-align:right}.power-score small{display:block;font-size:10px;font-weight:400}.power-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap}.power-controls .relation-signals{margin:0}.power-controls .btn{font-size:11px;padding:7px 10px}
 /* Compact first Operations section; keep activation and drop targets visible. */
 .immersive-deck .technology-layout>.operation-console{padding:12px 16px}
 .operation-console .section-title{margin-bottom:4px}.operation-console .section-title h2{font-size:18px;margin:0}.operation-console .console-capacity{padding:4px 8px;font-size:12px}.operation-console .console-intro{font-size:12px;margin:4px 0 8px}
@@ -76,11 +69,132 @@ dialog.order-modal .order-form>.action-description{margin:16px 0 0;padding-top:1
 @media(max-width:480px){.operation-console .console-slots{grid-template-columns:1fr}.operation-console .console-direct-card{grid-template-columns:120px minmax(0,1fr)}.operation-console .console-card-art .btn{font-size:11px;padding:6px}}
 /* Performance preset preserves native-resolution text, avoids costly frosted layers. */
 html[data-graphics="1080p"] .immersive-deck .deck-header,html[data-graphics="1080p"] .immersive-deck .deck-nav,html[data-graphics="1080p"] .immersive-deck .map-view-switch,html[data-graphics="1080p"] .immersive-deck .map-controls,html[data-graphics="1080p"] .immersive-deck .map-regions,html[data-graphics="1080p"] .immersive-deck .map-dossier,html[data-graphics="1080p"] .immersive-deck .field-team,html[data-graphics="1080p"] .immersive-deck .deck-main:not(.view-world){backdrop-filter:none;-webkit-backdrop-filter:none}
-/* An order dialog needs dimming, not a full-screen blur over the globe. */
-dialog.order-modal::backdrop{backdrop-filter:none;-webkit-backdrop-filter:none;background:#09090ed9}
-dialog.order-modal{box-shadow:0 12px 32px #0009}
-dialog.order-modal .order-agent{contain:layout paint}
-dialog.order-modal .order-form{animation:none}
+/* The express order is docked over the map. Only the briefing area scrolls. */
+#modal.order-modal {
+ position:fixed;inset:auto 0 max(12px,env(safe-area-inset-bottom));margin:0 auto;
+ width:min(680px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);
+ padding:0;overflow:hidden;border:1px solid #395269;border-radius:9px;
+ background:#101c2a;color:#edf5ff;box-shadow:0 12px 32px #0009;
+}
+#modal.order-modal::backdrop{backdrop-filter:none;-webkit-backdrop-filter:none;background:#060c163f}
+#modal.order-modal > .modal-close{top:9px;right:9px;width:40px;min-height:40px}
+#modal.order-modal .order-layout{display:block;width:100%;max-width:none;max-height:none;animation:none}
+#modal.order-modal .order-form {
+ display:flex;flex-direction:column;max-height:calc(100dvh - 26px);
+ min-width:0;padding:0;overflow:hidden;background:none;animation:none;
+}
+.express-order-heading {
+ display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 14px;
+ flex-shrink:0;padding:12px 56px 11px 16px;border-bottom:1px solid #33485e;background:#17283a;
+}
+#modal.order-modal .express-order-heading h2{margin:3px 0 0;font:700 clamp(20px,2.5vw,27px)/1.12 var(--display)}
+.express-order-heading .eyebrow{color:#abc0d6}
+.express-order-agent{display:flex;align-items:center;gap:7px}
+.express-order-agent .portrait{width:33px;height:38px;min-width:33px;border-radius:4px}
+.express-order-body{min-height:0;padding:11px 16px;overflow:auto;overscroll-behavior:contain}
+.express-order-fields{display:flex;flex-wrap:wrap;gap:7px 12px}
+#modal.order-modal .express-order-fields label{flex:1 1 190px;min-width:0;margin:0}
+.express-order-fields select,.mission-briefing-content select{width:100%;min-width:0}
+#modal.order-modal .mission-briefing-content label{margin:0}
+.express-order-body .training-order-note{margin:0 0 9px}
+.express-order-footer {
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:7px 10px;
+ flex-shrink:0;padding:10px 16px;border-top:1px solid #33485e;background:#0b1622;
+}
+.express-order-estimate{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.express-order-estimate strong{font-size:20px;color:#9ddaff}
+.express-order-estimate small,.mission-timing{font-size:12px;color:#b8cbe0}
+.express-order-feedback,
+.express-order-footer:has(>.mission-boost-control)>.express-order-estimate{grid-column:1/-1}
+.express-order-footer>.btn{width:100%;min-width:0;white-space:normal}
+@media(max-width:380px){.express-order-footer{grid-template-columns:1fr}}
+#modal.order-modal .order-form .express-order-feedback{margin:0}
+
+.mission-timing{font-variant-numeric:tabular-nums}
+.mission-credit-cost{color:#f1ca88;font-variant-numeric:tabular-nums}
+.mission-briefing {
+ margin-top:9px;border:1px solid #3b526a;border-radius:5px;background:#122131;
+}
+.mission-briefing > summary{padding:8px 10px;color:#b8e4ff;font-size:14px;font-weight:600;cursor:pointer}
+.mission-briefing > summary:focus-visible{outline:2px solid #a8d5ff;outline-offset:2px}
+.mission-briefing-content{display:grid;gap:8px;min-width:0;padding:8px 10px 10px;font-size:13px}
+.mission-briefing-content[hidden]{display:none}
+.mission-briefing-content .decision-box{margin:0;font-size:inherit}
+.mission-briefing-content .action-description,.mission-briefing-content > p{margin:0}
+.mission-briefing-content .mission-detail-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0}
+@media(max-height:720px){
+ .mission-briefing-content .order-checks{margin:0}
+ .mission-briefing-content .order-checks p{margin:3px 0}
+ .mission-briefing-content .decision-box{padding:8px 10px;line-height:1.45}
+ .mission-briefing-content .decision-box h3{margin:0 0 5px;font-size:15px}
+ .mission-briefing-content .decision-box p{margin:4px 0;font:inherit}
+ #modal.order-modal .mission-briefing-content .action-effects{margin:0}
+}
+.mission-boost-control{flex:1 1 185px;min-width:0}
+:is(.mission-boost-toggle.btn,#modal.order-modal .order-form .mission-boost-toggle){
+ display:flex;align-items:center;justify-content:flex-start;gap:7px;width:100%;min-width:0;
+ min-height:42px;margin:0;padding:5px 8px;text-align:left;line-height:1.2;white-space:normal;
+ border:1px solid #577593;border-radius:5px;background:#14293b;color:#d6edff;
+}
+.mission-boost-toggle>.icon{width:19px;height:19px;flex:none;color:#a6d8fa}
+.mission-boost-toggle>input{width:16px;height:16px;margin:0;flex:none;accent-color:#9ddaff}
+.mission-boost-toggle:has(input:not(:disabled)){cursor:pointer}
+:is(.mission-boost-toggle.btn[aria-pressed=true],#modal.order-modal .order-form .mission-boost-toggle:has(:checked)){
+ border-color:#9ddaff;background:#254d70;color:#eff9ff;
+}
+.mission-boost-toggle.btn:hover:not(:disabled){border-color:#9ddaff;background:#254d70}
+.mission-boost-toggle:focus-within{outline:2px solid #a8d5ff;outline-offset:2px}
+:is(.mission-boost-toggle.btn:disabled,#modal.order-modal .order-form .mission-boost-toggle:has(:disabled)){
+ opacity:1;border-color:#465469;background:#202937;color:#b7c6d5;
+}
+.mission-boost-copy{display:grid;gap:2px;min-width:0}
+.mission-boost-copy strong{font-size:12px}
+.mission-boost-copy small,.mission-boost-reason{font-size:11px;color:#b9d1e5;font-variant-numeric:tabular-nums}
+.mission-boost-balance{
+ margin-left:auto;padding:3px 4px;border:1px solid #4a637b;border-radius:4px;color:#c0d9eb;
+ font-size:10px;white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.mission-boost-balance.is-insufficient{color:#ffb9c4;border-color:#895264}
+.mission-boost-reason{display:block;margin:3px 0 0;color:#e7c59f}
+.mission-quick-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-block:7px}
+dialog .mission-quick-metrics .briefing-metric{
+ min-height:34px;padding:5px 7px;gap:6px;background:#142437;border:1px solid #395470;border-radius:5px;box-shadow:none;
+}
+dialog .mission-quick-metrics .metric-symbol{width:19px;height:19px;flex:0 0 19px;background:none;color:#a9d4f3}
+dialog .mission-quick-metrics .metric-symbol .icon{width:16px;height:16px}
+dialog .mission-quick-metrics .metric-value{gap:3px 6px;line-height:1.25}
+dialog .mission-quick-metrics .metric-value .icon{width:12px;height:12px;vertical-align:middle}
+dialog .mission-quick-metrics .metric-value strong{font-size:16px}
+dialog .mission-quick-metrics .metric-value small{font-size:11px;color:#c1d4e6}
+.mission-compare-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:3px 9px;margin:9px 0 5px}
+.mission-compare-heading small{color:#b8cbe0}
+.mission-candidate-readings b{color:#a9dcff}
+.mission-candidate-readings .mission-timing{font-size:11px}
+.inquiry-pinned-agent{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #395269;border-radius:5px;background:#122131}
+.inquiry-pinned-agent .mission-candidate-readings{text-align:right}
+.inquiry-pinned-agent .mission-timing{display:block}
+.country-order-footer,.inquiry-footer{
+ display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;flex-shrink:0;
+ padding:8px 10px;border-top:1px solid #33485e;background:#0b1622;
+}
+.country-order-footer .workspace-message,.inquiry-footer .inquiry-feedback{flex:0 0 100%;margin:0;color:#decaa9;font-size:12px}
+.mission-confirm-control{flex:1 1 165px;min-width:0;display:grid;gap:3px}
+.mission-confirm-control .mission-credit-cost{font-size:11px;text-align:right}
+.inquiry-action-context > .mission-briefing-content{grid-column:1/-1;border:1px solid #3b526a;border-radius:5px;background:#122131}
+
+:is(.express-order-footer,.mission-confirm-control) > .btn.primary {
+ min-height:42px;padding:8px 12px;border:1px solid #9ddaff;border-radius:5px;
+ background:#9ddaff;color:#0b2335;box-shadow:none;text-shadow:none;
+ font:700 14px/1.25 var(--font);letter-spacing:0;text-transform:none;
+}
+:is(.express-order-footer,.mission-confirm-control) > .btn.primary:hover:not(:disabled){background:#c0e9ff;color:#0b2335}
+@media(max-width:560px){
+ .express-order-heading,.express-order-body,.express-order-footer{padding-left:10px}
+ .express-order-body,.express-order-footer{padding-right:10px}
+ }
+@media(max-height:520px){
+ #modal.order-modal .order-form{max-height:calc(100dvh - 26px)}
+}
 /* Campaign condition chart and rich chronology details */
 .agent-condition-chart{margin:22px 0 0;padding:16px!important;background:linear-gradient(120deg,#182229,#231d29);border:1px solid #ffffff16;border-radius:12px}.agent-condition-chart svg{display:block;width:100%;max-height:200px}.agent-condition-chart figcaption{display:flex;justify-content:space-between;gap:12px}.agent-condition-chart figcaption small{color:#b7afb9;font-size:12px;font-weight:400}.agent-condition-chart [tabindex]:focus{outline:none}.agent-condition-chart [tabindex]:focus circle,.agent-condition-chart [tabindex]:hover circle{stroke:white;stroke-width:2}.report-rich-tooltip{position:fixed;z-index:10000;width:min(390px,calc(100vw - 24px));max-height:min(540px,calc(100vh - 24px));overflow:auto;box-sizing:border-box;padding:20px;border:1px solid #d5a3bb70;border-radius:14px;background:linear-gradient(145deg,#282632f7,#111b25fc);box-shadow:0 20px 60px #0009,0 0 25px #c780a212;backdrop-filter:blur(20px);color:#f4eef3;font-size:13px;line-height:1.5}.report-rich-tooltip h3{font-size:20px;margin:6px 0 14px}.report-rich-tooltip p{margin:4px 0}.timeline-tooltip-event{display:flex;gap:12px;border-top:1px solid #ffffff16;padding:12px 0}.timeline-tooltip-event .portrait{flex:none;width:48px;height:58px;border-radius:8px;overflow:hidden}.timeline-tooltip-event .portrait img{width:100%;height:100%;object-fit:cover}.timeline-tooltip-event strong{font-size:16px}.timeline-tooltip-event small{color:#c7bac8}.timeline-tooltip-event .tooltip-note{color:#b2b4c1;font-size:12px;margin-top:8px}.tooltip-prestige{padding:8px 10px;background:#8fd9c210;border-radius:6px;color:#a9e0cd}.timeline-mark:focus-visible{outline:2px solid #e8b2c3;outline-offset:2px}
 
@@ -90,9 +204,8 @@ dialog.order-modal .order-form{animation:none}
 .action-resources{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;font-size:14px}.action-resources>span,.console-card-cost .module-requirement{display:inline-flex;align-items:center;gap:5px;line-height:1.4}.action-resources>span{padding:6px 9px;background:#203f60;border:1px solid #4b789f;border-radius:5px;color:#d5edff}.action-resources .icon,.console-card-cost .module-requirement .icon{width:17px;height:17px}
 .operation-console .console-slot-heading>span{display:inline-flex;align-items:center;gap:6px;font-size:14px}.operation-console .console-slot-heading .icon{width:17px;height:17px}.operation-console .console-card-cost .module-requirement{font-size:14px}.operation-console .console-independent>span{display:inline-flex;align-items:center;gap:5px;font-size:14px}
 
-/* Module starts higher; one capacity status serves every activation card. */
-.immersive-deck .deck-main.view-operations{padding-top:10px}
-.immersive-deck .ops-layout.technology-layout{gap:12px}
+/* One capacity status serves every module card. */
+.immersive-deck .ops-layout.technology-layout{gap:12px;padding:0}
 .command-deck .deck-main.view-operations>.page-heading{padding-top:0;margin-bottom:8px}
 .view-operations>.page-heading .eyebrow:empty{display:none}.view-operations>.page-heading h1{margin-top:0;margin-bottom:4px}
 .immersive-deck .technology-layout>.operation-console{padding:8px 12px}

@@ -5,7 +5,7 @@
 .menu-earth canvas{position:absolute;inset:0;width:100%;height:100%}.menu-earth .menu-earth-fallback{width:100%;height:100%;inset:0}
 .main-menu:after{content:'';position:fixed;inset:0;background:linear-gradient(90deg,#040910d9 0%,#040910a6 29%,#04091012 57%,transparent 75%);z-index:-1;pointer-events:none}
 .menu-panel{width:clamp(390px,38vw,500px);margin:clamp(38px,9vh,110px) 0 65px clamp(28px,8.3vw,155px);padding:20px 0;box-sizing:border-box}
-.menu-brand{margin-bottom:54px}.menu-brand .brand{font-family:Oxanium,sans-serif;font-weight:500;font-size:clamp(25px,2.65vw,41px);letter-spacing:.15em;gap:20px;white-space:nowrap;color:#eaf6ff}.menu-brand .brand svg{width:49px;height:46px;color:#9fcfeb;flex-shrink:0}.menu-brand .brand span{color:#92c4ed;font-weight:400;font-size:.8em;letter-spacing:.2em}.menu-brand .brand small{display:none}
+.menu-brand{margin-bottom:54px}.menu-brand .brand{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:700;font-size:clamp(30px,3.4vw,54px);letter-spacing:.045em;gap:20px;white-space:nowrap;color:#eaf6ff}.menu-brand .brand-wordmark{text-transform:uppercase}.menu-brand .brand svg{width:49px;height:46px;color:#9fcfeb;flex-shrink:0}.menu-brand .brand span{color:#92c4ed;font-weight:inherit;font-size:.65em;letter-spacing:.2em}.menu-brand .brand small{display:none}
 .menu-eyebrow{font-family:Oxanium,sans-serif;font-size:11px;font-weight:400;letter-spacing:3px;color:#acbdce;margin:0 0 30px}
 .menu-panel h1{font-family:Oxanium,sans-serif;font-size:clamp(23px,2.05vw,31px);font-weight:400;letter-spacing:-.5px;line-height:1.35;margin:0 0 22px;text-wrap:balance}
 .menu-intro{font-size:16px;line-height:1.65;color:#afc2d4;margin:0 0 34px}.menu-panel nav{display:grid;gap:11px;max-width:410px}

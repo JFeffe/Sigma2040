@@ -1,3 +1,15 @@
+import {gameLanguage,translateText} from './localization.js?v=242';
+
+let confirmationPending=false;
+export async function confirmInGame(message){
+ if(confirmationPending)return false;
+ const text=translateText(message),desktop=globalThis.shadowMandatePC;
+ if(!desktop?.confirm)return globalThis.confirm(text);
+ confirmationPending=true;
+ try{return await desktop.confirm(text,gameLanguage());}
+ finally{confirmationPending=false;}
+}
+
 // Dismiss only a complete press/release on the backdrop, never a text-selection drag.
 export function bindBackdropDismiss(dialog,dismiss){
  let startedOutside=false;

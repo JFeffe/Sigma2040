@@ -1,12 +1,14 @@
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=238';
-import {musicMarkup} from './music.js?v=238';
-import * as E from './engine.js?v=238';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=238';
-import {proofTitle} from './intelligence.js?v=238';
-import {esc,button,portrait,icon} from './ui.js?v=238';
-const PREF='sigma2040-feedback-settings';
+import {languageSettingsMarkup,translateText} from './localization.js?v=242';
+import {readStorageItem} from './storage-keys.js?v=242';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=242';
+import {musicMarkup} from './music.js?v=242';
+import * as E from './engine.js?v=242';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=242';
+import {proofTitle} from './intelligence.js?v=242';
+import {esc,button,portrait,icon} from './ui.js?v=242';
+const PREF='shadow-mandate-2040-feedback-settings';
 let prefs={sound:false,volume:25,motion:'system'};
-try{const saved=JSON.parse(localStorage.getItem(PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system'};}catch{}
+try{const saved=JSON.parse(readStorageItem(localStorage,PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system'};}catch{}
 let baseline=null,notices=[],resourceChanges={},agentChanges={},expires=0,audioContext=null,lastSound=0;
 const signed=n=>(n>0?'+':'−')+Math.abs(Math.round(n*100)/100);
 export function feedbackSnapshot(s){const f=s.factions[s.player];return {campaign:`${s.seed}:${s.player}`,turn:s.turn,log:s.logId,resources:{budget:f.budget,confidence:f.confidence,score:f.score,crisis:s.crisis},agents:Object.fromEntries(s.agents.filter(a=>a.faction===s.player).map(a=>[a.id,{name:a.name,energy:100-a.fatigue,exposure:a.exposure,status:a.status}])),proofs:Object.fromEntries(f.evidence.map(e=>[e.id,e.contested?'discarded':e.verified?'verified':'pending']))};}
@@ -35,8 +37,15 @@ export function paintResourceFeedback(){
  for(const [key,value] of Object.entries(resourceChanges)){const node=document.querySelector(targets[key]);if(!node)continue;appendDelta(node,value,key==='crisis',key==='confidence'?' confiance':'');}
  for(const [id,change] of Object.entries(agentChanges)){for(const card of document.querySelectorAll('.agent-card'))if(card.dataset.id===id&&change.energy)appendDelta(card.querySelector('.fatigue,.compact-energy'),change.energy,false,' énergie');}
 }
-function appendDelta(node,value,inverse,label){if(!node||node.querySelector(`[data-delta-label="${label}"]`))return;const tag=document.createElement('span');tag.className='resource-delta '+((value>0)!==inverse?'good':'danger');tag.dataset.deltaLabel=label;tag.textContent=signed(value)+label;node.append(tag);setTimeout(()=>tag.remove(),Math.max(0,expires-Date.now()));}
-export function reportUpdates(s,scope='all'){const labels={budget:'crédits (solde du tour)',confidence:'confiance',score:'prestige',crisis:'crise'};return `<div class="report-updates"><div class="result-effects">${Object.entries(resourceChanges).filter(([k])=>scope==='all'||(scope==='world'?k==='crisis':k!=='crisis')).map(([k,v])=>`<span class="effect ${(v>0)!==(k==='crisis')?'good':'danger'}">${signed(v)} ${labels[k]}</span>`).join('')}</div>${notices.filter(n=>scope!=='world'&&n.turn===s.turn).map(n=>`<p class="${n.kind==='proof'?'':'attention'}">${esc(n.text)}</p>`).join('')}</div>`;}
+function appendDelta(node,value,inverse,label){if(!node||node.querySelector(`[data-delta-label="${label}"]`))return;const tag=document.createElement('span');tag.className='resource-delta '+((value>0)!==inverse?'good':'danger');tag.dataset.deltaLabel=label;tag.textContent=signed(value)+(label?' '+translateText(label.trim()):'');node.append(tag);setTimeout(()=>tag.remove(),Math.max(0,expires-Date.now()));}
+export function reportUpdates(s,scope='all'){
+ const labels={budget:'Crédits',confidence:'Confiance',score:'Prestige',crisis:'Crise'};
+ const effects=Object.entries(resourceChanges).filter(([key])=>scope==='all'||(scope==='world'?key==='crisis':key!=='crisis'))
+  .map(([key,value])=>`<span class="effect ${(value>0)!==(key==='crisis')?'good':'danger'}"><strong>${signed(value)}</strong> <span>${labels[key]}</span></span>`).join('');
+ const notes=notices.filter(n=>scope!=='world'&&n.turn===s.turn)
+  .map(n=>`<p class="${n.kind==='proof'?'':'attention'}">${esc(n.text)}</p>`).join('');
+ return effects||notes?`<div class="report-updates">${effects?`<div class="result-effects">${effects}</div>`:''}${notes}</div>`:'<p class="turn-report-quiet">Aucun changement</p>';
+}
 export function activityLinks(s,l){
  const links=[];const own=s.agents.filter(a=>a.faction===s.player).find(a=>l.text.includes(a.name));if(own)links.push({cmd:'select-agent',id:own.id,label:'Dossier '+own.name});
  const target=E.knownTargets(s).find(t=>l.text.includes(t.name));if(target)links.push({cmd:'suspect',id:target.id,label:'Dossier '+target.name});
@@ -56,7 +65,39 @@ export function transmission(r){
 }
 export function applyPreferences(){applyGraphics();if(typeof document==='undefined')return;document.documentElement.classList.toggle('reduce-feedback',prefs.motion==='reduced');}
 export function updatePreference(key,value){if(key==='sound')prefs.sound=!!value;if(key==='volume')prefs.volume=Math.max(0,Math.min(100,Number(value)||0));if(key==='motion')prefs.motion=value==='reduced'?'reduced':'system';try{localStorage.setItem(PREF,JSON.stringify(prefs));}catch{}applyPreferences();}
-export function settingsMarkup(){return `${graphicsMarkup()}${musicMarkup()}<section class="feedback-settings"><h3>Sons et animations</h3><label class="feedback-toggle"><input id="feedbackSound" type="checkbox" ${prefs.sound?'checked':''}> Sons de transmission et d’alerte</label><label for="feedbackVolume">Volume des effets <output id="feedbackVolumeValue">${prefs.volume}%</output></label><input id="feedbackVolume" type="range" min="0" max="100" value="${prefs.volume}" ${prefs.sound?'':'disabled'}><label for="feedbackMotion">Animations</label><select id="feedbackMotion"><option value="system" ${prefs.motion==='system'?'selected':''}>Suivre les préférences de l’appareil</option><option value="reduced" ${prefs.motion==='reduced'?'selected':''}>Réduire les animations</option></select><p>Les informations restent visibles lorsque les effets sont réduits. Réglages conservés sur cet appareil.</p>${button('Écouter un signal','test-sound','small',prefs.sound?'':'disabled title="Activez les sons pour écouter un signal."')}</section>`;}
+export function settingsMarkup(){
+ const panels=[['general','Général'],['display','Affichage'],['audio','Audio']];
+ return `<div class="settings-modal">
+  <header class="settings-header"><h2 id="settingsTitle">Paramètres</h2><p>Réglages enregistrés sur cet appareil.</p></header>
+  <nav class="settings-tabs" aria-label="Catégories de paramètres">
+   ${panels.map(([id,label])=>button(label,'settings-tab','small',`data-id="${id}" aria-pressed="${id==='general'}" aria-controls="settings-${id}"`)).join('')}
+  </nav>
+  <div class="settings-content">
+   <div id="settings-general" data-settings-panel="general">${languageSettingsMarkup()}</div>
+   <div id="settings-display" data-settings-panel="display" hidden>
+    ${graphicsMarkup()}
+    <section class="feedback-settings">
+     <h3>Animations</h3>
+     <label for="feedbackMotion">Effets de l’interface</label>
+     <select id="feedbackMotion">
+      <option value="system" ${prefs.motion==='system'?'selected':''}>Suivre les préférences de l’appareil</option>
+      <option value="reduced" ${prefs.motion==='reduced'?'selected':''}>Réduire les animations</option>
+     </select>
+    </section>
+   </div>
+   <div id="settings-audio" data-settings-panel="audio" hidden>
+    ${musicMarkup()}
+    <section class="feedback-settings">
+     <h3>Effets sonores</h3>
+     <label class="feedback-toggle"><input id="feedbackSound" type="checkbox" ${prefs.sound?'checked':''}> Sons de transmission et d’alerte</label>
+     <label class="settings-volume" for="feedbackVolume">Volume des effets <output id="feedbackVolumeValue">${prefs.volume}%</output></label>
+     <input id="feedbackVolume" type="range" min="0" max="100" value="${prefs.volume}" ${prefs.sound?'':'disabled'}>
+     ${button('Écouter un signal','test-sound','small',prefs.sound?'':'disabled title="Activez les sons pour écouter un signal."')}
+    </section>
+   </div>
+  </div>
+ </div>`;
+}
 export function playCue(kind='transmission'){
  if(!prefs.sound||prefs.volume===0||typeof window==='undefined'||document.hidden||Date.now()-lastSound<300)return;
  try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioContext??=new Audio();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});lastSound=Date.now();const notes=kind==='alert'?[420,300]:kind==='discovery'?[650,880,1050]:[620,790],now=audioContext.currentTime;notes.forEach((hz,i)=>{const osc=audioContext.createOscillator(),gain=audioContext.createGain(),start=now+i*.1;osc.type='sine';osc.frequency.value=hz;gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(prefs.volume/100*.11,start+.015);gain.gain.exponentialRampToValueAtTime(.0001,start+.13);osc.connect(gain);gain.connect(audioContext.destination);osc.start(start);osc.stop(start+.15);osc.onended=()=>{osc.disconnect();gain.disconnect();};});}catch{}

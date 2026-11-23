@@ -1,3 +1,11 @@
+# Shadow Mandate 2040
+
+## Build 242 — Atlas
+
+**[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/7c186bf5973578380aa8fddb5ebf36b37d4833c2...build-242)
+
+Atlas devient l’interface officielle. Le menu principal, la barre latérale et les fenêtres adoptent le nouveau visuel. Les dossiers et les ordres sont plus lisibles, la langue se choisit dans les paramètres et les noms décalés restent reliés à leur pays sur le globe.
+
 ## Build 238 — Langues étrangères et Drones
 
 [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/8e69aaba47f3e110bfedd719c292270ad148917f...build-238)

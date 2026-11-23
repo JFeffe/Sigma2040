@@ -28,6 +28,23 @@ test('Country popup puts deployment in actions, omits the removed summary and ke
  const agent=floatingAgentMarkup(s,a.id);assert.doesNotMatch(agent,/Nat\./);assert.match(agent,/<h2>[^<]+ <span class="agent-nationality">/);assert.match(agent,/Nationalité :/);assert.match(agent,/Pays actuel/);
 });
 
+test('Territory comparison displays each agent’s forecast and leaves confirmation outside the briefing',()=>{
+ const s=E.createGame('FR',DEFAULT_TEAM_IDS,218),[a,b]=E.team(s);
+ for(const agent of [a,b]){agent.country='TR';agent.weapon=false;}
+ a.stats[2]=8;b.stats[2]=5;b.talents=['endurance'];
+ const html=countryOperationsMarkup(s,'TR',{type:'equip',agent:b.id});
+ for(const agent of [a,b]){
+  const o=E.options(s,agent.id,'equip'),row=html.match(new RegExp(`<button[^>]*data-cmd="workspace-agent"[^>]*data-id="${agent.id}"[^>]*>[\\s\\S]*?<\\/button>`))?.[0];
+  assert.ok(row);
+  assert.ok(row.includes(`${o.chance} %</b>`));
+  assert.ok(row.includes(`${o.duration} tour ·`));
+  assert.ok(row.includes(`−${o.fatigue*o.duration} énergie`));
+  assert.ok(row.includes(`aria-pressed="${agent===b}"`));
+ }
+ assert.match(html,/<details class="mission-briefing">\s*<summary>Détails<\/summary>/);
+ assert.match(html,/<footer class="country-order-footer">[^]*data-cmd="workspace-confirm"[^]*Confirmer ·/);
+});
+
 function actions(html,scope){
  const group=html.split(`class="${scope}"`)[1].split('</div>')[0];
  return [...group.matchAll(/<button\b([^>]*)>/g)].map(([,attributes])=>[
@@ -113,6 +130,9 @@ test('The agent menu shares the country actions but evaluates and assigns them t
  const pinned=countryOperationModel(s,'DE',{type:'equip',agentId:a.id});
  assert.deepEqual(pinned.rows.map(r=>r.a.id),[a.id]);
  assert.equal(pinned.selected,null);
+ const agentMenu=countryOperationsMarkup(s,'DE',{group:'access',agentId:a.id});
+ assert.match(agentMenu,/data-cmd="workspace-action"/);
+ assert.doesNotMatch(agentMenu,/data-cmd="workspace-agent"|data-cmd="workspace-confirm"/);
  a.weapon=false;
  html=floatingAgentMarkup(s,a.id,{sidebar:true});
  assert.doesNotMatch(html,/data-type="equip"[^>]*disabled>/);

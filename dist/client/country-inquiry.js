@@ -1,29 +1,32 @@
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=238';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=238';
-import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=238';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=238';
-import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=238';
-import * as E from './engine.js?v=238';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=238';
-import {esc,icon,button,flag,portrait} from './ui.js?v=238';
-import {suspectPortrait} from './fracture-profiles.js?v=238';
-import {countrySignals} from './country-signals.js?v=238';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=238';
+import {localizeContent} from './localization.js?v=242';
+import {cellInfoButton,captiveMarkup} from './cell-info.js?v=242';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=242';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=242';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=242';
+import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=242';
+import * as E from './engine.js?v=242';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=242';
+import {esc,icon,button,flag,portrait} from './ui.js?v=242';
+import {suspectPortrait} from './fracture-profiles.js?v=242';
+import {countrySignals} from './country-signals.js?v=242';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=242';
+import {forecastMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=242';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
 export const INQUIRY_ACTIONS=ACTION_GROUPS.flatMap(([,ids])=>ids).filter(id=>relevant.has(id)&&!ACTIONS[id].disabled);
-export function countryTargetButtons(s,country,{empty='<p class="muted">Aucune cible connue dans ce pays.</p>',emptyLast=false}={}){
+export function countryTargetButtons(s,country,{empty='<p class="muted">Aucune cible connue dans ce pays.</p>',emptyLast=false,agentId=null}={}){
  const targets=E.knownTargets(s).filter(t=>t.country===country&&!t.arrested);
- const dossiers=targets.map(t=>button(`${suspectPortrait(t)}<span><strong>${esc(t.name)}</strong><small>${t.locationUntil>=s.turn?'Localisé · fin T'+t.locationUntil:'Position à confirmer'}</small></span>`,'country-inquiry','country-case-button',`data-id="${t.id}"`)).join('');
+ const actor=agentId?` data-agent="${esc(agentId)}"`:'';
+ const dossiers=targets.map(t=>button(`${suspectPortrait(t)}<span><strong>${esc(t.name)}</strong><small>${t.locationUntil>=s.turn?'Localisé · fin T'+t.locationUntil:'Position à confirmer'}</small></span>`,'country-inquiry','country-case-button',`data-id="${t.id}"${actor}`)).join('');
  const captives=E.team(s).filter(a=>a.status==='captured'&&a.country===country).map(a=>button(`${portrait(a)}<span><strong>${esc(a.name)}</strong><small>Extraire un agent</small></span>`,'rescue-captive','country-case-button',`data-id="${esc(a.id)}"`)).join('');
- const local=countryThreatButtons(s,country)+captives+captiveMarkup(s,country);
+ const local=countryThreatButtons(s,country,agentId)+captives+captiveMarkup(s,country);
  const content=emptyLast?dossiers+local+(dossiers?'':empty):(dossiers||empty)+local;
  return content?`<div class="country-case-buttons" aria-label="Dossiers, menaces et actions locales">${content}</div>`:'';
 }
-export function countryThreatButtons(s,country){return E.visiblePlots(s).filter(p=>p.country===country).sort((a,b)=>a.turn-b.turn).map(p=>{
+export function countryThreatButtons(s,country,agentId=null){return E.visiblePlots(s).filter(p=>p.country===country).sort((a,b)=>a.turn-b.turn).map(p=>{
  const own=threatCoverage(s,p).covered,other=s.gameMode==='cooperative'&&coveringFactions(s,p).some(f=>f.id!==s.player),covered=own||other;
- return button(`${icon('shield')}<span><strong>Menace · ${esc(cellName(p.cell))}</strong><small>${esc(p.kind)} · fin du tour ${p.turn}</small>${covered?`<small class="${!own&&other?'other-coverage':''}">${own?'Protégée par votre pays':'Couverte par une autre équipe'}</small>`:''}</span>`,'country-threat',`country-case-button country-threat-button ${covered?'threat-covered':''}`,`data-id="${p.id}" ${covered?'disabled':''}`);
+ return button(`${icon('shield')}<span><strong>Menace · ${esc(cellName(p.cell))}</strong><small>${esc(p.kind)} · fin du tour ${p.turn}</small>${covered?`<small class="${!own&&other?'other-coverage':''}">${own?'Protégée par votre pays':'Couverte par une autre équipe'}</small>`:''}</span>`,'country-threat',`country-case-button country-threat-button ${covered?'threat-covered':''}`,`data-id="${p.id}"${agentId?` data-agent="${esc(agentId)}"`:''} ${covered?'disabled':''}`);
  }).join('');}
 export function localInquiryAgents(s,country){return E.team(s).filter(a=>a.country===country&&!E.travelInProgress(a));}
 export function threatInquiryModel(s,id,agentId=null,useCredits=false){
@@ -74,8 +77,7 @@ export function inquiryActionInputs(type,candidate){
   return `<span class="${a&&!applied?'is-inactive':''}" title="${effect}">${esc(TALENTS[id][0])}${status}</span>`;
  }).join('');
  const effects=type==='hack'?[{icon:'terminal',text:'Hack +1 tour'}]:[];
- const modifiers=(o?.explanations||[]).filter(x=>x!=='Talents +10'&&!x.startsWith('Langues étrangères +5'));
- return `<div class="inquiry-action-inputs" aria-label="Stat, talent et effets associés">${stat}${talents}${actionResourceBadges(type,a)}${effects.map(x=>`<span${x.title?` title="${x.title}"`:''}>${icon(x.icon)} ${esc(x.text)}</span>`).join('')}${modifiers.map(x=>`<span class="inquiry-modifier">${esc(x)}</span>`).join('')}</div>`;
+ return `<div class="inquiry-action-inputs" aria-label="Stat, talent et effets associés">${stat}${talents}${actionResourceBadges(type,a)}${effects.map(x=>`<span${x.title?` title="${x.title}"`:''}>${icon(x.icon)} ${esc(x.text)}</span>`).join('')}</div>`;
 }
 export function inquiryActionCosts(type,candidate){
  if(!candidate)return '<p class="inquiry-costs-empty">Choisissez un agent pour voir l’énergie et l’exposition.</p>';
@@ -86,14 +88,17 @@ export function inquiryActionCosts(type,candidate){
 export function createCountryInquiryController(callbacks){
 let api=callbacks,selection=null,pending=false;
 function initCountryInquiry(callbacks){api=callbacks;}
-function openCountryInquiry(id,threat=false){
- if(threat){if(!threatInquiryModel(api.state(),id))return;selection={id,threat:true,type:'protect',agent:null,proof:null,boost:false,message:''};paint(true);return;}
+function openCountryInquiry(id,threat=false,actor=null){
+ if(threat){if(!threatInquiryModel(api.state(),id))return;selection={id,threat:true,type:'protect',actor,agent:null,proof:null,boost:false,message:''};paint(true);return;}
  const s=api.state(),t=E.knownTargets(s).find(t=>t.id===id);if(!t)return;
- const next=E.nextOperation(s,t);selection={id,type:INQUIRY_ACTIONS.includes(next.type)?next.type:'contacts',agent:null,proof:null,boost:false,message:''};
+ const next=E.nextOperation(s,t);selection={id,type:INQUIRY_ACTIONS.includes(next.type)?next.type:'contacts',actor,agent:null,proof:null,boost:false,message:''};
  selection.step=stepForAction(selection.type);selection.substep=substepForAction(selection.step,selection.type);paint(true);
 }
 function refreshCountryInquiry(){if(api?.modal.open&&api.modal.classList.contains('country-inquiry-modal'))paint();}
-function selectionModel(s,current){return current.threat?threatInquiryModel(s,current.id,current.agent,current.boost):inquiryModel(s,current.id,current.type,current.agent,current.proof,current.boost);}
+function selectionModel(s,current){
+ const agent=current.agent??current.actor;
+ return current.threat?threatInquiryModel(s,current.id,agent,current.boost):inquiryModel(s,current.id,current.type,agent,current.proof,current.boost);
+}
 function readOnly(){return pending?'Confirmation en cours…':api.readOnlyReason()||'';}
 function boostUnavailable(candidate,locked){return locked||candidate?.reason||candidate?.normal.error||(!candidate?'Choisissez un agent disponible.':'')||(candidate.normal.chance===100?'Formation : réussite garantie, sans boost.':candidate.normal.boostGain===0?'Chances déjà au plafond de 90 %.':'')||candidate.reinforced.error||'';}
 function paint(open=false){
@@ -102,11 +107,31 @@ function paint(open=false){
  let m=selectionModel(s,selection);if(!m){if(!open)api.modal.close();return;}
  if(selection.boost&&(s.factions[s.player].budget<E.ECONOMY.boostCost||m.selected?.normal.boostGain===0)){selection.boost=false;m=selectionModel(s,selection);}
  const {t,type,rows,selected,proofs,requirements,plot}=m;selection.agent=selected?.a.id||null;selection.proof=selected?.target&&type==='analyze'?selected.target:proofs[0]?.id||null;
+ const direct=selected&&selected.a.id===selection.actor;
  const locked=readOnly(),done=inquiryCompleted(s,t,type),e=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player],preview=selected,boostReason=boostUnavailable(selected,locked);
  const progress=plot?null:investigationSteps(s,t),stage=INVESTIGATION_STEPS.find(x=>x.id===selection.step)||INVESTIGATION_STEPS[0];
  const substeps=INVESTIGATION_SUBSTEPS[stage.id],substep=selection.substep??substepForAction(stage.id,stage.actions[0]);
  const actionKeys=substeps?.[substep]??stage.actions;
- const actions=plot?'':`${investigationRail(s,t,stage.id)}<div class="inquiry-stage-heading"><h3>${esc(stage.label)}</h3></div>${stage.id==='intervention'?'<p class="inquiry-description">Préparation et localisation peuvent être menées en parallèle.</p>':''}${substeps?investigationSubsteps(s,t,stage.id,true,substep):''}${stage.id==='validation'?`<p class="inquiry-description">${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.</p>`:''}${stage.id==='proofs'?`<p class="inquiry-description">${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.</p>`:''}<div class="inquiry-action-buttons" aria-label="Actions de l’étape">${actionKeys.map(key=>{const complete=inquiryCompleted(s,t,key),available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);return button(`${icon(complete?'check':ACTIONS[key].icon)}<span>${esc(ACTIONS[key].name)}</span>${complete?'<small>Fait</small>':!available?icon('lock'):''}`,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);}).join('')}</div>`;
+ const actionLabel=actionKeys.length===1?'Action sélectionnée':substeps?'Actions de la sous-étape':'Actions de l’étape';
+ const actionChoices=plot?'':actionKeys.map(key=>{
+  const action=ACTIONS[key],complete=!!inquiryCompleted(s,t,key);
+  const available=!complete&&localInquiryAgents(s,key==='analyze'?s.player:t.country).some(a=>!inquiryCandidate(s,t,key,a).reason);
+  const name=`<span>${esc(action.name)}</span>`;
+  const state=complete?'<small>Terminé</small>':!available?`<small>${icon('lock')} Indisponible</small>`:'';
+  const content=`${icon(complete?'check':action.icon)}${name}${state}`;
+  return actionKeys.length===1?`<div class="inquiry-single-action" data-action="${key}">${content}</div>`:
+   button(content,'inquiry-action',`inquiry-action ${complete?'is-complete':!available?'is-blocked':''}`,`data-id="${key}" aria-pressed="${key===type}"`);
+ }).join('');
+ const stageNote=plot?'':stage.id==='intervention'?'Préparation et localisation peuvent être menées en parallèle.':stage.id==='validation'?`${progress.verified} preuve(s) vérifiée(s) · 1 requise. Vous pouvez aussi vérifier la deuxième.`:stage.id==='proofs'?`${progress.proofs}/2 preuves recevables. Plusieurs agents peuvent chercher des preuves pendant le même tour.`:'';
+ const actions=plot?'':`<div class="inquiry-workflow">
+  <h3 class="workflow-label">Étapes du dossier</h3>
+  ${investigationRail(s,t,stage.id)}
+  ${substeps?`<section class="inquiry-substep-level"><h3 class="workflow-label">Sous-étapes</h3>${investigationSubsteps(s,t,stage.id,true,substep)}</section>`:''}
+  <section class="inquiry-action-level">
+   <h3 class="workflow-label">${actionLabel}</h3>
+   <div class="inquiry-action-buttons" role="group" aria-label="${actionLabel}">${actionChoices}</div>
+  </section>
+ </div>`;
  const running=E.team(s).filter(a=>a.task&&(a.task.target===t.id||a.task.type==='analyze'&&s.proofs.find(p=>p.id===a.task.target)?.suspect===t.id||a.country===t.country&&['contacts','influence','authorize','drone',...(plot?['protect']:[])].includes(a.task.type)));
  const missions=running.length?`<section class="inquiry-running"><h3>Missions affectées · ${running.length}</h3>${running.map(a=>`<div>${button(portrait(a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${a.id}" aria-label="Consulter la fiche de ${esc(a.name)}"`)}<span><strong>${esc(a.name)}</strong><small>${esc(ACTIONS[a.task.type].name)} · ${a.task.remaining} tour(s)${a.task.queued?' · planifiée':''}</small></span></div>`).join('')}</section>`:'';
 
@@ -114,22 +139,63 @@ function paint(open=false){
  const coverage=plot?threatCoverage(s,plot):null,otherCoverage=plot?coveringFactions(s,plot).filter(f=>f.id!==s.player):[];
 
  const blocked=locked||done||selected?.reason||(!selected?'Aucun agent disponible pour cette action.':'');
- const html=`<section class="country-inquiry"><header class="inquiry-heading">${plot?'<span class="inquiry-threat-icon">'+icon('shield')+'</span>':suspectPortrait(t)}<div><span class="eyebrow">${cellInfoButton(s,t.cell)} · ${plot?'MENACE':'DOSSIER'}</span><h2>${esc(t.name)}</h2><span>${flag(t.country)} ${esc(COUNTRY[t.country].name)}</span></div></header>
+ const briefingId='inquiry-briefing-'+esc(t.id)+(selection.actor?'-'+esc(selection.actor):'');
+ const modifiers=preview?.o.explanations.filter(x=>x!=='Talents +10'&&!x.startsWith('Langues étrangères +5'))??[];
+ const briefing=preview?forecastMarkup(s,preview.a.id,type,preview.target,'inquiryMechanics'):`<p id="inquiryMechanics">${esc(OUTCOMES[type])}</p>`;
+ const boost=!ACTIONS[type].safe?`<div class="mission-boost-control">
+  ${button(icon('boost')+missionBoostLabel(selected?.normal,selected?.reinforced,f.budget),'inquiry-boost','mission-boost-toggle',`id="inquiryBoost" aria-pressed="${selection.boost}" ${locked||f.budget<E.ECONOMY.boostCost||!selection.boost&&boostReason?'disabled':''}`)}
+  ${selected&&boostReason&&boostReason!==blocked?`<small class="mission-boost-reason">${esc(boostReason)}</small>`:''}
+ </div>`:'';
+ const confirmLabel=direct?'Préparer l’ordre':'Confirmer',confirmCommand=direct?'inquiry-express':'inquiry-confirm';
+ const country=COUNTRY[t.country],verified=e.filter(p=>p.verified).length;
+ const location=t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer';
+ const heading=plot?`<header class="inquiry-heading">
+  <span class="inquiry-threat-icon">${icon('shield')}</span>
+  <div><span class="eyebrow">${cellInfoButton(s,t.cell)} · MENACE</span><h2>${esc(t.name)}</h2><span>${flag(t.country)} ${esc(country.name)}</span></div>
+ </header>
  <div class="inquiry-country-signals">${countrySignals(s,t.country)}</div>
- <div class="inquiry-summary">${plot?`<span>Attaque · fin du tour ${plot.turn}</span><span>${esc(protection.current)}</span>${protection.planned?`<span>${esc(protection.planned)}</span>`:''}<span>${esc(protection.attack)}</span><span class="${!coverage.covered&&otherCoverage.length?'other-coverage':''}">${coverage.covered?'Protégée par votre pays':otherCoverage.length?'Couverte par une autre équipe':'Menace non couverte'}</span>${otherCoverage.length?`<span class="other-coverage">${icon('shield')} Déjà couverte par ${otherCoverage.map(f=>`${esc(COUNTRY[f.id].name)} · jusqu’à T${f.defense[plot.country]}`).join(' ; ')}</span>`:''}`:`<span>${e.length}/2 preuves · ${e.filter(p=>p.verified).length} vérifiée(s)</span><span>${t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer'}</span>`}</div>
+ <div class="inquiry-summary"><span>Attaque · fin du tour ${plot.turn}</span><span>${esc(protection.current)}</span>${protection.planned?`<span>${esc(protection.planned)}</span>`:''}<span>${esc(protection.attack)}</span><span class="${!coverage.covered&&otherCoverage.length?'other-coverage':''}">${coverage.covered?'Protégée par votre pays':otherCoverage.length?'Couverte par une autre équipe':'Menace non couverte'}</span>${otherCoverage.length?`<span class="other-coverage">${icon('shield')} Déjà couverte par ${otherCoverage.map(f=>`${esc(COUNTRY[f.id].name)} · jusqu’à T${f.defense[plot.country]}`).join(', ')}</span>`:''}</div>`:
+ `<header class="inquiry-heading dossier-sheet">
+  <div class="inquiry-identity">${suspectPortrait(t)}
+   <div>${cellInfoButton(s,t.cell)}<h2>${esc(t.name)}</h2><small>${esc(t.role)}</small></div>
+  </div>
+  <div class="inquiry-case-country">
+   <div class="inquiry-case-place">${flag(t.country)} <strong>${esc(country.name)}</strong></div>
+   <div class="inquiry-case-facts"><span>${icon('file')} ${e.length}/2 preuves · ${verified} ${verified===1?'vérifiée':'vérifiées'}</span><span>${icon('target')} ${esc(location)}</span></div>
+   <div class="compact-country-signals">${countrySignals(s,t.country,true)}</div>
+  </div>
+ </header>`;
+ const html=`<section class="country-inquiry${plot?'':' case-inquiry'}">${heading}
  <div class="inquiry-body">${isTutorial(s)?`<details class="tutorial-inquiry-note"><summary>Filigrane · Instructions de formation</summary><p>${esc(tutorialHint(s))}</p></details>`:''}${actions}
- <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · +${E.attackDamage(s,plot)} crise si non protégée · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}<div class="inquiry-action-context">${inquiryActionInputs(type,preview)}${button(`${icon('help')} Effets de l’action ${icon('chevron')}`,'inquiry-effects','inquiry-effects',`id="inquiryEffects" aria-expanded="${!!selection.effectsOpen}" aria-controls="inquiryMechanics"`)}<p id="inquiryMechanics" class="inquiry-mechanics" ${selection.effectsOpen?'':'hidden'}>${esc(OUTCOMES[type])}${type==='surveil'&&preview?' '+esc(E.operationForecast(s,preview.a.id,type,preview.target).warnings[0]):''}</p></div>
- ${plot&&selected?`<p class="inquiry-warning">Fin de préparation : T${s.turn+selected.o.duration-1}${s.turn+selected.o.duration-1>plot.turn?' · Trop tard pour cette attaque.':plot.turn>s.turn+selected.o.duration+2?' · Protection expirée avant cette attaque si lancée maintenant.':' · Protection à temps en cas de réussite.'}</p>`:''}
+ <section class="inquiry-operation">${plot?`<h3>${esc(ACTIONS.protect.name)}</h3><p class="inquiry-description">${esc(plot.kind)} · +${E.attackDamage(s,plot)} crise si non protégée · ${coverage.covered?'Protection de votre pays jusqu’à fin T'+coverage.until+'.':'Réussir la mission avant l’attaque pour protéger le pays.'}</p>`:''}
+ <div class="inquiry-action-context">
+  ${inquiryActionInputs(type,preview)}
+  ${button(`${icon('help')} Détails ${icon('chevron')}`,'inquiry-effects','inquiry-effects',`id="inquiryEffects" aria-expanded="${!!selection.effectsOpen}" aria-controls="${briefingId}"`)}
+  <div id="${briefingId}" class="mission-briefing-content" ${selection.effectsOpen?'':'hidden'}>
+   ${stageNote?`<p>${esc(stageNote)}</p>`:''}
+   ${modifiers.length?`<ul class="inquiry-odds-details">${modifiers.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:''}
+   ${briefing}
+  </div>
+ </div>
+ ${plot&&selected?`<p class="inquiry-warning"><span>Fin de préparation : T${s.turn+selected.o.duration-1}</span>${s.turn+selected.o.duration-1>plot.turn?' · Trop tard pour cette attaque.':plot.turn>s.turn+selected.o.duration+2?' · Protection expirée avant cette attaque si lancée maintenant.':' · Protection à temps en cas de réussite.'}</p>`:''}
  ${requirements.length?`<div class="inquiry-requirements">${requirements.map(r=>r.done?`<span class="is-met">${icon('check')} ${esc(r.label)}</span>`:button(`${icon('lock')} ${esc(r.label)}`,'inquiry-action','is-missing',`data-id="${r.action}"`)).join('')}</div>`:''}
  ${type==='arrest'&&!f.authorized[t.country]&&!t.arrested?'<p class="inquiry-warning">Sans mandat : arrestation clandestine, risque accru et coopération −1 niveau après la tentative.</p>':''}
  ${type==='analyze'?`<label class="inquiry-proof">Pièce de ce dossier<select id="inquiryProof" ${!proofs.length?'disabled':''}>${proofs.length?proofs.map(p=>`<option value="${p.id}" ${p.id===selection.proof?'selected':''}>${esc(proofTitle(s.proofs.find(x=>x.id===p.id)))}</option>`).join(''):'<option>Aucune pièce disponible</option>'}</select></label>`:''}
- <div class="inquiry-agents-heading"><div><p class="inquiry-agent-label">Choisir un agent · ${type==='analyze'?'au QG':esc(COUNTRY[t.country].name)}</p><small class="inquiry-boost-status" role="status">${esc(boostReason||(selected?.normal.boostGain<10?'Plafond 90 %':''))}</small></div>${button(`${icon('boost')}<span>+10% -6cr/<b class="inquiry-boost-balance ${f.budget<E.ECONOMY.boostCost?'is-insufficient':''}">${f.budget}</b></span>`,'inquiry-boost','inquiry-boost',`id="inquiryBoost" aria-label="${selection.boost?'Désactiver':'Activer'} le boost : +10 points, ${E.ECONOMY.boostCost} crédits" aria-pressed="${selection.boost}" title="${esc(locked||(!selection.boost&&boostReason)||'Boost de l’action · plafond de 90 %')}" ${locked||f.budget<E.ECONOMY.boostCost||!selection.boost&&boostReason?'disabled':''}`)}</div>
- <div class="inquiry-agents">${rows.length?rows.map(r=>`<div class="inquiry-agent-row ${r.reason?'is-blocked':''}">${button(portrait(r.a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${r.a.id}" aria-label="Consulter la fiche de ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible'+(r.a.status==='injured'?' · blessé':''))}</small></span><span class="inquiry-agent-numbers"><b>${r.o.chance} %</b><small>${r.o.duration} tour(s)</small></span>`,'inquiry-agent',`inquiry-agent ${r.reason?'is-blocked':''}`,`data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="inquiry-empty">Aucun agent de votre équipe ${type==='analyze'?'au QG':'présent dans ce pays'}.</p>`}</div>
- ${inquiryActionCosts(type,preview)}
- ${missions}</section></div><footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(selection.message||blocked)}</p>${button(`${icon('check')} Confirmer${selected?' · '+esc(selected.a.name):''}`,'inquiry-confirm','primary wide',blocked?'disabled':'')}</footer></section>`;
+ ${direct?`<div class="inquiry-pinned-agent">
+  <strong>${esc(selected.a.name)}</strong>
+  <span class="mission-candidate-readings"><b>${selected.o.chance} %</b><span class="sr-only"> de réussite</span>${missionTimingMarkup(selected.a,type,selected.o)}</span>
+ </div>`:`<div class="mission-compare-heading"><strong>Comparer les agents</strong><small>${type==='analyze'?'Agents disponibles au QG':esc(COUNTRY[t.country].name)}</small></div>
+ <div class="inquiry-agents">${rows.length?rows.map(r=>`<div class="inquiry-agent-row ${r.reason?'is-blocked':''}">${button(portrait(r.a),'inquiry-open-agent','inquiry-agent-portrait',`data-id="${r.a.id}" aria-label="Consulter la fiche de ${esc(r.a.name)}"`)}${button(`<span><strong>${esc(r.a.name)}</strong><small>${esc(r.reason||'Disponible'+(r.a.status==='injured'?' · blessé':''))}</small></span><span class="inquiry-agent-numbers mission-candidate-readings"><b>${r.o.chance} %</b><span class="sr-only"> de réussite</span>${missionTimingMarkup(r.a,type,r.o)}</span>`,'inquiry-agent',`inquiry-agent ${r.reason?'is-blocked':''}`,`id="inquiry-agent-${esc(r.a.id)}" data-id="${r.a.id}" aria-pressed="${selected?.a.id===r.a.id}" ${r.reason||locked?'disabled':''}`)}</div>`).join(''):`<p class="inquiry-empty">Aucun agent de votre équipe ${type==='analyze'?'au QG':'présent dans ce pays'}.</p>`}</div>
+ `}${inquiryActionCosts(type,preview)}
+ ${missions}</section></div>
+ <footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(selection.message||blocked)}</p>${boost}
+  <div class="mission-confirm-control">${selected?.o.cost?`<small class="mission-credit-cost">${selected.o.cost} crédits</small>`:''}${button(`${icon('check')} ${confirmLabel}${selected?' · '+esc(selected.a.name):''}`,confirmCommand,'primary wide',blocked?'disabled':'')}</div>
+ </footer></section>`;
  const modal=api.modal,scroll=modal.querySelector('.inquiry-body')?.scrollTop||0,focus=modal.contains?.(document.activeElement)?document.activeElement.id:null;
- if(open)api.showModal(html,'country-inquiry-modal');else {modal.querySelector('.country-inquiry')?.remove();modal.insertAdjacentHTML('beforeend',html);}
- modal.querySelector('.inquiry-body').scrollTop=scroll;if(focus?.startsWith('inquiry'))modal.querySelector('#'+focus)?.focus({preventScroll:true});
+ if(api.setContent)api.setContent(html);
+ else if(open)api.showModal(html,'country-inquiry-modal');
+ else {modal.querySelector('.country-inquiry')?.remove();modal.insertAdjacentHTML('beforeend',html);localizeContent(modal.querySelector('.country-inquiry'));}
+ modal.querySelector('.inquiry-body').scrollTop=scroll;if(focus?.startsWith('inquiry'))modal.querySelector('#'+CSS.escape(focus))?.focus({preventScroll:true});
 }
 async function handleInquiryCommand(cmd,id){
  if(cmd==='country-inquiry'||cmd==='country-threat'){openCountryInquiry(id,cmd==='country-threat');return;}
@@ -147,9 +213,12 @@ async function handleInquiryCommand(cmd,id){
   if(!selection.boost){const reason=boostUnavailable(selectionModel(api.state(),selection)?.selected,'');if(reason){api.notify(reason);paint();return;}}
   selection.boost=!selection.boost;selection.message='';paint();
  }
- if(cmd==='inquiry-confirm'){
+ if(cmd==='inquiry-confirm'||cmd==='inquiry-express'){
   const current=selection,s=api.state(),m=selectionModel(s,current),r=m?.selected;
   const reason=readOnly()||r?.reason||(!r?'Choisissez un agent disponible.':'');if(reason){api.notify(reason);paint();return;}
+  const direct=r.a.id===current.actor;
+  if(cmd==='inquiry-express'){if(direct)api.openAgent(r.a.id,m.type,r.target,current.boost);return;}
+  if(direct)return;
   const turn=s.turn;pending=true;paint();
   try{await api.assign({id:r.a.id,type:m.type,target:r.target,useCredits:current.boost});if(selection===current&&api.modal.open&&api.modal.classList.contains('country-inquiry-modal')&&api.state().turn===turn){current.message=`${r.a.name} · ${ACTIONS[m.type].name} : ordre confirmé.`;current.agent=null;current.boost=false;}}
   catch(e){api.notify(e.message);if(selection===current)current.message=e.message;}

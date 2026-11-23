@@ -20,7 +20,7 @@ test('Three controllers share the exclusive snake draft, resume in place and sta
  const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};globalThis.sessionStorage={...globalThis.localStorage};globalThis.document={querySelector:()=>null,querySelectorAll:()=>[]};globalThis.location={href:'https://example.test/',hash:''};globalThis.Peer=Peer;
  const hooks=()=>({modal(){},toast(){},render(){},close(){},state(){},leave(){}}),h=new Multiplayer(hooks()),a=new Multiplayer(hooks()),b=new Multiplayer(hooks());let resumed;
  try{
-  await h.create('Hôte','FR');await settle();await a.connect(null,h.details,'Alice');await settle();storage.delete('sigma-seat-'+h.details.id);await b.connect(null,h.details,'Benoît');await settle();
+  await h.create('Hôte','FR');await settle();await a.connect(null,h.details,'Alice');await settle();storage.delete('shadow-mandate-seat-'+h.details.id);await b.connect(null,h.details,'Benoît');await settle();
   await h.command('game-mode',{mode:'advanced'});for(const c of [h,a,b])await c.command('confirm-country');await assert.rejects(a.command('begin-draft'),/confirmer/);await h.command('begin-draft');await settle();
   const next=[h,a,b].find(c=>c.snapshot.country===draftCountry(h.room.draft));await next.command('draft-pick',{id:availableDraftAgents(h.room.draft)[0].id});await settle();
   assert.deepEqual(a.snapshot.draft,b.snapshot.draft);assert.equal(a.snapshot.draft.rng,undefined);assert.equal(a.snapshot.draft.seed,undefined);
@@ -41,7 +41,7 @@ test('Host and guest controllers exchange commands, private snapshots, acknowled
   await h.command('ready',{ready:true});await settle();assert.equal(g.snapshot.game.turn,1);await g.command('ready',{ready:true});await settle();assert.equal(g.snapshot.game.turn,2);assert.equal(h.snapshot.game.turn,2);
   const reserved=g.snapshot.country;g.connection.close();await settle();assert.equal(h.snapshot.members.find(m=>m.country===reserved).connected,false);
   g.retryPaused=false;g.connectGuest();await settle();assert.equal(g.snapshot.country,reserved);assert.equal(h.snapshot.members.find(m=>m.country===reserved).connected,true);
-  const saved=JSON.parse(storage.get('sigma2040-multiplayer-v1'));h.leave();await settle();r=new Multiplayer(hooks());await r.resume(saved);await settle();g.connectGuest();await settle();assert.equal(g.snapshot.game.turn,2);assert.equal(r.snapshot.members.length,2);
+  const saved=JSON.parse(storage.get('shadow-mandate-2040-multiplayer-v1'));h.leave();await settle();r=new Multiplayer(hooks());await r.resume(saved);await settle();g.connectGuest();await settle();assert.equal(g.snapshot.game.turn,2);assert.equal(r.snapshot.members.length,2);
  }finally{for(const c of [h,g,r].filter(Boolean)){c.leave();clearInterval(c.timer);}for(const name of ['Peer','document','location','localStorage','sessionStorage'])delete globalThis[name];}
 });
 
@@ -49,7 +49,7 @@ test('Observer host tracks two guests, switches perspective locally and resumes 
  const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};globalThis.sessionStorage={...globalThis.localStorage};globalThis.document={querySelector:()=>null,querySelectorAll:()=>[]};globalThis.location={href:'https://example.test/',hash:''};globalThis.Peer=Peer;
  const hooks=()=>({modal(){},toast(){},render(){},close(){},state(){},leave(){}});const h=new Multiplayer(hooks()),a=new Multiplayer(hooks()),b=new Multiplayer(hooks());let resumed;
  try{
-  await h.create('Observateur','FR');await settle();await h.command('observer',{observer:true});await a.connect(null,h.details,'Alice');await settle();storage.delete('sigma-seat-'+h.details.id);await b.connect(null,h.details,'Benoît');await settle();
+  await h.create('Observateur','FR');await settle();await h.command('observer',{observer:true});await a.connect(null,h.details,'Alice');await settle();storage.delete('shadow-mandate-seat-'+h.details.id);await b.connect(null,h.details,'Benoît');await settle();
   for(const g of [a,b])await g.command('team',{agents:['p0','p12','p13','p14']});await h.command('start');await settle();assert.equal(h.me.observer,true);assert.equal(h.snapshot.country,null);assert.equal(a.snapshot.game.agents.length,4);assert.equal(h.snapshot.game.agents.length,8);
   h.observe(b.snapshot.country);await b.command('assign',{id:b.snapshot.game.agents[0].id,type:'travel',target:'JP'});assert.equal(h.snapshot.game.player,b.snapshot.country);assert.equal(h.snapshot.game.agents.find(x=>x.id===b.snapshot.game.agents[0].id).task.target,'JP');await assert.rejects(h.command('ready',{ready:true}),/consultation/);
   await a.command('ready',{ready:true});await b.command('ready',{ready:true});await settle();assert.equal(h.snapshot.game.turn,2);assert.equal(h.snapshot.game.player,b.snapshot.country);

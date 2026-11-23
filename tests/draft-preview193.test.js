@@ -19,7 +19,7 @@ test('Draft preview adds the candidate to displayed totals while leaving picks, 
 
 test('Actual multiplayer preview can be changed without sending a pick; only confirmation reserves an agent',async()=>{
  const previous={document:globalThis.document,location:globalThis.location,localStorage:globalThis.localStorage};let html='';
- globalThis.document={querySelector:()=>null};globalThis.location={href:'https://sigma.test/'};globalThis.localStorage={getItem:()=>null,setItem(){}};
+ globalThis.document={querySelector:()=>null};globalThis.location={href:'https://shadow-mandate.test/'};globalThis.localStorage={getItem:()=>null,setItem(){}};
  const mp=new Multiplayer({lobby:value=>html=value,close(){},render:()=>mp.panel(),state(){},toast(){}});
  try{
   const r=room();send(r,r.members[0],'game-mode',{mode:'advanced'});r.members.forEach(m=>send(r,m,'confirm-country'));send(r,r.members[0],'begin-draft');

@@ -1,4 +1,5 @@
-import {evidenceQueue} from './engine.js?v=238';
+import {evidenceQueue} from './engine.js?v=242';
+import {readStorageItem} from './storage-keys.js?v=242';
 export function inquiryIndicator(state,unread=0){
  const count=evidenceQueue(state,state.player).length,newCount=Number(unread)||0;
  return count||newCount?{badge:String(newCount||count),label:[newCount?`${newCount} nouveau(x) dossier(s)`:'',count?`${count} preuve(s) à vérifier`:''].filter(Boolean).join(' · '),tone:'inquiry'}:null;
@@ -7,9 +8,9 @@ export function inquiryIndicator(state,unread=0){
 export function createInquiryTracker(storage){
  const sessions=new Map();
  function entry(state,room='solo'){
-  const key=`sigma-inquiry-read:${room}:${state.seed}:${state.player}`;
+  const key=`shadow-mandate-inquiry-read:${room}:${state.seed}:${state.player}`;
   if(!sessions.has(key)){
-   let saved;try{saved=JSON.parse(storage?.getItem(key)||'null');}catch{}
+   let saved;try{saved=JSON.parse(readStorageItem(storage,key)||'null');}catch{}
    sessions.set(key,{seen:Array.isArray(saved)?saved:Array.isArray(saved?.seen)?saved.seen:[],reads:saved?.reads||{}});
   }
   return {key,data:sessions.get(key)};

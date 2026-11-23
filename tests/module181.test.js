@@ -40,7 +40,7 @@ test('Mira migrates by template ID for every multiplayer team and its private vi
 test('Module page has one global capacity status that updates after activation, cancellation and expiry',()=>{
  const s=E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,42),a=E.team(s)[0];
  const render=()=>makeScreens(s,s.player,null,[],{}).operations();
- let html=render();assert.match(html,/<h1>Module<\/h1>/);assert.match(html,/console-capacity is-available/);assert.match(html,/2 places disponibles/);
+ let html=render();assert.match(html,/<h1 id="moduleTitle">[^]*?<span>Modules d’opération<\/span><\/h1>/);assert.equal((html.match(/<h1\b/g)||[]).length,1);assert.match(html,/console-capacity is-available/);assert.match(html,/2 places disponibles/);
  E.activateTech(s,'ai');html=render();assert.match(html,/1 place disponible/);assert.match(html,/Ce module est déjà actif/);
  E.assign(s,a.id,'protect',s.player);html=render();assert.match(html,/console-capacity is-full/);
  assert.equal((html.match(/Les deux places sont occupées/g)||[]).length,1);assert.doesNotMatch(html,/console-full|console-warning/);

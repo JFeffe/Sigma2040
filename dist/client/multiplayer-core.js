@@ -1,20 +1,21 @@
-import {selectOperationMap} from './operation-map.js?v=238';
-import {threatAnnounced} from './fracture.js?v=238';
-import {AI_LEVELS,normalizeAI} from './ai-difficulty.js?v=238';
-import {GAME_MODES,usesDraft,participantCount,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=238';
-import {recordAgentCondition} from './campaign-stats.js?v=238';
-import {assignDeployment} from './deployment.js?v=238';
-import {startClock} from './campaign-clock.js?v=238';
-import * as E from './engine.js?v=238';
-import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=238';
+import {selectOperationMap} from './operation-map.js?v=242';
+import {threatAnnounced} from './fracture.js?v=242';
+import {AI_LEVELS,normalizeAI} from './ai-difficulty.js?v=242';
+import {GAME_MODES,usesDraft,participantCount,selectParticipants,createDraft,validateDraft,publicDraft,draftCountry,pickDraftAgent,advanceNpcDraft,sameTeam} from './game-setup.js?v=242';
+import {recordAgentCondition} from './campaign-stats.js?v=242';
+import {assignDeployment} from './deployment.js?v=242';
+import {startClock} from './campaign-clock.js?v=242';
+import * as E from './engine.js?v=242';
+import {COUNTRIES, DEFAULT_TEAM_IDS, ROSTER, ACTIONS, TECH} from './data.js?v=242';
 export const PROTOCOL=19;
 export const playingMembers=room=>room.members.filter(m=>!m.observer);
 const powers=COUNTRIES.filter(c=>c.power).map(c=>c.id);
 const copy=x=>structuredClone(x);
 const fail=message=>{throw Error(message);};
-export function newRoom(id,invite,token,name,country='FR'){
+export function newRoom(id,invite,token,name,country='FR',gameMode='regular'){
  if(!powers.includes(country))fail('Pays invalide.');
- return {protocol:PROTOCOL,id,invite,revision:0,phase:'lobby',participantRules:1,gameMode:'regular',draft:null,aiDifficulty:'bb2',members:[{token,name:cleanName(name),country,host:true,connected:true,ready:false,confirmed:false,countryConfirmed:false,lastSeq:0,agents:[]}],game:null,offers:[]};
+ if(!Object.hasOwn(GAME_MODES,gameMode))fail('Mode de jeu invalide.');
+ return {protocol:PROTOCOL,id,invite,revision:0,phase:'lobby',participantRules:1,gameMode,draft:null,aiDifficulty:'bb2',members:[{token,name:cleanName(name),country,host:true,connected:true,ready:false,confirmed:false,countryConfirmed:false,lastSeq:0,agents:[]}],game:null,offers:[]};
 }
 export function cleanName(name){return String(name||'Joueur').trim().slice(0,30)||'Joueur';}
 export function joinRoom(room,{invite,token,name}){

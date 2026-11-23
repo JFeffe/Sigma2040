@@ -1,6 +1,7 @@
-import {playCue} from './experience.js?v=238';
-import {COUNTRY,ACTIONS} from './data.js?v=238';
-import {esc,portrait} from './ui.js?v=238';
+import {localizeContent,translateText} from './localization.js?v=242';
+import {playCue} from './experience.js?v=242';
+import {COUNTRY,ACTIONS} from './data.js?v=242';
+import {esc,portrait} from './ui.js?v=242';
 let signals=[];
 export function clearSignals(){signals=[];}
 export function stageSignal(a){signals=[{country:a.country,agentId:a.id,kind:'order',label:`${a.name} · ordre planifié`,until:Date.now()+6500}];}
@@ -12,7 +13,7 @@ export function paintSignals(svg){
  for(const pin of svg.querySelectorAll('.map-pin-v2')){
   const local=active.filter(s=>s.country===pin.dataset.id),existing=pin.querySelector('.map-signal');if(!local.length){existing?.remove();continue;}if(existing)continue;
   const kind=local.some(s=>s.kind==='danger')?'danger':local[0].kind;
-  const group=document.createElementNS('http://www.w3.org/2000/svg','g');group.setAttribute('class',`map-signal ${kind}`);group.innerHTML=`<title>${esc(local.map(s=>s.label).join(' · '))}</title><circle class="signal-ring" r="13"/><circle class="signal-ring second" r="13"/><circle class="signal-core" r="10"/>`;pin.prepend(group);
+  const group=document.createElementNS('http://www.w3.org/2000/svg','g');group.setAttribute('class',`map-signal ${kind}`);group.innerHTML=`<title>${esc(local.map(s=>translateText(s.label)).join(' · '))}</title><circle class="signal-ring" r="13"/><circle class="signal-ring second" r="13"/><circle class="signal-core" r="10"/>`;pin.prepend(group);
   setTimeout(()=>group.remove(),Math.max(...local.map(s=>s.until))-Date.now());
  }
  for(const s of active){
@@ -20,10 +21,10 @@ export function paintSignals(svg){
   const route=[...svg.querySelectorAll('.travel-route')].find(r=>r.dataset.agent===s.agentId);if(route&&s.kind==='order'){route.classList.add('route-feedback');setTimeout(()=>route.classList.remove('route-feedback'),3500);}
  }
  const shell=svg.closest('.cartography');let legend=shell.querySelector('.map-feedback-caption');
- if(active.length){if(!legend){legend=document.createElement('div');legend.className='map-feedback-caption';legend.setAttribute('role','status');shell.append(legend);}legend.textContent=active.map(s=>`${COUNTRY[s.country].city} · ${s.label}`).join(' / ');const current=legend;setTimeout(()=>current.remove(),6500);}else legend?.remove();
+ if(active.length){if(!legend){legend=document.createElement('div');legend.className='map-feedback-caption';legend.setAttribute('role','status');shell.append(legend);}legend.textContent=active.map(s=>`${translateText(COUNTRY[s.country].city)} · ${translateText(s.label)}`).join(' / ');const current=legend;setTimeout(()=>current.remove(),6500);}else legend?.remove();
 }
 export function orderFeedback(s,id){
  const a=s.agents.find(a=>a.id===id),t=a.task;if(!t)return;playCue();
  const box=document.querySelector('#toast');clearTimeout(orderFeedback.timer);
- box.innerHTML=`<div class="order-feedback"><div><strong>✓ ${esc(a.name)} · ordre confirmé</strong><span>${esc(ACTIONS[t.type].name)} · ${t.total} tour(s) · ${t.cost} crédits${t.bonusCredits?' · renfort inclus':''}</span></div></div>`;box.classList.add('show');orderFeedback.timer=setTimeout(()=>box.classList.remove('show'),3500);
+ box.innerHTML=`<div class="order-feedback"><div><strong>✓ ${esc(a.name)} · ordre confirmé</strong><span>${esc(ACTIONS[t.type].name)} · ${t.total} tour(s) · ${t.cost} crédits${t.bonusCredits?' · renfort inclus':''}</span></div></div>`;localizeContent(box);box.classList.add('show');orderFeedback.timer=setTimeout(()=>box.classList.remove('show'),3500);
 }

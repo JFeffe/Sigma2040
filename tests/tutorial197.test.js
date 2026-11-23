@@ -57,7 +57,7 @@ test('A damaged exercise does not discard other progress; unavailable storage is
 });
 test('The actual application persistence and exit routes preserve the ordinary in-memory campaign',()=>{
  const source=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8'),store=storage(),campaign=E.createConfiguredGame('FR',['p0','p12','p14','p15'],21),raw=JSON.stringify(campaign);store.setItem(CAMPAIGN_KEY,raw);
- const context={isTutorial:s=>!!s?.tutorial,state:createTutorialGame('contact'),campaignBeforeTutorial:campaign,multiplayer:{active:false},inquiryStorage:store,tutorialProgress:readTutorialProgress(store),saveTutorialProgress,SAVE:CAMPAIGN_KEY,localStorage:store,saveWarning:false,toast(){},clearTimeout(){},showReveals:{timer:1},revealSession:{},cinematic:{},closeBureau(){},clearSignals(){},resetExperience(){}};
+ const context={isTutorial:s=>!!s?.tutorial,state:createTutorialGame('contact'),campaignBeforeTutorial:campaign,multiplayer:{active:false},inquiryStorage:store,tutorialProgress:readTutorialProgress(store),saveTutorialProgress,SAVE:CAMPAIGN_KEY,localStorage:store,saveWarning:false,toast(){},clearTimeout(){},showReveals:{timer:1},revealSession:{},cinematic:{},clearSignals(){},resetExperience(){}};
  const functions=source.slice(source.indexOf('function persist()'),source.indexOf('function launchTutorial('));runInNewContext(functions+';persist();leaveTutorial();',context);
  assert.equal(store.getItem(CAMPAIGN_KEY),raw);assert.equal(context.state,campaign);assert.equal(context.campaignBeforeTutorial,null);assert.equal(context.revealSession,null);assert.equal(context.cinematic,null);assert.equal(context.setup,false);
  assert.ok(readTutorialProgress(store).sessions.contact);

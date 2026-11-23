@@ -35,7 +35,8 @@ test('Compact controller switches actions, opens portraits, and assigns only pro
   await handleInquiryCommand('inquiry-step','proofs');assert.match(html,/data-id="collect"/);assert.doesNotMatch(html,/data-id="analyze"/);
   await handleInquiryCommand('inquiry-step','access');assert.match(html,/data-id="contacts"/);assert.match(html,/data-id="drone"/);assert.doesNotMatch(html,/data-id="intimidate"/);
   assert.match(html,/Optionnel · une fois par pays/);
-  await handleInquiryCommand('inquiry-substep','mandate');assert.match(html,/data-id="authorize" aria-pressed="true"/);
+  await handleInquiryCommand('inquiry-substep','mandate');assert.match(html,/class="inquiry-single-action" data-action="authorize"/);
+  assert.doesNotMatch(html,/data-cmd="inquiry-action" data-id="authorize"/);
   assert.doesNotMatch(html,/data-id="contacts" aria-pressed=/);
   await handleInquiryCommand('inquiry-action','analyze');assert.match(html,/data-id="validation" aria-pressed="true"/);assert.match(html,/vérifier la deuxième/);
   await handleInquiryCommand('inquiry-step','access');

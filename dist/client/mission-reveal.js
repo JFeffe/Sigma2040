@@ -1,8 +1,8 @@
-import {cellName,namedCells} from './data.js?v=238';
-import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=238';
-import {recruitmentCandidates,team} from './engine.js?v=238';
-import {ACTIONS,COUNTRY} from './data.js?v=238';
-import {esc,button,portrait,flag,formatScore} from './ui.js?v=238';
+import {cellName,namedCells} from './data.js?v=242';
+import {suspectPortrait,CELL_PROFILES} from './fracture-profiles.js?v=242';
+import {recruitmentCandidates,team} from './engine.js?v=242';
+import {ACTIONS,COUNTRY} from './data.js?v=242';
+import {esc,button,portrait,flag,formatScore,icon} from './ui.js?v=242';
 export const MISSION_IMAGES=Object.fromEntries(['travel','drone','arrest','equip','hack','cyberSupport','sneak','contacts','hide','findSafehouse','analyze','rest','surveil','influence','collect','intimidate','authorize','fieldRest','prepare','heal','protect','counter','rescue'].map(k=>[k,`./assets/missions/${k}.webp`]));
 MISSION_IMAGES.fieldRest='./assets/missions/field-rest.webp';
 export function missionCards(s){return groupAutomaticReports([...(s.turnActivities||[]).filter(r=>r.faction===s.player&&['RÉUSSITE','ÉCHEC','INTERROMPUE'].includes(r.status)).flatMap(r=>r.proofRejection?[r,{...r,type:'forgery'}]:r.condition==='dead'?[r,{...r,type:'death'}]:r.newCapture?[r,{...r,type:'capture'}]:r.newInjury?[r,{...r,type:'injury'}]:[r]),...(s.attackDelayReports||[]),...(s.flightReports||[]).filter(r=>r.faction===s.player&&s.factions[s.player].known[r.suspectId]),...(s.cellReports||[]),...(s.attackReports||[]).filter(r=>!s.plots?.some(p=>p.id===r.plotId&&p.cancelled)&&!s.cellReports?.some(c=>c.attacks.some(p=>p.plotId===r.plotId))),...(s.threatReports||[])]);}
@@ -84,5 +84,27 @@ export function groupAutomaticReports(reports){
  return result.map(r=>r.type==='automatic-summary'&&r.reports.length===1?r.reports[0]:r);
 }
 export function automaticSummaryMarkup(r,index,total,s){
- return `<section class="automatic-summary"><span class="eyebrow">BILAN DE VOTRE ÉQUIPE · TOUR ${r.turn} · ${index+1} / ${total}</span><h2>Actions automatiques terminées</h2><p>${r.reports.length} agents · réussite garantie à 100 %</p><div class="automatic-summary-agents">${r.reports.map(row=>{const a=s?.agents.find(a=>a.id===row.agentId);return `<article>${a?portrait(a,'debrief-portrait'):''}<div><h3>${esc(row.agent)}</h3><strong>${esc(ACTIONS[row.type].name)}</strong><p>${COUNTRY[row.country]?flag(row.country)+' '+esc(COUNTRY[row.country].name)+' · ':''}${esc(compactOutcome(row))}</p><div class="outcome-metrics">${outcomeMetrics(row)}</div></div></article>`;}).join('')}</div><div class="reveal-controls">${button(index+1===total?'Voir le rapport':'Suivant','reveal-next','primary')}${button('Passer au rapport','reveal-skip')}</div></section>`;
+ const count=`${r.reports.length} ${r.reports.length===1?'agent':'agents'}`;
+ const rows=r.reports.map(row=>{
+  const agent=s?.agents.find(a=>a.id===row.agentId),country=COUNTRY[row.country];
+  return `<article class="automatic-result">
+   <div class="automatic-result-heading">
+    ${agent?portrait(agent,'debrief-portrait'):''}
+    <div><h3>${esc(row.agent)}</h3><strong>${esc(ACTIONS[row.type].name)}</strong>
+     ${country?`<span class="debrief-location">${flag(country.id)} <span>${esc(country.name)}</span></span>`:''}
+    </div>
+   </div>
+   <div class="outcome-metrics">${outcomeMetrics(row)}</div>
+   <details class="campaign-disclosure automatic-result-detail"><summary>Détails</summary><p>${esc(compactOutcome(row))}</p></details>
+  </article>`;
+ }).join('');
+ return `<section class="automatic-summary" aria-labelledby="automaticTitle">
+  <header class="automatic-summary-heading"><div><span class="eyebrow">Tour ${r.turn}</span><h2 id="automaticTitle" tabindex="-1" autofocus>Actions automatiques terminées</h2></div><span class="automatic-count">${icon('check')} <span>${count}</span></span></header>
+  <div class="automatic-summary-agents">${rows}</div>
+  <footer class="reveal-controls automatic-summary-actions">
+   ${total>1?`<span class="debrief-page-counter" aria-label="Résultat ${index+1} sur ${total}">${index+1} / ${total}</span>`:''}
+   ${index+1<total?button('Passer au rapport','reveal-skip'):''}
+   ${button(index+1===total?'Voir le rapport':'Suivant','reveal-next','primary')}
+  </footer>
+ </section>`;
 }

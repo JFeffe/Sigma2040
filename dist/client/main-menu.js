@@ -1,11 +1,19 @@
-import {RELEASE_LINK,unreadPatchCount} from './patch-notes.js?v=238';
-import {AI_LEVELS} from './ai-difficulty.js?v=238';
-import {BUILD_VERSION} from './build-version.js?v=238';
-import {campaignRules} from './campaign-rules.js?v=238';
-import {renderRatio} from './graphics.js?v=238';
-import {brand,button,esc} from './ui.js?v=238';
-import {COUNTRY} from './data.js?v=238';
-export function mainMenu(s){return `<main class="main-menu"><a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer">BUILD ${BUILD_VERSION} · MISE À JOUR GITHUB ↗</a><canvas class="menu-particles" aria-hidden="true"></canvas><div class="menu-earth" aria-hidden="true"><canvas id="menuEarth" width="1024" height="1024"></canvas><canvas id="menuOrbits"></canvas></div><section class="menu-panel"><div class="menu-brand">${brand()}</div><p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1><nav aria-label="Menu principal">${button(`<span>${s?.ended?'Consulter la campagne':'Continuer'}</span><small class="continue-details">${s?`${esc(COUNTRY[s.player].name)} · IA ${AI_LEVELS[s.aiDifficulty||'bb1']} · Tour ${s.turn} / ${campaignRules(s).maxTurns}${s.ended?' · Campagne terminée':''}`:'Aucune campagne enregistrée'}</small>`,'continue-game','primary continue-button',s?'':'disabled')}${button('Nouvelle partie','new','')}${button('Apprendre à jouer · Filigrane','tutorial-menu','')}${button('Multijoueur','mp-entry','')}${button('Patch notes'+(unreadPatchCount()?' · '+unreadPatchCount()+' non lues':''),'patch-notes',unreadPatchCount()?'patch-unread':'')}${button('Mods','mods','')}${button('Paramètres','settings','')}${button('Règles et sauvegarde','help','menu-help')}</nav></section><footer>SIGMA NETWORK / 2040 <span>La musique démarre à votre première interaction.</span></footer></main>`;}
+import {RELEASE_LINK,unreadPatchCount} from './patch-notes.js?v=242';
+import {AI_LEVELS} from './ai-difficulty.js?v=242';
+import {BUILD_VERSION} from './build-version.js?v=242';
+import {campaignRules} from './campaign-rules.js?v=242';
+import {renderRatio} from './graphics.js?v=242';
+import {brand,button,esc,icon} from './ui.js?v=242';
+import {COUNTRY} from './data.js?v=242';
+export function backToMainMenu(command='main-menu'){
+ return button(icon('arrow')+'<span>Retour au menu principal</span>',command,'small command-back');
+}
+
+export function menuSkyMarkup(){
+ return `<canvas class="menu-particles" aria-hidden="true"></canvas><div class="menu-earth" aria-hidden="true"><canvas id="menuEarth" width="1024" height="1024"></canvas><canvas id="menuOrbits"></canvas></div>`;
+}
+
+export function mainMenu(s){return `<main class="main-menu"><a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer">BUILD ${BUILD_VERSION} · MISE À JOUR GITHUB ↗</a>${menuSkyMarkup()}<section class="menu-panel"><div class="menu-brand">${brand()}</div><p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1><nav aria-label="Menu principal">${button(`<span>${s?.ended?'Consulter la campagne':'Continuer'}</span><small class="continue-details">${s?`${esc(COUNTRY[s.player].name)} · IA ${AI_LEVELS[s.aiDifficulty||'bb1']} · Tour ${s.turn} / ${campaignRules(s).maxTurns}${s.ended?' · Campagne terminée':''}`:'Aucune campagne enregistrée'}</small>`,'continue-game','primary continue-button',s?'':'disabled')}${button('Nouvelle partie','new','')}${button('Multijoueur','mp-entry','')}${button('Patch notes'+(unreadPatchCount()?' · '+unreadPatchCount()+' non lues':''),'patch-notes',unreadPatchCount()?'patch-unread':'')}${button('Paramètres','settings','')}${button('Règles et sauvegarde','help','menu-help')}</nav></section><footer>SHADOW MANDATE 2040 <span>La musique démarre à votre première interaction.</span></footer></main>`;}
 
 // GPU sphere and separate orbital/particle layers: no flattened background image.
 const TAU=Math.PI*2;
@@ -50,7 +58,7 @@ export function mountMenuEarth(){
  // Deterministic particles avoid a visual jump when returning to the menu.
  let seed=2040;const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  const dust=Array.from({length:170},()=>({x:random(),y:random(),r:.4+random()*1.1,depth:random(),phase:random()*TAU}));
- function resize(){w=innerWidth;h=innerHeight;dpr=renderRatio(w,h);side=canvas.parentElement.getBoundingClientRect().width;
+ function resize(){w=stars.clientWidth;h=stars.clientHeight;dpr=renderRatio(innerWidth,innerHeight);side=canvas.parentElement.getBoundingClientRect().width;
  if(renderer){const resolution=Math.max(1,Math.round(side*dpr));canvas.width=canvas.height=resolution;}
  orbitCanvas.width=orbitCanvas.height=Math.round(side*dpr);stars.width=Math.round(w*dpr);stars.height=Math.round(h*dpr);dirty=true;}
  const observer=new ResizeObserver(resize);observer.observe(canvas.parentElement);window.addEventListener('resize',resize);window.addEventListener('graphicschange',resize);resize();

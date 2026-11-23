@@ -12,8 +12,8 @@ test('host and invited guest exchange private snapshots and orders through the h
  const db=new DatabaseSync(':memory:');db.exec(migration);
  const env={DB:{prepare(sql){return {bind(...args){const statement=db.prepare(sql);return {first:()=>statement.get(...args),all:()=>({results:statement.all(...args)}),run:()=>statement.run(...args)};}}}},ASSETS:{fetch:()=>new Response('site')}};
  const originalFetch=globalThis.fetch;
- globalThis.fetch=(path,init)=>worker.fetch(new Request(new URL(path,'https://sigma.example'),{...init,headers:{...init.headers,origin:'https://sigma.example'}}),env);
- const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};globalThis.sessionStorage={...globalThis.localStorage};globalThis.document={querySelector:()=>null,querySelectorAll:()=>[]};globalThis.location={href:'https://sigma.example/',hash:''};
+ globalThis.fetch=(path,init)=>worker.fetch(new Request(new URL(path,'https://shadow-mandate.example'),{...init,headers:{...init.headers,origin:'https://shadow-mandate.example'}}),env);
+ const storage=new Map();globalThis.localStorage={getItem:k=>storage.get(k)||null,setItem:(k,v)=>storage.set(k,v)};globalThis.sessionStorage={...globalThis.localStorage};globalThis.document={querySelector:()=>null,querySelectorAll:()=>[]};globalThis.location={href:'https://shadow-mandate.example/',hash:''};
  const hooks=()=>({modal(){},toast(){},render(){},close(){},state(){},leave(){}});
  const host=new Multiplayer(hooks()),guest=new Multiplayer(hooks());
  try{
@@ -31,7 +31,7 @@ test('host and invited guest exchange private snapshots and orders through the h
   host.room.game.ended='victory';host.room.game.aiDifficulty='bb2';host.room.game.campaignStats.events=Array.from({length:400},()=>({turn:2,faction:'FR',agentId:'p0',templateId:'p0',agent:'IRIS',type:'analyze',status:'RÉUSSITE',country:'FR',targetName:'Test',chance:70,notes:['Rapport '.repeat(150)]}));host.room.revision++;
   assert.ok(JSON.stringify(host.room.game.campaignStats).length>300000);host.publish();
   await waitFor(()=>guest.snapshot.game?.ended==='victory');assert.equal(guest.snapshot.game.campaignStats.events.length,400);assert.equal(guest.snapshot.game.aiDifficulty,'bb2');assert.equal(guest.connection.open,true);
-  const invalid=await worker.fetch(new Request('https://sigma.example/api/relay',{method:'POST',headers:{origin:'https://sigma.example'},body:JSON.stringify({action:'poll',id:host.details.id,invite:'x'.repeat(36),peerId:crypto.randomUUID(),cursor:0})}),env);
+  const invalid=await worker.fetch(new Request('https://shadow-mandate.example/api/relay',{method:'POST',headers:{origin:'https://shadow-mandate.example'},body:JSON.stringify({action:'poll',id:host.details.id,invite:'x'.repeat(36),peerId:crypto.randomUUID(),cursor:0})}),env);
   assert.equal(invalid.status,404);
  }finally{host.leave();guest.leave();clearInterval(host.timer);clearInterval(guest.timer);await new Promise(resolve=>setTimeout(resolve,100));db.close();globalThis.fetch=originalFetch;for(const name of ['document','location','localStorage','sessionStorage'])delete globalThis[name];}
 });

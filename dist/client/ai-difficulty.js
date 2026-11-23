@@ -1,4 +1,4 @@
-export const AI_LEVELS={bb1:'Bot Brillant 1',bb2:'Bot Brillant 2'};
+export const AI_LEVELS={bb1:'Facile',bb2:'Normal'};
 export const LEGACY_AI_LEVELS=['easy','normal','expert'];
 export const normalizeAI=value=>Object.hasOwn(AI_LEVELS,value)?value:LEGACY_AI_LEVELS.includes(value)||value==null?'bb1':null;
 export const aiLevel=s=>normalizeAI(s.aiDifficulty)||'bb1';

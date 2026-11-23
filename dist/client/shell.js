@@ -1,15 +1,14 @@
-import {operationCountries} from './operation-map.js?v=238';
-import {isNpcTutorial} from './tutorial-mode.js?v=238';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=238';
-import {bureauEnabled} from './mod-settings.js?v=238';
-import {inquiryIndicator} from './inquiry-notifications.js?v=238';
-import {threatStatus} from './threat-status.js?v=238';
-import {campaignRules} from './campaign-rules.js?v=238';
-import {clockMarkup} from './campaign-clock.js?v=238';
-import {newsTicker} from './news.js?v=238';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=238';
-import {COUNTRY} from './data.js?v=238';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=238';
+import {operationCountries} from './operation-map.js?v=242';
+import {isNpcTutorial} from './tutorial-mode.js?v=242';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=242';
+import {inquiryIndicator} from './inquiry-notifications.js?v=242';
+import {threatStatus} from './threat-status.js?v=242';
+import {campaignRules} from './campaign-rules.js?v=242';
+import {clockMarkup} from './campaign-clock.js?v=242';
+import {newsTicker} from './news.js?v=242';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=242';
+import {COUNTRY} from './data.js?v=242';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=242';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
@@ -20,7 +19,7 @@ export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
 }
 export function gameShell(state,view,content,saveWarning,background='',unreadInquiry=false,dismissed={}){
  const danger=crisisAlert(state);
- const availability=navigationAvailability(state,unreadInquiry,dismissed),f=state.factions[state.player],tabs=[['world','world','Monde'],...(bureauEnabled()?[['bureau','file','Bureau des enquêtes']]:[]),['inquiry','file','Enquête'],['operations','module','Module'],['threats','shield','Menaces'],['government','shield','Gouvernement'],['diplomacy','seal','Diplomatie'],['agents','people','Agents'],['journal','clock','Journal']];
+ const availability=navigationAvailability(state,unreadInquiry,dismissed),f=state.factions[state.player],tabs=[['world','world','Monde'],['inquiry','file','Enquête'],['operations','module','Module'],['threats','shield','Menaces'],['government','shield','Gouvernement'],['diplomacy','seal','Diplomatie'],['agents','people','Agents'],['journal','clock','Journal']];
  return `<div style="${isTutorial(state)?'--training-agents:'+Math.max(1,state.agents.filter(a=>a.faction===state.player&&!['dead','retired'].includes(a.status)).length):''}" class="command-deck obsidian-deck immersive-deck ${isTutorial(state)?'tutorial-deck':''} ${isNpcTutorial(state)?'npc-training':''} ${danger?'crisis-emergency':''} ${view==='world'?'world-active':'menu-active'}">${background?`<div class="world-backdrop">${background}</div>`:''}
   <header class="deck-header">
    <div class="deck-brand">${brand()}<span class="division-flag" title="${COUNTRY[state.player].name}">${flag(state.player)}</span></div>
@@ -35,17 +34,17 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
    ${newsTicker(state)}${danger?`<section class="crisis-alert" role="alert"><span>${icon('shield')} <strong>ALERTE ROUGE · ${state.crisis} %</strong><span>${danger}</span></span>${button('Voir les menaces','nav','small','data-id="threats"')}</section>`:''}
   </header>
   <div class="deck-workspace">
-   <nav class="deck-nav" aria-label="Sections du jeu">${tabs.map(([id,ico,name])=>`<button class="deck-tab ${view===id?'active':''} ${availability[id]&&!availability[id].quiet?'nav-available nav-'+availability[id].tone:''}" ${availability[id]?`title="${esc(availability[id].label)}" aria-label="${esc(name+' · '+availability[id].label)}"`:''} data-cmd="${id==='bureau'?'bureau':'nav'}" data-id="${id}" ${view===id?'aria-current="page"':''}>${availability[id]?`<b class="nav-availability-badge" aria-hidden="true">${availability[id].badge}</b>`:''}${icon(ico)}<span>${id==='bureau'?'Bureau des<br>enquêtes':name}${id==='diplomacy'&&!dismissed.diplomacy&&(state.requests||[]).some(r=>r.status==='pending')?' · '+state.requests.filter(r=>r.status==='pending').length:''}</span></button>`).join('')}</nav>
+   <nav class="deck-nav" aria-label="Sections du jeu">${tabs.map(([id,ico,name])=>`<button class="deck-tab ${view===id?'active':''} ${availability[id]&&!availability[id].quiet?'nav-available nav-'+availability[id].tone:''}" ${availability[id]?`title="${esc(availability[id].label)}" aria-label="${esc(name+' · '+availability[id].label)}"`:''} data-cmd="nav" data-id="${id}" ${view===id?'aria-current="page"':''}>${availability[id]?`<b class="nav-availability-badge" aria-hidden="true">${availability[id].badge}</b>`:''}${icon(ico)}<span>${name}${id==='diplomacy'&&!dismissed.diplomacy&&(state.requests||[]).some(r=>r.status==='pending')?' · '+state.requests.filter(r=>r.status==='pending').length:''}</span></button>`).join('')}</nav>
    <div class="deck-content">
     ${state.event?`<div class="pending-communication"><span>${icon('people')}<strong>Communication en attente</strong><span>${esc(state.event.title)}</span></span>${button('Reprendre la communication','communication','primary small')}</div>`:''}
     <main class="deck-main view-${view}">
      ${state.ended?`<div class="campaign-banner ${state.ended}">${icon(state.ended==='victory'?'seal':'shield')} Campagne terminée · ${state.ended==='victory'?'Victoire collective':'Fracture l’emporte'} ${button('Consulter le bilan','ending','small')}</div>`:''}
      ${saveWarning&&isTutorial(state)?'<div class="notice warning">Progression de formation non enregistrée. Gardez cette page ouverte.</div>':saveWarning?'<div class="notice warning">Sauvegarde locale indisponible. Exportez votre campagne dans Règles & sauvegarde.</div>':''}
-     ${view==='agents'?`<div class="personnel-toolbar">${button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"')}</div>`:view!=='world'?button(icon('close')+' Retour à la carte','nav','overlay-return','data-id="world"'):''}${content}
+     ${content}
     </main>
    </div>
   </div>
-  <footer><span>${icon('lock')} ${saveWarning?'SAUVEGARDE INDISPONIBLE':'CANAL SÉCURISÉ · SAUVEGARDE LOCALE'}</span><span>DIVISION ${state.player} / ${state.agents.filter(a=>a.faction===state.player&&!['dead','retired'].includes(a.status)).length} AGENT(S)</span><span>SIGMA NETWORK / 2040</span></footer>
+  <footer><span>${icon('lock')} ${saveWarning?'SAUVEGARDE INDISPONIBLE':'CANAL SÉCURISÉ · SAUVEGARDE LOCALE'}</span><span>DIVISION ${state.player} / ${state.agents.filter(a=>a.faction===state.player&&!['dead','retired'].includes(a.status)).length} AGENT(S)</span><span>SHADOW MANDATE 2040</span></footer>
  </div>`;
 }
 

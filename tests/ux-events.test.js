@@ -24,8 +24,10 @@ test('Snapshots and connectivity updates do not reopen a closed lobby during pla
 test('Japan and Turkey country labels avoid city text at desktop and compact widths',()=>{
  for(const width of [480,1200])for(const id of ['TR','JP']){
   const x=width/2,y=250,cityBox={left:x-15,right:x+85,top:y-27,bottom:y+17};
-  const pos=layoutCountryLabels([{id,x,y,cityBox}],width,500,id)[id],cw=width<700?104:132,ch=width<700?39:43;
-  const box={left:x+pos[0]-cw/2,right:x+pos[0]+cw/2,top:y+pos[1]-ch/2,bottom:y+pos[1]+ch/2};
+  const nameBox={left:-28,right:28,top:-23,bottom:-6},labelBox={left:-53,right:53,top:-23,bottom:35};
+  const {dx,dy,compact}=layoutCountryLabels([{id,x,y,cityBox,nameBox,labelBox}],width,500,id)[id];
+  const measured=compact?nameBox:labelBox;
+  const box={left:x+dx+measured.left,right:x+dx+measured.right,top:y+dy+measured.top,bottom:y+dy+measured.bottom};
   assert.ok(box.right<=cityBox.left||box.left>=cityBox.right||box.bottom<=cityBox.top||box.top>=cityBox.bottom);
  }
  const s=fresh();s.factions.FR.cyberSupport.JP={from:1,until:3};assert.match(countryPin(s,COUNTRY.JP,[],[]),/class="hack-count"/);assert.match(countryPin(s,COUNTRY.JP,[],[]),/>3<\/text>/);s.turn=4;assert.doesNotMatch(countryPin(s,COUNTRY.JP,[],[]),/class="hack-count"/);

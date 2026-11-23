@@ -1,6 +1,8 @@
-const KEY='sigma2040-graphics-quality';
+import {readStorageItem} from './storage-keys.js?v=242';
+
+const KEY='shadow-mandate-2040-graphics-quality';
 export const GRAPHICS={ '1080p':{width:1920,height:1080,terrain:640},'1440p':{width:2560,height:1440,terrain:800},'4k':{width:3840,height:2160,terrain:1200} };
-let quality='1080p';try{const saved=localStorage.getItem(KEY);if(Object.hasOwn(GRAPHICS,saved))quality=saved;}catch{}
+let quality='1080p';try{const saved=readStorageItem(localStorage,KEY);if(Object.hasOwn(GRAPHICS,saved))quality=saved;}catch{}
 export const graphicsQuality=()=>quality;
 export const terrainLimit=()=>GRAPHICS[quality].terrain;
 export function renderRatio(width,height,dpr=globalThis.devicePixelRatio||1,mode=quality){const p=GRAPHICS[mode]||GRAPHICS['1080p'];if(!(width>0&&height>0))return 1;const landscape=width>=height;return Math.min(Math.max(.1,Number(dpr)||1),(landscape?p.width:p.height)/width,(landscape?p.height:p.width)/height);}
