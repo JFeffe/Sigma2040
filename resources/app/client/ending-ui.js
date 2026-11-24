@@ -1,10 +1,10 @@
-import {coopCellGoal,cellsDone} from './engine.js?v=243';
-import {isNpcTutorial} from './tutorial-mode.js?v=243';
-import {campaignRules} from './campaign-rules.js?v=243';
-import {COUNTRY} from './data.js?v=243';
-import {icon,button,esc,flag,formatScore} from './ui.js?v=243';
-import {campaignSummary,prestigeChart,contributionBreakdown} from './campaign-stats.js?v=243';
-import {clockMarkup} from './campaign-clock.js?v=243';
+import {coopCellGoal,cellsDone} from './engine.js?v=245';
+import {isNpcTutorial} from './tutorial-mode.js?v=245';
+import {campaignRules} from './campaign-rules.js?v=245';
+import {COUNTRY} from './data.js?v=245';
+import {icon,button,esc,flag,formatScore} from './ui.js?v=245';
+import {campaignSummary,prestigeChart,contributionBreakdown} from './campaign-stats.js?v=245';
+import {clockMarkup} from './campaign-clock.js?v=245';
 export function endingScreen(s,options={}){
  const win=s.ended==='victory';
  const factions=Object.values(s.factions).sort((a,b)=>b.score-a.score);

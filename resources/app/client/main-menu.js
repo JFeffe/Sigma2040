@@ -1,53 +1,201 @@
-import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=243';
-import {AI_LEVELS} from './ai-difficulty.js?v=243';
-import {BUILD_VERSION} from './build-version.js?v=243';
-import {campaignRules} from './campaign-rules.js?v=243';
-import {renderRatio} from './graphics.js?v=243';
-import {brand,button,esc,icon} from './ui.js?v=243';
-import {COUNTRY} from './data.js?v=243';
-export function backToMainMenu(command='main-menu'){
- return button(icon('arrow')+'<span>Retour au menu principal</span>',command,'small command-back');
+import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=245';
+import {AI_LEVELS} from './ai-difficulty.js?v=245';
+import {BUILD_VERSION} from './build-version.js?v=245';
+import {menuTitleMarkup} from './menu-title.js?v=245';
+import {campaignRules} from './campaign-rules.js?v=245';
+import {renderRatio} from './graphics.js?v=245';
+import {brand,button,esc,icon} from './ui.js?v=245';
+import {COUNTRY} from './data.js?v=245';
+export function menuChromeMarkup(desktop){
+ const build=desktop
+  ? `<span class="menu-build">BUILD ${BUILD_VERSION}</span>`
+  : `<a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer">BUILD ${BUILD_VERSION}</a>`;
+ return `<div class="menu-chrome">${build}${button(icon('arrow')+'<span>Retour</span>','menu-back','small command-back')}</div>`;
 }
 
 export function menuSkyMarkup(){
  return `<canvas class="menu-particles" aria-hidden="true"></canvas><div class="menu-earth" aria-hidden="true"><canvas id="menuEarth" width="1024" height="1024"></canvas><canvas id="menuOrbits"></canvas></div>`;
 }
 
-export function backToOptions(){
- return button(icon('arrow')+'<span>Retour aux options</span>','options','small command-back');
-}
-
 export function optionPage(content,page){
  return `<main class="command-menu option-page ${page}">
-  <header class="command-menu-header">${brand()}${backToOptions()}</header>
+  <header class="command-menu-header">${brand()}</header>
   <section class="command-menu-body">${content}</section>
  </main>`;
 }
 
 export function mainMenu(campaign,{options=false,desktop=false,saveStatus=''}={}){
- const build=desktop
-  ? `<span class="menu-build">BUILD ${BUILD_VERSION}</span>`
-  : `<a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer" title="Voir la mise à jour sur GitHub">BUILD ${BUILD_VERSION}</a>`;
  const unread=options&&hasReviewedPatchNotes()?unreadPatchCount():0;
  const links=options
   ? button(icon('file')+' Notes de version'+(unread?`<small class="menu-option-count">${unread}</small>`:''),'patch-notes',unread?'patch-unread':'')+
     button(icon('settings')+' Paramètres','settings')+
     button(icon('help')+' Règles','rules')+
-    button(icon('case')+' Sauvegardes','save-menu')+
-    backToMainMenu()
+    button(icon('case')+' Sauvegardes','save-menu')
   : button(`<span>${campaign?.ended?'Consulter la campagne':'Continuer'}</span>
       <small class="continue-details">${campaign?`${esc(COUNTRY[campaign.player].name)} · IA ${AI_LEVELS[campaign.aiDifficulty||'bb1']} · Tour ${campaign.turn} / ${campaignRules(campaign).maxTurns}${campaign.ended?' · Campagne terminée':''}`:esc(saveStatus||'Aucune campagne enregistrée')}</small>`,
       'continue-game','primary continue-button',campaign?'':'disabled')+
     button(icon('target')+' Nouvelle partie','new')+
     button(icon('settings')+' Options','options')+
     (desktop?button('Quitter le jeu','quit-game','menu-help'):'');
- return `<main class="main-menu${options?' options-menu':''}">${build}${menuSkyMarkup()}
+ const title=options?brand():menuTitleMarkup();
+ return `<main class="main-menu${options?' options-menu':''}">
   <section class="menu-panel">
-   <div class="menu-brand">${brand()}</div>
-   ${options?'<h1 id="optionsTitle" tabindex="-1">Options</h1>':'<p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1>'}
+   <div class="menu-brand"${options?'':' role="heading" aria-level="1"'}>${title}</div>
+   ${options?'<h1 id="optionsTitle" tabindex="-1">Options</h1>':''}
    <nav aria-label="${options?'Options':'Menu principal'}">${links}</nav>
   </section>
  </main>`;
+}
+
+export function menuMotionReduced(){
+ return document.documentElement.classList.contains('reduce-feedback')
+  ||matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+export function slideMenuPage(panel, entering){
+ const rest={transform:'translateX(0)',opacity:1};
+ const outside={transform:'translateX(-105vw)',opacity:0};
+ const animation=panel.animate(entering?[outside,rest]:[rest,outside],{
+  duration:entering?400:230,
+  easing:entering?'cubic-bezier(.19,.76,.28,1)':'cubic-bezier(.58,.04,.87,.43)',
+  fill:'both'
+ });
+ return animation.finished.catch(()=>{}).finally(()=>animation.cancel());
+}
+
+const studioDuration=5000;
+const titleFadeDuration=720;
+const titleAssemblyDuration=1800;
+const menuPanDelay=titleAssemblyDuration+550;
+const menuPanDuration=2550;
+const titleDuration=menuPanDelay+menuPanDuration;
+const titleTravel=.27;
+
+function playTitleArrival(menu,earth,nav){
+ const title=menu.querySelector('.menu-title-art');
+ const {clientWidth:width,clientHeight:height}=menu;
+ const titleBox=title.getBoundingClientRect();
+ const earthBox=earth.getBoundingClientRect();
+ const titleScale=Math.min(1.22,(width-36)/(titleBox.width*(1+2*titleTravel)),(height-56)/titleBox.height);
+ const titleX=(width-titleBox.width)/2-titleBox.left;
+ const titleY=(height-titleBox.height)/2-titleBox.top;
+ const centeredTitle=`translate(${titleX}px, ${titleY}px) scale(${titleScale})`;
+ const perspective=Math.max(width,height);
+ const distantScale=.82;
+ const earthCenter=earthBox.left+earthBox.width/2;
+ // Project the distant globe just beyond the right edge, then dolly forward as the camera pans.
+ const earthX=(width+12+earthBox.width*distantScale/2-earthCenter)/distantScale;
+ const earthY=-Math.min(height*.027,24)/distantScale;
+ const earthZ=perspective*(1-1/distantScale);
+ const earthPose=(x,y,z)=>`translateY(-50%) perspective(${perspective}px) translate3d(${x}px, ${y}px, ${z}px)`;
+ const panEasing='cubic-bezier(.42,0,.38,1)';
+ const panTiming={delay:menuPanDelay,duration:menuPanDuration,easing:panEasing,fill:'both'};
+
+ const titleAnimation=title.animate([{transform:centeredTitle},{transform:'none'}],panTiming);
+ const fade=title.animate([{opacity:0},{opacity:1}],{
+  duration:titleFadeDuration,easing:'cubic-bezier(.33,0,.3,1)',fill:'backwards'
+ });
+ const assemblyTiming={duration:titleAssemblyDuration,easing:'cubic-bezier(.44,0,.24,1)',fill:'backwards'};
+ const arrive=(selector,direction)=>title.querySelector(selector).animate([
+  {transform:`translateX(${direction*titleTravel*100}%)`},{transform:'none'}
+ ],assemblyTiming);
+ const pieces=title.classList.contains('menu-title-fallback')?[]:[
+  arrive('.menu-title-triangle',-1),arrive('.menu-title-lettering',1)
+ ];
+ const earthAnimation=earth.animate([
+  {transform:earthPose(earthX,earthY,earthZ)},
+  {transform:earthPose(0,0,0)}
+ ],panTiming);
+ const buttons=[...nav.querySelectorAll('button')].map((button,i)=>button.animate([
+  {opacity:0,transform:'translate(-20px, 7px)'},
+  {opacity:getComputedStyle(button).opacity,transform:'none'}
+ ],{duration:650,delay:titleDuration-1050+i*115,easing:'ease-out',fill:'both'}));
+ return [titleAnimation,fade,...pieces,earthAnimation,...buttons];
+}
+
+export function mountMenuIntro(menu,earth){
+ const motion=matchMedia('(prefers-reduced-motion: reduce)');
+ const nav=menu.querySelector('nav');
+ const title=menu.querySelector('.menu-title-art');
+ const textures=Promise.all([...title.querySelectorAll('defs image')].map(source=>{
+  const image=new Image();
+  image.src=source.getAttribute('href');
+  return image.decode();
+ })).then(()=>true,()=>false);
+ const studio=document.createElement('div');
+ studio.className='menu-studio';
+ studio.setAttribute('role','heading');
+ studio.setAttribute('aria-level','1');
+ studio.innerHTML='<span class="menu-studio-logo" aria-hidden="true"></span><strong>VORLIX</strong>';
+ menu.dataset.intro='studio';
+ nav.inert=true;
+ menu.prepend(studio);
+
+ const listeners=new AbortController();
+ const {signal}=listeners;
+ let panelTimer,pendingTitle=false,titleStarted=0,animations=[];
+ const timelineNow=()=>document.timeline.currentTime??performance.now();
+ const canAnimate=()=>!!menu.animate&&!menuMotionReduced();
+ function cancelAnimations(){
+  animations.forEach(animation=>animation.cancel());
+  animations=[];
+ }
+ function finish(){
+  if(signal.aborted)return;
+  listeners.abort();
+  clearTimeout(panelTimer);
+  cancelAnimations();
+  delete menu.dataset.intro;
+  menu.removeAttribute('data-intro-static');
+  nav.inert=false;
+  studio.remove();
+ }
+ function syncTitleArrival(){
+  if(menu.dataset.intro!=='title')return;
+  cancelAnimations();
+  clearTimeout(panelTimer);
+  const animated=canAnimate();
+  menu.toggleAttribute('data-intro-static',!animated);
+  if(!animated){
+   panelTimer=setTimeout(finish,Math.max(0,titleDuration-(timelineNow()-titleStarted)));
+   return;
+  }
+  animations=playTitleArrival(menu,earth,nav);
+  // Resizing recomputes the camera, keeping all layers on the original document timeline.
+  for(const animation of animations)animation.startTime=titleStarted;
+  animations[0].finished.then(finish,()=>{});
+ }
+ async function showTitle(){
+  clearTimeout(panelTimer);
+  pendingTitle=true;
+  // Decode during the studio card. A slow or missing texture can never swap into a moving title.
+  const ready=await Promise.race([textures,new Promise(resolve=>{panelTimer=setTimeout(()=>resolve(false),900);})]);
+  clearTimeout(panelTimer);
+  if(signal.aborted)return;
+  title.classList.toggle('menu-title-fallback',!ready);
+  cancelAnimations();
+  studio.remove();
+  menu.dataset.intro='title';
+  titleStarted=timelineNow();
+  syncTitleArrival();
+ }
+ function skipPanel(){
+  if(menu.dataset.intro==='studio'&&!pendingTitle)void showTitle();
+  else finish();
+ }
+ if(canAnimate())animations.push(studio.animate([
+  {opacity:1},{opacity:1,offset:.91,easing:'ease-in'},{opacity:0}
+ ],{duration:studioDuration,fill:'both'}));
+ panelTimer=setTimeout(showTitle,studioDuration);
+ menu.addEventListener('click',skipPanel,{signal});
+ document.addEventListener('keydown',event=>{
+  if(event.code!=='Space'&&event.key!==' ')return;
+  event.preventDefault();
+  if(!event.repeat)skipPanel();
+ },{signal});
+ motion.addEventListener('change',syncTitleArrival,{signal});
+ window.addEventListener('resize',syncTitleArrival,{signal});
+ return finish;
 }
 
 // GPU sphere and separate orbital/particle layers: no flattened background image.
@@ -81,19 +229,25 @@ function globeRenderer(canvas){
  return {gl,dispose,upload(im,i){gl.activeTexture(gl.TEXTURE0+i);gl.bindTexture(gl.TEXTURE_2D,textures[i]);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,im);},draw(a){gl.viewport(0,0,canvas.width,canvas.height);gl.uniform1f(loc,a);gl.drawArrays(gl.TRIANGLES,0,6);}};
  }catch(e){dispose();throw e;}
 }
-export function mountMenuEarth(){
- let canvas=document.querySelector('#menuEarth');if(!canvas)return ()=>{};
- const orbitCanvas=document.querySelector('#menuOrbits'),stars=document.querySelector('.menu-particles'),oc=orbitCanvas.getContext('2d'),sc=stars.getContext('2d');
+const menuAngles={
+ home:0,options:.17,settings:.29,rules:.31,saves:.35,'patch-notes':.27,
+ 'new-game':-.16,setup:-.31,tutorials:-.29,multiplayer:-.33,lobby:-.39
+};
+
+export function mountMenuEarth(scene,page){
+ let canvas=scene.querySelector('#menuEarth');
+ const orbitCanvas=scene.querySelector('#menuOrbits'),stars=scene.querySelector('.menu-particles'),oc=orbitCanvas.getContext('2d'),sc=stars.getContext('2d');
  let renderer,stopFallback=()=>{},disposed=false,frame=0,previous=0,elapsed=0,dirty=true,w=0,h=0,side=0,dpr=1;
- const reduced=()=>document.documentElement.classList.contains('reduce-feedback')||matchMedia('(prefers-reduced-motion: reduce)').matches;
- const fallback=()=>{if(disposed)return;renderer?.dispose();renderer=null;const replacement=document.createElement('canvas');replacement.id='menuEarth';replacement.width=900;replacement.height=900;replacement.className='menu-earth-fallback';canvas.replaceWith(replacement);canvas=replacement;stopFallback=mountFallbackEarth();};
+ let angle=menuAngles[page]??0,origin=angle,target=angle,turnedAt=0;
+ const cameraAngle=()=>.52+elapsed*.035+angle;
+ const fallback=()=>{if(disposed||canvas.classList.contains('menu-earth-fallback'))return;renderer?.dispose();renderer=null;const replacement=document.createElement('canvas');replacement.id='menuEarth';replacement.width=900;replacement.height=900;replacement.className='menu-earth-fallback';canvas.replaceWith(replacement);canvas=replacement;stopFallback=mountFallbackEarth(canvas,cameraAngle);};
  try{renderer=globeRenderer(canvas);}catch{fallback();}
  const onLost=e=>{e.preventDefault();fallback();};canvas.addEventListener('webglcontextlost',onLost,{once:true});
  if(renderer){loadImage('./assets/menu-earth-day.jpg').then(im=>{if(!disposed&&renderer){renderer.upload(im,0);dirty=true;}}).catch(()=>{fallback();});loadImage('./assets/menu-earth-clouds.png').then(im=>{if(!disposed&&renderer){renderer.upload(im,2);dirty=true;}}).catch(()=>{});loadImage('./assets/menu-earth-night.png').then(im=>{if(!disposed&&renderer){renderer.upload(im,1);dirty=true;}}).catch(()=>{});}
  // Deterministic particles avoid a visual jump when returning to the menu.
  let seed=2040;const random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
  const dust=Array.from({length:170},()=>({x:random(),y:random(),r:.4+random()*1.1,depth:random(),phase:random()*TAU}));
- function resize(){w=stars.clientWidth;h=stars.clientHeight;dpr=renderRatio(innerWidth,innerHeight);side=canvas.parentElement.getBoundingClientRect().width;
+ function resize(){w=stars.clientWidth;h=stars.clientHeight;dpr=renderRatio(innerWidth,innerHeight);side=canvas.parentElement.clientWidth;
  if(renderer){const resolution=Math.max(1,Math.round(side*dpr));canvas.width=canvas.height=resolution;}
  orbitCanvas.width=orbitCanvas.height=Math.round(side*dpr);stars.width=Math.round(w*dpr);stars.height=Math.round(h*dpr);dirty=true;}
  const observer=new ResizeObserver(resize);observer.observe(canvas.parentElement);window.addEventListener('resize',resize);window.addEventListener('graphicschange',resize);resize();
@@ -102,27 +256,46 @@ export function mountMenuEarth(){
  oc.lineWidth=1;oc.strokeStyle=index===0?'rgba(139,218,255,.76)':'rgba(108,197,247,.50)';oc.shadowColor='#4abaff';oc.shadowBlur=4;oc.stroke();oc.shadowBlur=0;
  const p=orbitPoint(o.phase+elapsed*o.speed,o);if(p.z<0&&p.x*p.x+p.y*p.y<=1.005)return;
  const x=c+p.x*r,y=c-p.y*r;oc.save();oc.translate(x,y);oc.rotate(-o.roll);oc.shadowColor='#7edbff';oc.shadowBlur=12;oc.fillStyle='#d6f5ff';oc.beginPath();oc.arc(0,0,2.6,0,TAU);oc.fill();oc.shadowBlur=0;oc.fillStyle='#699cb9';oc.strokeStyle='#b6e6ff';oc.lineWidth=.6;for(const dx of [-10,5]){oc.fillRect(dx,-2.5,5,5);oc.strokeRect(dx,-2.5,5,5);}oc.restore();}
- function draw(now){if(disposed)return;frame=requestAnimationFrame(draw);if(document.hidden){previous=0;return;}if(previous&&now-previous<33)return;const dt=previous?Math.min(now-previous,100)/1000:0;previous=now;const still=reduced();if(!still)elapsed+=dt;if(still&&!dirty)return;dirty=false;
- renderer?.draw(.52+elapsed*.035);oc.setTransform(dpr,0,0,dpr,0,0);oc.clearRect(0,0,side,side);orbits.forEach(drawOrbit);
- sc.setTransform(dpr,0,0,dpr,0,0);sc.clearRect(0,0,w,h);for(const p of dust){const x=(p.x*w+elapsed*(.6+p.depth))%w,y=(p.y*h+Math.sin(elapsed*.06+p.phase)*8+h)%h;const a=.18+.42*p.depth+Math.sin(elapsed*.4+p.phase)*.1;sc.fillStyle=`rgba(170,216,250,${a})`;sc.beginPath();sc.arc(x,y,p.r,0,TAU);sc.fill();if(p.depth>.93){sc.shadowColor='#8acfff';sc.shadowBlur=9;sc.fill();sc.shadowBlur=0;}}
+ function draw(now){if(disposed)return;frame=requestAnimationFrame(draw);if(document.hidden){previous=0;return;}if(previous&&now-previous<33)return;const dt=previous?Math.min(now-previous,100)/1000:0;previous=now;const still=menuMotionReduced();if(!still)elapsed+=dt;if(still&&!dirty&&angle===target)return;dirty=false;
+ const progress=still?1:Math.max(0,Math.min(1,(now-turnedAt)/700));
+ angle=progress===1?target:origin+(target-origin)*progress*progress*(3-2*progress);
+ renderer?.draw(cameraAngle());oc.setTransform(dpr,0,0,dpr,0,0);oc.clearRect(0,0,side,side);orbits.forEach(drawOrbit);
+ sc.setTransform(dpr,0,0,dpr,0,0);
+ sc.clearRect(0,0,w,h);
+ const starMargin=16;
+ const starSpan=w+2*starMargin;
+ for(const p of dust){
+  const x=(p.x*starSpan+elapsed*(4+6*p.depth))%starSpan-starMargin;
+  const alpha=.18+.42*p.depth+Math.sin(elapsed*.4+p.phase)*.1;
+  sc.fillStyle=`rgba(170,216,250,${alpha})`;
+  sc.beginPath();sc.arc(x,p.y*h,p.r,0,TAU);sc.fill();
+  if(p.depth>.93){sc.shadowColor='#8acfff';sc.shadowBlur=9;sc.fill();sc.shadowBlur=0;}
+ }
  }
  frame=requestAnimationFrame(draw);
- return ()=>{disposed=true;cancelAnimationFrame(frame);observer.disconnect();window.removeEventListener('resize',resize);window.removeEventListener('graphicschange',resize);canvas.removeEventListener('webglcontextlost',onLost);renderer?.dispose();stopFallback();};
+ return {
+  face(page){
+   const next=menuAngles[page]??0;
+   if(next===target)return;
+   origin=angle;target=next;turnedAt=performance.now();dirty=true;
+  },
+  dispose(){disposed=true;cancelAnimationFrame(frame);observer.disconnect();window.removeEventListener('resize',resize);window.removeEventListener('graphicschange',resize);canvas.removeEventListener('webglcontextlost',onLost);renderer?.dispose();stopFallback();}
+ };
 }
 
 // Software fallback retains rotation and lighting when WebGL is unavailable.
 let earthImages;
-function mountFallbackEarth(){
- const canvas=document.querySelector('#menuEarth'),ctx=canvas.getContext('2d'),size=canvas.width,r=size*.38,c=size/2;let disposed=false,frame=0;
+function mountFallbackEarth(canvas,cameraAngle){
+ const ctx=canvas.getContext('2d'),size=canvas.width,r=size*.38,c=size/2;let disposed=false,frame=0;
  const read=async src=>{const im=await loadImage(src),tmp=document.createElement('canvas');tmp.width=im.width;tmp.height=im.height;const tc=tmp.getContext('2d');tc.drawImage(im,0,0);return {w:im.width,h:im.height,data:tc.getImageData(0,0,im.width,im.height).data};};
  earthImages??=Promise.all([read('./assets/menu-earth-day.jpg'),read('./assets/menu-earth-night.png').catch(()=>null),read('./assets/menu-earth-clouds.png').catch(()=>null)]).catch(e=>{earthImages=null;throw e;});
  earthImages.then(([tex,night,clouds])=>{if(disposed)return;const pixels=[],out=ctx.createImageData(size,size),data=out.data;
  for(let y=0;y<size;y++)for(let x=0;x<size;x++){const nx=(x-c)/r,ny=(c-y)/r,d=Math.hypot(nx,ny),i=(y*size+x)*4;
  if(d>1){data[i]=51;data[i+1]=163;data[i+2]=255;data[i+3]=255*(Math.exp(-(d-1)*65)*.65+Math.exp(-(d-1)*18)*.08);continue;}
  const z=Math.sqrt(1-d*d),lit=(nx*.65+ny*.4+z*.8)/1.105,daylight=Math.max(0,Math.min(1,(lit+.16)/.51));pixels.push({i,lon:Math.atan2(nx,z),v:Math.acos(ny)/Math.PI,light:.14+.94*Math.max(0,lit),night:1-daylight*daylight*(3-2*daylight),rim:Math.pow(1-z,4)*(.26+.6*Math.max(0,lit))});data[i+3]=255;}
- let angle=.52,previous=0,first=true;
- function draw(now){if(disposed)return;frame=requestAnimationFrame(draw);if(document.hidden){previous=0;return;}if(previous&&now-previous<80)return;const dt=previous?Math.min(now-previous,120):0;previous=now;
- const still=document.documentElement.classList.contains('reduce-feedback')||matchMedia('(prefers-reduced-motion: reduce)').matches;if(still&&!first)return;first=false;if(!still)angle+=dt*.000035;
+ let previous=0,lastAngle;
+ function draw(now){if(disposed)return;frame=requestAnimationFrame(draw);if(document.hidden){previous=0;return;}if(previous&&now-previous<80)return;previous=now;
+ const angle=cameraAngle();if(angle===lastAngle)return;lastAngle=angle;
  for(const p of pixels){const u=((p.lon+angle)/TAU+.5+1)%1,tx=u*tex.w,ty=p.v*(tex.h-1),x=Math.floor(tx),y=Math.floor(ty),fx=tx-x,fy=ty-y,j=(y*tex.w+x)*4,jx=(y*tex.w+(x+1)%tex.w)*4,jy=(Math.min(y+1,tex.h-1)*tex.w+x)*4,jxy=(Math.min(y+1,tex.h-1)*tex.w+(x+1)%tex.w)*4;
  const n=night?(Math.min(night.h-1,Math.floor(p.v*night.h))*night.w+Math.floor(u*night.w))*4:0;
  const cu=(u+angle*.025)%1,k=clouds?(Math.min(clouds.h-1,Math.floor(p.v*clouds.h))*clouds.w+Math.floor(cu*clouds.w))*4:0,cloud=clouds?clouds.data[k+3]/255*.68:0;

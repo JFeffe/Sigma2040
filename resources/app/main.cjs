@@ -59,6 +59,7 @@ function installGameCommands(){
     'shadow-mandate:read-campaigns':()=>store.read(),
     'shadow-mandate:write-campaign':(raw,checkpoint,slot,expected)=>store.write(raw,checkpoint,slot,expected),
     'shadow-mandate:restore-campaign':(raw,slot,expected)=>store.restore(raw,slot,expected),
+    'shadow-mandate:delete-campaign':(slot,expected)=>store.remove(slot,expected),
     'shadow-mandate:confirm':async(message,language)=>{
       if(typeof message!=='string'||message.length>1000||!isLanguage(language))return false;
       const buttons=language==='en'?['Confirm','Cancel']:['Confirmer','Annuler'];
@@ -116,7 +117,7 @@ else {
         return new Response(fileResponse.body,{status:fileResponse.status,statusText:fileResponse.statusText,headers});
       }catch{return new Response('Introuvable',{status:404});}
     });
-    const icon=path.join(__dirname,'icon.png');
+    const icon=path.join(root,'assets','brand-triangle.png');
     window=new BrowserWindow({
       width:1440,height:900,minWidth:840,minHeight:610,title:'Shadow Mandate',autoHideMenuBar:true,
       show:false,backgroundColor:'#0b1220',...(fs.existsSync(icon)?{icon}:{}),

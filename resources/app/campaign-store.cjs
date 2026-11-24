@@ -5,6 +5,10 @@ const { randomUUID } = require('node:crypto');
 
 const MAX_CAMPAIGN_BYTES = 8 * 1024 * 1024;
 
+function matchesSaveRecord(actual, expected) {
+  return actual.status === expected?.status && actual.raw === expected.raw && actual.savedAt === expected.savedAt;
+}
+
 function createCampaignStore(directory, validateSave) {
   const currentFile = path.join(directory, 'campaign.json');
   const previousFile = path.join(directory, 'campaign.previous.json');
@@ -75,12 +79,16 @@ function createCampaignStore(directory, validateSave) {
     write: (raw, checkpoint = false, expected) => queue(async () => {
       const next = describe(raw, Date.now());
       const current = await readSlot(currentFile);
-      if (current.status === 'unavailable') throw new Error('Campaign storage unavailable');
-      if (expected !== undefined && expected !== (current.raw ?? null)) throw new Error('Campaign slot changed');
+      const previous = expected && typeof expected === 'object' ? await readSlot(previousFile) : null;
+      if (current.status === 'unavailable' || previous?.status === 'unavailable') throw new Error('Campaign storage unavailable');
+      const matches = previous
+        ? matchesSaveRecord(current, expected.current) && matchesSaveRecord(previous, expected.previous)
+        : expected === undefined || expected === (current.raw ?? null);
+      if (!matches) throw new Error('Campaign slot changed');
       if (current.status === 'ready') {
         if (current.raw === raw) return current;
         const advance = current.turn !== next.turn || current.seed !== next.seed || current.player !== next.player;
-        if (checkpoint === true || advance || (await readSlot(previousFile)).status !== 'ready') {
+        if (checkpoint === true || advance || (previous ?? await readSlot(previousFile)).status !== 'ready') {
           await replaceFile(previousFile, current);
         }
       }
@@ -96,6 +104,17 @@ function createCampaignStore(directory, validateSave) {
       // Keep the independent recovery file intact, including if replacing the current file fails.
       await replaceFile(currentFile, previous);
       return previous;
+    }),
+    remove: expected => queue(async () => {
+      const [current, previous] = await Promise.all([readSlot(currentFile), readSlot(previousFile)]);
+      for (const [key, record] of Object.entries({ current, previous })) {
+        if (record.status === 'unavailable' || !matchesSaveRecord(record, expected?.[key])) {
+          throw new Error('Campaign slot changed or unavailable');
+        }
+      }
+      // If removing the recovery copy fails, the playable campaign is still intact.
+      await fs.rm(previousFile, { force: true });
+      await fs.rm(currentFile, { force: true });
     }),
     flush: () => pending,
   };
@@ -113,6 +132,7 @@ function createCampaignSlotStore(directory, validateSave) {
     read: () => Promise.all(slots.map(slot => slot.read())),
     write: (raw, checkpoint, index = 0, expected) => requireSlot(index).write(raw, checkpoint, expected),
     restore: (raw, index = 0, expected) => requireSlot(index).restore(raw, expected),
+    remove: (index, expected) => requireSlot(index).remove(expected),
     flush: () => Promise.all(slots.map(slot => slot.flush())),
   };
 }

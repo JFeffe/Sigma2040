@@ -1,4 +1,4 @@
-import {COUNTRIES,COUNTRY} from './data.js?v=244';
+import {COUNTRIES,COUNTRY} from './data.js?v=245';
 
 const fields=COUNTRIES.filter(c=>!c.power);
 const legacyFields=fields.filter(c=>!c.expansion).map(c=>c.id);

@@ -1,5 +1,5 @@
-import {localizeContent,translateText} from './localization.js?v=243';
-import {readPreference,writePreference} from './browser-preferences.js?v=243';
+import {localizeContent,translateText} from './localization.js?v=245';
+import {readPreference,writePreference} from './browser-preferences.js?v=245';
 // Non-modal windows live outside #app so rendering the globe never destroys them.
 export function clampWindowPosition(x,y,width,height,viewportWidth,viewportHeight){
  return {x:Math.max(8,Math.min(x,Math.max(8,viewportWidth-width-8))),y:Math.max(8,Math.min(y,Math.max(8,viewportHeight-height-8)))};
@@ -43,7 +43,7 @@ export function createFloatingWindows(doc=document,win=window){
  });
  const front=r=>{r.el.style.zIndex=String(++layer);};
  function close(key){const r=records.get(key);if(!r)return;remember(r);resizeObserver.unobserve(r.el);r.cleanup?.();r.el.close();r.el.remove();records.delete(key);}
- function open(key,title,{className='',width=440,legacyWidth=null,onClose=null}={}){
+ function open(key,title,{className='',width=440,previousWidth=null,onClose=null}={}){
   if(records.has(key)){const r=records.get(key);front(r);return r;}
   const el=doc.createElement('dialog'),header=doc.createElement('header'),label=doc.createElement('strong'),closeButton=doc.createElement('button');
   el.className='workspace-window '+className;el.dataset.workspaceWindow=key;el.style.width=width+'px';
@@ -58,7 +58,7 @@ export function createFloatingWindows(doc=document,win=window){
   updateLabels();
   const candidate=savedLayouts[key]||savedLayouts[key.split(':')[0]];
   const saved=valid(candidate)?candidate:null;
-  const defaultWidth=saved?.autoHeight===undefined&&saved?.width===legacyWidth?width:saved?.width??width;
+  const defaultWidth=saved?.width===previousWidth?width:saved?.width??width;
   const r={key,el,header,width:defaultWidth,heightLimit:null,
    x:saved?.x??Math.max(12,win.innerWidth-defaultWidth-30-records.size*24),y:saved?.y??110+records.size*28};
   records.set(key,r);

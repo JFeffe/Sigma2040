@@ -44,23 +44,27 @@ test('Dossier popup opens through the application dialog, and its portrait opens
  }finally{globalThis.document=previous;}
 });
 
-test('A dossier prepares the express order for the same agent, target and boost selection',async()=>{
+test('A dossier opened from an agent uses the shared confirmation with that agent preselected',async()=>{
  const {context,modal,state}=applicationDialog(),t=E.knownTargets(state)[0],a=E.team(state)[1];
  a.country=t.country;state.factions.FR.access[t.country]=true;
  const previous=globalThis.document;globalThis.document={activeElement:null};
  try{
-  let prepared=null;
-  initCountryInquiry({state:()=>state,modal,showModal:context.showModal,openAgent:(...args)=>{prepared=args;},readOnlyReason:()=>'',notify(){}});
+  let assigned=null;
+  initCountryInquiry({state:()=>state,modal,showModal:context.showModal,readOnlyReason:()=>'',notify(){},
+   openAgent(){assert.fail('The dossier must assign directly');},
+   async assign(p){assigned=p;E.assign(state,p.id,p.type,p.target,p.useCredits);}
+  });
   openCountryInquiry(t.id,false,a.id);
-  assert.match(modal.innerHTML,/data-cmd="inquiry-express"/);
-  assert.doesNotMatch(modal.innerHTML,/data-cmd="inquiry-agent"/);
+  assert.doesNotMatch(modal.innerHTML,/data-cmd="inquiry-express"/);
+  assert.match(modal.innerHTML,new RegExp(`data-cmd="inquiry-agent"[^>]*data-id="${a.id}" aria-pressed="true"`));
   assert.match(modal.innerHTML,/<footer class="inquiry-footer">[\s\S]*data-cmd="inquiry-boost"/);
   const budget=state.factions.FR.budget;
   await handleInquiryCommand('inquiry-boost');
-  await handleInquiryCommand('inquiry-express');
-  assert.deepEqual(prepared,[a.id,'collect',t.id,true]);
-  assert.equal(state.factions.FR.budget,budget);
-  assert.equal(a.task,null);
+  await handleInquiryCommand('inquiry-confirm');
+  assert.deepEqual(assigned,{id:a.id,type:'collect',target:t.id,useCredits:true});
+  assert.equal(state.factions.FR.budget,budget-E.ECONOMY.boostCost);
+  assert.equal(a.task.target,t.id);
+  assert.equal(modal.className,'country-inquiry-modal');
  }finally{globalThis.document=previous;}
 });
 

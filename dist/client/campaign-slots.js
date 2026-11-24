@@ -23,8 +23,23 @@ export function latestCampaignSlot(slots) {
   }, -1);
 }
 
+export function canDeleteCampaignSlot({ current, previous }) {
+  return current.status !== 'unavailable' && previous.status !== 'unavailable'
+    && (current.status !== 'missing' || previous.status !== 'missing');
+}
+
+function matchesSaveRecord(actual, expected) {
+  return actual.status === expected?.status && actual.raw === expected.raw && actual.savedAt === expected.savedAt;
+}
+
+function storageSlotSnapshot(snapshot) {
+  // An unreadable legacy campaign can occupy slot 1 before it is migrated.
+  return snapshot?.current?.legacy ? { ...snapshot, current: { status: 'missing' } } : snapshot;
+}
+
 export function createBrowserCampaignStore(validateSave) {
   let connection;
+  const previous = { status: 'missing' };
 
   function database() {
     connection ??= new Promise((resolve, reject) => {
@@ -96,16 +111,29 @@ export function createBrowserCampaignStore(validateSave) {
       if (next.status !== 'ready') throw new Error('Invalid campaign');
       return transaction('readwrite', store => store.get(slot), (saved, store) => {
         const current = describe(saved);
-        if (expected !== undefined && expected !== (current.raw ?? null)) throw new Error('Campaign slot changed');
+        const matches = expected && typeof expected === 'object'
+          ? matchesSaveRecord(current, expected.current) && matchesSaveRecord(previous, expected.previous)
+          : expected === undefined || expected === (current.raw ?? null);
+        if (!matches) throw new Error('Campaign slot changed');
         if (current.raw === raw) return current;
         store.put(record);
         return next;
       });
     },
+    deleteCampaign(slot, expected) {
+      if (!isCampaignSlot(slot)) throw new Error('Invalid campaign slot');
+      return transaction('readwrite', store => store.get(slot), (saved, store) => {
+        const current = describe(saved);
+        if (!matchesSaveRecord(current, expected?.current) || !matchesSaveRecord(previous, expected?.previous)) {
+          throw new Error('Campaign slot changed');
+        }
+        store.delete(slot);
+      });
+    },
   };
 }
 
-export function createCampaignSaves(store, validateSave, readLegacy) {
+export function createCampaignSaves(store, validateSave, readLegacy, forgetLegacy) {
   let slots = emptyCampaignSlots();
   let active = null;
   let pending = Promise.resolve();
@@ -121,7 +149,7 @@ export function createCampaignSaves(store, validateSave, readLegacy) {
     await pending;
     try {
       slots = await store.readCampaigns();
-      if (hasLegacyError && firstFreeCampaignSlot(slots) === 0) slots[0].current = { status: 'invalid' };
+      if (hasLegacyError && firstFreeCampaignSlot(slots) === 0) slots[0].current = { status: 'invalid', legacy: true };
     } catch {
       slots = emptyCampaignSlots('unavailable');
     }
@@ -145,7 +173,7 @@ export function createCampaignSaves(store, validateSave, readLegacy) {
         legacy = readLegacy();
       } catch {
         hasLegacyError = true;
-        if (!unavailable) slots[0].current = { status: 'invalid' };
+        if (!unavailable) slots[0].current = { status: 'invalid', legacy: true };
       }
       if (legacy) {
         if (unavailable) {
@@ -153,7 +181,7 @@ export function createCampaignSaves(store, validateSave, readLegacy) {
           return legacy;
         }
         try {
-          slots[0].current = await store.writeCampaign(JSON.stringify(legacy), false, 0, null);
+          slots[0].current = await store.writeCampaign(JSON.stringify(legacy), false, 0, { ...slots[0] });
         } catch {
           // Another tab may have migrated the same campaign before this write.
           await refresh();
@@ -172,6 +200,7 @@ export function createCampaignSaves(store, validateSave, readLegacy) {
     const selection = active;
     const raw = JSON.stringify(campaign);
     return queue(async () => {
+      if (active !== selection) return;
       const current = await store.writeCampaign(raw, false, selection.slot, selection.raw);
       selection.raw = current.raw;
       slots[selection.slot].current = current;
@@ -181,10 +210,24 @@ export function createCampaignSaves(store, validateSave, readLegacy) {
   function replace(campaign, slot, expected, recoveryRaw) {
     return queue(async () => {
       const current = recoveryRaw === undefined
-        ? await store.writeCampaign(JSON.stringify(campaign), true, slot, expected)
+        ? await store.writeCampaign(JSON.stringify(campaign), true, slot, storageSlotSnapshot(expected))
         : await store.restoreCampaign(recoveryRaw, slot, expected);
       slots[slot].current = current;
       active = { slot, raw: current.raw };
+    });
+  }
+
+  function remove(slot, expected) {
+    return queue(async () => {
+      await store.deleteCampaign(slot, storageSlotSnapshot(expected));
+      if (slot === 0) {
+        forgetLegacy?.();
+        hasLegacyError = false;
+      }
+      slots[slot] = { current: { status: 'missing' }, previous: { status: 'missing' } };
+      const wasActive = active?.slot === slot;
+      if (wasActive) active = null;
+      return wasActive;
     });
   }
 
@@ -196,5 +239,6 @@ export function createCampaignSaves(store, validateSave, readLegacy) {
     select,
     update,
     replace,
+    remove,
   };
 }

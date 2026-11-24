@@ -9,8 +9,8 @@ test('Multiplayer entry opens and switches join/host without a lobby snapshot',(
  globalThis.localStorage={getItem:()=>null};
  let html='';const mp=new Multiplayer({modal:value=>{html=value;}});
  try{
-  mp.entry();assert.match(html,/id="mpInvite"/);assert.match(html,/aaaaaaaa-aaaa/);assert.doesNotMatch(html,/mp-ai-difficulty/);assert.match(html,/data-cmd="main-menu"/);
-  mp.entry('host');assert.match(html,/data-cmd="mp-create"/);assert.match(html,/id="mpEntryGameMode"/);assert.doesNotMatch(html,/id="mpInvite"/);assert.match(html,/data-cmd="main-menu"/);
+  mp.entry();assert.match(html,/id="mpInvite"/);assert.match(html,/aaaaaaaa-aaaa/);assert.doesNotMatch(html,/mp-ai-difficulty|data-cmd="(?:main-menu|new)"/);
+  mp.entry('host');assert.match(html,/data-cmd="mp-create"/);assert.match(html,/id="mpEntryGameMode"/);assert.doesNotMatch(html,/id="mpInvite"|data-cmd="(?:main-menu|new)"/);
   mp.entry('join');assert.match(html,/data-cmd="mp-join"/);
  }finally{clearInterval(mp.timer);}
 });
@@ -27,7 +27,8 @@ test('Leaving a pending invitation returns to the menu and ignores late connecti
   mp.peer={connect:()=>link,destroy:()=>link.emit('close')};
   mp.connectGuest();
   mp.panel();
-  assert.match(html,/data-cmd="mp-leave"/);
+  assert.match(html,/id="mpLobby"/);
+  assert.doesNotMatch(html,/data-cmd="mp-leave"/);
   await mp.handle('mp-leave');
   assert.equal(mp.active,false);
   assert.equal(mp.connection,null);

@@ -68,7 +68,7 @@ test('Agent picker exposes checkboxes, per-agent previews and clear disabled ava
  const html=deploymentPickerMarkup(s,'travel','JP');
  assert.match(html,new RegExp(`name="deployAgent" value="${a.id}"  aria-label`));
  for(const agent of [b,c,d])assert.match(html,new RegExp(`name="deployAgent" value="${agent.id}" disabled`));
- assert.match(html,/data-cmd="confirm-deployment" disabled/);assert.match(html,/0 agent sélectionné/);assert.match(html,/Destination : <strong>Japon/);assert.match(html,/énergie/);
+ assert.match(html,/data-cmd="confirm-deployment" disabled/);assert.match(html,/0 agent sélectionné/);assert.match(html,/id="deploymentDestination".*<option value="JP" selected[^>]*>.*>Japon<\/span>/);assert.match(html,/énergie/);
 });
 
 test('Host validates a guest deployment as one command, with ownership, readiness, duplicate and rollback protections',()=>{

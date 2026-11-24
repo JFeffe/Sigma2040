@@ -1,14 +1,14 @@
-import {operationCountries} from './operation-map.js?v=243';
-import {isNpcTutorial} from './tutorial-mode.js?v=243';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=243';
-import {inquiryIndicator} from './inquiry-notifications.js?v=243';
-import {threatStatus,threatCoverage,threatProtection,coveringFactions} from './threat-status.js?v=243';
-import {campaignRules} from './campaign-rules.js?v=243';
-import {clockMarkup} from './campaign-clock.js?v=243';
-import {newsTicker} from './news.js?v=243';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=243';
-import {COUNTRY} from './data.js?v=243';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=243';
+import {operationCountries} from './operation-map.js?v=245';
+import {isNpcTutorial} from './tutorial-mode.js?v=245';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=245';
+import {inquiryIndicator} from './inquiry-notifications.js?v=245';
+import {threatStatus} from './threat-status.js?v=245';
+import {campaignRules} from './campaign-rules.js?v=245';
+import {clockMarkup} from './campaign-clock.js?v=245';
+import {newsTicker} from './news.js?v=245';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=245';
+import {COUNTRY} from './data.js?v=245';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=245';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
@@ -16,15 +16,6 @@ export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  const government=!governmentOptions(state,'funding').error||!governmentOptions(state,'medical').error||operationCountries(state).some(c=>!governmentOptions(state,'diplomacy',c.id).error);
  const alerts={inquiry:inquiryIndicator(state,unreadInquiry),threats:count?{badge:String(count),label:`${count} menace${count>1?'s':''} non couverte${count>1?'s':''} par votre pays`,tone:'threats'}:null,operations:free?{badge:String(free),label:`${free} emplacement${free>1?'s':''} de module disponible${free>1?'s':''}`,tone:'modules'}:null,government:government?{badge:'!',label:'Au moins une faveur gouvernementale disponible',tone:'favors'}:null};
  for(const id of Object.keys(alerts))if(dismissed[id]){if(id==='threats'&&alerts[id])alerts[id]={...alerts[id],quiet:true};else alerts[id]=null;};return alerts;
-}
-export function turnBriefing(state){
- if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return '';
- const free=state.agents.filter(a=>a.faction===state.player&&!a.task&&!['dead','retired','captured'].includes(a.status)).length;
- const {plots,next}=threatStatus(state), p=next||plots[0];
- const covered=p&&(state.gameMode==='cooperative'?coveringFactions(state,p).length>0:threatCoverage(state,p).covered);
- const planned=p&&!covered&&threatProtection(state,p).projected;
- const coverage=covered?'Couverte':planned?'Prévue si réussite':'Non couverte';
- return `<div class="turn-briefing" role="group" aria-label="Résumé du tour"><span class="turn-briefing-ready"><strong>${free}</strong> agent${free===1?'':'s'} sans ordre</span>${p?`<button type="button" class="turn-briefing-threat ${covered?'is-covered':planned?'is-planned':'is-uncovered'}" data-cmd="nav" data-id="threats"><span>${p.turn===state.turn?'Ce tour':'Tour '+p.turn} · ${esc(COUNTRY[p.country]?.name||p.country)}</span><strong>${coverage}</strong></button>`:'<span>Aucune menace signalée</span>'}</div>`;
 }
 export function gameShell(state,view,content,saveWarning,background='',unreadInquiry=false,dismissed={}){
  const danger=crisisAlert(state);
@@ -39,8 +30,8 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
     <div class="crisis-block ${danger?'crisis-critical':''}" data-resource="crisis"><span title="Crise mondiale">CRISE <small>+${campaignRules(state).crisisPerTurn}/TOUR</small></span><strong>${state.crisis}%</strong><i><b style="width:${state.crisis}%"></b></i></div>
     <div class="turn-block"><span>TOUR</span><strong>${String(state.tutorial?.mission==='simulation'?Math.min(10,state.turn):state.turn).padStart(2,'0')}<small>${state.tutorial?.mission==='simulation'?' / 10':isTutorial(state)&&!isNpcTutorial(state)?state.tutorial.mission==='arrest'?' / 6':'':' / '+campaignRules(state).maxTurns}</small></strong></div>
    </div>
-   ${clockMarkup(state)}<div class="deck-system">${button(state.ended?'Voir le bilan':state.event?'Communication':`Terminer le tour ${icon('arrow')}`,'advance','primary',isTutorial(state)&&!state.ended&&(tutorialObjective(state).done||tutorialObjective(state).failed)?'disabled':'')}${button(icon('help'),'open-wiki','system-button','aria-label="Wiki opérationnel" title="Wiki opérationnel · Ctrl + Espace"')}${button(icon('settings'),'settings','system-button','aria-label="Paramètres" title="Paramètres"')}${button('Menu','main-menu','new-game-button','aria-label="Menu principal"')}</div>
-   ${turnBriefing(state)}${newsTicker(state)}${danger?`<section class="crisis-alert" role="alert"><span>${icon('shield')} <strong>ALERTE ROUGE · ${state.crisis} %</strong><span>${danger}</span></span>${button('Voir les menaces','nav','small','data-id="threats"')}</section>`:''}
+   ${clockMarkup(state)}<div class="deck-system">${button(state.ended?'Voir le bilan':state.event?'Communication':`Terminer le tour ${icon('arrow')}`,'advance','primary',isTutorial(state)&&!state.ended&&(tutorialObjective(state).done||tutorialObjective(state).failed)?'disabled':'')}${button(icon('help'),'open-wiki','system-button',`aria-label="Wiki opérationnel" aria-expanded="${view==='wiki'}" title="Wiki opérationnel · Ctrl + Espace"`)}${button(icon('settings'),'settings','system-button','aria-label="Paramètres" title="Paramètres"')}${button('Menu','main-menu','new-game-button','aria-label="Menu principal"')}</div>
+   ${newsTicker(state)}${danger?`<section class="crisis-alert" role="alert"><span>${icon('shield')} <strong>ALERTE ROUGE · ${state.crisis} %</strong><span>${danger}</span></span>${button('Voir les menaces','nav','small','data-id="threats"')}</section>`:''}
   </header>
   <div class="deck-workspace">
    <nav class="deck-nav" aria-label="Sections du jeu">${tabs.map(([id,ico,name])=>`<button class="deck-tab ${view===id?'active':''} ${availability[id]&&!availability[id].quiet?'nav-available nav-'+availability[id].tone:''}" title="${esc(availability[id]?.label||name)}" aria-label="${esc(availability[id]?name+' · '+availability[id].label:name)}" data-cmd="nav" data-id="${id}" ${view===id?'aria-current="page"':''}>${availability[id]?`<b class="nav-availability-badge" aria-hidden="true">${availability[id].badge}</b>`:''}${icon(ico)}<span>${name}${id==='diplomacy'&&!dismissed.diplomacy&&(state.requests||[]).some(r=>r.status==='pending')?' · '+state.requests.filter(r=>r.status==='pending').length:''}</span></button>`).join('')}</nav>

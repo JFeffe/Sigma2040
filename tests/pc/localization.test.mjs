@@ -95,11 +95,15 @@ test('the PC menu exposes recovery status and links to saves via Options', async
 });
 
 test('the release badge formats correctly and the history retains the previous build', async () => {
+  const { menuChromeMarkup } = await client('main-menu');
   const { patchNotesPage, PATCH_NOTES } = await client('patch-notes');
   setGameLanguage('en');
   try {
     assert.equal(PATCH_NOTES[0].version, BUILD_VERSION);
     assert.ok(PATCH_NOTES.some(release => release.version === '240'));
+    assert.match(menuChromeMarkup(true), new RegExp('class="menu-build">BUILD ' + BUILD_VERSION + '<'));
+    assert.equal([...menuChromeMarkup(false).matchAll(/data-cmd="menu-back"/g)].length, 1);
+    assert.equal(translateText('Retour'), 'Back');
     const page = patchNotesPage();
     assert.match(page, new RegExp('UNREAD · LATEST UPDATE · VERSION ' + BUILD_VERSION));
     assert.doesNotMatch(page, /Q VERSION|VERSION\d{3}/);
@@ -108,8 +112,8 @@ test('the release badge formats correctly and the history retains the previous b
   }
 });
 
-test('English save cards show the country, turn and restore controls', async () => {
-  const { saveScreen } = await client('save-ui');
+test('English save cards show the country, turn, restore and delete controls', async () => {
+  const { saveScreen, saveDeletionConfirmation } = await client('save-ui');
   const { emptyCampaignSlots } = await client('campaign-slots');
   setGameLanguage('en');
   try {
@@ -123,6 +127,13 @@ test('English save cards show the country, turn and restore controls', async () 
     assert.match(html, /France<\/strong> <span>· Turn 7<\/span>/);
     assert.match(html, /<time datetime="2026-11-21T00:00:00.000Z"/);
     assert.match(html, /data-cmd="save-restore"/);
+    assert.equal([...html.matchAll(/data-cmd="save-delete"/g)].length, 2);
+    assert.doesNotMatch(html, /data-cmd="(?:save-export[^"]*|import|export)"|id="saveFile"/);
+    const confirmation = saveDeletionConfirmation(0, slots[0], true);
+    assert.match(confirmation, /Supprimer cette sauvegarde \?/);
+    assert.match(confirmation, /La copie de récupération sera aussi supprimée\./);
+    assert.match(confirmation, /La campagne ouverte sera fermée\./);
+    assert.equal(translateText('Supprimer cette sauvegarde ?'), 'Delete this save?');
   } finally {
     setGameLanguage('fr');
   }

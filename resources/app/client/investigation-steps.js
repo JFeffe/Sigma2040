@@ -1,5 +1,5 @@
-import * as E from './engine.js?v=243';
-import {esc,icon,button} from './ui.js?v=243';
+import * as E from './engine.js?v=245';
+import {esc,icon,button} from './ui.js?v=245';
 
 export const INVESTIGATION_SUBSTEPS={
  access:{open:['contacts','influence','drone'],mandate:['authorize']},
@@ -7,7 +7,7 @@ export const INVESTIGATION_SUBSTEPS={
 };
 export const INVESTIGATION_STEPS=[
  {id:'access',short:'Accès local',label:'Établir un accès local',actions:Object.values(INVESTIGATION_SUBSTEPS.access).flat()},
- {id:'proofs',short:'2 preuves',label:'Recueillir deux preuves',actions:['collect','intimidate','hack']},
+ {id:'proofs',short:'Preuves',label:'Recueillir deux preuves',actions:['collect','intimidate','hack']},
  {id:'validation',short:'Validation',label:'Valider une preuve',actions:['analyze']},
  {id:'intervention',short:'Intervention',label:'Préparer l’intervention',actions:Object.values(INVESTIGATION_SUBSTEPS.intervention).flat()},
  {id:'arrest',short:'Arrestation',label:'Procéder à l’arrestation',actions:['arrest']}
@@ -35,10 +35,11 @@ export function investigationSubsteps(s,t,stage,interactive=false,selected=null)
    ['mandate','Obtenir un mandat','seal',p.mandate,field,'Optionnel · une fois par pays']]:
   [['prepare','Préparer une arrestation','target',p.prepared,p.ready,p.prepared?'Préparation terminée':'Deux preuves, dont une vérifiée'],
    ['locate','Localiser la cible','eye',p.located,true,p.located?'Valide jusqu’à fin T'+t.locationUntil:'Position à actualiser']];
- return `<div class="case-parallel">${tasks.map(([id,label,glyph,done,available,detail])=>{
+ const options=interactive?tasks.filter(([id])=>id!==selected):tasks;
+ return `<div class="case-parallel">${options.map(([id,label,glyph,done,available,detail])=>{
   const complete=done||t.arrested,cls=`case-parallel-task ${id==='mandate'?'optional ':''}${complete?'complete':available?'available':'pending'}`;
   const content=`<strong>${icon(complete?'check':glyph)}${label}</strong><small>${esc(detail)}</small>`;
-  return interactive?button(content,'inquiry-substep',cls,`data-id="${id}" aria-pressed="${selected===id}"`):`<div class="${cls}">${content}</div>`;
+  return interactive?button(`<strong>${icon(complete?'check':glyph)}${label}</strong>`,'inquiry-substep',cls,`data-id="${id}" title="${esc(detail)}"`):`<div class="${cls}">${content}</div>`;
  }).join('')}</div>`;
 }
 export function investigationProgressMarkup(s,t){
@@ -47,5 +48,5 @@ export function investigationProgressMarkup(s,t){
 }
 export function investigationRail(s,t,selected){
  const p=investigationSteps(s,t);
- return `<nav class="inquiry-step-rail" aria-label="Étapes de l’enquête">${p.steps.map(x=>button(`<span>${icon(x.done?'check':x.available?'unlock':'lock')}</span><strong>${x.short}</strong>`,'inquiry-step',`inquiry-step ${x.partial?'partial':x.done?'complete':x.available?'available':'pending'}`,`data-id="${x.id}" aria-pressed="${x.id===selected}" title="${esc(x.label+' · '+x.detail)}"`)).join('')}</nav>`;
+ return `<nav class="inquiry-step-rail" aria-label="Étapes de l’enquête">${p.steps.map(x=>button(`${x.done?`<span>${icon('check')}</span>`:''}<strong>${x.short}</strong>`,'inquiry-step',`inquiry-step ${x.partial?'partial':x.done?'complete':x.available?'available':'pending'}`,`data-id="${x.id}" aria-pressed="${x.id===selected}" title="${esc(x.label+' · '+x.detail)}"`)).join('')}</nav>`;
 }

@@ -1,11 +1,48 @@
-import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=243';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=243';
-import {tutorialHint,isTutorial,tutorialAgentPlan} from './tutorial-rules.js?v=243';
-import {TUTORIAL_MISSIONS,tutorialMission,tutorialObjective} from './tutorial.js?v=243';
-import {ACTIONS,COUNTRY} from './data.js?v=243';
-import {button,brand,esc,icon} from './ui.js?v=243';
-const header=controls=>`<header class="training-header">${brand()}<span class="training-label">ACADÉMIE / SIGMA</span><nav aria-label="Navigation de la formation">${controls}</nav></header>`;
-export function tutorialMenu(progress){return `<div class="training-page">${header(button('Menu principal','main-menu'))}<main class="training-menu"><span class="eyebrow">DOSSIER D’INITIATION / 2040</span><h1>Opération <em>Filigrane</em></h1><p class="training-intro">Du premier contact au démantèlement de Filigrane.<br>Six modules pour apprendre les bases, puis jouer dix tours avec un allié PNJ. Objectif : 19 minutes au total.</p><div class="training-promises"><span>${icon('people')} 1–5 : exercices courts · 6 : dix tours avec PNJ</span><span>${icon('check')} Vos actions réussissent à 100 %</span><span>${icon('file')} Campagne conservée</span></div>${progress.warning?'<p class="notice warning">Une sauvegarde d’exercice n’a pas pu être reprise. Vous pouvez relancer cette mission ; les autres progrès sont conservés.</p>':''}<div class="training-missions">${TUTORIAL_MISSIONS.map(m=>{const saved=progress.sessions[m.id],status=saved&&tutorialObjective(saved),resume=saved&&!status.done&&!status.failed;return `<article class="training-mission"><span class="training-number">${m.number}</span><div class="training-mission-meta">${m.duration} · ${m.agents} agent${m.agents>1?'s':''}${m.npcs?' · '+m.npcs+' PNJ':''}</div><h2>${m.title}</h2><p>${m.brief}</p><p class="training-skills">${m.skills}</p><div class="training-mission-bottom">${button(resume?'Reprendre · tour '+saved.turn:progress.completed.includes(m.id)?'Rejouer la mission':'Commencer','tutorial-start','primary',`data-id="${m.id}"`)}<small>${progress.completed.includes(m.id)?m.npcs?'✓ Chapitre terminé':'✓ Mission accomplie':status?.failed?'À réessayer':'Mission indépendante'}</small></div></article>`;}).join('')}</div><p class="training-footnote">Toutes les missions sont accessibles et rejouables séparément. Vos progrès sont enregistrés dans ce navigateur, à part de la campagne. Les durées indiquées sont des objectifs de lecture et de jeu, sans compte à rebours. Les missions conservent les durées et coûts du jeu. Vos actions sont garanties ; les PNJ suivent les chances normales.</p></main></div>`;}
+import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=245';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=245';
+import {tutorialHint,isTutorial,tutorialAgentPlan} from './tutorial-rules.js?v=245';
+import {TUTORIAL_MISSIONS,tutorialMission,tutorialObjective} from './tutorial.js?v=245';
+import {ACTIONS,COUNTRY} from './data.js?v=245';
+import {button,brand,esc,icon} from './ui.js?v=245';
+const header=()=>`<header class="training-header">${brand()}<span class="training-label">ACADÉMIE / SIGMA</span></header>`;
+const tutorialSummaries={
+ basics:'Repérez les menaces, puis donnez votre premier ordre à IRIS.',
+ inquiry:'Faites collecter une preuve par BISHOP pendant qu’APÉRO vérifie la première au QG.',
+ intervention:'Préparez le dossier, obtenez le mandat et localisez Vesper avant de l’arrêter.',
+ shield:'Protégez Berlin avant le tour 3, avec le soutien numérique d’APÉRO au QG.',
+ recovery:'Faites récupérer vos agents, réduisez leur exposition et demandez un financement.',
+ simulation:'Menez une enquête et protégez votre réseau pendant dix tours avec un allié.'
+};
+
+export function tutorialMenu(progress){
+ const missions=TUTORIAL_MISSIONS.map(m=>{
+  const saved=progress.sessions[m.id],status=saved&&tutorialObjective(saved),completed=progress.completed.includes(m.id);
+  const resume=saved&&!status.done&&!status.failed;
+  const action=resume?'Reprendre · tour '+saved.turn:completed?'Rejouer la mission':'Commencer';
+  const result=completed?(m.npcs?'✓ Chapitre terminé':'✓ Mission accomplie'):status?.failed?'À réessayer':'';
+  return `<article class="training-mission">
+   <div class="training-mission-top">
+    <span class="training-number">${m.number}</span>
+    <p class="training-mission-meta"><span translate="no">${m.duration}</span> · ${m.agents} agent${m.agents>1?'s':''}${m.npcs?' · '+m.npcs+' PNJ allié':''}</p>
+   </div>
+   <h2>${m.title}</h2>
+   <p class="training-mission-summary">${tutorialSummaries[m.id]}</p>
+   <div class="training-mission-bottom">
+    ${button(action,'tutorial-start','primary',`data-id="${m.id}"`)}
+    ${result?`<small>${result}</small>`:''}
+   </div>
+  </article>`;
+ });
+ return `<div class="training-page">${header()}
+  <main class="training-menu">
+   <h1>Opération Filigrane</h1>
+   <p class="training-intro">Six modules · environ 19 minutes.</p>
+   <p class="training-note">Réussite garantie pour vos actions. Progression séparée de la campagne.</p>
+   ${progress.warning?'<p class="notice warning">Une sauvegarde d’exercice n’a pas pu être reprise. Vous pouvez relancer cette mission ; les autres progrès sont conservés.</p>':''}
+   <div class="training-missions">${missions.join('')}</div>
+  </main>
+ </div>`;
+}
 function targetLabel(s,o){const id=o.type==='analyze'?s.proofs.find(p=>p.id===o.target)?.suspect:o.target;const name=s.suspects.find(t=>t.id===id)?.name;return name?' · '+esc(name):COUNTRY[o.target]?' · '+esc(COUNTRY[o.target].name):'';}
 export function tutorialGuide(s,collapsed=false){
  if(!isTutorial(s))return '';

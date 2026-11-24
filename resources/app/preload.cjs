@@ -6,6 +6,7 @@ contextBridge.exposeInMainWorld('shadowMandatePC', {
   writeCampaign: (raw, checkpoint, slot, expected) =>
     ipcRenderer.invoke('shadow-mandate:write-campaign', raw, checkpoint, slot, expected),
   restoreCampaign: (raw, slot, expected) => ipcRenderer.invoke('shadow-mandate:restore-campaign', raw, slot, expected),
+  deleteCampaign: (slot, expected) => ipcRenderer.invoke('shadow-mandate:delete-campaign', slot, expected),
   confirm: (message, language) => ipcRenderer.invoke('shadow-mandate:confirm', message, language),
   setLanguage: language => ipcRenderer.send('shadow-mandate:language', language),
   quit: () => ipcRenderer.send('shadow-mandate:quit'),

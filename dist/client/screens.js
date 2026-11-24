@@ -1,48 +1,48 @@
-import {operationMapMarkup} from './draft-ui.js?v=244';
-import {operationCountries} from './operation-map.js?v=244';
-import {cellInfoBadge} from './cell-info.js?v=244';
-import {agentLocation} from './agent-location.js?v=244';
-import {attackDelayBanner} from './attack-delay-ui.js?v=244';
-import {countrySidebarActions,floatingAgentMarkup} from './country-operations.js?v=244';
-import {isCooperative,visibleTeam} from './cooperative.js?v=244';
-import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=244';
-import {isTutorial} from './tutorial-rules.js?v=244';
-import {recruitCard,selectedRecruitSlots,recruitControls,visibleRecruits} from './recruit-selection.js?v=244';
-import {aiDifficultyControl} from './ai-difficulty.js?v=244';
-import {threatPanel} from './threats-ui.js?v=244';
-import {personnelPanel} from './personnel-ui.js?v=244';
-import {teamBalanceMarkup} from './team-balance.js?v=244';
-import {COOPERATION,cooperationRules} from './cooperation.js?v=244';
-import {technologyPanel} from './technology-ui.js?v=244';
-import {prestigeHistory} from './prestige.js?v=244';
-import {countryArtHeader,countrySignals,diplomacySignals} from './country-signals.js?v=244';
-import {suspectPortrait,SUSPECT_PROFILES,identityKnown} from './fracture-profiles.js?v=244';
-import {plotStage} from './fracture.js?v=244';
-import {activityRows,techUnavailable} from './experience.js?v=244';
-import {evidenceSummary,nationalPanel,foreignProgress} from './command-ui.js?v=244';
-import {internationalActivity} from './operations-ui.js?v=244';
-import {proofTitle} from './intelligence.js?v=244';
-import {countryOptions,statusBadge,availability,caseProgress,sortedCaseTargets} from './presentation.js?v=244';
-import {renderMap} from './map.js?v=244';
-import {cityArt,fullBody} from './visuals.js?v=244';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,TALENTS,STAT_NAMES,ACTIONS,CELLS,cellName,EVIDENCE_NAMES,TECH} from './data.js?v=244';
-import * as E from './engine.js?v=244';
-import {esc,icon,button,flag,nationalities,nationalityFlags,talentIcon,portrait,statlines,talents,brand,heading,formatScore,campaignHeading} from './ui.js?v=244';
-export function setupScreen(country,agents,hasSave,mp=null,aiDifficulty='bb2',gameMode='regular',operationMap=null){const regularSetup=gameMode==='regular',choosingMap=regularSetup&&(mp?.chooseMap||!mp&&operationMap===false);return `<div class="setup-shell"><header>${brand()}<div class="classified">ACCÈS RESTREINT <span>● CONNEXION SÉCURISÉE</span></div></header><main class="setup-main">${mp?.header||''}${heading('','Opération Ligne de faille','')}<div class="setup-columns"><div class="setup-selection"><section class="setup-country"><div class="section-title"><h2><span>01</span> Choisir votre pays</h2></div><div class="country-grid">${COUNTRIES.filter(c=>c.power).map(c=>`<button class="nation ${c.id===country?'selected':''}" data-cmd="${mp?'mp-country':'country'}" data-id="${c.id}" ${mp?.locked||mp?.taken?.includes(c.id)?'disabled':''} aria-pressed="${c.id===country}">${flag(c.id)}<div><strong>${c.name}</strong></div>${c.id===country?icon('check'):''}</button>`).join('')}</div></section>${operationMapMarkup(operationMap)}${choosingMap?'<p class="notice">Confirmez votre pays pour découvrir les six pays d’opération avant de composer votre unité.</p>':['advanced','cooperative'].includes(gameMode)?`<p class="notice">${gameMode==='cooperative'?'Deux pays alliés, quatre agents chacun. Dossiers, preuves, contacts, mandats, planques et hack partagés. Victoire : 3 cellules et l’Architecte en 30 tours. Crise +3 par tour, +30 par attaque réussie. Budgets et diplomatie individuels. Le PNJ prépare ses ordres avant vous.':'Confirmez votre pays pour choisir seize agents parmi les vingt disponibles. Les PNJ complèteront les quatre pays participants.'}</p>`:`<div class="section-title"><h2><span>02</span> Composer votre unité</h2><span class="count">${agents.length} / 4 agents sélectionnés</span></div>${selectedRecruitSlots(agents,mp?'multi':'solo')}${recruitControls(mp?'multi':'solo')}<div class="recruit-grid">${visibleRecruits(mp?'multi':'solo').map(a=>recruitCard(a,agents,mp?'multi':'solo')).join('')}</div>`}</div><aside class="briefing panel">${['advanced','cooperative'].includes(gameMode)?`<h2>${gameMode==='cooperative'?'Deux pays, huit agents':'Quatre pays, seize agents'}</h2><p>Choix exclusifs en serpentin. Après le repêchage, réorganisez votre équipe et désignez son chef.</p>`:teamBalanceMarkup(agents)}${mp?'':`<div class="setup-game-options">${aiDifficultyControl(aiDifficulty)}</div>`}${mp?'':choosingMap||['advanced','cooperative'].includes(gameMode)?button('Confirmer mon pays','solo-confirm-country','primary setup-launch'):button('Lancer l’opération','start','primary setup-launch',agents.length!==4?'disabled':'')}</aside></div></main><footer>PROGRAMME SHADOW MANDATE / DIVISION RENSEIGNEMENT <span>2040 · LIGNE DE FAILLE</span></footer></div>`;}
+import {operationMapMarkup} from './draft-ui.js?v=245';
+import {operationCountries} from './operation-map.js?v=245';
+import {cellInfoBadge} from './cell-info.js?v=245';
+import {agentLocation} from './agent-location.js?v=245';
+import {attackDelayBanner} from './attack-delay-ui.js?v=245';
+import {countrySidebarActions,floatingAgentMarkup} from './country-operations.js?v=245';
+import {isCooperative,visibleTeam} from './cooperative.js?v=245';
+import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=245';
+import {isTutorial} from './tutorial-rules.js?v=245';
+import {recruitCard,selectedRecruitSlots,recruitControls,visibleRecruits} from './recruit-selection.js?v=245';
+import {aiDifficultyControl} from './ai-difficulty.js?v=245';
+import {threatPanel} from './threats-ui.js?v=245';
+import {personnelPanel} from './personnel-ui.js?v=245';
+import {teamBalanceMarkup} from './team-balance.js?v=245';
+import {COOPERATION,cooperationRules} from './cooperation.js?v=245';
+import {technologyPanel} from './technology-ui.js?v=245';
+import {prestigeHistory} from './prestige.js?v=245';
+import {countryArtHeader,countrySignals,diplomacySignals} from './country-signals.js?v=245';
+import {suspectPortrait,SUSPECT_PROFILES,identityKnown} from './fracture-profiles.js?v=245';
+import {plotStage} from './fracture.js?v=245';
+import {activityRows,techUnavailable} from './experience.js?v=245';
+import {evidenceSummary,nationalPanel,foreignProgress} from './command-ui.js?v=245';
+import {proofTitle} from './intelligence.js?v=245';
+import {countryOptions,statusBadge,availability,caseProgress,sortedCaseTargets} from './presentation.js?v=245';
+import {renderMap} from './map.js?v=245';
+import {cityArt,fullBody} from './visuals.js?v=245';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,TALENTS,STAT_NAMES,ACTIONS,CELLS,cellName,EVIDENCE_NAMES,TECH} from './data.js?v=245';
+import * as E from './engine.js?v=245';
+import {esc,icon,button,flag,nationalities,nationalityFlags,talentIcon,portrait,statlines,talents,brand,heading,formatScore,campaignHeading} from './ui.js?v=245';
+export function setupScreen(country,agents,hasSave,mp=null,aiDifficulty='bb2',gameMode='regular',operationMap=null){const regularSetup=gameMode==='regular',choosingMap=regularSetup&&(mp?.chooseMap||!mp&&operationMap===false);return `<div class="setup-shell"><header>${brand()}<div class="classified"><span class="classified-access">ACCÈS RESTREINT</span><span class="classified-link">CONNEXION SÉCURISÉE</span></div></header><main class="setup-main">${mp?.header||''}${heading('','Opération Ligne de faille','')}<div class="setup-columns"><div class="setup-selection"><section class="setup-country"><div class="section-title"><h2><span>01</span> Choisir votre pays</h2></div><div class="country-grid">${COUNTRIES.filter(c=>c.power).map(c=>`<button class="nation ${c.id===country?'selected':''}" data-cmd="${mp?'mp-country':'country'}" data-id="${c.id}" ${mp?.locked||mp?.taken?.includes(c.id)?'disabled':''} aria-pressed="${c.id===country}">${flag(c.id)}<div><strong>${c.name}</strong></div>${c.id===country?icon('check'):''}</button>`).join('')}</div></section>${operationMapMarkup(operationMap)}${choosingMap?'<p class="notice">Confirmez votre pays pour découvrir les six pays d’opération avant de composer votre unité.</p>':['advanced','cooperative'].includes(gameMode)?`<p class="notice">${gameMode==='cooperative'?'Deux pays alliés, quatre agents chacun. Dossiers, preuves, contacts, mandats, planques et hack partagés. Victoire : 3 cellules et l’Architecte en 30 tours. Crise +3 par tour, +30 par attaque réussie. Budgets et diplomatie individuels. Le PNJ prépare ses ordres avant vous.':'Confirmez votre pays pour choisir seize agents parmi les vingt disponibles. Les PNJ complèteront les quatre pays participants.'}</p>`:`<div class="section-title"><h2><span>02</span> Composer votre unité</h2><span class="count">${agents.length} / 4 agents sélectionnés</span></div>${selectedRecruitSlots(agents,mp?'multi':'solo')}${recruitControls(mp?'multi':'solo')}<div class="recruit-grid">${visibleRecruits(mp?'multi':'solo').map(a=>recruitCard(a,agents,mp?'multi':'solo')).join('')}</div>`}</div><aside class="briefing panel">${['advanced','cooperative'].includes(gameMode)?`<div class="setup-brief"><h2>${gameMode==='cooperative'?'Deux pays, huit agents':'Quatre pays, seize agents'}</h2><p>Repêchez quatre agents, puis désignez le chef de votre équipe.</p></div>`:teamBalanceMarkup(agents)}${mp?'':`<div class="setup-game-options">${aiDifficultyControl(aiDifficulty)}</div>`}${mp?'':choosingMap||['advanced','cooperative'].includes(gameMode)?button('Confirmer mon pays','solo-confirm-country','primary setup-launch'):button('Lancer l’opération','start','primary setup-launch',agents.length!==4?'disabled':'')}</aside></div></main><footer>PROGRAMME SHADOW MANDATE / DIVISION RENSEIGNEMENT <span>2040 · LIGNE DE FAILLE</span></footer></div>`;}
 export function makeScreens(state,selectedCountry,selectedAgent,world,camera,locked=''){
 const f=state.factions[state.player];
 function agentStatus(a){return a.status==='captured'?'En détention':a.status==='injured'?'Blessé':a.task?`${a.task.queued?'Ordre planifié':'En opération'} · ${a.task.remaining} t`:'Disponible';}
-function teamCards(){const pending=state.recruitments.filter(r=>r.faction===state.player);return `<div class="team-grid">${E.team(state).map(a=>{const b=availability(a),t=a.task;return `<button class="agent-card ${a.faction!==state.player?'coop-ally':''} state-${b.kind} ${t?'busy':''}" data-cmd="map-agent" data-id="${a.id}" aria-pressed="${selectedAgent===a.id}" title="${a.faction===state.player?'Cliquez pour consulter':'Partenaire : consulter la fiche'} · ${esc(a.name)} · ${COUNTRY[a.country].city} · ${t?ACTIONS[t.type].name+' · '+t.remaining+' tour(s)':b.label} · ${100-a.fatigue}/100 énergie">${portrait(a)}<div class="agent-card-copy"><h3><span class="field-agent-name">${esc(a.name)}</span> <span class="agent-nationality" title="Nationalité">${nationalityFlags(a)}</span>${a.faction!==state.player?' · Allié':''}</h3><span class="availability ${b.kind}">${icon(b.icon)}${t?.queued?'PLANIFIÉ':b.label}${t?` <small>· ${t.remaining} t</small>`:''}</span><div class="agent-brief">${agentLocation(a,{compact:true,pin:true})}<span class="compact-energy" title="Énergie et exposition">É ${100-a.fatigue} · Exp ${a.exposure}</span></div>${t?`<progress class="compact-progress" aria-label="Progression de ${esc(ACTIONS[t.type].name)}" max="${t.total}" value="${t.total-t.remaining}"></progress>`:''}</div></button>`;}).join('')}${pending.map(r=>`<div class="empty-slot pending-recruit" role="status">${icon('clock')}<span><strong>${esc(FULL_ROSTER.find(a=>a.id===(r.templateId||r.id))?.name||r.id)}</strong><small>Arrivée dans ${r.remaining} tour(s)</small></span></div>`).join('')}${Array.from({length:isTutorial(state)&&!tutorialRecruitment(state)?0:Math.max(0,4-E.team(state).length-pending.length)},()=>`<button class="empty-slot" data-cmd="recruit">${icon('plus')} Recruter</button>`).join('')}</div>`;}
+function teamCards(){const pending=state.recruitments.filter(r=>r.faction===state.player);return `<div class="team-grid">${E.team(state).map(a=>{const b=availability(a),t=a.task;return `<button class="agent-card ${a.faction!==state.player?'coop-ally':''} state-${b.kind} ${t?'busy':''}" data-cmd="map-agent" data-id="${a.id}" aria-pressed="${selectedAgent===a.id}" title="${a.faction===state.player?'Cliquez pour consulter':'Partenaire : consulter la fiche'} · ${esc(a.name)} · ${COUNTRY[a.country].city} · ${t?ACTIONS[t.type].name+' · '+t.remaining+' tour(s)':b.label} · ${100-a.fatigue}/100 énergie">${portrait(a)}<div class="agent-card-copy"><h3><span class="field-agent-name">${esc(a.name)}</span> <span class="agent-nationality" title="Nationalité">${nationalityFlags(a)}</span>${a.faction!==state.player?'<span class="field-agent-ally">Allié</span>':''}</h3>
+  <span class="availability ${b.kind}">${icon(b.icon)}<span class="field-agent-status">${t?.queued?'PLANIFIÉ':b.label}</span>${t?` <small>· ${t.remaining} t</small>`:''}</span>
+  <div class="agent-brief">${agentLocation(a,{compact:true,pin:true})}</div>
+  <div class="field-agent-details"><div><span class="compact-energy" title="Énergie et exposition">É ${100-a.fatigue} · Exp ${a.exposure}</span>${t?`<progress class="compact-progress" aria-label="Progression de ${esc(ACTIONS[t.type].name)}" max="${t.total}" value="${t.total-t.remaining}"></progress>`:''}</div></div>
+ </div></button>`;}).join('')}${pending.map(r=>`<div class="empty-slot pending-recruit" role="status">${icon('clock')}<span><strong>${esc(FULL_ROSTER.find(a=>a.id===(r.templateId||r.id))?.name||r.id)}</strong><small>Arrivée dans ${r.remaining} tour(s)</small></span></div>`).join('')}${Array.from({length:isTutorial(state)&&!tutorialRecruitment(state)?0:Math.max(0,4-E.team(state).length-pending.length)},()=>`<button class="empty-slot" data-cmd="recruit">${icon('plus')} Recruter</button>`).join('')}</div>`;}
 function worldScreen(){
  const c=COUNTRY[selectedCountry],active=visibleTeam(state).find(a=>a.id===selectedAgent);
- const heading=active
-  ? `<span class="agent-sidebar-identity">${esc(active.name)} <span class="agent-nationality">${nationalityFlags(active)}</span></span>`
-  : `${flag(c.id)} ${c.name}<span>${c.city}</span>`;
  const panel=active?floatingAgentMarkup(state,active.id,{locked}):`<aside class="country-dossier panel">${countryArtHeader(state,c.id)}<div class="country-sidebar-scroll">${c.power&&c.id!==state.player?`<p class="power-consultation">Superpuissance · consultation uniquement</p>${state.factions[c.id]?`<p>${formatScore(state.factions[c.id].score)} prestige</p>`:''}`:countrySidebarActions(state,c.id,locked)}</div></aside>`;
  const training=isTutorial(state)?'<div class="objective-strip"><span>FILIGRANE · Formation sur le terrain</span></div>':'';
  return `<h1 class="sr-only">Situation mondiale</h1>
- <details class="map-dossier ${active?'agent-sidebar':'country-sidebar'}" ${camera.panelOpen?'open':''}><summary${active?` aria-label="${esc(active.name)}"`:''}>${heading}</summary>${panel}</details>
- <div class="world-overview"><section class="world-center">${renderMap(state,selectedCountry,world,camera)}${training}</section></div>
+ ${camera.panelOpen?`<section class="map-dossier ${active?'agent-sidebar':'country-sidebar'}" aria-label="${esc(active?.name||c.name)}">${active?'':`<header class="map-dossier-heading">${flag(c.id)}<strong>${esc(c.name)}</strong><span class="map-dossier-city">${esc(c.city)}</span></header>`}${panel}</section>`:''}
+ <div class="world-overview"><section class="world-center">${renderMap(state,camera.panelOpen?selectedCountry:null,world,camera)}${training}</section></div>
  ${attackDelayBanner(state)}
  <section class="field-team panel">
   <div class="panel-bar"><span>VOS AGENTS SUR LE TERRAIN</span><span>${E.team(state).filter(a=>!a.task&&a.status!=='captured').length} DISPONIBLE(S)</span></div>
@@ -188,7 +188,6 @@ function diplomacyScreen(){
    <details class="campaign-disclosure diplomacy-rules">
     <summary>Détails de la coopération</summary><div class="diplomacy-detail-content">${cooperationRules}</div>
    </details>
-   <details class="campaign-disclosure diplomacy-activity"><summary>Activité internationale</summary>${internationalActivity(state)}</details>
   </div>`)}
   <div class="diplomacy-columns">
    <section class="diplomacy-group diplomacy-powers"><h2>Superpuissances <small>Classées par prestige</small></h2><div class="campaign-grid">${powers.map(countryRelation).join('')}</div></section>

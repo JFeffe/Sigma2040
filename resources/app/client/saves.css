@@ -76,6 +76,12 @@ dialog.save-dialog {
  margin-top:auto;
 }
 
+.save-screen .save-actions {margin-top:14px;}
+.save-replacement {margin-top:12px;padding:10px 12px;border:1px solid var(--atlas-edge);border-radius:8px;}
+.save-replacement h3 {margin-bottom:5px;font-size:16px;}
+#app .save-delete.btn,#modal .save-delete.btn {color:#ffd7da;border-color:#a74d58;}
+#app .save-delete.btn:hover,#modal .save-delete.btn:hover {background:#58232b;border-color:#e08590;}
+
 .save-recovery p {
  padding:0 10px;
 }

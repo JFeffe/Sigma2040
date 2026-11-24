@@ -16,19 +16,20 @@ function dialog(s){
 }
 const buttonTag=(html,id)=>html.match(new RegExp('<button[^>]*id="'+id+'"[^>]*>'))?.[0];
 
-test('Dossier separates mechanical effects from stat, talent, hack and Research; disclosure stays open during selection',async()=>{
+test('Dossier shows the success effect above lean details and preserves the disclosure during selection',async()=>{
  const s=fresh(),a=E.team(s)[0],b=E.team(s)[1],t=E.knownTargets(s)[0];a.country=b.country=t.country;a.stats=[5,5,5];a.talents=['informatique'];s.factions.FR.access[t.country]=true;
  const d=dialog(s);
  try{
   openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','hack');await handleInquiryCommand('inquiry-agent',a.id);
   assert.match(buttonTag(d.html(),'inquiryEffects'),/aria-expanded="false"/);
-  assert.match(d.html(),/Habileté 5/);assert.match(d.html(),/Informatique \+10/);assert.ok(d.html().includes(icon('research')));assert.match(d.html(),/Hack \+1 tour/);
+  assert.doesNotMatch(d.html(),/Habileté 5|Informatique \+10|inquiry-odds-details/);assert.ok(d.html().includes(icon('research')));
   const mechanics=d.html().match(/<p id="inquiryMechanics"[^>]*>(.*?)<\/p>/s)[1];
-  assert.match(mechanics,/preuve brute/);assert.doesNotMatch(mechanics,/Habileté|Informatique|talent/i);
+  assert.match(mechanics,/preuve brute.*\+1 tour de hack/);assert.doesNotMatch(mechanics,/Habileté|Informatique|talent/i);
+  assert.ok(d.html().indexOf('inquiryMechanics')<d.html().indexOf('id="inquiryEffects"'));
   await handleInquiryCommand('inquiry-effects');d.body.scrollTop=125;await handleInquiryCommand('inquiry-agent',b.id);
-  assert.match(buttonTag(d.html(),'inquiryEffects'),/aria-expanded="true"/);assert.equal(d.body.scrollTop,125);assert.match(d.html(),/Informatique · absent/);
+  assert.match(buttonTag(d.html(),'inquiryEffects'),/aria-expanded="true"/);assert.equal(d.body.scrollTop,125);assert.doesNotMatch(d.html(),/Informatique · absent|decision-box/);
   await handleInquiryCommand('inquiry-action','drone');assert.ok(d.html().includes(icon('module')));assert.match(d.html(),/Module · 1 place/);
-  assert.doesNotMatch(d.html().match(/<p id="inquiryMechanics"[^>]*>(.*?)<\/p>/s)[1],/Habileté|Drones|talent/i);
+  assert.match(d.html().match(/<p id="inquiryMechanics"[^>]*>(.*?)<\/p>/s)[1],/suspects présents sont localisés/);
  }finally{d.restore();}
 });
 
@@ -82,7 +83,7 @@ test('Energy and exposure are below the agents and distinguish both outcomes usi
  try{
   openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','drone');
   const html=d.html(),costs=html.slice(html.indexOf('<div class="inquiry-costs"'));
-  assert.ok(html.indexOf('class="inquiry-costs"')>html.indexOf('class="inquiry-agents"'));assert.match(costs,/<b>−9<\/b> · réussite ou échec/);assert.match(costs,/Réussite <b>\+8<\/b>/);assert.match(costs,/Échec <b>\+15<\/b>/);
+  assert.ok(html.indexOf('class="inquiry-costs"')>html.indexOf('class="inquiry-agents"'));assert.match(costs,/Durée[\s\S]*Énergie[\s\S]*<b>−9<\/b>/);assert.match(costs,/Réussite <b>\+8<\/b>/);assert.match(costs,/Échec <b>\+15<\/b>/);
  }finally{d.restore();}
 });
 

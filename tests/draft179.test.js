@@ -48,6 +48,22 @@ test('Draft order is random, seeded, snake-shaped and uses each of the sixteen a
  assert.ok(orders.size>4);
 });
 
+test('Draft country cards show the active round order without a repeated selection notice',()=>{
+ for(const [mode,count] of [['advanced',4],['cooperative',2]]){
+  const d=createDraft(powers.slice(0,count),42,mode),expected=[...d.order];
+  for(let round=0;round<4;round++){
+   const html=draftScreen(d,powers[0]);
+   const teams=html.slice(html.indexOf('class="draft-countries"'),html.indexOf('</section>'));
+   assert.deepEqual([...teams.matchAll(/assets\/flags\/([a-z]{2})\.svg/g)].map(([,id])=>id.toUpperCase()),expected);
+   assert.match(teams,/aria-current="true"/);
+   assert.doesNotMatch(html,/Cliquez sur un agent pour voir son apport|class="notice draft-turn"/);
+   for(const country of expected)pickDraftAgent(d,country,availableDraftAgents(d)[0].id);
+   expected.reverse();
+  }
+  assert.doesNotThrow(()=>validateDraft(d));
+ }
+});
+
 test('NPC draft picks stop at the next human, remain deterministic and never take an already reserved agent',()=>{
  for(const count of [1,2,3]){const humans=powers.slice(0,count),d=advanceNpcDraft(createDraft(humans,170)),control=structuredClone(d);while(draftCountry(d)){const c=draftCountry(d),id=availableDraftAgents(d)[0].id;assert.ok(humans.includes(c));pickDraftAgent(d,c,id);advanceNpcDraft(d);pickDraftAgent(control,c,id);advanceNpcDraft(control);}assert.deepEqual(d,control);assert.equal(d.picks.length,16);assert.equal(new Set(d.picks.map(p=>p.id)).size,16);assert.doesNotThrow(()=>validateDraft(d));}
 });

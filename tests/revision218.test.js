@@ -23,7 +23,7 @@ test('Country popup puts deployment in actions, omits the removed summary and ke
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,218),a=E.team(s)[0];a.country='TR';a.weapon=false;
  const html=countryOperationsMarkup(s,'TR',{type:'equip'});
  assert.doesNotMatch(html,/country-title-signals|country-authorities|country-operations-cases|équipe sur place/);
- assert.match(html,/class="country-operation-types">.*data-cmd="workspace-deploy"/);
+ assert.match(html,/class="country-operation-types"[^>]*>.*data-cmd="workspace-deploy"/);
  assert.match(html,/workspace-confirm/);
  const agent=floatingAgentMarkup(s,a.id);assert.doesNotMatch(agent,/Nat\./);assert.match(agent,/<h2>[^<]+ <span class="agent-nationality">/);assert.match(agent,/Nationalité :/);assert.match(agent,/Pays actuel/);
 });
@@ -41,8 +41,9 @@ test('Territory comparison displays each agent’s forecast and leaves confirmat
   assert.ok(row.includes(`−${o.fatigue*o.duration} énergie`));
   assert.ok(row.includes(`aria-pressed="${agent===b}"`));
  }
- assert.match(html,/<details class="mission-briefing">\s*<summary>Détails<\/summary>/);
- assert.match(html,/<footer class="country-order-footer">[^]*data-cmd="workspace-confirm"[^]*Confirmer ·/);
+ assert.match(html,/<details class="mission-briefing case-details">\s*<summary>Détails<\/summary>/);
+ assert.match(html,/<footer class="country-order-footer">[^]*data-cmd="workspace-confirm"[^]*Confirmer avec/);
+ assert.match(html,/operation-success[^]*Arme équipée/);
 });
 
 function actions(html,scope){
@@ -53,19 +54,23 @@ function actions(html,scope){
  ]);
 }
 const sidebar=(s,country)=>actions(countrySidebarActions(s,country),'country-sidebar-actions');
-const popup=(s,country,selection)=>actions(countryOperationsMarkup(s,country,selection),'country-operation-types');
+function assertPopupAlternatives(s,country,expected,selection={}){
+ const html=countryOperationsMarkup(s,country,selection);
+ const displayed=expected.filter(([type])=>type!==selection.type);
+ assert.deepEqual(actions(html,'country-operation-types'),displayed);
+}
 
 test('HQ action order and disabled states are identical in both menus',()=>{
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,218),[a,b]=E.team(s);
  const expected=[['deploy',false],['rest',true],['cyberSupport',true],['counter',true],['analyze',false],['heal',false]];
  assert.deepEqual(sidebar(s,'FR'),expected);
- assert.deepEqual(popup(s,'FR'),expected);
+ assertPopupAlternatives(s,'FR',expected);
  const suspect=E.knownTargets(s)[0],proof=s.proofs.find(p=>p.suspect===suspect.id);
  s.factions.FR.evidence.push({id:proof.id,verified:false,contested:false});
  a.status='injured';b.country='DE';
  expected[0][1]=expected[4][1]=expected[5][1]=true;
  assert.deepEqual(sidebar(s,'FR'),expected);
- assert.deepEqual(popup(s,'FR'),expected);
+ assertPopupAlternatives(s,'FR',expected);
  const html=countryOperationsMarkup(s,'FR',{type:'analyze'});
  assert.ok(html.includes(`<strong>${suspect.name}</strong><small>`));
  assert.match(html,/data-cmd="workspace-proof"/);
@@ -73,20 +78,20 @@ test('HQ action order and disabled states are identical in both menus',()=>{
  expected[4][1]=expected[5][1]=false;
  assert.deepEqual(sidebar(s,'FR'),expected);
  for(const agent of E.team(s))agent.country='DE';
- assert.deepEqual(popup(s,'FR'),[['deploy',true],['rest',false],['cyberSupport',false],['counter',false],['analyze',false],['heal',false]]);
+ assertPopupAlternatives(s,'FR',[['deploy',true],['rest',false],['cyberSupport',false],['counter',false],['analyze',false],['heal',false]]);
 });
 
 test('Field action menus react to HQ availability, arms and a shared team safehouse',()=>{
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,218),[a,b]=E.team(s);
  const expected=[['deploy',true],['cyberSupport',true],['equip',false],['findSafehouse',false],['fieldRest',false],['hide',false]];
  assert.deepEqual(sidebar(s,'DE'),expected);
- assert.deepEqual(popup(s,'DE'),expected);
+ assertPopupAlternatives(s,'DE',expected);
  a.country='DE';a.weapon=false;
  expected[2][1]=expected[3][1]=expected[5][1]=true;
  assert.deepEqual(sidebar(s,'DE'),expected);
  a.weapon=true;b.safehouses=['DE'];
  expected[2][1]=expected[3][1]=false;expected[4][1]=true;
- assert.deepEqual(popup(s,'DE'),expected);
+ assertPopupAlternatives(s,'DE',expected);
  for(const agent of E.team(s))agent.country='DE';
  expected[0][1]=expected[1][1]=false;
  assert.deepEqual(sidebar(s,'DE'),expected);
@@ -101,14 +106,14 @@ test('Access actions replace an empty dossier slot with or without a threat',()=
  plot.resolved=true;
  assert.match(countrySidebarActions(s,country),/data-group="access"/);
  const expected=[['contacts',false],['influence',false],['drone',false],['authorize',false]];
- assert.deepEqual(popup(s,country,{group:'access'}),expected);
+ assertPopupAlternatives(s,country,expected,{group:'access'});
  a.country=country;
  for(const action of expected)action[1]=true;
- assert.deepEqual(popup(s,country,{group:'access'}),expected);
+ assertPopupAlternatives(s,country,expected,{group:'access'});
  f.access[country]=f.authorized[country]=true;
  f.tech=[{type:'relay',until:s.turn},{type:'ai',until:s.turn}];
  expected[0][1]=expected[2][1]=expected[3][1]=false;
- assert.deepEqual(popup(s,country,{group:'access'}),expected);
+ assertPopupAlternatives(s,country,expected,{group:'access'});
  const targets=s.suspects.slice(0,2);
  for(const t of targets)f.known[t.id]={country,identified:true,locationUntil:0};
  assert.doesNotMatch(countrySidebarActions(s,country),/data-group="access"/);
@@ -118,25 +123,30 @@ test('Access actions replace an empty dossier slot with or without a threat',()=
  assert.match(html,/class="agent-profile-heading"[^>]*>\s*<h2>/);
 });
 
-test('The agent menu shares the country actions but evaluates and assigns them to the selected agent only',()=>{
+test('The agent menu opens the same local comparison and preselects the originating agent',()=>{
  const s=E.createGame('FR',DEFAULT_TEAM_IDS,218),[a,b]=E.team(s);
  a.country=b.country='DE';a.weapon=true;b.weapon=false;
  let html=floatingAgentMarkup(s,a.id);
  assert.match(html,/data-cmd="workspace-travel"[^>]*>[\s\S]*?Voyager<\/button>/);
- assert.match(html,/data-type="equip"[^>]*disabled>/);
- assert.match(html,/data-type="cyberSupport"[^>]*disabled>/);
+ assert.match(html,new RegExp(`data-type="equip" data-agent="${a.id}"`));
+ assert.doesNotMatch(html,/data-type="equip"[^>]*disabled>/);
+ assert.doesNotMatch(html,/data-type="cyberSupport"[^>]*disabled>/);
  assert.match(html,/data-type="fieldRest"[^>]*disabled>/);
  assert.doesNotMatch(html,/floating-agent-role/);
  assert.equal(new Map(sidebar(s,'DE')).get('equip'),true);
- const pinned=countryOperationModel(s,'DE',{type:'equip',agentId:a.id});
- assert.deepEqual(pinned.rows.map(r=>r.a.id),[a.id]);
- assert.equal(pinned.selected,null);
- const agentMenu=countryOperationsMarkup(s,'DE',{group:'access',agentId:a.id});
+ const country=countryOperationModel(s,'DE',{type:'equip'});
+ const viaAgent=countryOperationModel(s,'DE',{type:'equip',agent:a.id});
+ assert.deepEqual(viaAgent.rows.map(r=>r.a.id),country.rows.map(r=>r.a.id));
+ assert.equal(country.selected.a.id,b.id);
+ assert.equal(viaAgent.selected.a.id,a.id);
+ assert.ok(viaAgent.selected.reason);
+ const agentMenu=countryOperationsMarkup(s,'DE',{type:'equip',agent:a.id});
  assert.match(agentMenu,/data-cmd="workspace-action"/);
- assert.doesNotMatch(agentMenu,/data-cmd="workspace-agent"|data-cmd="workspace-confirm"/);
+ assert.match(agentMenu,/data-cmd="workspace-agent"/);
+ assert.match(agentMenu,/data-cmd="workspace-confirm" disabled/);
  a.weapon=false;
  html=floatingAgentMarkup(s,a.id);
  assert.doesNotMatch(html,/data-type="equip"[^>]*disabled>/);
- assert.equal(countryOperationModel(s,'DE',{type:'equip',agentId:a.id}).selected.a.id,a.id);
- assert.equal(countryOperationModel(s,'DE',{type:'equip',agentId:'invalid'}).selected,null);
+ assert.equal(countryOperationModel(s,'DE',{type:'equip',agent:a.id}).selected.a.id,a.id);
+ assert.ok(countryOperationModel(s,'DE',{type:'equip',agent:'invalid'}).selected);
 });

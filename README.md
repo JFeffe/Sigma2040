@@ -1,5 +1,11 @@
 # Shadow Mandate 2040
 
+## Build 245 — Identité visuelle et repêchage
+
+**[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/7b777ffc9333db4f60b3263c4873f40e27db4357...build-245)
+
+Le logo s’assemble à l’ouverture. Les menus et le tutoriel sont plus compacts, les cartes du repêchage suivent la ronde en cours et le débriefing des attaques reportées adopte le format des autres résultats. Cette version regroupe aussi les corrections de l’interface de campagne, des sauvegardes et du multijoueur.
+
 ## Build 244 — Illustration « Attaque reportée »
 
 **[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/524bcbb5265a9e9a74ee59a5c71fc1c4a37a54ee...build-244)
@@ -20,7 +26,7 @@ Atlas devient l’interface officielle. Le menu principal, la barre latérale et
 
 ## Version Windows x64
 
-Décompresser l’archive Windows, conserver les fichiers ensemble et ouvrir **Shadow Mandate 2040.exe**. Le jeu et les sauvegardes solo sont disponibles hors ligne. Pour transférer une campagne du navigateur vers l’application, exporter son fichier JSON depuis le navigateur puis l’importer dans l’application.
+Décompresser l’archive Windows, conserver les fichiers ensemble et ouvrir **Shadow Mandate 2040.exe**. Le jeu et les sauvegardes solo sont disponibles hors ligne.
 
 Pour jouer en ligne, ouvrir **Nouvelle partie**, puis **Multijoueur**. Choisir le mode, créer le salon et utiliser **Copier le lien**. Les invités peuvent ouvrir ce lien dans leur navigateur ou le coller dans **Rejoindre une partie**. L’hôte et les invités doivent être connectés à Internet.
 
@@ -37,7 +43,7 @@ npm run dev
 
 Ouvrir l’adresse locale affichée par Vite. Pour vérifier le projet : `npm test`.
 
-Les sauvegardes et préférences utilisent le préfixe `shadow-mandate-2040`. Les fichiers JSON de campagnes précédentes peuvent être importés depuis le jeu. Vite sert l’interface locale. La version Electron utilise le relais HTTPS du jeu pour le multijoueur.
+Les sauvegardes et préférences utilisent le préfixe `shadow-mandate-2040`. Vite sert l’interface locale. La version Electron utilise le relais HTTPS du jeu pour le multijoueur.
 
 ## Build 238 — Langues étrangères et Drones
 

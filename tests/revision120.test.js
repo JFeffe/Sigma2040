@@ -5,7 +5,7 @@ import {COUNTRY,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
 import {createInquiryTracker,inquiryIndicator} from '../dist/client/inquiry-notifications.js';
 import {gameShell} from '../dist/client/shell.js';
 import {BUILD_VERSION} from '../dist/client/build-version.js';
-import {mainMenu} from '../dist/client/main-menu.js';
+import {menuChromeMarkup} from '../dist/client/main-menu.js';
 const fresh=(seed=42)=>E.createGame('FR',DEFAULT_TEAM_IDS,seed);
 test('Every initial attack targets a secondary country over 1000 seeds',()=>{for(let seed=1;seed<=1000;seed++){const s=fresh(seed);assert.equal(s.plots.length,17);for(const p of s.plots)assert.ok(!COUNTRY[p.country].power);}});
 test('Initial dossiers are unread; reading persists and hides alerts until next turn',()=>{
@@ -18,5 +18,5 @@ test('Initial dossiers are unread; reading persists and hides alerts until next 
 });
 test('Contested and closed-case evidence never adds a pending verification; nav order and main menu build are correct',()=>{
  const s=fresh(),t=s.suspects[0],p=s.proofs.find(p=>p.suspect===t.id);s.factions.FR.evidence=[{id:p.id,contested:true}];assert.equal(inquiryIndicator(s),null);s.factions.FR.evidence[0].contested=false;t.arrested=true;assert.equal(inquiryIndicator(s),null);
- const html=gameShell(s,'world','',false,'',true);assert.match(html,/nav-available nav-inquiry/);assert.ok(html.indexOf('data-id="government"')<html.indexOf('data-id="diplomacy"'));assert.match(mainMenu(s),new RegExp('<a class="menu-build" href="https://github.com/JFeffe/Sigma2040/compare/[^"]+"[^>]*>BUILD '+BUILD_VERSION));
+ const html=gameShell(s,'world','',false,'',true);assert.match(html,/nav-available nav-inquiry/);assert.ok(html.indexOf('data-id="government"')<html.indexOf('data-id="diplomacy"'));assert.match(menuChromeMarkup(false),new RegExp('<a class="menu-build" href="https://github.com/JFeffe/Sigma2040/compare/[^"]+"[^>]*>BUILD '+BUILD_VERSION));
 });

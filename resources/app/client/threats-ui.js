@@ -1,10 +1,10 @@
-import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=243';
-import {attackDamage} from './engine.js?v=243';
-import {activeAttackDelays,attackDelayNotice} from './attack-delay-ui.js?v=243';
-import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=243';
-import {COUNTRY} from './data.js?v=243';
-import {cityArt} from './visuals.js?v=243';
-import {campaignHeading,esc,flag,button,icon} from './ui.js?v=243';
+import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=245';
+import {attackDamage} from './engine.js?v=245';
+import {activeAttackDelays,attackDelayNotice} from './attack-delay-ui.js?v=245';
+import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=245';
+import {COUNTRY} from './data.js?v=245';
+import {cityArt} from './visuals.js?v=245';
+import {campaignHeading,esc,flag,button,icon} from './ui.js?v=245';
 export function threatPanel(s){
  const status=threatStatus(s);
  const uncovered=new Set(status.uncovered.map(p=>p.id)),delays=activeAttackDelays(s);

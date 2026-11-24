@@ -1,4 +1,4 @@
-import {readStorageItem} from './storage-keys.js?v=244';
+import {legacyStorageKey,readStorageItem} from './storage-keys.js?v=245';
 
 export const CAMPAIGN_KEY='shadow-mandate-2040-campaign-v1';
 export const ECONOMY_BACKUP_KEY='shadow-mandate-2040-before-free-actions-v82';
@@ -10,4 +10,11 @@ export function readCampaign(storage,validate){
  const state=validate(parsed);
  if(legacy&&!readStorageItem(storage,ECONOMY_BACKUP_KEY))storage.setItem(ECONOMY_BACKUP_KEY,raw);
  return state;
+}
+
+export function forgetLegacyCampaign(storage){
+ try{
+  storage?.removeItem(CAMPAIGN_KEY);
+  storage?.removeItem(legacyStorageKey(CAMPAIGN_KEY));
+ }catch{}
 }

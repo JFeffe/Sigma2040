@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#0b1220"/><path d="M11 12h43L32 52Z" fill="none" stroke="#9fbbd8" stroke-width="3"/><path d="m20 18 19 21M30 18l14 15" stroke="#edb76a" stroke-width="3"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+ <defs>
+  <linearGradient id="metal" x2=".75" y2="1" gradientUnits="objectBoundingBox">
+   <stop stop-color="#f4f4f5"/><stop offset=".42" stop-color="#57575a"/><stop offset="1" stop-color="#1c1c20"/>
+  </linearGradient>
+  <linearGradient id="fault" x2="0" y2="1">
+   <stop stop-color="#ff647e"/><stop offset="1" stop-color="#b71936"/>
+  </linearGradient>
+ </defs>
+ <rect x="1" y="1" width="62" height="62" rx="13" fill="#171719" stroke="#444448"/>
+ <path d="M7 13h50L33 56Z" fill="url(#metal)" stroke="#77777b"/>
+ <path d="M47 13h10L41 24H30L19 33l-3-5 12-8h10Z" fill="url(#fault)"/>
+</svg>

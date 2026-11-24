@@ -3,7 +3,6 @@
  --personnel-muted:var(--atlas-muted);
  --personnel-inset:var(--atlas-inset);
  width:100%;
- max-width:1030px;
  margin-inline:auto;
 }
 .personnel-command .campaign-status {
@@ -13,7 +12,7 @@
 }
 .command-deck .personnel-workspace {
  display:grid;
- grid-template-columns:minmax(220px,.65fr) minmax(0,1.2fr);
+ grid-template-columns:minmax(220px,.76fr) minmax(0,1.2fr);
  align-items:start;
  gap:12px;
  width:100%;

@@ -1,16 +1,15 @@
-import {localizeContent,translateText} from './localization.js?v=243';
-import {confirmInGame} from './dialog-behavior.js?v=243';
-import {resetRecruitFilters,toggleRecruitSelection} from './recruit-selection.js?v=243';
-import {GAME_MODES,reorderTeam} from './game-setup.js?v=243';
-import {backToMainMenu} from './main-menu.js?v=243';
-import {draftScreen,draftCandidate} from './draft-ui.js?v=243';
-import {aiDifficultyControl} from './ai-difficulty.js?v=243';
-import {OBSERVER_COLORS} from './map-markers.js?v=243';
-import {setupScreen} from './screens.js?v=243';
-import {PROTOCOL,playingMembers,newRoom,joinRoom,disconnect,execute,roomView,restoreRoom} from './multiplayer-core.js?v=243';
-import {RelayPeer} from './relay.js?v=243';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from './data.js?v=243';
-import {brand,esc,button,flag,portrait,statlines,talents,nationalities} from './ui.js?v=243';
+import {localizeContent,translateText} from './localization.js?v=245';
+import {confirmInGame} from './dialog-behavior.js?v=245';
+import {resetRecruitFilters,toggleRecruitSelection} from './recruit-selection.js?v=245';
+import {GAME_MODES,reorderTeam} from './game-setup.js?v=245';
+import {draftScreen,draftCandidate} from './draft-ui.js?v=245';
+import {aiDifficultyControl} from './ai-difficulty.js?v=245';
+import {OBSERVER_COLORS} from './map-markers.js?v=245';
+import {setupScreen} from './screens.js?v=245';
+import {PROTOCOL,playingMembers,newRoom,joinRoom,disconnect,execute,roomView,restoreRoom} from './multiplayer-core.js?v=245';
+import {RelayPeer} from './relay.js?v=245';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER,DEFAULT_TEAM_IDS} from './data.js?v=245';
+import {brand,esc,button,flag,portrait,statlines,talents,nationalities,countryOption,countrySelect} from './ui.js?v=245';
 const ACTIVE='sigma-active-multiplayer';
 const SAVE='sigma2040-multiplayer-v1',BACKUP='sigma2040-multiplayer-before-free-actions-v82';
 const PUBLIC_GAME_URL='https://sigma-2040.docile-hero-2836.chatgpt.site/';
@@ -50,7 +49,7 @@ export class Multiplayer{
   const buttonState=selected=>`aria-pressed="${selected}"`;
   const modeChoices=Object.entries(GAME_MODES).map(([id,label])=>`<option value="${id}" ${id===this.entryGameMode?'selected':''}>${label}</option>`).join('');
   const html=`<main class="command-menu multiplayer-entry">
-   <header class="command-menu-header">${brand()}<div class="mp-entry-nav">${button('Retour aux modes','new','small')}${backToMainMenu()}</div></header>
+   <header class="command-menu-header">${brand()}</header>
    <section class="command-menu-body">
     <h1 id="multiplayerTitle" tabindex="-1">Multijoueur</h1>
     <div class="mp-entry-card">
@@ -60,7 +59,7 @@ export class Multiplayer{
      </div>
      <div class="mp-entry-form">
       <label>Votre pseudo<input id="mpName" maxlength="30" value="${esc(this.entryName)}" autocomplete="nickname"></label>
-      ${host?`<label>Mode de jeu<select id="mpEntryGameMode">${modeChoices}</select></label>
+      ${host?`<label>Mode de jeu<select class="menu-select" id="mpEntryGameMode">${modeChoices}</select></label>
        <p>Le lien à partager s’affichera dans le salon.</p>
        ${button('Créer le salon','mp-create','primary wide')}`:`<label>Code ou lien d’invitation<input id="mpInvite" value="${esc(this.entryInvitation)}" placeholder="Collez l’invitation reçue de l’hôte" spellcheck="false"></label>
        ${button('Rejoindre la partie','mp-join','primary wide')}`}
@@ -131,23 +130,82 @@ export class Multiplayer{
   const selected=this.draft||me?.agents||[],lobby=s?.phase==='lobby',pregame=s?.phase!=='playing',advanced=['advanced','cooperative'].includes(s?.gameMode),players=s?playingMembers(s):[],observer=s?.members.find(m=>m.observer),editable=!this.pending&&!this.status;
   const countryStep=lobby&&s?.participantRules===1;
   const participating=s?.draft?.countries||s?.mapParticipants||Object.keys(s?.game?.factions||{});
-  const members=`<div class="mp-members">${powers.map(c=>{const m=s?.members.find(m=>m.country===c.id),npc=participating.includes(c.id);return `<div class="mp-member">${flag(c.id)}<div><strong>${c.name}</strong><span>${m?`<span translate="no">${esc(m.name)}</span>`+(m.host?' · Hôte':''):npc?'PNJ':lobby?'Disponible':'Hors partie'}</span></div><span>${m?!m.connected?'Déconnecté':countryStep?m.countryConfirmed?'Pays confirmé':'Pays à confirmer':pregame?m.confirmed?'Équipe confirmée':s?.phase==='draft'?'Repêchage':'Équipe à confirmer':m.ready?'Prêt':'En préparation':npc?'Automatique':'—'}</span>${this.host&&m&&!m.host?button(lobby?'Retirer':'Confier au PNJ','mp-replace','small',`data-id="${c.id}"`):''}</div>`;}).join('')}</div>`;
+  const members=powers.map(c=>{
+   const member=s?.members.find(m=>m.country===c.id),npc=participating.includes(c.id);
+   const role=member?'':npc?'PNJ':lobby?'Disponible':'Hors partie';
+   const seatStatus=member
+    ?!member.connected?'Déconnecté'
+     :countryStep?member.countryConfirmed?'Pays confirmé':'Pays à confirmer'
+     :pregame?member.confirmed?'Équipe confirmée':s?.phase==='draft'?'Repêchage':'Équipe à confirmer'
+     :member.ready?'Prêt':'En préparation'
+    :npc?'Automatique':'';
+   const manageSeat=this.host&&member&&!member.host
+    ?button(lobby?'Retirer':'Confier au PNJ','mp-replace','small mp-seat-action',`data-id="${c.id}"`)
+    :'';
+   return `<div class="mp-member" role="listitem"${me?.country===c.id?' data-local-seat':''}>
+    ${flag(c.id)}<div class="mp-member-name"><strong>${c.name}</strong>
+    <span>${member?`<span translate="no">${esc(member.name)}</span>${member.host?' · Hôte':''}`:role}</span></div>
+    ${seatStatus?`<span class="mp-member-status">${seatStatus}</span>`:''}${manageSeat}
+   </div>`;
+  }).join('');
   const confirmation=me&&!me.observer&&(lobby||s?.phase==='teams')?`<div class="mp-team-confirmation">${countryStep?button(me.countryConfirmed?'Pays confirmé ✓':'Confirmer mon pays','mp-confirm-country','primary mp-confirm-team',me.countryConfirmed||!editable?'disabled':''):button(me.confirmed?'Équipe confirmée ✓':'Confirmer mes 4 agents','mp-team','primary mp-confirm-team',selected.length!==4||me.confirmed||!editable?'disabled':'')}<p role="status">${countryStep?(advanced?'Le repêchage commence après la confirmation des pays.':'Le tirage de la carte précède la sélection des agents.'):selected.length+'/4 agents sélectionnés'}</p></div>`:'';
   const startPhase=s?.phase==='teams'||!countryStep&&!advanced&&lobby,beginReady=players.length>=(s?.gameMode==='cooperative'?1:2)&&s?.members.every(m=>m.connected)&&players.every(m=>m.countryConfirmed),startReady=players.length>=(advanced?1:2)&&s?.members.every(m=>m.connected)&&players.every(m=>m.confirmed);
   const modeLabel=GAME_MODES[s?.gameMode];
-  const navigation=`<div class="mp-lobby-nav">${modeLabel?`<strong>${modeLabel}</strong>`:''}${backToMainMenu('mp-leave')}</div>`;
-  const lobbyHeader=`<section class="mp-lobby-header panel" id="mpLobby">${confirmation}<span class="eyebrow">${pregame?'PRÉPARATION MULTIJOUEUR':'SALON · '+(me?.observer?'OBSERVATEUR':COUNTRY[me?.country]?.name)}</span><h2>${lobby?(me?.observer?'Hôte observateur':countryStep?'Choisissez votre pays':'Composez votre équipe'):s?.phase==='draft'?'Repêchage des agents':s?.phase==='teams'?'Confirmez votre équipe':'Joueurs et invitation'}</h2>${observer?`<p class="notice mp-observer-notice"><span translate="no">${esc(observer.name)}</span> · Hôte observateur — accès à toutes les informations des joueurs. Aucune équipe ni place occupée.</p>`:''}${this.host&&lobby?`<div class="mp-role"><strong>Votre rôle</strong>${button('Hôte joueur','mp-role-player',me?.observer?'':'primary')}${button('Hôte observateur','mp-role-observer',me?.observer?'primary':'')}</div>`:''}${this.status?`<p role="status" class="notice warning">${esc(this.status)}</p>${!this.host?button('Réessayer','mp-reconnect','wide'):''}`:''}${this.pending?'<p role="status">Confirmation de l’hôte…</p>':''}${this.savedError?'<p class="notice warning">Exportez la sauvegarde : la sauvegarde automatique a échoué.</p>':''}<div class="setup-game-options">${aiDifficultyControl(s?.game?.aiDifficulty||s?.aiDifficulty||'bb1',true,this.host&&lobby&&editable)}</div><div class="mp-invitation"><label>Lien d’invitation<input readonly id="mpLink" value="${esc(invitationUrl.href)}"></label>${button('Copier le lien','mp-copy','small')}</div><div class="mp-lobby-actions">${this.host&&countryStep?button(advanced?'Commencer le repêchage':'Tirer la carte','mp-begin-draft','primary',!beginReady||!editable?'disabled title="Tous les joueurs doivent confirmer leur pays et être connectés."':''):''}${this.host&&startPhase?button('Lancer la partie','mp-start','primary',!startReady||!editable?'disabled title="Tous les joueurs doivent être connectés et avoir confirmé leur équipe."':''):''}${!pregame?button('Retour au commandement','mp-play','primary'):''}${this.host?button('Exporter la sauvegarde','mp-export')+button('Exporter la copie avant changement','mp-export-backup'):''}${button('Paramètres','settings')}</div><p role="status">${lobby&&advanced?players.filter(m=>m.countryConfirmed).length+'/'+players.length+' pays confirmés · '+Math.max(0,(s?.gameMode==='cooperative'?2:4)-players.length)+' PNJ compléteront les pays actifs':pregame?players.filter(m=>m.confirmed).length+'/'+players.length+' équipes confirmées':'Le bouton Salon reste accessible depuis le commandement.'}</p>${members}</section>`;
-  const top=navigation+lobbyHeader;
+  const lobbyTitle=lobby
+   ?me?.observer?'Hôte observateur':countryStep?'Choisissez votre pays':'Composez votre équipe'
+   :s?.phase==='draft'?'Repêchage des agents':s?.phase==='teams'?'Confirmez votre équipe':'Joueurs et invitation';
+  const lobbyLabel=pregame?'PRÉPARATION MULTIJOUEUR':`SALON · ${me?.observer?'OBSERVATEUR':COUNTRY[me?.country]?.name||''}`;
+  const roles=this.host&&lobby?`<section class="mp-role"><h3>Votre rôle</h3><div class="mp-lobby-choices">
+   ${button('Hôte joueur','mp-role-player','',`aria-pressed="${!me?.observer}"`)}
+   ${button('Hôte observateur','mp-role-observer','',`aria-pressed="${!!me?.observer}"`)}
+  </div></section>`:'';
+  const progress=countryStep
+   ?{confirmed:players.filter(m=>m.countryConfirmed).length,label:'pays confirmés'}
+   :{confirmed:players.filter(m=>m.confirmed).length,label:'équipes confirmées'};
+  const top=`<section class="mp-lobby-header panel" id="mpLobby">
+   <header class="mp-lobby-intro">
+    <div><span class="eyebrow">${lobbyLabel}</span><h2>${lobbyTitle}</h2>${modeLabel?`<p class="mp-lobby-mode"><strong>${modeLabel}</strong></p>`:''}</div>
+    ${confirmation}
+   </header>
+   ${observer?`<p class="notice mp-observer-notice"><span translate="no">${esc(observer.name)}</span> · Hôte observateur — accès à toutes les informations des joueurs. Aucune équipe ni place occupée.</p>`:''}
+   ${this.status?`<p role="status" class="notice warning">${esc(this.status)}</p>${!this.host?button('Réessayer','mp-reconnect','wide'):''}`:''}
+   ${this.pending?'<p role="status">Confirmation de l’hôte…</p>':''}
+   ${this.savedError?'<p class="notice warning">Exportez la sauvegarde : la sauvegarde automatique a échoué.</p>':''}
+   <div class="mp-lobby-controls">${roles}${aiDifficultyControl(s?.game?.aiDifficulty||s?.aiDifficulty||'bb1',true,this.host&&lobby&&editable)}</div>
+   <div class="mp-invitation">
+    <label for="mpLink">Lien d’invitation</label>
+    <div class="mp-invitation-row"><input readonly id="mpLink" value="${esc(invitationUrl.href)}">${button('Copier le lien','mp-copy','small')}</div>
+   </div>
+   <div class="mp-lobby-actions">
+    ${this.host&&countryStep?button(advanced?'Commencer le repêchage':'Tirer la carte','mp-begin-draft','primary',!beginReady||!editable?'disabled title="Tous les joueurs doivent confirmer leur pays et être connectés."':''):''}
+    ${this.host&&startPhase?button('Lancer la partie','mp-start','primary',!startReady||!editable?'disabled title="Tous les joueurs doivent être connectés et avoir confirmé leur équipe."':''):''}
+    ${!pregame?button('Retour au commandement','mp-play','primary'):''}
+    ${this.host?button('Exporter la sauvegarde','mp-export')+button('Exporter la copie avant changement','mp-export-backup'):''}
+    ${button('Paramètres','settings')}
+   </div>
+   <section class="mp-lobby-countries">
+    <header><h3>Pays du salon</h3>
+    ${pregame?`<p class="mp-lobby-progress" role="status">${progress.confirmed}/${players.length} ${progress.label}${lobby&&advanced?' · '+Math.max(0,(s?.gameMode==='cooperative'?2:4)-players.length)+' PNJ compléteront les pays actifs':''}</p>`:''}</header>
+    <div class="mp-members" role="list" aria-label="Pays du salon">${members}</div>
+   </section>
+  </section>`;
   let html;
   if(s?.draft&&['draft','teams'].includes(s.phase))html=draftScreen(s.draft,me?.observer?null:me?.country,{multi:true,header:top,agents:selected,confirmed:me?.confirmed,editable:!!me&&!me.observer&&editable,candidate:this.draftCandidate});
   else if((lobby||s?.phase==='teams')&&me&&!me.observer)html=setupScreen(me.country,selected,false,{header:top,chooseMap:countryStep,locked:!lobby,taken:s.members.filter(m=>m.country!==me.country).map(m=>m.country)},s.aiDifficulty,s.gameMode,s.operationCountries);
   else if(pregame)html=`<main class="mp-observer-lobby">${top}</main>`;
   if(html){if(this.hooks.lobby)this.hooks.lobby(html);else this.hooks.modal(html);return;}
-  this.hooks.modal(`<div class="simple-modal mp-dialog">${top}</div>`);
+  this.hooks.modal(`<div class="simple-modal mp-dialog">${top}${button('Quitter la session','mp-leave','small')}</div>`);
  }
  decorate(){if(!this.active||!this.snapshot?.game)return;const s=this.snapshot,me=this.me,players=playingMembers(s);const advance=document.querySelector('[data-cmd="advance"]');if(advance){advance.textContent=translateText(s.game.ended?'Voir le bilan':this.observer?'Observation en cours':me.ready?'Modifier mes ordres':s.game.event?'Communication':'Je suis prêt');advance.disabled=!s.game.ended&&(!!this.pending||!!this.status||this.observer);}
  const container=document.querySelector('.deck-content');if(!container)return;const panel=document.createElement('section');panel.className='mp-status';panel.innerHTML=`<strong>${players.filter(m=>m.ready).length}/${players.length} prêts</strong><span>${players.map(m=>esc(COUNTRY[m.country].name)+': '+(!m.connected?'déconnecté':m.ready?'prêt':'en préparation')).join(' · ')}</span>${button('Salon','mp-panel','small')}${this.status?`<p role="status">${esc(this.status)}</p>`:''}${this.pending?'<p role="status">Confirmation de l’hôte…</p>':''}${this.savedError?'<p>Échec de sauvegarde : exportez la partie.</p>':''}`;
- if(this.observer){panel.classList.add('mp-observer-status');panel.innerHTML=`<div class="mp-observer-heading"><strong>HÔTE OBSERVATEUR</strong><span>Consultation uniquement · Carte : tous les agents des joueurs</span></div><label>Joueur observé <select id="mpObserveCountry">${players.map(m=>`<option translate="no" value="${m.country}" ${s.game.player===m.country?'selected':''}>${esc(m.name)} · ${translateText(COUNTRY[m.country].name)}</option>`).join('')}</select></label><div class="mp-observer-legend">${players.map(m=>`<button class="btn small" data-cmd="mp-observe" data-id="${m.country}" style="--observer-color:${OBSERVER_COLORS[m.country]}" aria-pressed="${s.game.player===m.country}">${flag(m.country)} <span translate="no">${esc(m.name)}</span></button>`).join('')}</div>`+panel.innerHTML;}localizeContent(panel);container.prepend(panel);
+ if(this.observer){
+  panel.classList.add('mp-observer-status');
+  const observerCountry=countrySelect(players.map(m=>countryOption(m.country,
+   `${translateText(COUNTRY[m.country].name)} · ${m.name}`,{selected:s.game.player===m.country,localize:false}
+  )).join(''),'id="mpObserveCountry"');
+  panel.innerHTML=`<div class="mp-observer-heading"><strong>HÔTE OBSERVATEUR</strong><span>Consultation uniquement · Carte : tous les agents des joueurs</span></div><label>Joueur observé ${observerCountry}</label><div class="mp-observer-legend">${players.map(m=>`<button class="btn small" data-cmd="mp-observe" data-id="${m.country}" style="--observer-color:${OBSERVER_COLORS[m.country]}" aria-pressed="${s.game.player===m.country}">${flag(m.country)} <span translate="no">${esc(m.name)}</span></button>`).join('')}</div>`+panel.innerHTML;
+ }
+ localizeContent(panel);container.prepend(panel);
  if(this.observer)for(const el of document.querySelectorAll('[data-tech-drag]'))el.draggable=false;
  if(me.ready||this.observer){for(const el of document.querySelectorAll('[data-cmd]'))if(['government-favor','deploy','travel','agent-rest','recruit','confidence','confirm-order','cancel','confirm-cancel','cancel-tech','confirm-cancel-tech','cancel-cyber','confirm-cancel-cyber','tech-drone','confidence','tech','hire','share-confirm','request-accept','request-decline','event','mp-share-yes','mp-share-no'].includes(el.dataset.cmd))el.disabled=true;}
  const footer=document.querySelector('.command-deck > footer span');if(footer)footer.textContent=translateText(this.observer?'HÔTE OBSERVATEUR · CONSULTATION UNIQUEMENT':this.host?'HÔTE · SAUVEGARDE MULTI LOCALE':'INVITÉ · SAUVEGARDE CHEZ L’HÔTE');

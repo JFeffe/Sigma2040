@@ -22,7 +22,7 @@ test('Home preserves campaign info and puts mission modes and options in their o
  const {s}=scenario([100,100]);
  const home=mainMenu(s),options=mainMenu(s,{options:true}),newGame=newGameMenu();
  assert.deepEqual([...home.matchAll(/data-cmd="([^"]+)"/g)].map(match=>match[1]),['continue-game','new','options']);
- assert.deepEqual([...options.matchAll(/data-cmd="([^"]+)"/g)].map(match=>match[1]),['patch-notes','settings','rules','save-menu','main-menu']);
+ assert.deepEqual([...options.matchAll(/data-cmd="([^"]+)"/g)].map(match=>match[1]),['patch-notes','settings','rules','save-menu']);
  assert.match(newGame,/data-cmd="tutorial-menu"/);
  assert.match(newGame,/data-cmd="mp-entry"/);
  assert.match(home,/data-cmd="continue-game"[^>]*>[\s\S]*France · IA Normal · Tour 1 \/ 30<\/small><\/button>/);

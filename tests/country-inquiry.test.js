@@ -30,19 +30,19 @@ test('Compact controller switches actions, opens portraits, and assigns only pro
   initCountryInquiry({state:()=>s,modal,readOnlyReason:()=>readOnly,notify(){},showModal(h,c){html=h;modal.className=c;modal.open=true;},openAgent(id){assert.equal(modal.open,true);opened=id;},async assign(p){assigned=p;E.assign(s,p.id,p.type,p.target,p.useCredits);}});
   openCountryInquiry(t.id);assert.match(html,/inquiry-step-rail/);assert.doesNotMatch(html,/id="inquiryAction"/);
   await handleInquiryCommand('inquiry-step','intervention');
-  assert.match(html,/data-id="prepare"/);assert.doesNotMatch(html,/Optionnel · une fois par pays/);
-  await handleInquiryCommand('inquiry-substep','locate');assert.match(html,/data-id="surveil" aria-pressed="true"/);
-  await handleInquiryCommand('inquiry-step','proofs');assert.match(html,/data-id="collect"/);assert.doesNotMatch(html,/data-id="analyze"/);
-  await handleInquiryCommand('inquiry-step','access');assert.match(html,/data-id="contacts"/);assert.match(html,/data-id="drone"/);assert.doesNotMatch(html,/data-id="intimidate"/);
+  assert.match(html,/data-action="prepare"/);assert.match(html,/data-id="locate"/);assert.doesNotMatch(html,/Optionnel · une fois par pays/);
+  await handleInquiryCommand('inquiry-substep','locate');assert.match(html,/data-action="surveil"/);assert.match(html,/data-id="prepare"/);
+  await handleInquiryCommand('inquiry-step','proofs');assert.match(html,/data-action="collect"/);assert.doesNotMatch(html,/data-id="analyze"/);
+  await handleInquiryCommand('inquiry-step','access');assert.match(html,/data-action="contacts"/);assert.match(html,/data-id="drone"/);assert.doesNotMatch(html,/data-id="intimidate"/);
   assert.match(html,/Optionnel · une fois par pays/);
-  await handleInquiryCommand('inquiry-substep','mandate');assert.match(html,/class="inquiry-single-action" data-action="authorize"/);
-  assert.doesNotMatch(html,/data-cmd="inquiry-action" data-id="authorize"/);
-  assert.doesNotMatch(html,/data-id="contacts" aria-pressed=/);
-  await handleInquiryCommand('inquiry-action','analyze');assert.match(html,/data-id="validation" aria-pressed="true"/);assert.match(html,/vérifier la deuxième/);
+  await handleInquiryCommand('inquiry-substep','mandate');assert.match(html,/class="inquiry-single-action"[^>]*data-action="authorize"/);
+  assert.doesNotMatch(html,/data-cmd="inquiry-action"[^>]*data-id="authorize"/);
+  assert.doesNotMatch(html,/data-id="contacts"/);
+  await handleInquiryCommand('inquiry-action','analyze');assert.match(html,/data-id="validation" aria-pressed="true"/);assert.match(html,/Pièce de ce dossier/);
   await handleInquiryCommand('inquiry-step','access');
   await handleInquiryCommand('inquiry-open-agent',a.id);assert.equal(opened,a.id);
   const plot=E.visiblePlots(s)[0];a.country=plot.country;
-  await handleInquiryCommand('country-threat',plot.id);assert.match(html,/Protéger une infrastructure/);assert.doesNotMatch(html,/id="inquiryAction"/);
+  await handleInquiryCommand('country-threat',plot.id);assert.match(html,/threat-inquiry[\s\S]*dossier-sheet[\s\S]*operation-card[\s\S]*Protéger une infrastructure/);assert.match(html,/pendant les trois tours suivants/);assert.doesNotMatch(html,/id="inquiryAction"/);
   await handleInquiryCommand('inquiry-action','arrest');await handleInquiryCommand('inquiry-agent',a.id);
   readOnly='Observateur';await handleInquiryCommand('inquiry-confirm');assert.equal(assigned,null);
   readOnly='';await handleInquiryCommand('inquiry-confirm');assert.equal(assigned.type,'protect');assert.equal(assigned.target,plot.country);assert.equal(modal.open,true);
@@ -115,7 +115,7 @@ test('Parallel collection produces two distinct proofs; both can be verified in 
  assert.notEqual(a.task.target,b.task.target);
 });
 
-test('Dossier stays on the chosen mission for two consecutive agent assignments',async()=>{
+test('Dossier opened with a preferred agent still displays every candidate and supports consecutive assignments',async()=>{
  for(const type of ['prepare','arrest']){
  const s=fresh(),{t,a,f}=local(s),b=E.team(s)[1];b.country=t.country;f.access[t.country]=true;
  f.evidence=[{id:t.id+'-e0',verified:true},{id:t.id+'-e1',verified:false}];Object.assign(f.known[t.id],{identified:false,prepared:type==='arrest',locationUntil:8});
@@ -123,7 +123,12 @@ test('Dossier stays on the chosen mission for two consecutive agent assignments'
  const previous=globalThis.document;globalThis.document={activeElement:null};
  try{
  initCountryInquiry({state:()=>s,modal,readOnlyReason:()=>'',notify(){},showModal(h,c){html=h;modal.className=c;modal.open=true;},openAgent(){},async assign(p){E.assign(s,p.id,p.type,p.target,p.useCredits);}});
- openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action',type);
+ openCountryInquiry(t.id,false,b.id);
+ assert.match(html,new RegExp('data-id="'+b.id+'" aria-pressed="true"'));
+ assert.match(html,new RegExp('data-id="'+a.id+'" aria-pressed="false"'));
+ assert.match(html,/Comparer les agents/);
+ assert.match(html,/Détails du dossier/);
+ await handleInquiryCommand('inquiry-action',type);
  for(const agent of [a,b]){await handleInquiryCommand('inquiry-agent',agent.id);await handleInquiryCommand('inquiry-confirm');assert.equal(agent.task.type,type);assert.equal(agent.task.target,t.id);assert.equal(modal.open,true);}
  assert.match(html,/Missions affectées · 2/);
  }finally{globalThis.document=previous;}

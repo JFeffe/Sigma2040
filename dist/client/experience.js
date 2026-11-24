@@ -1,11 +1,11 @@
-import {languageSettingsMarkup,translateText} from './localization.js?v=244';
-import {readStorageItem} from './storage-keys.js?v=244';
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=244';
-import {musicMarkup} from './music.js?v=244';
-import * as E from './engine.js?v=244';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=244';
-import {proofTitle} from './intelligence.js?v=244';
-import {esc,button,portrait,icon} from './ui.js?v=244';
+import {languageSettingsMarkup,translateText} from './localization.js?v=245';
+import {readStorageItem} from './storage-keys.js?v=245';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=245';
+import {musicMarkup} from './music.js?v=245';
+import * as E from './engine.js?v=245';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=245';
+import {proofTitle} from './intelligence.js?v=245';
+import {esc,button,portrait,icon} from './ui.js?v=245';
 const PREF='shadow-mandate-2040-feedback-settings';
 let prefs={sound:false,volume:25,motion:'system',infoBar:true};
 try{const saved=JSON.parse(readStorageItem(localStorage,PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system',infoBar:saved.infoBar!==false};}catch{}

@@ -1,11 +1,11 @@
-import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=244';
-import {readStorageItem} from './storage-keys.js?v=244';
-import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=244';
-import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=244';
-import * as E from './engine.js?v=244';
-import {tutorialTechAllowed} from './tutorial-advanced.js?v=244';
-import {SUSPECTS} from './data.js?v=244';
-import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=244';
+import {COMPACT_IDS,COMPACT_BASE,COMPACT_MISSIONS} from './tutorial-compact.js?v=245';
+import {readStorageItem} from './storage-keys.js?v=245';
+import {isNpcTutorial,tutorialParticipants,tutorialSeed} from './tutorial-mode.js?v=245';
+import {NPC_MISSIONS,setupNpcTutorial} from './tutorial-npc.js?v=245';
+import * as E from './engine.js?v=245';
+import {tutorialTechAllowed} from './tutorial-advanced.js?v=245';
+import {SUSPECTS} from './data.js?v=245';
+import {isTutorial,TUTORIAL_IDS,tutorialObjective} from './tutorial-rules.js?v=245';
 export {isTutorial,tutorialObjective};
 export const TUTORIAL_KEY='shadow-mandate-2040-filigrane-v1';
 export const LEGACY_TUTORIAL_MISSIONS=Object.freeze([

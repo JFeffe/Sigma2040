@@ -60,8 +60,6 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .country-proof-choice small{font-size:11px;font-weight:400;color:#bec5d1}
 .country-proof-choice[aria-pressed=true]{background:#203f60;border-color:#78b9f1;color:#d5edff}
 
-.immersive-deck .agent-sidebar>summary{justify-content:flex-start;gap:6px;padding:7px 10px}
-.immersive-deck .agent-sidebar>summary:after{margin-left:auto}
 .floating-agent-facts .agent-deployment{font-size:11px;gap:4px}
 .floating-agent-facts .agent-deployment .country-code,.floating-agent-facts .agent-deployment .country-code img{width:20px;height:14px}
 .floating-agent-status{display:flex;align-items:center;flex-wrap:wrap;gap:4px 7px}
@@ -119,10 +117,9 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 
 /* The country art and status stay above the scrollable actions. */
 .immersive-deck .map-dossier.country-sidebar{overflow:hidden}
-.country-sidebar[open]{display:flex;flex-direction:column}
-.country-sidebar>summary{flex:none}
-.country-sidebar[open]::details-content{display:flex;flex:1;min-height:0;overflow:hidden}
-.immersive-deck .country-sidebar .country-dossier{flex:1;min-height:0;overflow:hidden}
+.immersive-deck .country-sidebar{display:flex;flex-direction:column}
+.country-sidebar>.map-dossier-heading{flex:none}
+.immersive-deck .country-sidebar .country-dossier{flex:1;align-self:stretch;width:100%;min-height:0;box-sizing:border-box;overflow:hidden}
 .immersive-deck .country-sidebar .country-sidebar-scroll{flex:1 1 auto;min-height:0;overflow:auto;display:grid;gap:6px;overscroll-behavior:contain}
 .country-art-header{position:relative;flex:none;overflow:hidden;border-radius:5px}
 .country-art-header.is-secondary{height:105px;border:1px solid #69798a}
@@ -133,12 +130,27 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .country-art-header .compact-country-signal{background:#10141dec;color:#d8dce5;padding:3px 4px}
 .country-art-header .compact-country-signal.is-active{color:#a2e0bc}
 
-.country-operations-heading{padding-bottom:3px}
-.country-operations-heading .country-art-header.is-secondary{height:76px}
-.country-operations-heading .country-art-header.is-power>.city-art{height:70px;min-height:0}
-.country-operations-heading .country-art-header.is-secondary>.compact-country-signals{
- grid-template-columns:repeat(3,minmax(0,1fr));
+.country-operations-heading{margin-block-end:6px}
+.country-operations-heading .country-art-header{
+ display:grid;grid-template-columns:var(--action-image-width) minmax(0,1fr);align-items:start;gap:7px;
+ height:auto;border:0;overflow:visible;
 }
+.country-operations-heading .country-art-header>.city-art{
+ position:static;transform:none;width:var(--action-image-width);height:var(--action-image-height);
+ min-height:0;border-radius:4px;border:1px solid var(--atlas-edge);box-shadow:none;
+}
+.country-operations-heading .city-caption{display:none}
+.country-action-place{display:grid;gap:3px;min-width:0}
+.country-action-place h2{margin:0;gap:5px;flex-wrap:wrap;font-size:15px}
+.country-action-place h2 .country-code{width:21px;height:15px;min-width:0}
+.country-action-place h2 small{font:400 11px/1.2 var(--font);color:var(--atlas-muted)}
+.country-action-place .compact-country-signals{display:flex;align-items:center;flex-wrap:wrap;gap:3px}
+.country-action-place .compact-country-signal{padding:2px 4px;font-size:10px}
+.country-operations .action-resources{gap:4px;margin:4px 0;font-size:11px}
+.country-operations .action-resources>span{padding:2px 4px}
+.country-operations .action-resources .icon{width:13px;height:13px}
+.country-operations .country-operation-detail select{min-height:32px;margin:4px 0 5px;padding:4px 6px}
+.country-operation-agent .portrait{width:var(--action-image-width);height:var(--action-image-height)}
 .country-operations .country-operation-types{grid-template-columns:repeat(auto-fit,minmax(min(100%,145px),1fr))}
 .country-operation-agents,.country-operations .country-proof-choices{
  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:4px 8px;
@@ -149,7 +161,6 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .country-operation-choice .mission-candidate-readings{white-space:normal}
 .country-operation-choice .mission-timing{display:block;margin-top:2px}
 @media(max-height:720px){
- .country-operations-heading .country-art-header.is-secondary{height:66px}
  .country-operations .country-operation-agents:has(>.country-operation-agent:nth-child(3):last-child){
   grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr));
  }

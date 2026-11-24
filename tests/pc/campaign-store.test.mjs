@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 import storeModule from '../../resources/app/campaign-store.cjs';
 import * as E from '../../resources/app/client/engine.js';
+import { createCampaignSaves, firstFreeCampaignSlot } from '../../resources/app/client/campaign-slots.js';
 
 const { createCampaignStore, createCampaignSlotStore } = storeModule;
 
@@ -141,5 +142,66 @@ test('four PC slots keep legacy files and isolate each campaign, checkpoint and 
   assert.equal(after[2].current.raw, raw);
   assert.equal(after[2].previous.raw, before[2].current.raw);
   assert.equal(await fs.readFile(path.join(directory, 'campaign.json'), 'utf8'), first);
+});
+
+test('deleting a slot rejects stale confirmations and clears the slot and its recovery file', async t => {
+  const { directory } = await fixture(t);
+  const store = createCampaignSlotStore(directory, E.validateSave);
+  const other = JSON.stringify(campaign(41));
+  await store.write(other, false, 1, null);
+  await store.write(JSON.stringify(campaign(42)), false, 0, null);
+  const before = await store.read();
+  await store.write(JSON.stringify(campaign(43)), true, 0, before[0].current.raw);
+
+  await assert.rejects(store.remove(0, before[0]), /Campaign slot changed/);
+  const slots = await store.read();
+  assert.equal(slots[0].current.seed, 43);
+  assert.equal(slots[0].previous.seed, 42);
+  await store.remove(0, slots[0]);
+
+  const after = await createCampaignSlotStore(directory, E.validateSave).read();
+  assert.deepEqual(after[0], { current: { status: 'missing' }, previous: { status: 'missing' } });
+  assert.equal(after[1].current.raw, other);
+});
+
+test('deleting the migrated active campaign prevents a queued autosave or legacy load from recreating it', async t => {
+  const { directory } = await fixture(t);
+  const files = createCampaignSlotStore(directory, E.validateSave);
+  const store = { readCampaigns: files.read, writeCampaign: files.write, deleteCampaign: files.remove };
+  let legacy = campaign();
+  const saves = createCampaignSaves(store, E.validateSave, () => legacy, () => { legacy = null; });
+  const loaded = await saves.load();
+  assert.equal(saves.activeSlot, 0);
+
+  const removing = saves.remove(0, saves.slots[0]);
+  const autosaving = saves.update(loaded);
+  assert.equal(await removing, true);
+  await autosaving;
+  assert.equal(await saves.load(), null);
+});
+
+test('a fifth campaign only replaces the confirmed slot and rejects stale slot snapshots', async t => {
+  const { directory } = await fixture(t);
+  const store = createCampaignSlotStore(directory, E.validateSave);
+  const empty = await store.read();
+  const firstFour = [41, 42, 43, 44].map(seed => JSON.stringify(campaign(seed)));
+  await Promise.all(firstFour.map((raw, slot) => store.write(raw, true, slot, empty[slot])));
+  const fifth = JSON.stringify(campaign(50));
+  await assert.rejects(store.write(fifth, true, 1, empty[1]), /Campaign slot changed/);
+  const full = await store.read();
+  assert.equal(firstFreeCampaignSlot(full), -1);
+  assert.deepEqual(full.map(slot => slot.current.raw), firstFour);
+
+  // A recovery file can change independently while the primary still matches the confirmation.
+  const checkpoint = JSON.stringify(campaign(45));
+  await fs.writeFile(path.join(directory, 'slot-3', 'campaign.previous.json'), checkpoint);
+  await assert.rejects(store.write(fifth, true, 2, full[2]), /Campaign slot changed/);
+  const updated = await store.read();
+  assert.equal(updated[2].previous.raw, checkpoint);
+  await store.write(fifth, true, 2, updated[2]);
+
+  const after = await store.read();
+  assert.deepEqual(after.map(slot => slot.current.raw), [firstFour[0], firstFour[1], fifth, firstFour[3]]);
+  assert.equal(after[2].previous.raw, firstFour[2]);
 });
 

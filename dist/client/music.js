@@ -1,15 +1,16 @@
-import {readStorageItem} from './storage-keys.js?v=244';
-import {translateText} from './localization.js?v=244';
+import {readStorageItem} from './storage-keys.js?v=245';
+import {translateText} from './localization.js?v=245';
 const KEY='shadow-mandate-2040-music';
 export const TRACKS=[{title:'Ticking Shadows — A Cello Study',artist:'AICanvas',src:'ticking-shadows.mp3'},{title:'Steering Politics',artist:'Grand Project',src:'steering-politics.mp3'},{title:'The Perfect System',artist:'Grand Project',src:'the-perfect-system.mp3'}];
 let prefs={enabled:true,volume:20};
 try{const p=JSON.parse(readStorageItem(localStorage,KEY)||'{}');prefs={enabled:p.enabled!==false,volume:Number.isFinite(p.volume)?Math.max(0,Math.min(100,p.volume)):20};}catch{}
-let decks=[],current=0,index=0,started=false,loading=false,fade=null,last=0,unlocked=false,message='La musique démarrera à votre première interaction.';
+const interactionRequired='La musique démarrera à votre première interaction.';
+let decks=[],current=0,index=0,started=false,loading=false,fade=null,last=0,unlocked=false,message=interactionRequired;
 function announce(){document.querySelectorAll('[data-music-status]').forEach(el=>el.textContent=translateText(message));}
 export const musicGain=value=>.5*(Math.max(0,Math.min(100,Number(value)||0))/100)**2;
 function gains(){const v=musicGain(prefs.volume);if(!decks.length)return;if(fade){const t=Math.min(1,fade.elapsed/fade.duration);decks[current].volume=v*Math.cos(t*Math.PI/2);decks[1-current].volume=v*Math.sin(t*Math.PI/2);}else{decks[current].volume=v;decks[1-current].volume=0;}}
 function prepare(){if(decks.length)return;decks=[new Audio(),new Audio()];decks.forEach((a,i)=>{a.preload='metadata';a.hidden=true;a.setAttribute('aria-hidden','true');document.body.append(a);a.addEventListener('ended',()=>{if(i===current&&!fade)nextTrack();});a.addEventListener('error',()=>{message='Musique indisponible. Utilisez « Piste suivante » pour réessayer.';announce();});});decks[0].src='./assets/music/'+TRACKS[0].src;gains();}
-export async function startMusic(){unlocked=true;if(!prefs.enabled||document.hidden||loading)return;prepare();if(started&&!decks[current].paused)return;loading=true;try{await decks[current].play();if(!prefs.enabled||document.hidden){decks[current].pause();return;}started=true;message=TRACKS[index].title+' · '+TRACKS[index].artist;announce();}catch{message='Cliquez sur Continuer ou sur une commande pour démarrer la musique.';announce();}finally{loading=false;}}
+export async function startMusic(){unlocked=true;if(!prefs.enabled||document.hidden||loading)return;prepare();if(started&&!decks[current].paused)return;loading=true;try{await decks[current].play();if(!prefs.enabled||document.hidden){decks[current].pause();return;}started=true;message=TRACKS[index].title+' · '+TRACKS[index].artist;announce();}catch(error){if(error.name==='NotAllowedError'){message=interactionRequired;announce();}}finally{loading=false;}}
 export async function nextTrack(){if(!prefs.enabled||!unlocked||loading||fade||document.hidden)return;prepare();loading=true;const next=(index+1)%TRACKS.length,incoming=decks[1-current];incoming.src='./assets/music/'+TRACKS[next].src;incoming.volume=0;try{await incoming.play();if(!prefs.enabled||document.hidden){incoming.pause();return;}fade={elapsed:0,duration:decks[current].ended?1.5:4,next};started=true;}catch{incoming.pause();message='Piste indisponible. Réessayez la lecture.';announce();}finally{loading=false;}}
 export function setMusic(key,value){if(key==='enabled')prefs.enabled=!!value;else if(key==='volume')prefs.volume=Math.max(0,Math.min(100,Number(value)||0));try{localStorage.setItem(KEY,JSON.stringify(prefs));}catch{}gains();if(!prefs.enabled){decks.forEach(a=>a.pause());message='Musique désactivée.';announce();}else{startMusic();if(fade)decks[1-current].play().catch(()=>{});}}
 export function musicMarkup(){
@@ -23,4 +24,12 @@ export function musicMarkup(){
  </section>`;
 }
 function tick(now){const dt=Math.min((now-last)/1000,.1);last=now;if(started&&prefs.enabled&&!document.hidden){const a=decks[current];if(fade){if(!decks[1-current].paused&&decks[1-current].readyState>=3)fade.elapsed+=dt;gains();if(fade.elapsed>=fade.duration){a.pause();a.currentTime=0;current=1-current;index=fade.next;fade=null;gains();message=TRACKS[index].title+' · '+TRACKS[index].artist;announce();}}else if(Number.isFinite(a.duration)&&a.duration-a.currentTime<=4&&!a.paused)nextTrack();}requestAnimationFrame(tick);}
-export function initMusic(){document.addEventListener('pointerdown',()=>{if(!started)startMusic();},{capture:true});document.addEventListener('keydown',()=>{if(!started)startMusic();},{capture:true});document.addEventListener('visibilitychange',()=>{if(document.hidden)decks.forEach(a=>a.pause());else if(unlocked&&prefs.enabled){startMusic();if(fade)decks[1-current].play().catch(()=>{});}});requestAnimationFrame(tick);}
+export function initMusic(){
+ const retry=()=>{if(!started)void startMusic();};
+ document.addEventListener('pointerdown',retry,{capture:true});
+ document.addEventListener('click',retry,{capture:true});
+ document.addEventListener('keydown',retry,{capture:true});
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)decks.forEach(a=>a.pause());else if(unlocked&&prefs.enabled){startMusic();if(fade)decks[1-current].play().catch(()=>{});}});
+ void startMusic();
+ requestAnimationFrame(tick);
+}

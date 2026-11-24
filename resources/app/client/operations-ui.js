@@ -1,11 +1,12 @@
-import {tutorialGuaranteed} from './tutorial-mode.js?v=243';
-import {prestigeHint} from './prestige.js?v=243';
-import {transmission} from './experience.js?v=243';
-import {contributors} from './command-ui.js?v=243';
-import * as E from './engine.js?v=243';
-import {caseFor,proofTitle} from './intelligence.js?v=243';
-import {COUNTRY,ACTIONS} from './data.js?v=243';
-import {esc,button,flag,portrait,icon,formatScore} from './ui.js?v=243';
+import {tutorialGuaranteed} from './tutorial-mode.js?v=245';
+import {prestigeHint} from './prestige.js?v=245';
+import {transmission} from './experience.js?v=245';
+import {contributors} from './command-ui.js?v=245';
+import * as E from './engine.js?v=245';
+import {caseFor,proofTitle,OUTCOMES} from './intelligence.js?v=245';
+import {incidentDescription} from './incident-rules.js?v=245';
+import {COUNTRY,ACTIONS} from './data.js?v=245';
+import {esc,button,flag,portrait,icon,formatScore} from './ui.js?v=245';
 const delta=n=>(n>0?'+':'')+n;
 const energyRecovery={rest:50,fieldRest:30,hide:10,heal:40};
 const missionEnergyChange=(a,type,o)=>energyRecovery[type]?Math.min(a.fatigue,energyRecovery[type]):-o.fatigue*o.duration;
@@ -13,6 +14,39 @@ export function missionTimingMarkup(a,type,o,{showEnergy=true}={}){
  const energy=missionEnergyChange(a,type,o);
  const signed=energy<0?'−'+Math.abs(energy):delta(energy);
  return `<small class="mission-timing">${o.duration} ${o.duration===1?'tour':'tours'}${showEnergy?` · ${signed} énergie`:''}</small>`;
+}
+export function operationReadingsMarkup(s,type,candidate){
+ if(!candidate)return '';
+ const {a,o}=candidate,signed=n=>n<0?'−'+Math.abs(n):delta(n);
+ const success=E.missionExposure(a,type,true),failure=E.missionExposure(a,type,false);
+ const exposure=ACTIONS[type].safe||tutorialGuaranteed(s,a.faction)||success===failure?`<b>${signed(success)}</b>`:
+  success===0?`<span class="on-failure"><b>${signed(failure)}</b> <small>en cas d’échec</small></span>`:
+  `<span class="on-success">Réussite <b>${signed(success)}</b></span><span class="on-failure">Échec <b>${signed(failure)}</b></span>`;
+ return `<div class="inquiry-costs" aria-label="Durée, énergie et exposition pour ${esc(a.name)}">
+  <div><strong>${icon('clock')} Durée</strong>${missionTimingMarkup(a,type,o,{showEnergy:false})}</div>
+  <div><strong>${icon('bolt')} Énergie</strong><b>${signed(missionEnergyChange(a,type,o))}</b></div>
+  <div><strong>${icon('eye')} Exposition</strong><span class="inquiry-outcomes">${exposure}</span></div>
+ </div>`;
+}
+const compactOutcomes={
+ collect:'Une preuve brute est transmise au QG.',
+ analyze:'La pièce choisie est vérifiée ou écartée si elle est fausse. +2 prestige par pièce et par pays.',
+ surveil:'La position de la cible est confirmée. Sa durée dépend de la coopération et du relais satellite.',
+ hack:'Une preuve brute si le dossier en compte moins de deux, +1 tour de hack et +1 point de Recherche.',
+ drone:'Accès local ouvert. Les suspects présents sont localisés, sauf l’Architecte encore inconnu.',
+ intimidate:'Une preuve brute et une position valide jusqu’à la fin du tour suivant la réussite.',
+ arrest:'Cible arrêtée, crise −4 et +2 prestige pour le pays qui intervient.',
+ protect:'Le pays est protégé au tour de résolution et pendant les trois tours suivants.',
+ counter:'Recherche +2 et repérage pendant deux tours des agents adverses à 20 d’exposition ou plus.',
+ cyberSupport:'Pendant les trois tours suivant la résolution, les nouveaux ordres de vos agents sur place gagnent +10 points de réussite.'
+};
+export function operationSuccessMarkup(type,id=''){
+ return `<div class="operation-success"><strong>${icon('check')} En cas de réussite</strong><p${id?` id="${esc(id)}"`:''}>${esc(compactOutcomes[type]||OUTCOMES[type])}</p></div>`;
+}
+export function operationIncidentMarkup(s,type,candidate){
+ if(!candidate||ACTIONS[type].safe||tutorialGuaranteed(s,candidate.a.faction))return '';
+ const incident=incidentDescription(type,candidate.o.clandestine);
+ return incident?`<p><strong>En cas d’échec</strong> — ${esc(incident)}</p>`:'';
 }
 export function missionBoostLabel(normal,reinforced,budget){
  const odds=normal?.boostGain?` · ${normal.chance} % → ${reinforced.chance} %`:'';
@@ -59,5 +93,3 @@ export function reportCards(s,turn=null,compact=false){
  }).join('')}</div>`:'';
 }
 export function cooperationPanel(s){return '';}
-
-export function internationalActivity(s){const sightings=Object.values(s.factions[s.player].publicAgents).filter(a=>a.source!=='counter'||a.until>=s.turn).sort((a,b)=>b.turn-a.turn).slice(0,8);const entries=s.logs.filter(l=>!l.faction&&['success','info','score'].includes(l.type)).slice(0,6);return `<details class="campaign-disclosure cooperation-panel"><summary>Activité internationale · annonces et mouvements connus</summary>${sightings.length?`<h3>Dernières présences signalées</h3><p class="muted">Informations datées ; la position actuelle et les ordres restent inconnus.</p>${sightings.map(a=>`<p>${flag(a.faction)} ${esc(a.name)} · Équipe ${COUNTRY[a.faction].name} · Position : ${COUNTRY[a.country].name} · Observé T${a.turn}</p>`).join('')}`:''}${entries.length?entries.map(l=>`<p><strong>T${l.turn}</strong> · ${esc(l.text)}</p>`).join(''):'<p>Les annonces apparaîtront après les opérations des puissances.</p>'}</details>`;}

@@ -1,7 +1,8 @@
-import { COUNTRY } from './data.js?v=244';
-import { GAME_MODES } from './game-setup.js?v=244';
-import { formatText, gameLanguage } from './localization.js?v=244';
-import { button, esc, flag, icon } from './ui.js?v=244';
+import { COUNTRY } from './data.js?v=245';
+import { GAME_MODES } from './game-setup.js?v=245';
+import { formatText, gameLanguage } from './localization.js?v=245';
+import { canDeleteCampaignSlot, firstFreeCampaignSlot } from './campaign-slots.js?v=245';
+import { button, esc, flag } from './ui.js?v=245';
 
 const statusText = {
   missing: 'Emplacement libre',
@@ -38,48 +39,42 @@ function slotCard(index, record, actions, { active = false, recovery = '' } = {}
   </article>`;
 }
 
-export function saveScreen(slots, { activeSlot, writeError = false, legacyBackup = false } = {}) {
+export function saveScreen(slots, { activeSlot, writeError = false } = {}) {
   const cards = slots.map(({ current, previous }, slot) => {
     const actions = current.status === 'ready'
-      ? slotCommand(current.ended ? 'Consulter' : 'Reprendre', 'save-resume', slot, 'small primary') +
-        slotCommand('Exporter', 'save-export', slot)
+      ? slotCommand(current.ended ? 'Consulter' : 'Reprendre', 'save-resume', slot, 'small primary')
       : '';
     const recovery = previous.status === 'ready' ? `<details class="campaign-disclosure save-recovery"
       ${current.status === 'ready' ? '' : 'open'}>
       <summary>Copie de récupération</summary><p>${campaignLabel(previous)}</p>
       <div class="save-slot-actions">
         ${slotCommand('Restaurer cette copie', 'save-restore', slot)}
-        ${slotCommand('Exporter la copie', 'save-export-previous', slot)}
       </div>
     </details>` : '';
-    return slotCard(slot, current, actions, { active: slot === activeSlot && current.status === 'ready', recovery });
+    const remove = canDeleteCampaignSlot({ current, previous })
+      ? slotCommand('Supprimer', 'save-delete', slot, 'small save-delete') : '';
+    return slotCard(slot, current, actions + remove, { active: slot === activeSlot && current.status === 'ready', recovery });
   }).join('');
   return `<section class="save-screen">
     <h2 id="saveDialogTitle" tabindex="-1">Sauvegardes</h2>
     <p class="save-intro">Chaque fin de tour met à jour l’emplacement de la campagne ouverte.</p>
-    ${writeError ? '<p class="notice warning" role="status">L’enregistrement a échoué. Vous pouvez exporter la partie ouverte.</p>' : ''}
+    ${writeError ? '<p class="notice warning" role="status">L’enregistrement de la campagne a échoué.</p>' : ''}
     <div class="save-slots">${cards}</div>
-    <div class="save-actions">
-      ${button(icon('file') + ' Importer un fichier JSON', 'import', 'small')}
-      ${writeError ? button('Exporter la partie ouverte', 'export', 'small') : ''}
-      ${legacyBackup ? button('Exporter l’ancienne copie de compatibilité', 'export-economy-backup', 'small') : ''}
-      <input type="file" id="saveFile" accept=".json,application/json" hidden>
-    </div>
   </section>`;
 }
 
-export function saveSlotPicker(slots, action) {
+export function saveSlotPicker(slots) {
   const cards = slots.map(({ current, previous }, slot) => {
-    const record = current.status === 'missing' && previous.status === 'ready' ? previous : current;
-    const available = current.status !== 'unavailable';
+    const record = current.status === 'missing' ? previous : current;
+    const available = current.status !== 'unavailable' && previous.status !== 'unavailable';
     const label = record.status === 'missing' ? 'Utiliser cet emplacement' : 'Remplacer la sauvegarde';
     return slotCard(slot, record, available ? slotCommand(label, 'save-slot-select', slot) : '');
   }).join('');
   return `<section class="save-screen">
     <h2 id="saveDialogTitle" tabindex="-1">Choisir un emplacement</h2>
-    <p class="save-intro">${action === 'new'
+    <p class="save-intro">${firstFreeCampaignSlot(slots) >= 0
       ? 'Sélectionnez l’emplacement de la nouvelle campagne.'
-      : 'Sélectionnez l’emplacement de la campagne importée.'}</p>
+      : 'Aucun emplacement libre. Choisissez une sauvegarde à remplacer ou annulez.'}</p>
     <div class="save-slots">${cards}</div>
     ${button('Annuler', 'close', 'small')}
   </section>`;
@@ -89,17 +84,31 @@ export function saveConfirmation({ action, campaign, slot }, { current, previous
   const restoring = action === 'restore';
   const existing = current.status === 'missing' ? previous : current;
   const replaces = existing.status !== 'missing';
-  const title = restoring ? 'Restaurer cette copie ?' : replaces ? 'Remplacer cette sauvegarde ?' : 'Importer cette campagne ?';
-  const label = restoring ? 'Restaurer' : replaces ? 'Remplacer' : 'Importer';
+  const title = restoring ? 'Restaurer cette copie ?' : replaces ? 'Remplacer cette sauvegarde ?' : 'Utiliser cet emplacement ?';
+  const label = restoring ? 'Restaurer' : replaces ? 'Remplacer' : 'Utiliser';
   return `<section class="save-screen">
     <h2 id="saveDialogTitle" tabindex="-1">${title}</h2>
-    <p>${esc(slotTitle(slot))} · ${campaignLabel(campaign)}</p>
-    ${replaces ? '<p>Cette campagne remplacera la sauvegarde de cet emplacement.</p>' : ''}
-    ${existing.status === 'ready' ? `<p class="save-slot-campaign">${campaignLabel(existing)}</p>` : ''}
+    <p><strong>${esc(slotTitle(slot))}</strong></p>
+    <p>${restoring ? 'Copie de récupération' : 'Nouvelle campagne'} · ${campaignLabel(campaign)}</p>
+    ${replaces ? `<div class="save-replacement"><h3>Sauvegarde à remplacer</h3>${saveRecord(existing)}</div>` : ''}
     <div class="save-actions">
       ${button('Annuler', 'close', 'small')}
-      ${current.status === 'ready' ? slotCommand('Exporter', 'save-export', slot) : ''}
       ${button(label, 'save-commit', 'primary')}
+    </div>
+  </section>`;
+}
+
+export function saveDeletionConfirmation(slot, { current, previous }, closesCampaign) {
+  const record = current.status === 'ready' ? current : previous;
+  return `<section class="save-screen">
+    <h2 id="saveDialogTitle" tabindex="-1">Supprimer cette sauvegarde ?</h2>
+    <p>${esc(slotTitle(slot))}${record.status === 'ready' ? ' · ' + campaignLabel(record) : ''}</p>
+    <p>Cette suppression est définitive.</p>
+    ${previous.status !== 'missing' ? '<p>La copie de récupération sera aussi supprimée.</p>' : ''}
+    ${closesCampaign ? '<p>La campagne ouverte sera fermée.</p>' : ''}
+    <div class="save-actions">
+      ${button('Annuler', 'save-delete-cancel', 'small')}
+      ${button('Supprimer', 'save-delete-confirm', 'small save-delete')}
     </div>
   </section>`;
 }

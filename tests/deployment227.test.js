@@ -41,8 +41,11 @@ test('Agent travel opens the common deployment picker with the agent already che
  assert.ok(destinations.every(x=>x.country.id!=='JP'&&(!x.country.power||x.country.id==='FR')));
  const choice=destinations.find(row=>!row.travel.error||!row.sneak.error);
  const html=agentTravelPickerMarkup(s,a.id);
- assert.equal(html,deploymentPickerMarkup(s,choice.travel.error?'sneak':'travel',choice.country.id,[a.id],a.id));
- assert.match(html,/Choisir un agent.*id="deploymentDestination".*Avec passeport.*Passage clandestin/);
+ assert.equal(html,deploymentPickerMarkup(s,choice.travel.error?'sneak':'travel',choice.country.id,[a.id]));
+ assert.match(html,/Choisir un agent.*id="deploymentDestination".*Avec passeport.*Passage clandestin/s);
+ const fromCountry=deploymentPickerMarkup(s,choice.travel.error?'sneak':'travel',choice.country.id);
+ const fields=markup=>markup.match(/<div class="deployment-fields">.*?<\/div>/s)[0];
+ assert.equal(fields(html),fields(fromCountry));
  assert.match(html,new RegExp(`name="deployAgent" value="${a.id}" [^>]*checked`));
  assert.match(html,new RegExp(`name="deployAgent" value="${b.id}"`));
  E.assign(s,a.id,'hide');
@@ -53,7 +56,7 @@ test('Changing the destination from agent travel keeps eligible agents selected'
  const source=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8');
  const handler=source.slice(source.indexOf(" if(event.target.id==='deploymentMode'||"),source.indexOf(" if(event.target.name==='deployAgent')"));
  const s=fresh(),[a,b]=E.team(s);b.country='JP';
- const picker={dataset:{deploymentAgent:a.id,deploymentType:'sneak'},querySelectorAll:()=>[a,b].map(({id})=>({value:id}))};
+ const picker={dataset:{deploymentType:'sneak'},querySelectorAll:()=>[a,b].map(({id})=>({value:id}))};
  let html='';
  runInNewContext('(function(){'+handler+'})()', {state:s,event:{target:{id:'deploymentDestination',value:'JP',closest:()=>picker}},deploymentPickerMarkup,showModal:v=>html=v,modal:{querySelector:()=>null}});
  assert.match(html,/data-deployment-type="sneak" data-deployment-target="JP"/);

@@ -1,13 +1,52 @@
-/* The full game name stays readable in menus and compact command headers. */
-.brand>.brand-wordmark{min-width:0;white-space:normal;line-height:1.15}
-.brand .brand-wordmark>span{display:block;font-size:.65em;letter-spacing:.24em;margin-top:.25em}
-.brand>svg{flex-shrink:0}
-.menu-brand .brand{gap:16px;white-space:normal}
-.menu-brand .brand .brand-wordmark>span{font-size:.65em;letter-spacing:.24em}
+:root {
+ --brand-display:'Barlow Condensed','Arial Narrow',sans-serif;
+ --brand-silver:linear-gradient(180deg,#fff 8%,#e1e1e1 46%,#a4a4a6 100%);
+ --brand-red:#f35b70;
+}
+.brand {
+ --brand-width:clamp(190px,22vw,257px);
+ --brand-mark-width:clamp(34px,4.1vw,50px);
+ display:flex;align-items:center;gap:clamp(4px,.6vw,8px);
+ width:var(--brand-width);min-width:0;max-width:100%;
+}
+.brand>svg.brand-mark {
+ display:block;flex:0 0 auto;width:var(--brand-mark-width);height:auto;
+ filter:drop-shadow(0 2px 4px #000a);
+}
+.brand>.brand-wordmark {flex:1 1 auto;min-width:0;filter:drop-shadow(0 2px 3px #000c)}
+.brand-wordmark>svg {width:100%;height:auto;overflow:visible}
+.options-menu .menu-brand .brand {
+ --brand-width:clamp(217px,31vw,328px);
+ --brand-mark-width:clamp(42px,5.4vw,63px);
+}
+.training-header .brand {
+ --brand-width:clamp(173px,20vw,236px);
+ --brand-mark-width:clamp(33px,3.6vw,45px);
+ width:var(--brand-width);flex:0 1 auto;
+}
+:is(#app,#modal) :where(
+ .setup-main>.page-heading h1,.rules-page .page-heading h1,
+ .settings-header h2,.save-screen h2,.patch-notes-page>h1,
+ .multiplayer-entry h1,.new-game-intro h1,.draft-heading h1,.training-menu>h1
+) {
+ width:fit-content;max-width:100%;padding:.03em .14em .08em .02em;
+ font:italic 700 var(--brand-heading-size,clamp(28px,3.8vw,44px))/1.05 var(--brand-display);
+ letter-spacing:.025em;text-transform:uppercase;text-wrap:balance;text-shadow:none;
+ color:var(--atlas-ink);
+ background:var(--brand-silver);background-clip:text;-webkit-text-fill-color:transparent;
+ filter:drop-shadow(0 2px 3px #000a);
+}
+.settings-header h2,.save-screen h2 {--brand-heading-size:clamp(27px,3.8vw,38px)}
+.training-menu>h1[tabindex="-1"]:focus,.setup-main h2[tabindex="-1"]:focus {outline:none}
+.setup-main .section-title>h2,.rules-page .wiki-section>h2 {
+ font:italic 700 clamp(19px,2.3vw,25px)/1.12 var(--brand-display);
+ letter-spacing:.02em;
+}
+.setup-main .section-title>h2>span {
+ margin:0;color:var(--brand-red);font:600 12px/1 Barlow,sans-serif;
+ letter-spacing:.08em;font-variant-numeric:tabular-nums;
+}
 .news-brand{white-space:normal;flex-shrink:0;max-width:190px;line-height:1.2}
 @media(max-width:700px){
- .menu-brand .brand{font-size:clamp(22px,6vw,34px);gap:12px;letter-spacing:.035em}
- .training-header .brand{font-size:18px;letter-spacing:1px}
- .setup-shell .brand{font-size:20px;letter-spacing:1px}
  .news-brand{max-width:136px;font-size:10px;padding:0 8px}
 }

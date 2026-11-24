@@ -1,9 +1,9 @@
-import {countryOnMap} from './operation-map.js?v=243';
-import {createFloatingWindows} from './floating-windows.js?v=243';
-import {createCountryInquiryController} from './country-inquiry.js?v=243';
-import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=243';
-import {COUNTRY,ACTIONS} from './data.js?v=243';
-import {visibleTeam} from './cooperative.js?v=243';
+import {countryOnMap} from './operation-map.js?v=245';
+import {createFloatingWindows} from './floating-windows.js?v=245';
+import {createCountryInquiryController} from './country-inquiry.js?v=245';
+import {countryOperationsMarkup,countryOperationModel,floatingAgentMarkup} from './country-operations.js?v=245';
+import {COUNTRY,ACTIONS} from './data.js?v=245';
+import {visibleTeam} from './cooperative.js?v=245';
 
 export function createGameWorkspace(api){
  const windows=createFloatingWindows();let context=null;
@@ -17,28 +17,29 @@ export function createGameWorkspace(api){
    if(r.controller)r.controller.refreshCountryInquiry();
   }
  }
- function orderForAgent(countryId,agentId,type){
-  const s=api.state(),agent=s.agents.find(a=>a.id===agentId&&a.faction===s.player&&a.country===countryId);
-  if(agent&&!api.readOnlyReason())api.openAgent(agent.id,type,type==='cyberSupport'&&countryId!==s.player?countryId:null);
- }
- function country(id,preferred=null,agent=null,group=null,agentId=null){
+ function country(id,{type=null,group=null,agent=null}={}){
   if(!api.active()||!countryOnMap(api.state(),id))return;if(COUNTRY[id].power&&id!==api.state().player){api.selectCountry(id);return;}
-  if(preferred&&agentId){orderForAgent(id,agentId,preferred);return;}
-  api.showWorld();refresh();const key=(group==='access'?'country-access:':'country:')+id+(agentId?':'+agentId:''),title=group==='access'?'Actions du pays':'Pays';
-  const r=windows.open(key,title+' · '+COUNTRY[id].name,{width:610,legacyWidth:440,className:'country-operations-window'});r.kind='country';r.id=id;r.selection??={group,agentId,boost:false};
-  if(preferred&&!r.pending)r.selection={group,agentId,type:preferred,agent,boost:false};
+  api.showWorld();refresh();const key=(group==='access'?'country-access:':'country:')+id,title=group==='access'?'Actions du pays':'Pays';
+  const r=windows.open(key,title+' · '+COUNTRY[id].name,{width:520,previousWidth:610,className:'country-operations-window'});
+  r.kind='country';r.id=id;r.selection??={group,boost:false};
+  if(!r.pending&&type)r.selection={group,type,agent:agent??r.selection.agent,boost:false};
+  else if(!r.pending&&agent){r.selection.agent=agent;r.selection.boost=false;r.selection.message='';}
   refresh();
  }
- function inquiry(id,threat=false,agentId=null){
-  if(!api.active())return;api.showWorld();refresh();const key=(threat?'threat:':'case:')+id+(agentId?':'+agentId:''),existing=windows.get(key);
-  if(existing){windows.open(key,'');return;}
-  const s=api.state(),title=threat?'Menace':'Dossier · '+(s.suspects.find(t=>t.id===id)?.name||id),r=windows.open(key,title,{width:630,legacyWidth:480,className:'country-inquiry-modal'});
+ async function inquiry(id,threat=false,agentId=null){
+  if(!api.active())return;api.showWorld();refresh();const key=(threat?'threat:':'case:')+id,existing=windows.get(key);
+  if(existing){
+   windows.open(key,'');
+   if(agentId)await existing.controller.handleInquiryCommand('inquiry-agent',agentId);
+   return;
+  }
+  const s=api.state(),title=threat?'Menace':'Dossier · '+(s.suspects.find(t=>t.id===id)?.name||id),r=windows.open(key,title,{width:520,previousWidth:630,className:'country-inquiry-modal'});
   r.controller=createCountryInquiryController({...api,modal:r.el,setContent:r.setHTML});r.controller.openCountryInquiry(id,threat,agentId);
   if(!r.el.querySelector('.country-inquiry'))r.close();
  }
  async function command(cmd,id,el){
-  if(cmd==='workspace-country'){country(id,el?.dataset.type||null,null,el?.dataset.group||null,el?.dataset.agent||null);return true;}
-  if(cmd==='country-inquiry'||cmd==='country-threat'||cmd==='suspect'){inquiry(id,cmd==='country-threat',el?.dataset.agent||null);return true;}
+  if(cmd==='workspace-country'){country(id,{type:el?.dataset.type,group:el?.dataset.group,agent:el?.dataset.agent});return true;}
+  if(cmd==='country-inquiry'||cmd==='country-threat'||cmd==='suspect'){await inquiry(id,cmd==='country-threat',el?.dataset.agent||null);return true;}
   if(cmd==='workspace-travel'){if(!api.readOnlyReason())api.travel(id);return true;}
   if(cmd==='workspace-deploy'){if(!api.readOnlyReason())api.deploy(id);return true;}
   const root=el?.closest('[data-workspace-window]'),r=root&&windows.get(root.dataset.workspaceWindow);if(!r)return false;
@@ -46,9 +47,8 @@ export function createGameWorkspace(api){
   if(!cmd.startsWith('workspace-'))return false;
   if(r.pending)return true;
   if(cmd==='workspace-action'){
-   if(r.selection.agentId){orderForAgent(r.id,r.selection.agentId,id);return true;}
-   r.selection={group:r.selection.group,type:id,boost:false};refresh();
-   r.el.querySelector('.country-operation-types [aria-pressed="true"]')?.focus({preventScroll:true});
+   r.selection={group:r.selection.group,type:id,agent:r.selection.agent,boost:false};refresh();
+   r.el.querySelector('.operation-card>.inquiry-single-action')?.focus({preventScroll:true});
   }
   if(cmd==='workspace-proof'){
    r.selection.target=id;r.selection.message='';refresh();

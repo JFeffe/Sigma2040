@@ -1,13 +1,13 @@
-import {isCooperative,visibleTeam} from './cooperative.js?v=244';
-import * as E from './engine.js?v=244';
-import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=244';
-import {agentLocation} from './agent-location.js?v=244';
-import {exposureLevel} from './exposure.js?v=244';
-import {fullBody} from './visuals.js?v=244';
-import {availability} from './presentation.js?v=244';
-import {statActions} from './recruit-selection.js?v=244';
-import {proofTitle} from './intelligence.js?v=244';
-import {campaignHeading,esc,icon,button,portrait,nationalityFlags,talentIcon,sortedTalents} from './ui.js?v=244';
+import {isCooperative,visibleTeam} from './cooperative.js?v=245';
+import * as E from './engine.js?v=245';
+import {ACTIONS,COUNTRY,ROSTER,STAT_NAMES,TALENTS} from './data.js?v=245';
+import {agentLocation} from './agent-location.js?v=245';
+import {exposureLevel} from './exposure.js?v=245';
+import {fullBody} from './visuals.js?v=245';
+import {availability} from './presentation.js?v=245';
+import {statActions} from './recruit-selection.js?v=245';
+import {proofTitle} from './intelligence.js?v=245';
+import {campaignHeading,esc,icon,button,portrait,nationalityFlags,talentIcon,sortedTalents} from './ui.js?v=245';
 
 const statIcons=['scan','target','shield'];
 

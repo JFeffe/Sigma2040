@@ -1,10 +1,10 @@
-import {languageSettingsMarkup,translateText} from './localization.js?v=243';
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=243';
-import {musicMarkup} from './music.js?v=243';
-import * as E from './engine.js?v=243';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=243';
-import {proofTitle} from './intelligence.js?v=243';
-import {esc,button,portrait,icon} from './ui.js?v=243';
+import {languageSettingsMarkup,translateText} from './localization.js?v=245';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=245';
+import {musicMarkup} from './music.js?v=245';
+import * as E from './engine.js?v=245';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=245';
+import {proofTitle} from './intelligence.js?v=245';
+import {esc,button,portrait,icon} from './ui.js?v=245';
 const PREF='sigma2040-feedback-settings';
 let prefs={sound:false,volume:25,motion:'system',infoBar:true};
 try{const saved=JSON.parse(localStorage.getItem(PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system',infoBar:saved.infoBar!==false};}catch{}

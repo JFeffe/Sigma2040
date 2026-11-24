@@ -1,5 +1,5 @@
-import {selectOperationMap} from './operation-map.js?v=244';
-import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=244';
+import {selectOperationMap} from './operation-map.js?v=245';
+import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=245';
 
 export const GAME_MODES=Object.freeze({regular:'Standard Normal',advanced:'Standard Avancé',cooperative:'Coop'});
 export const PARTICIPANT_COUNT=4;
@@ -20,7 +20,14 @@ export function createDraft(humans,seed=Date.now(),mode='advanced'){
  const order=shuffle(countries,s);
  return {version:1,...(mode==='cooperative'?{mode}:{}),seed:seed>>>0,rng:s.rng,humans:[...humans],countries,order,teams:Object.fromEntries(countries.map(c=>[c,[]])),picks:[]};
 }
-export function draftCountry(d){const n=d.picks.length,count=d.countries.length;if(n>=count*4)return null;const round=Math.floor(n/count),slot=n%count;return d.order[round%2?count-1-slot:slot];}
+export function draftRoundOrder(d){
+ const round=Math.floor(d.picks.length/d.order.length);
+ return round%2?[...d.order].reverse():d.order;
+}
+export function draftCountry(d){
+ const count=d.order.length,pick=d.picks.length;
+ return pick<count*4?draftRoundOrder(d)[pick%count]:null;
+}
 export function availableDraftAgents(d){const used=new Set(d.picks.map(p=>p.id));return DISPLAY_ROSTER.filter(a=>!used.has(a.id));}
 export function pickDraftAgent(d,country,id){
  if(draftCountry(d)!==country)throw Error('Attendez le tour de votre pays.');

@@ -35,9 +35,9 @@ test('Multiplayer confirmation is the first lobby control for host and guest, wi
  }finally{clearInterval(mp.timer);for(const [k,v] of Object.entries(previous))if(v===undefined)delete globalThis[k];else globalThis[k]=v;}
 });
 
-test('Country inquiry steps use status icons and preserve selection and completion without ordinal numbers',()=>{
+test('The compact investigation rail shows selection and completion without lock icons or ordinal numbers',()=>{
  const s=fresh(),t=E.knownTargets(s)[0];let html=investigationRail(s,t,'access');
- assert.doesNotMatch(html,/<span>[1-5]<\/span>/);assert.ok(html.includes(icon('unlock')));assert.ok(html.includes(icon('lock')));
+ assert.doesNotMatch(html,/<span>[1-5]<\/span>/);assert.ok(!html.includes(icon('unlock')));assert.ok(!html.includes(icon('lock')));
  assert.match(html,/data-id="access" aria-pressed="true"/);assert.match(html,/inquiry-step pending/);
  s.factions.FR.access[t.country]=true;html=investigationRail(s,t,'proofs');assert.match(html,/inquiry-step partial/);assert.ok(html.includes(icon('check')));
  assert.match(html,/data-id="proofs" aria-pressed="true"/);
