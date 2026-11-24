@@ -1,4 +1,4 @@
-# Sigma 2040 — Corrections et simulations, révision 116
+# Shadow Mandate 2040 — Corrections et simulations, révision 116
 
 ## Changements intégrés
 

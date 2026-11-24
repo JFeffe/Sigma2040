@@ -1,7 +1,7 @@
-import {COUNTRY} from './data.js?v=242';
-import {mapCountries} from './operation-map.js?v=242';
-import * as E from './engine.js?v=242';
-import {button,esc,portrait} from './ui.js?v=242';
+import {COUNTRY} from './data.js?v=243';
+import {mapCountries} from './operation-map.js?v=243';
+import * as E from './engine.js?v=243';
+import {button,esc,portrait} from './ui.js?v=243';
 
 export function deploymentOptions(s,type,target){
  return E.team(s).filter(a=>!['dead','retired'].includes(a.status)).map(a=>({agent:a,...E.options(s,a.id,type,target)}));

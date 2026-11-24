@@ -1,7 +1,7 @@
-import {localizeContent,translateText} from './localization.js?v=242';
-import {playCue} from './experience.js?v=242';
-import {COUNTRY,ACTIONS} from './data.js?v=242';
-import {esc,portrait} from './ui.js?v=242';
+import {localizeContent,translateText} from './localization.js?v=243';
+import {playCue} from './experience.js?v=243';
+import {COUNTRY,ACTIONS} from './data.js?v=243';
+import {esc,portrait} from './ui.js?v=243';
 let signals=[];
 export function clearSignals(){signals=[];}
 export function stageSignal(a){signals=[{country:a.country,agentId:a.id,kind:'order',label:`${a.name} · ordre planifié`,until:Date.now()+6500}];}

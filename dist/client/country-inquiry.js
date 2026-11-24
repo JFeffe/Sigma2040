@@ -1,16 +1,16 @@
-import {localizeContent} from './localization.js?v=242';
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=242';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=242';
-import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=242';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=242';
-import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=242';
-import * as E from './engine.js?v=242';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=242';
-import {esc,icon,button,flag,portrait} from './ui.js?v=242';
-import {suspectPortrait} from './fracture-profiles.js?v=242';
-import {countrySignals} from './country-signals.js?v=242';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=242';
-import {forecastMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=242';
+import {localizeContent} from './localization.js?v=243';
+import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=243';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=243';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=243';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=243';
+import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=243';
+import * as E from './engine.js?v=243';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=243';
+import {esc,icon,button,flag,portrait} from './ui.js?v=243';
+import {suspectPortrait} from './fracture-profiles.js?v=243';
+import {countrySignals} from './country-signals.js?v=243';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=243';
+import {forecastMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=243';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -151,13 +151,13 @@ function paint(open=false){
  const location=t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à fin T'+t.locationUntil:'Position à confirmer';
  const heading=plot?`<header class="inquiry-heading">
   <span class="inquiry-threat-icon">${icon('shield')}</span>
-  <div><span class="eyebrow">${cellInfoButton(s,t.cell)} · MENACE</span><h2>${esc(t.name)}</h2><span>${flag(t.country)} ${esc(country.name)}</span></div>
+  <div><span class="eyebrow">${cellInfoBadge(s,t.cell)} · MENACE</span><h2>${esc(t.name)}</h2><span>${flag(t.country)} ${esc(country.name)}</span></div>
  </header>
  <div class="inquiry-country-signals">${countrySignals(s,t.country)}</div>
  <div class="inquiry-summary"><span>Attaque · fin du tour ${plot.turn}</span><span>${esc(protection.current)}</span>${protection.planned?`<span>${esc(protection.planned)}</span>`:''}<span>${esc(protection.attack)}</span><span class="${!coverage.covered&&otherCoverage.length?'other-coverage':''}">${coverage.covered?'Protégée par votre pays':otherCoverage.length?'Couverte par une autre équipe':'Menace non couverte'}</span>${otherCoverage.length?`<span class="other-coverage">${icon('shield')} Déjà couverte par ${otherCoverage.map(f=>`${esc(COUNTRY[f.id].name)} · jusqu’à T${f.defense[plot.country]}`).join(', ')}</span>`:''}</div>`:
  `<header class="inquiry-heading dossier-sheet">
   <div class="inquiry-identity">${suspectPortrait(t)}
-   <div>${cellInfoButton(s,t.cell)}<h2>${esc(t.name)}</h2><small>${esc(t.role)}</small></div>
+   <div>${cellInfoBadge(s,t.cell)}<h2>${esc(t.name)}</h2><small>${esc(t.role)}</small></div>
   </div>
   <div class="inquiry-case-country">
    <div class="inquiry-case-place">${flag(t.country)} <strong>${esc(country.name)}</strong></div>

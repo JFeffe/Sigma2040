@@ -1,9 +1,9 @@
-import {weaponOpportunity} from './bot-weapon.js?v=242';
-import {activeCaptives,rescueTargets} from './cell-variants.js?v=242';
-import {incidentRates} from './incident-rules.js?v=242';
-import {protectionShare} from './balance-rules.js?v=242';
-import {TECH,COUNTRY} from './data.js?v=242';
-import {campaignRules} from './campaign-rules.js?v=242';
+import {weaponOpportunity} from './bot-weapon.js?v=243';
+import {activeCaptives,rescueTargets} from './cell-variants.js?v=243';
+import {incidentRates} from './incident-rules.js?v=243';
+import {protectionShare} from './balance-rules.js?v=243';
+import {TECH,COUNTRY} from './data.js?v=243';
+import {campaignRules} from './campaign-rules.js?v=243';
 
 // A faction proposes multi-turn goals, reserves each chosen goal and assigns
 // complementary agents. All opponent evidence comes from public sightings.

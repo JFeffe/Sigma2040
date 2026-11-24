@@ -7,6 +7,16 @@ const cache=()=>globalThis[Symbol.for('shadow-mandate-2040.browser-preferences')
 const store=()=>{const data=new Map();return {getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,String(v)),removeItem:k=>data.delete(k)};};
 function reset(){cache();delete globalThis.localStorage;delete globalThis.sessionStorage;delete globalThis.document;}
 test('Globe remains active even with a saved Dome preference',()=>{reset();assert.equal(createCamera().mode,'globe');globalThis.localStorage=store();assert.equal(createCamera().mode,'globe');localStorage.setItem('shadow-mandate-map-mode','invalid');assert.equal(createCamera().mode,'globe');localStorage.setItem('shadow-mandate-map-mode','dome');assert.equal(createCamera().mode,'globe');localStorage.setItem('shadow-mandate-map-mode','globe');assert.equal(createCamera().mode,'globe');globalThis.localStorage={getItem(){throw Error('blocked');}};assert.equal(createCamera().mode,'globe');reset();});
-test('Legacy patch-note preferences migrate without loss',()=>{reset();globalThis.localStorage=store();localStorage.setItem('sigma-patch-notes-read',JSON.stringify({sigmaPreference:1,value:'238',updatedAt:100}));assert.equal(unreadPatchCount(),1);assert.match(patchNotesPage(),/data-release="149"/);cache();assert.equal(unreadPatchCount(),0);reset();});
+test('Legacy patch-note preferences migrate without loss',()=>{
+ reset();
+ globalThis.localStorage=store();
+ const lastRead='238';
+ localStorage.setItem('sigma-patch-notes-read',JSON.stringify({sigmaPreference:1,value:lastRead,updatedAt:100}));
+ assert.equal(unreadPatchCount(),PATCH_NOTES.filter(release=>Number(release.version)>Number(lastRead)).length);
+ assert.match(patchNotesPage(),/data-release="149"/);
+ cache();
+ assert.equal(unreadPatchCount(),0);
+ reset();
+});
 test('Cookie fallback retains patch-note reads after reopening when local storage fails',()=>{reset();const cookies=new Map();globalThis.document={get cookie(){return [...cookies].map(([k,v])=>k+'='+v).join('; ');},set cookie(v){const [pair]=v.split(';');const i=pair.indexOf('=');cookies.set(pair.slice(0,i),pair.slice(i+1));}};globalThis.localStorage={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};patchNotesPage();cache();assert.equal(unreadPatchCount(),0);reset();});
 test('Read badge clears immediately even when all persistent storage is unavailable',()=>{reset();globalThis.localStorage={getItem(){throw Error('blocked');},setItem(){throw Error('blocked');}};assert.ok(unreadPatchCount()>0);const html=patchNotesPage();assert.equal(PATCH_NOTES[0].version,BUILD_VERSION);assert.ok(html.indexOf('data-release="149"')<html.indexOf('data-release="148"'));assert.match(html,/Mod Bureau des enquêtes/);assert.equal(unreadPatchCount(),0);assert.doesNotMatch(mainMenu(null),/non lues|btn patch-unread/);reset();});

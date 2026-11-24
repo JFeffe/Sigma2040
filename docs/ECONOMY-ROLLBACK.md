@@ -14,10 +14,10 @@ Pour reprendre ensuite les développements, restaurer les fichiers de ce commit
 dans un nouveau commit (ne pas forcer la branche distante).
 
 La première ancienne campagne solo chargée conserve ses octets originaux dans
-`sigma2040-before-free-actions-v82`. Aide permet d’exporter cette copie pour la
+`shadow-mandate-2040-before-free-actions-v82`. Aide permet d’exporter cette copie pour la
 réimporter après retour à la version 82. Ne pas importer une campagne contenant
 les nouveaux renforts dans l’ancien moteur. La première sauvegarde multijoueur reprise est également conservée dans
-`sigma2040-multiplayer-before-free-actions-v82` et exportable depuis le salon.
+`shadow-mandate-2040-multiplayer-before-free-actions-v82` et exportable depuis le salon.
 Le protocole réseau passe à 2 : les anciens salons sont migrés à la reprise,
 mais les clients doivent tous recharger le jeu pour échanger des commandes.
 

@@ -1,5 +1,5 @@
-import {evidenceQueue} from './engine.js?v=242';
-import {readStorageItem} from './storage-keys.js?v=242';
+import {evidenceQueue} from './engine.js?v=243';
+import {readStorageItem} from './storage-keys.js?v=243';
 export function inquiryIndicator(state,unread=0){
  const count=evidenceQueue(state,state.player).length,newCount=Number(unread)||0;
  return count||newCount?{badge:String(newCount||count),label:[newCount?`${newCount} nouveau(x) dossier(s)`:'',count?`${count} preuve(s) à vérifier`:''].filter(Boolean).join(' · '),tone:'inquiry'}:null;

@@ -1,0 +1,5 @@
+export function startClock(s,now=Date.now(),partial=false){if(!s.campaignClock)s.campaignClock={startedAt:now,endedAt:s.ended?now:null,partial};return s.campaignClock;}
+export function stopClock(s,now=Date.now()){if(s.campaignClock&&s.campaignClock.endedAt===null)s.campaignClock.endedAt=Math.max(s.campaignClock.startedAt,now);}
+export function elapsedMs(s,now=Date.now()){const c=s.campaignClock;return c?Math.max(0,(c.endedAt??now)-c.startedAt):0;}
+export function formatDuration(ms){const sec=Math.floor(Math.max(0,ms)/1000);return [Math.floor(sec/3600),Math.floor(sec/60)%60,sec%60].map(n=>String(n).padStart(2,'0')).join(':');}
+export function clockMarkup(s){return `<div class="campaign-clock" title="Temps réel depuis le lancement, pauses et fermeture du jeu comprises${s.campaignClock?.partial?' · suivi partiel de cette ancienne sauvegarde':''}"><span>DURÉE DE LA PARTIE${s.campaignClock?.partial?' · PARTIELLE':''}</span><strong data-campaign-clock>${formatDuration(elapsedMs(s))}</strong></div>`;}

@@ -1,6 +1,6 @@
-import {GAME_MODES} from './game-setup.js?v=242';
-import {backToMainMenu,menuSkyMarkup} from './main-menu.js?v=242';
-import {brand,button,icon} from './ui.js?v=242';
+import {GAME_MODES} from './game-setup.js?v=243';
+import {backToMainMenu,menuSkyMarkup} from './main-menu.js?v=243';
+import {brand,button,icon} from './ui.js?v=243';
 
 function gameChoice(label,description,symbol,command,{mode,featured=false}={}){
  return button(`<span class="game-choice-icon">${icon(symbol)}</span>
@@ -23,8 +23,6 @@ export function newGameMenu(){
    <div class="new-game-alternates">
     ${gameChoice(GAME_MODES.advanced,'Repêchez vos agents à tour de rôle avant la campagne.','case','new-mode',{mode:'advanced'})}
     ${gameChoice(GAME_MODES.cooperative,'Affrontez Fracture avec un allié contrôlé par le jeu.','shield','new-mode',{mode:'cooperative'})}
-   </div>
-   <div class="new-game-utilities">
     ${gameChoice('Multijoueur','Créez un salon ou rejoignez une partie avec une invitation.','people','mp-entry')}
     ${gameChoice('Tutoriel','Apprenez à jouer avec la formation Filigrane.','file','tutorial-menu')}
    </div>

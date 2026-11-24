@@ -118,10 +118,42 @@ test('Advanced setup shows country selection first, disabled taken draft agents,
  const s=advancedGame();const shell=gameShell(s,'agents','');assert.doesNotMatch(shell,/Renforts & relève|Retour à la carte/);assert.match(shell,/data-id="agents" aria-current="page"/);
 });
 
-test('Actual solo setup handlers draft four agents, reorder chief and launch the complete exclusive game',()=>{
+test('Actual solo setup handlers draft four agents, reorder chief and save the complete exclusive game',async()=>{
  const app=readFileSync(new URL('../dist/client/app.js',import.meta.url),'utf8'),cases=app.slice(app.indexOf(" case 'ai-difficulty':"),app.indexOf(" case 'resume':"));
- const context={workspace:null,setupDifficulty:'normal',setupMode:'advanced',setupMap:null,setupDraft:null,setupConfirmed:false,setupDraftCandidate:null,setupCountry:'FR',setupAgents:[],E,usesDraft,createDraft,draftCountry,pickDraftAgent,advanceNpcDraft,reorderTeam,draftCandidate,render:()=>{},toast:()=>{},resetExperience:()=>{},clearSignals:()=>{},persist:()=>{},camera:{},focusCountry:()=>{},menuOpen:false,AI_LEVELS:{},state:null};
- const handle=runInNewContext('(cmd,id)=>{switch(cmd){'+cases+'}}',context);handle('solo-confirm-country');assert.equal(context.setupDraft.humans[0],'FR');for(let round=0;round<4;round++){assert.equal(draftCountry(context.setupDraft),'FR');const id=availableDraftAgents(context.setupDraft)[0].id,before=JSON.stringify(context.setupDraft);handle('solo-draft-preview',id);assert.equal(JSON.stringify(context.setupDraft),before);assert.equal(context.setupDraftCandidate,id);handle('solo-draft-confirm');assert.equal(context.setupDraftCandidate,null);}assert.equal(draftCountry(context.setupDraft),null);const chosen=context.setupAgents[3];handle('solo-draft-chief',chosen);handle('start');assert.equal(context.state,null);handle('solo-confirm-team');handle('start');assert.equal(context.state.agents.length,16);assert.equal(context.state.gameMode,'advanced');assert.equal(E.team(context.state).find(a=>a.chief).id,chosen);
+ const start=app.slice(app.indexOf('function startCampaign(button)'),app.indexOf('function resumeSaveSlot('));
+ let pending;
+ const context={
+  setupDifficulty:'normal',setupMode:'advanced',setupMap:null,setupDraft:null,setupConfirmed:false,
+  setupDraftCandidate:null,setupCountry:'FR',setupAgents:[],E,usesDraft,createDraft,draftCountry,
+  pickDraftAgent,advanceNpcDraft,reorderTeam,draftCandidate,render:()=>{},toast:()=>{},AI_LEVELS:{},state:null,
+  saves:{slots:[],async refresh(){}},
+  firstFreeCampaignSlot:()=>2,
+  saveOperation(operation){pending=operation();return pending;},
+  applySaveChoice({campaign,slot,action}){assert.equal(slot,2);assert.equal(action,'new');context.state=campaign;}
+ };
+ const handle=runInNewContext('(()=>{'+start+'return (cmd,id,el)=>{switch(cmd){'+cases+'}};})()',context);
+ handle('solo-confirm-country');
+ assert.equal(context.setupDraft.humans[0],'FR');
+ for(let round=0;round<4;round++){
+  assert.equal(draftCountry(context.setupDraft),'FR');
+  const id=availableDraftAgents(context.setupDraft)[0].id,before=JSON.stringify(context.setupDraft);
+  handle('solo-draft-preview',id);
+  assert.equal(JSON.stringify(context.setupDraft),before);
+  assert.equal(context.setupDraftCandidate,id);
+  handle('solo-draft-confirm');
+  assert.equal(context.setupDraftCandidate,null);
+ }
+ assert.equal(draftCountry(context.setupDraft),null);
+ const chosen=context.setupAgents[3];
+ handle('solo-draft-chief',chosen);
+ handle('start');
+ assert.equal(context.state,null);
+ handle('solo-confirm-team');
+ handle('start');
+ await pending;
+ assert.equal(context.state.agents.length,16);
+ assert.equal(context.state.gameMode,'advanced');
+ assert.equal(E.team(context.state).find(a=>a.chief).id,chosen);
 });
 
 test('Actual multiplayer controller renders all draft phases and confirms a reordered team without losing picks',async()=>{

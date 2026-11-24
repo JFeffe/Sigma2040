@@ -52,7 +52,7 @@ test('Selected agent retains country navigation while country popup omits the re
 });
 
 test('Operation summary includes all unused current actions at zero without changing counters or inventing retired actions',()=>{
- const s=fresh();recordOperation(s,{faction:'FR',type:'rest',turn:1,status:'RÉUSSITE',chance:100,fatigue:-50});
+ const s=fresh();s.ended='defeat';recordOperation(s,{faction:'FR',type:'rest',turn:1,status:'RÉUSSITE',chance:100,fatigue:-50});
  const before=JSON.stringify(s),totals=operationTotals(s,'FR');
  for(const country of ['FR','US']){
   const html=campaignSummary(s,{country,tab:'operations'}),table=html.match(/<table[^>]*aria-label="Analyse de vos opérations"[^]*?<\/table>/)[0],rows=[...table.match(/<tbody>([^]*?)<\/tbody>/)[1].matchAll(/<tr>([^]*?)<\/tr>/g)].map(m=>m[1]);

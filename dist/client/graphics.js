@@ -1,4 +1,4 @@
-import {readStorageItem} from './storage-keys.js?v=242';
+import {readStorageItem} from './storage-keys.js?v=243';
 
 const KEY='shadow-mandate-2040-graphics-quality';
 export const GRAPHICS={ '1080p':{width:1920,height:1080,terrain:640},'1440p':{width:2560,height:1440,terrain:800},'4k':{width:3840,height:2160,terrain:1200} };

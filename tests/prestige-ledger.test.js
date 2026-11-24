@@ -19,6 +19,6 @@ test('Old saves preserve prestige as an undated balance; invalid history is reje
 test('New shell replaces old panels, preserves news links and requested navigation order',()=>{
  const s=fresh(),world=makeScreens(s,'FR',null,[],createCamera()).world(),html=gameShell(s,'world',world,false);
  assert.ok(html.includes('news-ticker'));assert.ok(!html.includes('intel-rail'));assert.ok(!html.includes('nouveauté'));assert.ok(html.includes('data-id="journal"'));
- const nav=html.match(/<nav[^]*?<\/nav>/)[0];assert.deepEqual([...nav.matchAll(/data-id="([^"]+)"/g)].map(m=>m[1]),['world','inquiry','operations','threats','government','diplomacy','agents','journal']);
+ const nav=html.match(/<nav[^]*?<\/nav>/)[0];assert.deepEqual([...nav.matchAll(/data-id="([^"]+)"/g)].map(m=>m[1]),['world','inquiry','threats','operations','government','diplomacy','agents','journal']);
  for(const c of COUNTRIES){const pin=countryPin(s,c,[],[]);assert.deepEqual([...pin.matchAll(/class="map-status ([^ ]+)/g)].map(m=>m[1]),c.power?['protection']:['access','mandate','safehouse','hack','protection']);}
 });

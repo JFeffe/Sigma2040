@@ -17,7 +17,7 @@ if(process.argv[2]!=='--worker'){
  if(!Number.isInteger(cases)||cases<6||cases>100000||cases%6)throw Error('Game pairs must be a multiple of six between 6 and 100000.');
  const script=fileURLToPath(import.meta.url),current=fileURLToPath(new URL('../dist/client/',import.meta.url));
  const beforeClient=path.resolve(baseline),output=path.resolve(process.argv[4]||'bb1-travel-results.json');
- const temp=mkdtempSync(path.join(os.tmpdir(),'sigma-bb1-travel-')),workers=6;
+ const temp=mkdtempSync(path.join(os.tmpdir(),'shadow-mandate-bb1-travel-')),workers=6;
  try{
   const outcomes=await Promise.allSettled(Array.from({length:workers},(_,i)=>new Promise((resolve,reject)=>{
    const p=spawn(process.execPath,[script,'--worker',beforeClient,current,path.join(temp,i+'.json'),String(i),String(workers),String(cases)],{stdio:['ignore','inherit','inherit']});

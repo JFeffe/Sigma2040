@@ -1,13 +1,13 @@
-import {localizeContent,translateText} from './localization.js?v=242';
-import {mapCountries,countryOnMap} from './operation-map.js?v=242';
-import {renderRatio,terrainLimit} from './graphics.js?v=242';
-import {COOPERATION} from './cooperation.js?v=242';
-import {paintSignals,signalSnapshot} from './feedback.js?v=242';
-import {domeRaw,limitDome} from './dome-projection.js?v=242';
-import {COUNTRIES,COUNTRY} from './data.js?v=242';
-import {team,knownTargets,visiblePlots,cyberStatus,hasSafehouse} from './engine.js?v=242';
-import {icon,esc} from './ui.js?v=242';
-import {agentMapMarkers,mapAgents,OBSERVER_COLORS} from './map-markers.js?v=242';
+import {localizeContent,translateText} from './localization.js?v=243';
+import {mapCountries,countryOnMap} from './operation-map.js?v=243';
+import {renderRatio,terrainLimit} from './graphics.js?v=243';
+import {COOPERATION} from './cooperation.js?v=243';
+import {paintSignals,signalSnapshot} from './feedback.js?v=243';
+import {domeRaw,limitDome} from './dome-projection.js?v=243';
+import {COUNTRIES,COUNTRY} from './data.js?v=243';
+import {team,knownTargets,visiblePlots,cyberStatus,hasSafehouse} from './engine.js?v=243';
+import {icon,esc} from './ui.js?v=243';
+import {agentMapMarkers,mapAgents,OBSERVER_COLORS} from './map-markers.js?v=243';
 export const createCamera=()=>({lon:25,lat:18,k:1,mode:'globe',yaw:0,pitch:0,panX:0,panY:0,expanded:false,foreign:true});
 export function constrain(c){c.k=Math.max(1,Math.min(3,c.k));c.lat=Math.max(-80,Math.min(80,c.lat));c.lon=((c.lon+180)%360+360)%360-180;limitDome(c);return c;}
 export function zoomAt(c,k){c.k=k;if(c.k<=1){c.panX=0;c.panY=0;}return constrain(c);}
@@ -34,7 +34,7 @@ export function countryPin(s,c,plots,targets){
  const statuses=items.map(([, ,label,active])=>translateText(label)+' '+translateText(active?'actif':'inactif')).join(', ');
  const name=translateText(c.name);
  const accessible=`${name}, ${translateText(c.city)}. ${cooperationLabel}${statuses}`;
- return `<g class="map-pin-v2 ${plots.some(p=>p.country===c.id)?'threatened':''}" data-cmd="map-country" data-id="${c.id}" role="button" tabindex="0" aria-label="${esc(accessible)}"><g class="city-mark"><circle class="pin-hit" r="15" fill="transparent"/><circle class="pin-ring" r="8"/><circle class="pin-core" r="3"/><text class="pin-country" x="12" y="-10">${c.id}</text>${targets.some(t=>t.country===c.id&&!t.arrested)?'<circle class="clue-mark intelligence-layer" cx="9" cy="-8" r="3"/>':''}</g><g class="map-country-label"><text class="pin-name" text-anchor="middle" y="-8">${esc(name.toLocaleUpperCase(name==='Türkiye'?'tr':'fr'))}</text>${cooperation}<g class="pin-status-row">${status}</g></g></g>`;
+ return `<g class="map-pin-v2 ${plots.some(p=>p.country===c.id)?'threatened':''}" data-cmd="map-country" data-id="${c.id}" role="button" tabindex="0" aria-label="${esc(accessible)}"><g class="city-mark"><circle class="pin-hit" r="15" fill="transparent"/><circle class="pin-ring" r="8"/><circle class="pin-core" r="3"/><text class="pin-country" x="12" y="-10">${c.id}</text>${targets.some(t=>t.country===c.id&&!t.arrested)?'<circle class="clue-mark intelligence-layer" cx="9" cy="-8" r="3"/>':''}</g><g class="map-country-label"><text class="pin-name" text-anchor="middle" y="-8">${esc(name.toUpperCase())}</text>${cooperation}<g class="pin-status-row">${status}</g></g></g>`;
 }
 const mapMargin=6,overviewLabelDistance=46,detailLabelDistance=64;
 const labelNudges=Array.from({length:17},(_,i)=>(i-8)*8)
@@ -145,8 +145,7 @@ export function syncCameraTurn(camera,state,room='solo'){const key=`${room}:${st
 export function renderMap(s,selected,world,camera){context={s,selected,world};return `<div class="cartography ${camera.foreign===false?'foreign-hidden':''} ${camera.expanded?'map-expanded':''}" ${camera.expanded?'role="dialog" aria-modal="true" aria-label="Carte agrandie"':''}>
  <div class="cartography-top"><span>${icon('world')} OPÉRATION LIGNE DE FAILLE</span></div>
  <div class="map-stage"><canvas class="earth-canvas" aria-hidden="true"></canvas><svg id="strategicMap" class="strategic-map" role="group" tabindex="0" aria-label="${camera.mode==='dome'?'Dôme interactif. Glisser pour orienter, ou déplacer après zoom.':'Globe interactif. Glisser pour tourner.'} Flèches pour déplacer. Plus et moins pour zoomer."></svg><p class="globe-loading" role="status">Chargement du globe…</p></div>
-
- <div class="map-bottom"><div class="map-layers"><button data-map="foreign" aria-pressed="${camera.foreign!==false}" title="Afficher ou masquer les agents étrangers repérés">${icon('people')} Agents étrangers</button></div><span class="map-instruction">${camera.mode==='dome'?'Glisser : orienter · Après zoom : déplacer':'Glisser : tourner'} · Molette : zoom</span></div></div>`;}
+ </div>`;}
 export function mountMap(camera,getSelected,rerender){
  const svg=document.querySelector('#strategicMap');if(!svg)return ()=>{};
  const {s,world}=context,shell=svg.closest('.cartography'),canvas=shell.querySelector('canvas'),abort=new AbortController(),features=geometry(world),d3=globalThis.d3;
@@ -154,14 +153,23 @@ export function mountMap(camera,getSelected,rerender){
  const pointers=new Map();let pinch=0,origin=null;
  const on=(el,t,fn,opts={})=>el.addEventListener(t,fn,{...opts,signal:abort.signal});
  const message=shell.querySelector('.globe-loading');
- const overlays=[...(svg.closest('.command-deck')?.querySelectorAll(
-  '.deck-header,.news-ticker,.crisis-alert,.deck-nav,.field-team,.map-dossier,.map-bottom,.pending-communication,.objective-strip')||[])];
+ const deck=svg.closest('.command-deck');
+ const navigation=deck?.querySelector('.deck-nav');
+ const foreignToggle=deck?.querySelector('.field-team [data-map="foreign"]');
+ const overlays=[...(deck?.querySelectorAll(
+  '.deck-header,.news-ticker,.crisis-alert,.deck-nav,.field-team,.map-dossier,.pending-communication,.objective-strip,.attack-delay-banner')||[])];
+ function syncForeignVisibility(){
+  const visible=camera.foreign!==false;
+  shell.classList.toggle('foreign-hidden',!visible);
+  foreignToggle?.setAttribute('aria-pressed',visible);
+ }
  function labelObstacles(){
   const stage=svg.getBoundingClientRect();
   return overlays.flatMap(el=>{
    const rect=el.getBoundingClientRect();
    if(!rect.width||!rect.height||getComputedStyle(el).visibility==='hidden')return [];
-   return [{left:rect.left-stage.left-3,right:rect.right-stage.left+3,
+   const railWidth=el===navigation?Number.parseFloat(getComputedStyle(el).getPropertyValue('--atlas-rail-width'))||0:0;
+   return [{left:rect.left-stage.left-3,right:Math.max(rect.right,rect.left+railWidth)-stage.left+3,
     top:rect.top-stage.top-3,bottom:rect.bottom-stage.top+3}];
   });
  }
@@ -332,11 +340,12 @@ export function mountMap(camera,getSelected,rerender){
    agentCenters.push([px,py]);occupied.push(moveBox(marker.box,px,py));
   }
   svg.querySelector('.globe-routes').innerHTML=mapAgents(s).filter(a=>a.task&&['travel','sneak'].includes(a.task.type)).map(a=>`<path data-agent="${a.id}" ${s.multiplayer?.observer?`style="stroke:${OBSERVER_COLORS[a.faction]}"`:""} class="travel-route ${signalSnapshot().some(x=>x.agentId===a.id&&x.kind==='order')?'route-feedback':''} ${a.task.type==='sneak'?'covert':''}" d="${path({type:'LineString',coordinates:[COUNTRY[a.country].pos,COUNTRY[a.task.target].pos]})||''}"><title>${esc(a.name)} · ${esc(translateText(`${a.task.remaining} ${a.task.remaining===1?'tour':'tours'}`))}</title></path>`).join('');
-  shell.classList.toggle('foreign-hidden',camera.foreign===false);shell.querySelector('[data-map="foreign"]').setAttribute('aria-pressed',camera.foreign!==false);
+  syncForeignVisibility();
  }
  function schedule(fast=true){if(frame)return;frame=requestAnimationFrame(()=>{frame=0;paint(fast&&dragging);});}
- function action(cmd){if(cmd==='in')zoomAt(camera,camera.k*1.25);if(cmd==='out')zoomAt(camera,camera.k/1.25);if(cmd==='reset')Object.assign(camera,{lon:25,lat:18,k:1,yaw:0,pitch:0,panX:0,panY:0});if(cmd==='focus'){if(camera.mode==='dome')camera.k=Math.max(1.65,camera.k);focusCountry(camera,getSelected());}if(cmd==='america')Object.assign(camera,{lon:-85,lat:15,k:1});if(cmd==='europe')Object.assign(camera,{lon:25,lat:18,k:1,yaw:0,pitch:0,panX:0,panY:0});if(cmd==='asia')Object.assign(camera,{lon:100,lat:20,k:1});if(camera.mode==='dome'&&['america','europe','asia'].includes(cmd)){camera.k=1.65;camera.yaw=camera.pitch=0;const raw=domeRaw(),point=raw((camera.lon-5)*Math.PI/180,camera.lat*Math.PI/180);camera.panX=-point[0];camera.panY=point[1];}if(cmd==='foreign'){camera.foreign=camera.foreign===false;try{localStorage.setItem('shadow-mandate-map-foreign',String(camera.foreign));}catch{}shell.classList.toggle('foreign-hidden',!camera.foreign);shell.querySelector('[data-map="foreign"]').setAttribute('aria-pressed',camera.foreign);}if(cmd==='expand'){camera.expanded=!camera.expanded;rerender();return;}schedule(false);}
+ function action(cmd){if(cmd==='in')zoomAt(camera,camera.k*1.25);if(cmd==='out')zoomAt(camera,camera.k/1.25);if(cmd==='reset')Object.assign(camera,{lon:25,lat:18,k:1,yaw:0,pitch:0,panX:0,panY:0});if(cmd==='focus'){if(camera.mode==='dome')camera.k=Math.max(1.65,camera.k);focusCountry(camera,getSelected());}if(cmd==='america')Object.assign(camera,{lon:-85,lat:15,k:1});if(cmd==='europe')Object.assign(camera,{lon:25,lat:18,k:1,yaw:0,pitch:0,panX:0,panY:0});if(cmd==='asia')Object.assign(camera,{lon:100,lat:20,k:1});if(camera.mode==='dome'&&['america','europe','asia'].includes(cmd)){camera.k=1.65;camera.yaw=camera.pitch=0;const raw=domeRaw(),point=raw((camera.lon-5)*Math.PI/180,camera.lat*Math.PI/180);camera.panX=-point[0];camera.panY=point[1];}if(cmd==='foreign'){camera.foreign=camera.foreign===false;try{localStorage.setItem('shadow-mandate-map-foreign',String(camera.foreign));}catch{}syncForeignVisibility();}if(cmd==='expand'){camera.expanded=!camera.expanded;rerender();return;}schedule(false);}
  on(shell,'click',e=>{const b=e.target.closest('[data-map]');if(b)action(b.dataset.map);});
+ if(foreignToggle)on(foreignToggle,'click',()=>action('foreign'));
  on(svg,'pointerdown',e=>{if(e.button!==0&&e.pointerType!=='touch')return;pointers.set(e.pointerId,[e.clientX,e.clientY]);origin=[e.clientX,e.clientY];dragging=true;moved=false;pinch=0;});
  on(window,'pointermove',e=>{if(!pointers.has(e.pointerId))return;const old=pointers.get(e.pointerId),p=[e.clientX,e.clientY];pointers.set(e.pointerId,p);if(pointers.size===2){const [a,b]=[...pointers.values()],distance=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch)zoomAt(camera,camera.k*distance/pinch);pinch=distance;moved=true;}else{const dx=p[0]-old[0],dy=p[1]-old[1];if(camera.mode==='dome'){if(camera.k>1){const r=Math.min(width*.40,height*.50)*camera.k;camera.panX+=dx/r;camera.panY+=dy/r;}else{camera.yaw+=dx*.08;camera.pitch+=dy*.04;}}else{camera.lon-=dx*.3/camera.k;camera.lat+=dy*.3/camera.k;}if(Math.hypot(p[0]-origin[0],p[1]-origin[1])>4)moved=true;}schedule();});
  const release=e=>{pointers.delete(e.pointerId);pinch=0;if(!pointers.size){dragging=false;schedule(false);}};on(window,'pointerup',release);on(window,'pointercancel',release);

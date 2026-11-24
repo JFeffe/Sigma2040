@@ -1,11 +1,11 @@
-import {translateText} from './localization.js?v=242';
-import {operationCountries} from './operation-map.js?v=242';
-import {COOPERATION} from './cooperation.js?v=242';
-import {evidenceFreshness} from './experience.js?v=242';
-import * as E from './engine.js?v=242';
-import {COUNTRY} from './data.js?v=242';
-import {proofTitle} from './intelligence.js?v=242';
-import {esc,flag,button,icon} from './ui.js?v=242';
+import {translateText} from './localization.js?v=243';
+import {operationCountries} from './operation-map.js?v=243';
+import {COOPERATION} from './cooperation.js?v=243';
+import {evidenceFreshness} from './experience.js?v=243';
+import * as E from './engine.js?v=243';
+import {COUNTRY} from './data.js?v=243';
+import {proofTitle} from './intelligence.js?v=243';
+import {esc,flag,button,icon} from './ui.js?v=243';
 const nation=id=>COUNTRY[id]?`${flag(id)} ${COUNTRY[id].name}`:'Non consigné';
 export function exposureMarkup(a){const penalty=E.exposurePenalty(a);return `<div class="exposure-block"><div class="exposure-segments" role="meter" aria-label="Exposition" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.min(100,a.exposure)}" aria-valuetext="${a.exposure}/100 ; ${penalty?'pénalité de '+penalty+' points sur les actions sensibles':'aucune pénalité'}">${[0,20,40,60,80].map(n=>`<i class="${a.exposure>n?'filled':''} ${a.exposure>=60?'high':a.exposure>=40?'medium':'low'}"></i>`).join('')}</div><details class="exposure-card"><summary>Exposition <strong>${a.exposure}/100</strong> · ${E.exposureLabel(a)}${penalty?` · −${penalty} pts sur les actions sensibles`:''}</summary><meter min="0" max="100" value="${a.exposure}" aria-label="Exposition de l’agent"></meter><p>Traces et attention laissées par l’agent, distinctes de sa fatigue. 0–19 Discret · 20–39 Repérable au contre-espionnage mondial · 40–59 Surveillé : −6 aux actions sensibles · 60–79 Compromis : −9 sensibles / −5 enquête · 80–100 Très exposé : −12 sensibles / −10 enquête et +1 pression sur une réussite contre une cible (arrestation : +3, sans cumul). Sensibles : passage clandestin, arrestation, extraction. Enquête : collecte, localisation, préparation, intrusion. Aucune capture automatique.</p><p>Passeport +10 · acquisition d’arme +10 · drone +10 · échec +18. Réduire : profil bas −35, repos au QG −20, planque −15.</p></details></div>`;}
 export function evidenceSummary(s){
@@ -74,11 +74,6 @@ export function nationalPanel(s){
    ${governmentCard(s,'medical','plus',countries,chosen)}
   </section>
   <div class="government-footer">${icon('clock')}${last?`<span>Dernière faveur</span><strong>${esc(E.GOVERNMENT_FAVORS[last.type].name)}${last.country?' · '+esc(COUNTRY[last.country].name):''}</strong><small>Tour ${last.turn}</small>`:'<span>Aucune faveur sollicitée</span>'}</div>
-  <details class="campaign-disclosure government-help"><summary>Comprendre le soutien gouvernemental</summary>
-<p>La confiance commence à 20 %. Chaque action avec jet de réussite rapporte +3 confiance à sa réussite, jusqu’à 100 %. Les actions automatiques (sans jet), échecs, annulations et interruptions ne rapportent rien. Chaque contribution récompensée en prestige donne aussi +2 confiance : preuve vérifiée au pays découvreur ; localisation, préparation et intervention lors de l’arrestation ; attaque déjouée au pays défenseur. Ce bonus ne peut être reçu qu’une fois par contribution. Les faveurs consomment cette confiance. Le revenu est de 0 crédit sous 10 %, 2 crédits de 10 à 49 %, et 3 crédits dès 50 %. Le niveau après résolution des actions détermine le revenu du tour.</p>
-   <p>Les trois faveurs partagent un délai : une faveur au tour 1 permet la suivante au tour 3. Le financement est limité à la place restante dans votre réserve ; son coût est de 15 confiance pour un gain allant jusqu’à 5 crédits. Une réserve pleine ne peut pas recevoir cette faveur.</p>
-   <p>Diplomatie : Hostile → Réticente : 15 confiance ; Réticente → Neutre : 15 ; Neutre → Favorable : 10 ; Favorable → Soutien total : 5. Le soutien médical coûte 25 confiance et est limité à 3 utilisations par partie et par joueur. La démarche diplomatique améliore la coopération d’un pays secondaire, sans ouvrir l’accès ni délivrer de mandat. Le soutien médical restaure jusqu’à 12 énergie à tous les agents vivants de votre équipe, au QG, à l’étranger, en déplacement ou capturés, puis soigne tous les agents blessés de l’équipe à la fin du tour.</p>
-  </details>
  </section>`;
 }
 

@@ -37,6 +37,11 @@ test('Twenty full bodies keep an identical background frame behind each centered
    for(const image of images)assert.match(image,/width="1024" height="1536"/);
    assert.match(markup,/preserveAspectRatio="xMidYMid meet"/);
   }
+  const profile=fullBody(agent,{profile:true});
+  assert.notEqual(profile.match(/viewBox="([^"]+)"/)[1],commonFrame,agent.name);
+  assert.match(profile,/preserveAspectRatio="xMidYMax meet"/);
+  assert.doesNotMatch(profile,/agent-body-background/);
+  assert.equal([...profile.matchAll(/<image\b/g)].length,1);
   assert.match(recruitCard(agent,[]),/agent-body-background/);
   assert.match(recruitDetails(id),/agent-body-foreground/);
  }

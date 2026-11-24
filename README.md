@@ -1,20 +1,47 @@
 # Shadow Mandate 2040
 
+## Build 243 — Atlas noir et rouge
+
+**[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/6728875dd7934749b5d14f7657d68fa323aa82ec...build-243)
+
+Les fiches d’agent partagent le même cadre sur le globe et dans l’onglet Agents. Le menu de gauche se replie sur Monde, les cellules affichent leurs détails au survol et le menu Options donne accès au wiki et aux quatre emplacements de sauvegarde automatique.
+
 ## Build 242 — Atlas
 
 **[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/7c186bf5973578380aa8fddb5ebf36b37d4833c2...build-242)
 
 Atlas devient l’interface officielle. Le menu principal, la barre latérale et les fenêtres adoptent le nouveau visuel. Les dossiers et les ordres sont plus lisibles, la langue se choisit dans les paramètres et les noms décalés restent reliés à leur pays sur le globe.
 
+## Version Windows x64
+
+Décompresser l’archive Windows, conserver les fichiers ensemble et ouvrir **Shadow Mandate 2040.exe**. Le jeu et les sauvegardes solo sont disponibles hors ligne. Pour transférer une campagne du navigateur vers l’application, exporter son fichier JSON depuis le navigateur puis l’importer dans l’application.
+
+Pour jouer en ligne, ouvrir **Nouvelle partie**, puis **Multijoueur**. Choisir le mode, créer le salon et utiliser **Copier le lien**. Les invités peuvent ouvrir ce lien dans leur navigateur ou le coller dans **Rejoindre une partie**. L’hôte et les invités doivent être connectés à Internet.
+
+Sur Windows x64 avec Node.js 22.12 ou ultérieur, `npm ci` puis `npm run build:windows` génèrent l’application et son archive ZIP dans `release/`. `npm run desktop` ouvre la version de développement dans Electron.
+
+Pour l’édition PC hors ligne destinée à Steam, `npm run build:steam` génère le dépôt Windows et son manifeste. [Préparer le dépôt Steam](docs/STEAM-WINDOWS.md)
+
+## Lancer le jeu dans un navigateur local
+
+```sh
+npm ci
+npm run dev
+```
+
+Ouvrir l’adresse locale affichée par Vite. Pour vérifier le projet : `npm test`.
+
+Les sauvegardes et préférences utilisent le préfixe `shadow-mandate-2040`. Les fichiers JSON de campagnes précédentes peuvent être importés depuis le jeu. Vite sert l’interface locale. La version Electron utilise le relais HTTPS du jeu pour le multijoueur.
+
 ## Build 238 — Langues étrangères et Drones
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/8e69aaba47f3e110bfedd719c292270ad148917f...build-238)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/8e69aaba47f3e110bfedd719c292270ad148917f...build-238)
 
 Le malus linguistique disparaît. Le talent Langues étrangères donne +5 points cumulables à sept actions à l’étranger. Les porteurs du talent Drones peuvent lancer une reconnaissance sans réserver de place de module et bénéficient de +10 points au jet.
 
 ## Build 237 — Icône d’arme
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/25e456613ecb376036f6e2b53ced7802505e6cab...build-237)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/) · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/25e456613ecb376036f6e2b53ced7802505e6cab...build-237)
 
 La fiche agent affiche une icône de pistolet à côté du statut de l’arme (« Avec » ou « Sans »).
 
@@ -54,7 +81,7 @@ Toutes les actions à risque utilisent `50 + 7 × (stat − 5) + bonus − péna
 
 # Publication GitHub — build 211
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Actions du territoire : hack depuis le QG et protection. Fiche du personnage : accès à l’enquête du territoire, repos, profil bas et protection avec chances visibles même en cas de blocage. Suppression de la consigne de double-clic. La résolution du dernier tour précède le bilan de campagne.
 
@@ -64,7 +91,7 @@ Validation : `npm test` — 602 tests réussis. Cinquante graines coop testées 
 
 # Publication GitHub — build 205
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Mode **Coopératif** : deux pays actifs, deux humains ou un humain avec un PNJ, quatre agents chacun repêchés en serpentin. Enquêtes partagées, ressources et prestige individuels, agents alliés visibles avec un contour violet et consultation sans contrôle. Le PNJ prépare ses ordres avant le joueur; les missions sont résolues à la fin du tour.
 
@@ -74,7 +101,7 @@ Validation : suite `npm test`, tests dédiés des deux configurations coopérati
 
 # Publication GitHub — build 200
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Navigation du tutoriel alignée avec le haut du guide sur ordinateur, sans déplacement quand les instructions changent ou se replient. Les panneaux de jeu restent sous le guide ; la navigation mobile reste en bas.
 
@@ -82,7 +109,7 @@ Validation : `npm test` et contrôle visuel du guide développé/replié avec le
 
 # Historique — build 199
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Le tutoriel enseigne la coordination simultanée sur le globe et dans les vrais dossiers.
 
@@ -95,7 +122,7 @@ Validation : `npm test`, tests des ordres parallèles dans les deux sens, annula
 
 # Historique — build 198
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Les trois missions Filigrane se jouent sur le globe et dans les vrais écrans du jeu : déploiement, dossier de Vesper, collecte, validation et intervention. Le joueur confirme les ordres et termine les tours avec les commandes habituelles.
 
@@ -107,7 +134,7 @@ Validation : `npm test`, parcours de formation et compatibilité des sauvegardes
 
 # Historique — build 197
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 **Apprendre à jouer · Opération Filigrane** : trois mini-missions indépendantes depuis le menu principal, sans joueur PNJ.
 
@@ -121,7 +148,7 @@ Validation : `npm test` ; tests des trois parcours avec rechargement après chaq
 
 # Historique — build 196
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - Un résumé commun par tour pour les actions automatiques réussies, avec les résultats de chaque agent.
 - Menaces : hauteur adaptée au texte ; protection active, protection en préparation et couverture au tour prévu affichées séparément, sans garantir une mission non résolue.
@@ -134,7 +161,7 @@ Validation : `npm test` ; régressions sur les cinq niveaux de coopération, les
 
 # Historique — build 195
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - Confirmation de l’équipe après le repêchage : statistiques individuelles sur 10 et talents avec icônes et descriptions, à côté de chaque portrait.
 - Affichage adapté aux petits écrans, commandes de choix du chef et de réorganisation conservées, en solo et en multijoueur.
@@ -143,7 +170,7 @@ Validation : `npm test`. Vérification visuelle dans un navigateur indisponible 
 
 # Historique — build 194
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - Arme : +10 en arrestation ; vérification d’une falsification : +2 prestige ; localisation : 1 tour. Le relais conserve ses +2 tours de validité.
 - Annulation de module : remboursement le tour d’activation et retrait des effets. Confirmation nominative avant l’annulation des voyages accélérés par la logistique.
@@ -155,7 +182,7 @@ Validation : `npm test`, **511 tests réussis**, et régressions ciblées sur re
 
 # Historique — build 192
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Votre unité à gauche** : quatre fiches horizontales avec portraits, noms, surnoms, drapeaux, statistiques alignées et talents visibles ; sélection conservée.
 - **Dossier complet à droite** : plein pied sur le fond commun, énergie et exposition en chiffres colorés, situation opérationnelle, mission, talents et parcours en blocs compacts.
@@ -165,7 +192,7 @@ Validation : `npm test`, **499 tests réussis**. Contrôles supplémentaires sur
 
 # Historique — build 191
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Seize nouveaux portraits détourés** : Iris, Bishop, Amber, Lei, Apéro, Mira, Midnight, Mercer, Marlowe, Nox, Adler, Dante, Selin, Rocket, Alba et Raven sur fond transparent, avec leurs visages, tenues et accessoires conservés.
 - **Contours neutres** : halos et reflets rouges et bleus retirés lorsqu’ils étaient présents, notamment sur Mira, Midnight, Mercer et Raven.
@@ -177,7 +204,7 @@ Validation : `npm test`, **499 tests réussis**. Les seize nouvelles images sont
 
 # Historique — build 190
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Iris, Bishop, Amber et Lei** : silhouettes plein pied détourées sur fond transparent et superposées au décor commun.
 - **Iris** : reflets rouges et bleus retirés de ses contours.
@@ -189,7 +216,7 @@ Validation : `npm test`, **499 tests réussis**. Transparence, contours et silho
 
 # Historique — build 189
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Apéro, Mira, Midnight et Mercer** : silhouettes plein pied sur fond transparent, superposées au décor commun comme les douze autres agents détourés.
 - **Contours neutres** : reflets rouges et bleus retirés sur Mira, Midnight et Mercer.
@@ -201,7 +228,7 @@ Validation : `npm test`, **499 tests réussis**. Transparence et contours inspec
 
 # Historique — build 188
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Selin, Rocket, Alba et Raven** : éclairage des contours retouché pour retirer les halos rouges et bleus des silhouettes plein pied.
 - **Marlowe, Nox, Adler et Dante** : silhouettes plein pied détourées sur fond transparent ; halos rouges et bleus retirés sur Adler et Dante.
@@ -213,7 +240,7 @@ Validation : `npm test`, **499 tests réussis**. Transparence, contours et silho
 
 # Historique — build 187
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Les huit agents avec une silhouette transparente utilisent désormais exactement le même cadrage du décor plein pied fourni. Les textures et les lumières ne se déplacent plus selon l’agent. Seul le personnage est décalé pour conserver son centrage, dans la sélection d’équipe, le repêchage, les dossiers et l’onglet Agents, en solo et en multijoueur.
 
@@ -221,7 +248,7 @@ Validation : `npm test`, **499 tests réussis**. Les huit décors ont été comp
 
 # Historique — build 186
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Selin, Rocket, Alba et Raven** : silhouettes plein pied sur fond transparent, avec leurs tenues, poses et accessoires conservés.
 - **Décor commun** : même fond que Link, Monroe, Tara et Viktor, superposé derrière chaque personnage en deux couches séparées.
@@ -231,7 +258,7 @@ Validation : `npm test`, **499 tests réussis**. Transparence et cadrage des qua
 
 # Historique — build 185
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Déploiement** : quatre lignes compactes avec portraits de 40 × 48 px, cases à cocher et mention Voyage avec passeport.
 - **Panneau agent sur le globe** : identité remontée, énergie et exposition à droite sans jauges ; couleurs selon les seuils demandés et boutons plus petits.
@@ -241,7 +268,7 @@ Validation : `npm test`, **499 tests réussis**. Les seuils d’énergie et d’
 
 # Historique — build 184
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 - **Repêchage** : composition de votre équipe, totaux Analyse / Habileté / Sang-froid et talents repêchés visibles pendant la sélection, en solo et en multijoueur. Les talents répétés affichent leur nombre.
 - **Patch notes d’équilibrage** : tableaux Avant / Après, flèches vertes pour les buffs et rouges pour les nerfs. Valeurs historiques d’Iris, Mira, du soutien médical, de la diplomatie, du drone et de la crise ajoutées sans réécrire les anciens textes.
@@ -252,7 +279,7 @@ Validation : `npm test`, **499 tests réussis**, dont dix tests sur le récapitu
 
 # Historique — build 183
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Le fond plein pied fourni est affiché derrière Link, Monroe, Tara et Viktor. Le décor et le personnage transparent restent deux images distinctes superposées dans le navigateur ; les huit fichiers des personnages n’ont pas été modifiés. Les portraits et les règles du jeu restent ceux du build 182.
 
@@ -260,7 +287,7 @@ Les fichiers de jeu de ce build doivent être vérifiés par leur empreinte Git 
 
 # Historique — build 181
 
-[Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
+[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site)
 
 Dans les fenêtres de dossier et de menace, le bouton **Effets de l’action** est aligné à droite ; stat, talent et effets associés sont affichés à gauche. Les détails restent mécaniques. Énergie et exposition sont regroupées sous les agents et distinguent réussite et échec. Le boost, représenté par deux flèches vers le haut au-dessus des pourcentages, affiche **+10% -6cr/8** avec le solde courant après la barre. Sous 6 crédits, ce nombre devient rouge, le boost est retiré et le bouton désactivé ; les actions de base restent disponibles si leurs conditions sont remplies. Les raisons d’indisponibilité restent visibles.
 
@@ -282,7 +309,7 @@ Validation du build 181 : `npm test -- --test-concurrency=4`, 480 tests réussis
 
 BotBrillant1 (BB1) est disponible comme quatrième choix d’IA en solo et en multijoueur. [Guide BB1](docs/bots/BB1.md). La version 176 améliore ses choix gouvernementaux, ses modules et la recherche d’arme.
 
-# Sigma 2040 — Ligne de faille
+# Shadow Mandate 2040 — Ligne de faille
 
 Prototype de jeu de stratégie solo et multijoueur bêta, en français. Site avec relais HTTP et base D1 pour les salons. Le client et ses ressources sont dans `dist/client/`, le relais dans `dist/server/index.js`. L’hôte conserve le calcul et la sauvegarde intégrale sur son appareil.
 
@@ -315,7 +342,7 @@ Le projet statique ne dispose pas d’un serveur de développement compatible av
 
 Portraits originaux générés pour ce projet, à partir des planches de direction artistique approuvées. Fond cartographique Natural Earth, domaine public : jeu de données `ne_50m_admin_0_countries`. Les pays jouables sont un choix de fiction pour 2040, pas un classement géopolitique actuel.
 
-Les interfaces WebMCP exposent uniquement les renseignements connus via `read_sigma_campaign`, l’affectation via `stage_sigma_operation` et la progression effective via `advance_sigma_turn`.
+Les interfaces WebMCP exposent uniquement les renseignements connus via `read_shadow_mandate_campaign`, l’affectation via `stage_shadow_mandate_operation` et la progression effective via `advance_shadow_mandate_turn`.
 
 ## Interface v2
 
@@ -559,7 +586,7 @@ Voir `docs/ECONOMY-VALIDATION.md` et `docs/ECONOMY-ROLLBACK.md`.
 
 ## Révision 116 — PNJ, bilan et rythme des menaces
 
-Voir [le bilan des corrections et des 3 100 simulations](docs/Sigma-2040-bilan-corrections-116.md). Passage clandestin +0/+10 exposition ; garde d’identité dans les ordres ; préparation unique ; intimidation 1/1 ou 0/1 ; bon pays dans les rapports de hack. Bilan par agent et catégorie, appuis et gouvernement, frise compacte. Alerte de crise. PNJ aléatoires pondérés par équilibre, coordination d’enquête et gestion des ressources. Quatorze attaques tous les deux tours dans les nouvelles parties.
+Voir [le bilan des corrections et des 3 100 simulations](docs/Shadow-Mandate-2040-bilan-corrections-116.md). Passage clandestin +0/+10 exposition ; garde d’identité dans les ordres ; préparation unique ; intimidation 1/1 ou 0/1 ; bon pays dans les rapports de hack. Bilan par agent et catégorie, appuis et gouvernement, frise compacte. Alerte de crise. PNJ aléatoires pondérés par équilibre, coordination d’enquête et gestion des ressources. Quatorze attaques tous les deux tours dans les nouvelles parties.
 
 Validation finale : 252 tests, plus lots comparatifs et 600 nouvelles graines de validation. Secourisme et durée de Logistique prioritaire inchangés. Les statistiques détaillées d’anciennes campagnes sont partielles ; leur calendrier existant est préservé.
 
@@ -611,7 +638,7 @@ Validation : 271 tests automatisés réussis avant publication. Le navigateur lo
 
 Passage clandestin : suppression du tour supplémentaire pour les nouveaux ordres (durée de base 1 à 2 tours). Probabilités et conséquences inchangées ; Logistique reste réservée aux voyages sous passeport. Les trajets déjà affectés gardent leur durée.
 
-Menaces et bandeau Sigma Info : « Attaque à la fin du tour X » et « N tours pour agir », avec le calcul X − tour courant + 1. Aucune modification de la résolution : les actions se terminent avant les attaques de fin de tour.
+Menaces et bandeau Shadow Mandate Info : « Attaque à la fin du tour X » et « N tours pour agir », avec le calcul X − tour courant + 1. Aucune modification de la résolution : les actions se terminent avant les attaques de fin de tour.
 
 Financement exceptionnel : 15 confiance. Soutien médical : 25 confiance, maximum 3 utilisations par partie et par joueur, compteur restant affiché. Diplomatie : 20 / 20 / 15 / 10 confiance. Délai partagé de deux tours inchangé. Le quota est sauvegardé et vérifié par l’hôte ; les anciennes sauvegardes reprennent le nombre enregistré dans les statistiques gouvernementales (à défaut, la dernière faveur médicale connue). Protocole multijoueur 11 ; rechargement requis pour tous.
 

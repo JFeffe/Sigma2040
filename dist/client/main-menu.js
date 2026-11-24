@@ -1,10 +1,10 @@
-import {RELEASE_LINK,unreadPatchCount} from './patch-notes.js?v=242';
-import {AI_LEVELS} from './ai-difficulty.js?v=242';
-import {BUILD_VERSION} from './build-version.js?v=242';
-import {campaignRules} from './campaign-rules.js?v=242';
-import {renderRatio} from './graphics.js?v=242';
-import {brand,button,esc,icon} from './ui.js?v=242';
-import {COUNTRY} from './data.js?v=242';
+import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=243';
+import {AI_LEVELS} from './ai-difficulty.js?v=243';
+import {BUILD_VERSION} from './build-version.js?v=243';
+import {campaignRules} from './campaign-rules.js?v=243';
+import {renderRatio} from './graphics.js?v=243';
+import {brand,button,esc,icon} from './ui.js?v=243';
+import {COUNTRY} from './data.js?v=243';
 export function backToMainMenu(command='main-menu'){
  return button(icon('arrow')+'<span>Retour au menu principal</span>',command,'small command-back');
 }
@@ -13,7 +13,42 @@ export function menuSkyMarkup(){
  return `<canvas class="menu-particles" aria-hidden="true"></canvas><div class="menu-earth" aria-hidden="true"><canvas id="menuEarth" width="1024" height="1024"></canvas><canvas id="menuOrbits"></canvas></div>`;
 }
 
-export function mainMenu(s){return `<main class="main-menu"><a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer">BUILD ${BUILD_VERSION} · MISE À JOUR GITHUB ↗</a>${menuSkyMarkup()}<section class="menu-panel"><div class="menu-brand">${brand()}</div><p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1><nav aria-label="Menu principal">${button(`<span>${s?.ended?'Consulter la campagne':'Continuer'}</span><small class="continue-details">${s?`${esc(COUNTRY[s.player].name)} · IA ${AI_LEVELS[s.aiDifficulty||'bb1']} · Tour ${s.turn} / ${campaignRules(s).maxTurns}${s.ended?' · Campagne terminée':''}`:'Aucune campagne enregistrée'}</small>`,'continue-game','primary continue-button',s?'':'disabled')}${button('Nouvelle partie','new','')}${button('Multijoueur','mp-entry','')}${button('Patch notes'+(unreadPatchCount()?' · '+unreadPatchCount()+' non lues':''),'patch-notes',unreadPatchCount()?'patch-unread':'')}${button('Paramètres','settings','')}${button('Règles et sauvegarde','help','menu-help')}</nav></section><footer>SHADOW MANDATE 2040 <span>La musique démarre à votre première interaction.</span></footer></main>`;}
+export function backToOptions(){
+ return button(icon('arrow')+'<span>Retour aux options</span>','options','small command-back');
+}
+
+export function optionPage(content,page){
+ return `<main class="command-menu option-page ${page}">
+  <header class="command-menu-header">${brand()}${backToOptions()}</header>
+  <section class="command-menu-body">${content}</section>
+ </main>`;
+}
+
+export function mainMenu(campaign,{options=false,desktop=false,saveStatus=''}={}){
+ const build=desktop
+  ? `<span class="menu-build">BUILD ${BUILD_VERSION}</span>`
+  : `<a class="menu-build" href="${RELEASE_LINK}" target="_blank" rel="noopener noreferrer" title="Voir la mise à jour sur GitHub">BUILD ${BUILD_VERSION}</a>`;
+ const unread=options&&hasReviewedPatchNotes()?unreadPatchCount():0;
+ const links=options
+  ? button(icon('file')+' Notes de version'+(unread?`<small class="menu-option-count">${unread}</small>`:''),'patch-notes',unread?'patch-unread':'')+
+    button(icon('settings')+' Paramètres','settings')+
+    button(icon('help')+' Règles','rules')+
+    button(icon('case')+' Sauvegardes','save-menu')+
+    backToMainMenu()
+  : button(`<span>${campaign?.ended?'Consulter la campagne':'Continuer'}</span>
+      <small class="continue-details">${campaign?`${esc(COUNTRY[campaign.player].name)} · IA ${AI_LEVELS[campaign.aiDifficulty||'bb1']} · Tour ${campaign.turn} / ${campaignRules(campaign).maxTurns}${campaign.ended?' · Campagne terminée':''}`:esc(saveStatus||'Aucune campagne enregistrée')}</small>`,
+      'continue-game','primary continue-button',campaign?'':'disabled')+
+    button(icon('target')+' Nouvelle partie','new')+
+    button(icon('settings')+' Options','options')+
+    (desktop?button('Quitter le jeu','quit-game','menu-help'):'');
+ return `<main class="main-menu${options?' options-menu':''}">${build}${menuSkyMarkup()}
+  <section class="menu-panel">
+   <div class="menu-brand">${brand()}</div>
+   ${options?'<h1 id="optionsTitle" tabindex="-1">Options</h1>':'<p class="menu-eyebrow">OPÉRATION LIGNE DE FAILLE</p><h1>Déjouez leurs plans. Imposez votre influence.</h1>'}
+   <nav aria-label="${options?'Options':'Menu principal'}">${links}</nav>
+  </section>
+ </main>`;
+}
 
 // GPU sphere and separate orbital/particle layers: no flattened background image.
 const TAU=Math.PI*2;

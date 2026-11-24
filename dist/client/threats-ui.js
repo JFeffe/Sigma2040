@@ -1,10 +1,10 @@
-import {cellInfoButton,captiveMarkup} from './cell-info.js?v=242';
-import {attackDamage} from './engine.js?v=242';
-import {activeAttackDelays,attackDelayNotice} from './attack-delay-ui.js?v=242';
-import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=242';
-import {COUNTRY} from './data.js?v=242';
-import {cityArt} from './visuals.js?v=242';
-import {campaignHeading,esc,flag,button,icon} from './ui.js?v=242';
+import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=243';
+import {attackDamage} from './engine.js?v=243';
+import {activeAttackDelays,attackDelayNotice} from './attack-delay-ui.js?v=243';
+import {threatCoverage,threatStatus,threatProtectionText} from './threat-status.js?v=243';
+import {COUNTRY} from './data.js?v=243';
+import {cityArt} from './visuals.js?v=243';
+import {campaignHeading,esc,flag,button,icon} from './ui.js?v=243';
 export function threatPanel(s){
  const status=threatStatus(s);
  const uncovered=new Set(status.uncovered.map(p=>p.id)),delays=activeAttackDelays(s);
@@ -26,7 +26,7 @@ export function threatPanel(s){
     </header>
    </div>
    <div class="threat-record-body">
-    <div class="threat-record-meta">${cellInfoButton(s,p.cell)} <div class="threat-date"><strong>Attaque à la fin du tour ${p.turn}</strong><small>${remaining} tour${remaining>1?'s':''} pour agir</small></div></div>
+    <div class="threat-record-meta">${cellInfoBadge(s,p.cell)} <div class="threat-date"><strong>Attaque à la fin du tour ${p.turn}</strong><small>${remaining} tour${remaining>1?'s':''} pour agir</small></div></div>
     <div class="threat-impact"><h3>${esc(p.kind)}</h3>
      <p>Sans protection · +${attackDamage(s,p)} de crise</p>${s.cellVariantRules===1&&p.cell===4?'<small>Puis +3 par fin de tour tant que l’agent reste captif.</small>':''}
     </div>

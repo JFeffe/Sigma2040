@@ -1,130 +1,240 @@
-/* Agents: four comparable portrait cards and one compact operational dossier. */
-.personnel-command{--personnel-accent:#a9d6f5;--personnel-muted:#a9c1d6}
-.command-deck .personnel-workspace{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(420px,1fr);gap:12px;align-items:start;width:100%}
-.personnel-empty{padding:12px}
-.personnel-empty>p{margin:0 0 10px}
+.personnel-command.campaign-panel {
+ --personnel-accent:var(--atlas-accent);
+ --personnel-muted:var(--atlas-muted);
+ --personnel-inset:var(--atlas-inset);
+ width:100%;
+ max-width:1030px;
+ margin-inline:auto;
+}
+.personnel-command .campaign-status {
+ background:var(--atlas-card);
+ border-color:var(--atlas-line);
+ color:var(--atlas-ink);
+}
+.command-deck .personnel-workspace {
+ display:grid;
+ grid-template-columns:minmax(220px,.65fr) minmax(0,1.2fr);
+ align-items:start;
+ gap:12px;
+ width:100%;
+}
+.personnel-empty {padding:12px;}
+.personnel-empty>p {margin:0 0 10px;}
 
-.command-deck .personnel-roster{display:flex;flex-direction:column;gap:8px;min-width:0;align-self:start;grid-column:auto}
-.personnel-roster-heading{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px;border-bottom:1px solid #365169}
-.personnel-roster-heading>span{font-size:11px;letter-spacing:.12em;color:var(--personnel-muted)}
-.personnel-roster-heading>strong{font-size:19px;line-height:1}
-.personnel-roster-heading small{font-size:12px;font-weight:400;color:var(--personnel-muted)}
-.command-deck .personnel-member{position:relative;display:grid;grid-template-columns:76px minmax(135px,1fr) minmax(220px,1.12fr);grid-template-rows:auto auto;gap:6px 12px;align-items:center;min-height:96px;width:100%;padding:9px 12px;box-sizing:border-box;border:1px solid #365169;border-radius:8px;background:#121e2d;text-align:left;color:#e8f3ff;cursor:pointer;font:inherit}
-.command-deck .personnel-member.selected{background:linear-gradient(120deg,#213e56,#152638);border-color:#7db6e0;box-shadow:inset 3px 0 var(--personnel-accent)}
-.command-deck .personnel-member:hover{border-color:#7db6e0}
-.command-deck .personnel-member:focus-visible{outline:2px solid #a9d6f5;outline-offset:2px}
-.command-deck .personnel-member>.portrait{grid-column:1;grid-row:1/3;width:76px;height:86px;margin:0;flex:none;border:1px solid #635063;border-radius:6px}
-.command-deck .personnel-member>.portrait img{width:100%;height:100%;object-fit:cover;object-position:center top}
-.personnel-member-copy{grid-column:2;grid-row:1;display:flex;flex-direction:column;gap:3px;min-width:0}
-.personnel-member-copy>strong{display:flex;align-items:center;gap:7px;font:600 21px/1.05 var(--display);letter-spacing:.03em}
-.personnel-member-role{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0;font-size:12px;line-height:1.2;color:#c1b1c7}
-.personnel-member-role .origin-nationalities{display:inline-flex;gap:4px;flex:none}
-.personnel-member-role .origin-nationalities img{width:21px;height:15px}
-.personnel-chief{display:inline-flex;color:#e6c784}
-.personnel-chief>.icon{width:15px;height:15px}
-.personnel-member-state{display:flex;align-items:center;gap:4px;font-size:10px;line-height:1.3;color:#ddbb88}
-.personnel-member-state>.icon{width:12px;height:12px;flex:none}
-.personnel-member-state.free{color:#98c5ba}
-.personnel-member-state.detained{color:#f28d9d}
-.personnel-member-stats,.personnel-capabilities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;min-width:0}
-.personnel-member-stats{grid-column:3;grid-row:1}
-.personnel-stat{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;padding:5px 6px;border:1px solid #534457;border-radius:5px;background:#11182299;cursor:help;font-variant-numeric:tabular-nums}
-.personnel-stat-label{display:flex;align-items:center;gap:4px;line-height:1.2;font-size:11px;white-space:nowrap}
-.personnel-stat-label>.icon{width:14px;height:14px;flex:none}
-.personnel-stat-label abbr{display:none;text-decoration:none}
-.personnel-stat strong{font:600 23px/1 var(--display);font-variant-numeric:tabular-nums}
-.personnel-stat strong small{font-size:10px;font-family:inherit;font-weight:400;line-height:1;margin-left:2px;color:#998aa5}
-.personnel-stat.stat-0{color:#9edfff}
-.personnel-stat.stat-1{color:#ffdc6f}
-.personnel-stat.stat-2{color:#e6a3ff}
-.personnel-member-talents{grid-column:2/4;grid-row:2;display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;min-width:0}
-.personnel-member-talents>span{display:inline-flex;align-items:center;gap:5px;max-width:100%;box-sizing:border-box;padding:4px 6px;border:1px solid #54445b;border-radius:4px;background:#10152280;color:#d2c4db;font-size:12px;line-height:1.2;cursor:help}
-.personnel-member-talents>span>.icon{width:14px;height:14px;flex:none;color:#c49bbd}
-.personnel-member-talents>span>span{overflow-wrap:anywhere}
-.personnel-pending{padding:12px;border:1px dashed #665469;border-radius:8px;display:flex;align-items:center;gap:8px;font-size:13px}
-.personnel-pending>.icon{width:17px;height:17px;flex:none}
-.personnel-pending small{margin-left:auto;color:var(--personnel-muted);font-size:12px}
-.personnel-recruit{min-height:34px}
+.command-deck .personnel-roster {
+ container:personnel-roster / inline-size;
+ display:grid;
+ grid-column:auto;
+ align-self:start;
+ align-content:start;
+ gap:8px;
+ min-width:0;
+ height:auto;
+ padding:9px;
+ border:1px solid var(--atlas-line);
+ border-radius:var(--atlas-radius);
+}
+.personnel-roster-heading {
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ padding:2px 3px 8px;
+ border-bottom:1px solid var(--atlas-line);
+}
+.personnel-roster-heading>span {font-size:12px;color:var(--personnel-muted);}
+.personnel-roster-heading>strong {font-size:18px;line-height:1;white-space:nowrap;}
+.personnel-roster-heading small {font-size:11px;font-weight:400;color:var(--personnel-muted);}
+.personnel-members {display:grid;gap:6px;min-width:0;}
+.command-deck .personnel-member {
+ position:relative;
+ display:grid;
+ grid-template-columns:52px minmax(0,1fr) auto;
+ align-items:center;
+ gap:8px;
+ min-height:68px;
+ width:100%;
+ padding:6px 8px;
+ box-sizing:border-box;
+ border:1px solid var(--atlas-line);
+ border-radius:8px;
+ background:var(--atlas-card);
+ color:var(--atlas-ink);
+ font:inherit;
+ text-align:left;
+ cursor:pointer;
+}
+.command-deck .personnel-member.coop-ally {--personnel-selection-edge:#ac7bdf;border-color:var(--personnel-selection-edge);}
+.command-deck .personnel-member.selected {
+ background:var(--atlas-selected);
+ border-color:var(--personnel-selection-edge,var(--atlas-mark));
+ box-shadow:inset 3px 0 var(--personnel-selection-edge,var(--atlas-mark));
+}
+.command-deck .personnel-member:hover {border-color:var(--personnel-selection-edge,var(--personnel-accent));}
+.command-deck .personnel-member:focus-visible {outline:2px solid var(--personnel-accent);outline-offset:2px;}
+.command-deck .personnel-member>.portrait {
+ width:100%;
+ height:56px;
+ margin:0;
+ border:1px solid var(--atlas-edge);
+ border-radius:6px;
+}
+.command-deck .personnel-member>.portrait img {width:100%;height:100%;object-fit:cover;object-position:center top;}
+.personnel-member-copy {display:grid;gap:2px;min-width:0;}
+.personnel-member-copy>strong {
+ display:flex;
+ align-items:center;
+ flex-wrap:wrap;
+ gap:3px 6px;
+ font:700 20px/1 var(--atlas-display);
+ letter-spacing:.02em;
+ overflow-wrap:anywhere;
+}
+.personnel-member-copy .origin-nationalities {display:inline-flex;gap:3px;flex:none;}
+.personnel-member-copy .origin-nationalities img {width:17px;height:12px;}
+.personnel-member-role {font-size:12px;line-height:1.2;color:var(--personnel-muted);overflow-wrap:anywhere;}
+.personnel-chief {display:inline-flex;color:#e6c784;}
+.personnel-chief>.icon {width:13px;height:13px;}
+.personnel-member-state {
+ display:flex;
+ align-items:center;
+ gap:4px;
+ color:#ddbb88;
+ font-size:10px;
+ line-height:1.25;
+}
+.personnel-member-state>.icon {width:12px;height:12px;flex:none;}
+.personnel-member-state.free {color:#98c5ba;}
+.personnel-member-state.detained {color:#f28d9d;}
+.personnel-member-stats {
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:3px;
+}
+.personnel-member-stats>.personnel-stat {
+ display:inline-flex;
+ justify-content:center;
+ align-items:center;
+ gap:3px;
+ padding:3px 4px;
+ border:1px solid var(--atlas-line);
+ border-radius:5px;
+ background:var(--personnel-inset);
+ font-variant-numeric:tabular-nums;
+}
+.personnel-member-stats .icon {width:12px;height:12px;flex:none;}
+.personnel-member-stats strong {font:700 16px/1 var(--atlas-display);}
+.personnel-stat.stat-0 {color:#9edfff;}
+.personnel-stat.stat-1 {color:#ffdc6f;}
+.personnel-stat.stat-2 {color:#e6a3ff;}
+.personnel-pending {
+ display:flex;
+ align-items:center;
+ gap:8px;
+ padding:8px;
+ border:1px dashed var(--atlas-edge);
+ border-radius:7px;
+ font-size:12px;
+}
+.personnel-pending>.icon {width:15px;height:15px;flex:none;}
+.personnel-pending small {margin-inline-start:auto;color:var(--personnel-muted);}
+.personnel-recruit {min-height:34px;}
 
-.command-deck .personnel-dossier{min-width:0;min-height:0;padding:12px;display:flex;flex-direction:column;gap:10px;border:1px solid #365169;border-radius:8px;background:#121e2d}
-.personnel-identity{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid #365169;flex:none;min-width:0}
-.personnel-identity>div:first-child{min-width:0}
-.personnel-identity h2{margin:0;font:700 30px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.04em;overflow-wrap:anywhere}
-.personnel-identity p{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:5px 0 0!important;font-size:12px!important;line-height:1.3!important;color:var(--personnel-accent)}
-.personnel-identity .origin-nationalities{display:inline-flex;gap:4px}
-.personnel-identity .origin-nationalities img{width:22px;height:16px}
-.personnel-condition{display:flex;flex-direction:column;gap:6px;flex:none;min-width:145px;font-variant-numeric:tabular-nums}
-.personnel-condition>span{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;cursor:help}
-.personnel-condition>span>span{display:flex;align-items:center;gap:4px;color:#c4b8ce}
-.personnel-condition .icon{width:14px;height:14px;flex:none}
-.personnel-condition strong{font-size:14px;white-space:nowrap}
-.personnel-condition .reading-green{color:#79dba4}
-.personnel-condition .reading-blue{color:#74b9ff}
-.personnel-condition .reading-yellow{color:#f2d56b}
-.personnel-condition .reading-orange{color:#d97926}
-.personnel-condition .reading-red{color:#f3838e}
-.personnel-dossier-layout{display:grid;grid-template-columns:minmax(110px,.52fr) minmax(0,1fr);gap:10px;flex:1;min-height:0}
-.command-deck .personnel-portrait-stage{position:relative;min-width:0;min-height:220px;height:auto;max-height:none;margin:0;border:1px solid #365169;border-radius:7px;overflow:hidden;background:#0e1927;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.command-deck .personnel-portrait-stage>.full-body{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:0!important;max-height:none!important;max-width:100%!important;min-height:0!important;margin:0!important;padding:0!important;object-fit:contain;flex:1 1 0;filter:none!important}
-.personnel-portrait-stage figcaption{width:100%;box-sizing:border-box;padding:8px 5px;border-top:1px solid #3a3549;background:#111724;color:#bfb2ca;font-size:11px;text-align:center;flex:none}
-.personnel-dossier-content{display:flex;flex-direction:column;gap:8px;min-width:0;min-height:0}
-.personnel-status{display:inline-flex;align-items:center;align-self:flex-start;gap:5px;padding:4px 6px;border:1px solid #635268;border-radius:4px;color:#e2cadd;font-size:10px;line-height:1.3}
-.personnel-status>.icon{width:13px;height:13px;flex:none}
-.personnel-status.free{color:#a2d0bf;border-color:#496d64}
-.personnel-status.busy{color:#edc88f;border-color:#7a6448}
-.personnel-status.detained{color:#ff99a8;border-color:#a43c53}
-.personnel-capabilities{flex:none;gap:5px}
-.personnel-capabilities .personnel-stat{flex-direction:row;justify-content:center;gap:6px;padding:5px 4px}
-.personnel-capabilities .personnel-stat-name{display:none}
-.personnel-capabilities .personnel-stat-label abbr{display:inline}
-.personnel-capabilities .personnel-stat strong{font-size:20px}
-.personnel-capabilities .personnel-stat strong small{display:none}
-.personnel-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0;flex:none}
-.personnel-facts>div{padding:6px 7px;border:1px solid #365169;border-radius:5px;background:#101a28;min-width:0}
-.personnel-facts>div:last-child{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.personnel-facts dt{display:flex;align-items:center;gap:5px;font-size:10px;line-height:1.3;color:#aeb2c4}
-.personnel-facts dt>.icon{width:12px;height:12px;flex:none}
-.personnel-facts dd{margin:3px 0 0;font-size:12px;line-height:1.25;color:#e0d9e7;overflow-wrap:anywhere}
-.personnel-facts>div:last-child dd{margin:0}
-.personnel-facts .condition-warning dd{color:#f19aac}
-.personnel-mission{padding:8px;border:1px solid #415b70;border-left:3px solid #87b9de;border-radius:6px;background:#101b2a;flex:none}
-.personnel-mission.engaged{border-left-color:#e4bd82}
-.personnel-mission-heading{display:flex;justify-content:space-between;gap:8px;font-size:10px;line-height:1.3;color:#c3adca}
-.personnel-mission-heading strong{color:#efc98e;white-space:nowrap}
-.personnel-mission h3{font-size:14px;margin:5px 0 3px;color:#f0e4f1;line-height:1.25}
-.personnel-mission p{font-size:11px!important;line-height:1.35!important;color:#bcb1c8;margin:3px 0 6px}
-.personnel-mission>progress{display:block;width:100%;height:4px;margin:6px 0;accent-color:#d7b589}
-.personnel-mission-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.command-deck .personnel-mission-actions .btn{font-size:11px;min-height:30px;padding:5px 7px}
-.personnel-dossier-content>.quick-action{margin:0;flex:none}
-.command-deck .personnel-dossier-content>.quick-action .btn{font-size:11px;min-height:30px;padding:5px 7px;background:#26212c;border-color:#594561;color:#d9c9e0}
-.personnel-talents{margin:0;flex:none}
-.personnel-talents>h3{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#baacc6;margin:0 0 5px}
-.personnel-talents>div{display:flex;flex-wrap:wrap;gap:5px}
-.personnel-talents details{min-width:0;max-width:100%;flex:1 1 auto;background:#102032;border:1px solid #365169;border-radius:5px}
-.personnel-talents details[open]{flex-basis:100%}
-.personnel-talents summary{padding:6px;display:flex;align-items:center;gap:5px;cursor:pointer;list-style:none;font-size:11px;line-height:1.25}
-.personnel-talents summary strong{font-weight:500;flex:1;overflow-wrap:anywhere}
-.personnel-talents summary>.icon{width:14px;height:14px;flex:none;color:#c49bbd}
-.personnel-talents summary>.icon:last-child{width:10px;transition:transform .15s}
-.personnel-talents details[open] summary>.icon:last-child{transform:rotate(90deg)}
-.personnel-talents details p{padding:0 8px 8px;margin:0;font-size:12px!important;line-height:1.45!important;color:#c2b2cb}
-.personnel-lore{border-top:1px solid #453849;padding-top:6px;flex:none}
-.personnel-lore summary{display:flex;align-items:center;gap:5px;font-size:11px;color:#bfb0c9;cursor:pointer;list-style:none}
-.personnel-lore summary>.icon{width:13px;height:13px}
-.personnel-lore summary>.icon:last-child{margin-left:auto}
-.personnel-lore[open] summary>.icon:last-child{transform:rotate(90deg)}
-.personnel-biography{margin:7px 0 0;font-size:12px!important;line-height:1.45!important;color:#c0b3c8}
-.command-deck .personnel-footer{display:flex!important;position:static!important;align-items:center;justify-content:flex-end;margin:0;padding:7px 0 0!important;border-top:1px solid #47394c;background:none!important;flex:none}
-.personnel-footer>div{display:flex;gap:6px;flex-wrap:wrap}
-.command-deck .personnel-footer .btn{font-size:11px;padding:5px 8px;min-height:30px}
+@container personnel-roster (max-width:320px) {
+ .command-deck .personnel-member {
+  grid-template-columns:45px minmax(0,1fr);
+  gap:4px 7px;
+ }
+ .command-deck .personnel-member>.portrait {grid-row:1/3;height:58px;}
+ .personnel-member-stats {justify-self:start;}
+}
 
-@media(min-width:1700px){.command-deck .personnel-member{grid-template-columns:92px minmax(160px,1fr) minmax(240px,1.1fr);min-height:120px;padding:12px 15px;gap:8px 16px}.command-deck .personnel-member>.portrait{width:92px;height:104px}.personnel-member-copy>strong{font-size:25px}.personnel-member-role{font-size:14px}.personnel-member-state{font-size:12px}.personnel-member-talents>span{font-size:13px}.personnel-stat strong{font-size:27px}.command-deck .personnel-dossier{padding:16px}.personnel-dossier-content{gap:10px}.personnel-facts dd{font-size:13px}.personnel-talents summary{font-size:12px}}
-@media(min-width:981px) and (max-width:1200px){.command-deck .personnel-workspace{grid-template-columns:minmax(0,1.3fr) minmax(400px,1fr);gap:10px}.command-deck .personnel-member{grid-template-columns:60px minmax(115px,1fr) minmax(150px,.9fr);gap:6px 8px;padding:8px}.command-deck .personnel-member>.portrait{width:60px;height:78px}.personnel-member-copy>strong{font-size:19px}.personnel-member-role{font-size:11px}.personnel-member-stats .personnel-stat-name{display:none}.personnel-member-stats .personnel-stat-label abbr{display:inline}.personnel-member-talents>span{font-size:11px;padding:3px 5px}}
-@media(min-width:981px) and (max-height:760px){.command-deck .personnel-member{min-height:88px;padding:7px 10px;gap:5px 10px;grid-template-columns:64px minmax(115px,1fr) minmax(150px,1.1fr)}.command-deck .personnel-member>.portrait{width:64px;height:74px}.personnel-member-copy>strong{font-size:19px}.personnel-member-talents>span{font-size:11px;padding:3px 5px}.personnel-stat{padding:4px 5px}.personnel-stat strong{font-size:21px}.personnel-roster-heading{padding-bottom:5px}.command-deck .personnel-roster{gap:6px}.command-deck .personnel-dossier{gap:8px;padding:10px}.personnel-identity{padding-bottom:8px}.personnel-identity h2{font-size:25px}}
-@media(max-width:980px){.command-deck .personnel-workspace{grid-template-columns:minmax(0,1fr);flex:none;gap:14px}.command-deck .personnel-member{grid-template-columns:64px minmax(150px,1fr) minmax(220px,1fr);min-height:94px}.command-deck .personnel-member>.portrait{width:64px;height:80px}.personnel-dossier-layout{grid-template-columns:minmax(130px,.45fr) minmax(0,1fr);flex:none}.command-deck .personnel-portrait-stage{height:410px}.personnel-dossier-content{overflow:visible}.personnel-capabilities .personnel-stat-name{display:inline}.personnel-capabilities .personnel-stat-label abbr{display:none}.personnel-capabilities .personnel-stat strong small{display:inline}.personnel-talents details{flex-basis:28%}}
-@media(max-width:600px){.command-deck .personnel-member{grid-template-columns:54px minmax(105px,1fr) minmax(120px,.85fr);padding:8px;gap:6px;min-height:90px}.command-deck .personnel-member>.portrait{width:54px;height:70px}.personnel-member-copy>strong{font-size:18px}.personnel-member-role{font-size:11px}.personnel-member-state{font-size:9px}.personnel-member-stats{gap:4px}.personnel-member-stats .personnel-stat-name{display:none}.personnel-member-stats .personnel-stat-label abbr{display:inline}.personnel-member-stats .personnel-stat{padding:4px 2px}.personnel-stat strong{font-size:20px}.personnel-stat strong small{display:none}.personnel-member-talents>span{font-size:11px;padding:3px 5px}.personnel-dossier-layout{grid-template-columns:100px minmax(0,1fr);gap:8px}.command-deck .personnel-portrait-stage{height:360px}.personnel-capabilities .personnel-stat-name{display:none}.personnel-capabilities .personnel-stat-label abbr{display:inline}.personnel-capabilities .personnel-stat strong small{display:none}.personnel-talents details{flex-basis:100%}.personnel-condition{min-width:135px}.personnel-condition>span{font-size:11px}.personnel-condition strong{font-size:13px}}
-@media(max-width:420px){.personnel-identity{gap:8px;align-items:flex-start}.personnel-identity h2{font-size:24px}.personnel-dossier-layout{grid-template-columns:minmax(0,1fr)}.command-deck .personnel-portrait-stage{height:280px}.personnel-talents details{flex-basis:45%}.personnel-member-role .origin-nationalities img{width:18px;height:13px}.personnel-stat-label{font-size:10px}.personnel-stat-label>.icon{width:12px;height:12px}.personnel-member-stats .personnel-stat-label{gap:2px}.personnel-member-talents{gap:4px}.personnel-member-copy{gap:4px}.personnel-member-state{flex-wrap:wrap}}
+.command-deck .personnel-dossier {
+ display:grid;
+ gap:8px;
+ min-width:0;
+ padding:9px;
+ border:1px solid var(--atlas-line);
+ border-radius:var(--atlas-radius);
+ background:var(--atlas-card);
+}
+.personnel-dossier .agent-profile-card {
+ grid-template: auto / minmax(0,min(35%,166px)) minmax(0,1fr);
+ block-size:auto;
+ min-block-size:270px;
+}
+.personnel-dossier .agent-profile-portrait {position:absolute;inset:0;}
+.personnel-dossier .agent-profile-card .agent-profile-facts {
+ gap:6px;
+ padding:10px;
+ overflow:visible;
+}
+.personnel-dossier .floating-agent-readings strong {font-size:14px;}
+.personnel-dossier .floating-agent-stats>span {min-height:26px;gap:5px;}
+.personnel-dossier .floating-agent-stats strong {font:700 17px/1 var(--atlas-display);}
+.personnel-dossier .floating-agent-facts .talents>span {min-height:22px;font-size:11px;}
+.personnel-facts {
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:5px;
+ margin:0;
+}
+.personnel-facts>div {
+ min-width:0;
+ padding:5px 7px;
+ border:1px solid var(--atlas-line);
+ border-radius:6px;
+ background:var(--personnel-inset);
+}
+.personnel-facts dt {
+ display:flex;
+ align-items:center;
+ gap:4px;
+ color:var(--personnel-muted);
+ font-size:10px;
+ line-height:1.3;
+}
+.personnel-facts dt>.icon {width:12px;height:12px;flex:none;}
+.personnel-facts dd {
+ margin:2px 0 0;
+ color:var(--atlas-ink);
+ font-size:12px;
+ line-height:1.25;
+ overflow-wrap:anywhere;
+}
+.personnel-facts .condition-warning dd {color:#f19aac;}
+.personnel-mission {
+ display:grid;
+ gap:4px;
+ padding:8px;
+ border:1px solid var(--atlas-line);
+ border-inline-start:3px solid var(--personnel-accent);
+ border-radius:7px;
+ background:var(--personnel-inset);
+}
+.personnel-mission.engaged {border-inline-start-color:#e4bd82;}
+.personnel-mission-heading {display:flex;justify-content:space-between;gap:8px;font-size:10px;line-height:1.3;color:var(--personnel-muted);}
+.personnel-mission-heading strong {color:#efc98e;white-space:nowrap;}
+.personnel-mission h3 {margin:0;color:var(--atlas-ink);font-size:14px;line-height:1.25;}
+.personnel-mission p {margin:0;color:var(--personnel-muted);font-size:11px;line-height:1.35;}
+.personnel-mission>progress {display:block;width:100%;height:4px;margin:3px 0;accent-color:#d7b589;}
+.personnel-mission-actions {display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;}
+.command-deck :is(.personnel-mission-actions,.personnel-footer) .btn {font-size:11px;min-height:29px;padding:4px 7px;}
+.command-deck .personnel-footer {
+ display:flex;
+ position:static;
+ align-items:center;
+ justify-content:flex-end;
+ gap:5px;
+ flex-wrap:wrap;
+ margin:0;
+ padding:7px 0 0;
+ border-top:1px solid var(--atlas-line);
+ background:none;
+}
+@media (max-width:760px) {
+ .command-deck .personnel-workspace {grid-template-columns:minmax(0,1fr);}
+}
 
 /* Threats retain the same card geometry regardless of active count. */
 .compact-threat-grid{grid-template-columns:repeat(auto-fill,minmax(280px,320px));gap:14px;align-content:start;align-items:start;justify-content:start}.compact-threat-grid .compact-threat-card{box-sizing:border-box;width:100%;height:auto;min-height:310px;padding:16px;display:flex;flex-direction:column;gap:10px;border-color:#76404e;background:#241b24}.compact-threat-card.threat-covered{border-color:#446b62;background:#192624}.compact-threat-card header{gap:10px;flex:none}.compact-threat-card header .flag{width:34px}.compact-threat-card header h2{font-size:20px;margin:2px 0}.compact-threat-card header p{font-size:12px;color:#b8abba;margin:0}.compact-threat-card .eyebrow{font-size:12px;letter-spacing:.06em}.threat-state{margin-left:auto;color:#ff8ca3}.threat-covered .threat-state{color:#98d0b9}.threat-date{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;flex:none}.threat-date>strong{font-size:17px;color:#ffafbd}.threat-covered .threat-date>strong{color:#b4dfca}.threat-date>small{font-size:12px;color:#bdafc1}.compact-threat-card>h3{font-size:14px;line-height:20px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:none}.threat-coverage{padding:10px;border-radius:6px;background:#090e1680;flex:1 0 auto;min-height:0;overflow-wrap:anywhere}.threat-coverage>strong{display:block;font-size:14px;color:#ff9eb0}.threat-covered .threat-coverage>strong{color:#a5d8c1}.threat-coverage p{font-size:12px!important;line-height:1.45;color:#c3b5c8;margin:5px 0 0}.compact-threat-card footer{position:static!important;background:none!important;display:flex!important;align-items:center;justify-content:space-between;gap:8px;margin:0!important;padding:0!important;border:0!important;flex:none}.compact-threat-card footer>small{font-size:12px;color:#b8a8c0}.compact-threat-card footer .btn{font-size:12px;padding:7px 9px}.command-deck .deck-tab.nav-threats{--ready:#f87591;--ready-bg:#4d2031;color:#ffe0e8;box-shadow:inset 0 0 14px #f8759120}

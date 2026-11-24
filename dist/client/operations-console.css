@@ -69,14 +69,14 @@ dialog.order-modal .metric-track{bottom:6px;left:12px;right:12px;height:3px}
 @media(max-width:480px){.operation-console .console-slots{grid-template-columns:1fr}.operation-console .console-direct-card{grid-template-columns:120px minmax(0,1fr)}.operation-console .console-card-art .btn{font-size:11px;padding:6px}}
 /* Performance preset preserves native-resolution text, avoids costly frosted layers. */
 html[data-graphics="1080p"] .immersive-deck .deck-header,html[data-graphics="1080p"] .immersive-deck .deck-nav,html[data-graphics="1080p"] .immersive-deck .map-view-switch,html[data-graphics="1080p"] .immersive-deck .map-controls,html[data-graphics="1080p"] .immersive-deck .map-regions,html[data-graphics="1080p"] .immersive-deck .map-dossier,html[data-graphics="1080p"] .immersive-deck .field-team,html[data-graphics="1080p"] .immersive-deck .deck-main:not(.view-world){backdrop-filter:none;-webkit-backdrop-filter:none}
-/* The express order is docked over the map. Only the briefing area scrolls. */
+/* Center express orders while keeping the header and confirmation visible. */
 #modal.order-modal {
- position:fixed;inset:auto 0 max(12px,env(safe-area-inset-bottom));margin:0 auto;
- width:min(680px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);
+ position:fixed;inset:0;margin:auto;
+ width:min(680px,calc(100vw - 24px));height:fit-content;max-width:none;max-height:calc(100dvh - 24px);
  padding:0;overflow:hidden;border:1px solid #395269;border-radius:9px;
- background:#101c2a;color:#edf5ff;box-shadow:0 12px 32px #0009;
+ background:var(--atlas-panel);color:var(--atlas-ink);box-shadow:0 12px 32px #0009;
 }
-#modal.order-modal::backdrop{backdrop-filter:none;-webkit-backdrop-filter:none;background:#060c163f}
+#modal.order-modal::backdrop{backdrop-filter:none;-webkit-backdrop-filter:none;background:#0606063f}
 #modal.order-modal > .modal-close{top:9px;right:9px;width:40px;min-height:40px}
 #modal.order-modal .order-layout{display:block;width:100%;max-width:none;max-height:none;animation:none}
 #modal.order-modal .order-form {
@@ -85,10 +85,10 @@ html[data-graphics="1080p"] .immersive-deck .deck-header,html[data-graphics="108
 }
 .express-order-heading {
  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 14px;
- flex-shrink:0;padding:12px 56px 11px 16px;border-bottom:1px solid #33485e;background:#17283a;
+ flex-shrink:0;padding:12px 56px 11px 16px;border-bottom:1px solid var(--atlas-line);background:var(--atlas-panel);
 }
 #modal.order-modal .express-order-heading h2{margin:3px 0 0;font:700 clamp(20px,2.5vw,27px)/1.12 var(--display)}
-.express-order-heading .eyebrow{color:#abc0d6}
+.express-order-heading .eyebrow{color:var(--atlas-muted)}
 .express-order-agent{display:flex;align-items:center;gap:7px}
 .express-order-agent .portrait{width:33px;height:38px;min-width:33px;border-radius:4px}
 .express-order-body{min-height:0;padding:11px 16px;overflow:auto;overscroll-behavior:contain}
@@ -99,11 +99,11 @@ html[data-graphics="1080p"] .immersive-deck .deck-header,html[data-graphics="108
 .express-order-body .training-order-note{margin:0 0 9px}
 .express-order-footer {
  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:7px 10px;
- flex-shrink:0;padding:10px 16px;border-top:1px solid #33485e;background:#0b1622;
+ flex-shrink:0;padding:10px 16px;border-top:1px solid var(--atlas-line);background:var(--atlas-inset);
 }
 .express-order-estimate{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
-.express-order-estimate strong{font-size:20px;color:#9ddaff}
-.express-order-estimate small,.mission-timing{font-size:12px;color:#b8cbe0}
+.express-order-estimate strong{font-size:20px;color:var(--atlas-accent)}
+.express-order-estimate small,.mission-timing{font-size:12px;color:var(--atlas-muted)}
 .express-order-feedback,
 .express-order-footer:has(>.mission-boost-control)>.express-order-estimate{grid-column:1/-1}
 .express-order-footer>.btn{width:100%;min-width:0;white-space:normal}
@@ -113,10 +113,10 @@ html[data-graphics="1080p"] .immersive-deck .deck-header,html[data-graphics="108
 .mission-timing{font-variant-numeric:tabular-nums}
 .mission-credit-cost{color:#f1ca88;font-variant-numeric:tabular-nums}
 .mission-briefing {
- margin-top:9px;border:1px solid #3b526a;border-radius:5px;background:#122131;
+ margin-top:9px;border:1px solid #3b526a;border-radius:5px;background:var(--atlas-panel);
 }
 .mission-briefing > summary{padding:8px 10px;color:#b8e4ff;font-size:14px;font-weight:600;cursor:pointer}
-.mission-briefing > summary:focus-visible{outline:2px solid #a8d5ff;outline-offset:2px}
+.mission-briefing > summary:focus-visible{outline:2px solid var(--atlas-alert);outline-offset:2px}
 .mission-briefing-content{display:grid;gap:8px;min-width:0;padding:8px 10px 10px;font-size:13px}
 .mission-briefing-content[hidden]{display:none}
 .mission-briefing-content .decision-box{margin:0;font-size:inherit}
@@ -134,31 +134,31 @@ html[data-graphics="1080p"] .immersive-deck .deck-header,html[data-graphics="108
 :is(.mission-boost-toggle.btn,#modal.order-modal .order-form .mission-boost-toggle){
  display:flex;align-items:center;justify-content:flex-start;gap:7px;width:100%;min-width:0;
  min-height:42px;margin:0;padding:5px 8px;text-align:left;line-height:1.2;white-space:normal;
- border:1px solid #577593;border-radius:5px;background:#14293b;color:#d6edff;
+ border:1px solid var(--atlas-edge);border-radius:5px;background:var(--atlas-panel);color:var(--atlas-ink);
 }
-.mission-boost-toggle>.icon{width:19px;height:19px;flex:none;color:#a6d8fa}
-.mission-boost-toggle>input{width:16px;height:16px;margin:0;flex:none;accent-color:#9ddaff}
+.mission-boost-toggle>.icon{width:19px;height:19px;flex:none;color:var(--atlas-accent)}
+.mission-boost-toggle>input{width:16px;height:16px;margin:0;flex:none;accent-color:var(--atlas-mark)}
 .mission-boost-toggle:has(input:not(:disabled)){cursor:pointer}
 :is(.mission-boost-toggle.btn[aria-pressed=true],#modal.order-modal .order-form .mission-boost-toggle:has(:checked)){
- border-color:#9ddaff;background:#254d70;color:#eff9ff;
+ border-color:var(--atlas-mark);background:var(--atlas-selected);color:var(--atlas-ink);
 }
-.mission-boost-toggle.btn:hover:not(:disabled){border-color:#9ddaff;background:#254d70}
-.mission-boost-toggle:focus-within{outline:2px solid #a8d5ff;outline-offset:2px}
+.mission-boost-toggle.btn:hover:not(:disabled){border-color:var(--atlas-mark);background:var(--atlas-selected)}
+.mission-boost-toggle:focus-within{outline:2px solid var(--atlas-alert);outline-offset:2px}
 :is(.mission-boost-toggle.btn:disabled,#modal.order-modal .order-form .mission-boost-toggle:has(:disabled)){
- opacity:1;border-color:#465469;background:#202937;color:#b7c6d5;
+ opacity:1;border-color:var(--atlas-line);background:var(--atlas-panel);color:#a5a5a5;
 }
 .mission-boost-copy{display:grid;gap:2px;min-width:0}
 .mission-boost-copy strong{font-size:12px}
-.mission-boost-copy small,.mission-boost-reason{font-size:11px;color:#b9d1e5;font-variant-numeric:tabular-nums}
+.mission-boost-copy small,.mission-boost-reason{font-size:11px;color:var(--atlas-muted);font-variant-numeric:tabular-nums}
 .mission-boost-balance{
- margin-left:auto;padding:3px 4px;border:1px solid #4a637b;border-radius:4px;color:#c0d9eb;
+ margin-left:auto;padding:3px 4px;border:1px solid var(--atlas-edge);border-radius:4px;color:var(--atlas-muted);
  font-size:10px;white-space:nowrap;font-variant-numeric:tabular-nums;
 }
 .mission-boost-balance.is-insufficient{color:#ffb9c4;border-color:#895264}
 .mission-boost-reason{display:block;margin:3px 0 0;color:#e7c59f}
 .mission-quick-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-block:7px}
 dialog .mission-quick-metrics .briefing-metric{
- min-height:34px;padding:5px 7px;gap:6px;background:#142437;border:1px solid #395470;border-radius:5px;box-shadow:none;
+ min-height:34px;padding:5px 7px;gap:6px;background:var(--atlas-panel);border:1px solid var(--atlas-edge);border-radius:5px;box-shadow:none;
 }
 dialog .mission-quick-metrics .metric-symbol{width:19px;height:19px;flex:0 0 19px;background:none;color:#a9d4f3}
 dialog .mission-quick-metrics .metric-symbol .icon{width:16px;height:16px}
@@ -170,24 +170,24 @@ dialog .mission-quick-metrics .metric-value small{font-size:11px;color:#c1d4e6}
 .mission-compare-heading small{color:#b8cbe0}
 .mission-candidate-readings b{color:#a9dcff}
 .mission-candidate-readings .mission-timing{font-size:11px}
-.inquiry-pinned-agent{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #395269;border-radius:5px;background:#122131}
+.inquiry-pinned-agent{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid #395269;border-radius:5px;background:var(--atlas-panel)}
 .inquiry-pinned-agent .mission-candidate-readings{text-align:right}
 .inquiry-pinned-agent .mission-timing{display:block}
 .country-order-footer,.inquiry-footer{
  display:flex;flex-wrap:wrap;align-items:center;gap:5px 8px;flex-shrink:0;
- padding:8px 10px;border-top:1px solid #33485e;background:#0b1622;
+ padding:8px 10px;border-top:1px solid #33485e;background:var(--atlas-inset);
 }
 .country-order-footer .workspace-message,.inquiry-footer .inquiry-feedback{flex:0 0 100%;margin:0;color:#decaa9;font-size:12px}
 .mission-confirm-control{flex:1 1 165px;min-width:0;display:grid;gap:3px}
 .mission-confirm-control .mission-credit-cost{font-size:11px;text-align:right}
-.inquiry-action-context > .mission-briefing-content{grid-column:1/-1;border:1px solid #3b526a;border-radius:5px;background:#122131}
+.inquiry-action-context > .mission-briefing-content{grid-column:1/-1;border:1px solid #3b526a;border-radius:5px;background:var(--atlas-panel)}
 
 :is(.express-order-footer,.mission-confirm-control) > .btn.primary {
- min-height:42px;padding:8px 12px;border:1px solid #9ddaff;border-radius:5px;
- background:#9ddaff;color:#0b2335;box-shadow:none;text-shadow:none;
+ min-height:42px;padding:8px 12px;border:1px solid var(--atlas-mark);border-radius:5px;
+ background:var(--atlas-action);color:#0b2335;box-shadow:none;text-shadow:none;
  font:700 14px/1.25 var(--font);letter-spacing:0;text-transform:none;
 }
-:is(.express-order-footer,.mission-confirm-control) > .btn.primary:hover:not(:disabled){background:#c0e9ff;color:#0b2335}
+:is(.express-order-footer,.mission-confirm-control) > .btn.primary:hover:not(:disabled){background:#ae3649;color:#0b2335}
 @media(max-width:560px){
  .express-order-heading,.express-order-body,.express-order-footer{padding-left:10px}
  .express-order-body,.express-order-footer{padding-right:10px}

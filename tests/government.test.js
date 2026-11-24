@@ -23,6 +23,6 @@ test('Government saves migrate safely and reject forged cooldowns or country tar
  for(const lastFavor of [{type:'funding',turn:2,gain:3},{type:'diplomacy',turn:1,country:'US'},{type:'funding',turn:1,gain:99},{type:'unknown',turn:1}]){const bad=fresh();bad.factions.FR.lastFavor=lastFavor;assert.throws(()=>E.validateSave(bad));}
  E.requestGovernmentFavor(s,'funding');assert.deepEqual(E.validateSave(structuredClone(s)).factions.FR.lastFavor,s.factions.FR.lastFavor);
 });
-test('Government layout exposes three icon cards and puts detailed instructions last',()=>{
- const html=nationalPanel(fresh());assert.equal((html.match(/data-cmd="government-favor"/g)||[]).length,3);assert.ok(html.includes('governmentCountry'));assert.ok(html.indexOf('government-help')>html.indexOf('government-footer'));assert.ok(!html.includes('Influence Interne'));assert.ok(!html.includes('value="US"'));
+test('Government layout exposes three favor cards and the last favor without a rules drawer',()=>{
+ const html=nationalPanel(fresh());assert.equal((html.match(/data-cmd="government-favor"/g)||[]).length,3);assert.ok(html.includes('governmentCountry'));assert.match(html,/government-footer/);assert.doesNotMatch(html,/government-help/);assert.ok(!html.includes('Influence Interne'));assert.ok(!html.includes('value="US"'));
 });

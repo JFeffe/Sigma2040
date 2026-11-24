@@ -1,0 +1,23 @@
+SHADOW MANDATE  |  ÉDITION PC WINDOWS  |  BUILD 243
+
+Windows 10 ou 11, 64 bits. Ouvrir « Shadow Mandate.exe » depuis son dossier
+d’installation. Le jeu fonctionne hors ligne avec le moteur fourni. Le menu
+principal contient la commande Quitter le jeu.
+
+Dans Paramètres → Langue du jeu, choisissez Français ou English. Le choix
+est mémorisé dans votre profil PC.
+
+Les campagnes solo et coopératives avec un équipier ordinateur sont incluses.
+Pour jouer en ligne, ouvrez Nouvelle partie, puis Multijoueur. Choisissez
+le mode, créez un salon puis partagez le lien d’invitation qui y est affiché.
+Le menu Options donne accès à quatre emplacements de sauvegarde. Le jeu
+met à jour l’emplacement actif à chaque tour et conserve une copie de
+récupération. Les campagnes peuvent être importées et exportées au format JSON.
+
+Les sauvegardes sont dans %LOCALAPPDATA%\Shadow Mandate\saves.
+Les campagnes du profil PC précédent sont reprises au premier démarrage.
+
+Pour une mise à jour manuelle, exporter la campagne depuis Sauvegardes
+et quitter le jeu avant de remplacer les fichiers d’installation.
+
+Le moteur d’affichage embarqué Electron est fourni avec ses avis de licences.

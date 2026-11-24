@@ -1,6 +1,6 @@
-import * as E from './engine.js?v=242';
-import {COUNTRY,TECH} from './data.js?v=242';
-import {icon,button,esc,portrait,campaignHeading} from './ui.js?v=242';
+import * as E from './engine.js?v=243';
+import {COUNTRY,TECH} from './data.js?v=243';
+import {icon,button,esc,portrait,campaignHeading} from './ui.js?v=243';
 let selected=null,scope='';
 export function selectTechnology(type){selected=['ai','guard','drone'].includes(type)?type:null;}
 const modules={...TECH,protect:{name:'Protection d’infrastructure',icon:'shield',duration:2},drone:{name:'Reconnaissance par drone',icon:'drone',duration:1}};
@@ -58,10 +58,6 @@ export function technologyPanel(s){
   ${campaignHeading('moduleTitle','module','Modules d’opération',capacity)}
   <div class="console-slots">${slots}</div>
   <div class="campaign-grid module-catalog">${cards}</div>
-  <details class="campaign-disclosure module-help"><summary>Fonctionnement des emplacements</summary>
-   <p>Deux places partagées entre vos modules et les missions de protection ou de reconnaissance par drone sans le talent Drones.</p>
-   <p>Activez un module depuis sa carte ou déposez-le dans un emplacement libre.</p>
-  </details>
  </section>`;
 }
 

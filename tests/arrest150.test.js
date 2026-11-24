@@ -18,4 +18,13 @@ test('Higher chance acts first, unused boost refunded without failure; agent ord
 test('Sang-froid breaks equal chances',()=>{const {s,agents}=scenario([100,100],[3,9]);E.advance(s);assert.equal(s.operationReports.find(r=>r.agentId===agents[1].id).status,'RÉUSSITE');});
 test('Failed first arrest lets the next attempt resolve',()=>{const {s}=scenario([0,0]);E.advance(s);assert.equal(s.operationReports.filter(r=>r.type==='arrest'&&r.status==='ÉCHEC').length,2);});
 test('Complete tie is seeded, reproducible and varies across games',()=>{const winners=new Set();for(let seed=1;seed<=20;seed++){const a=scenario([100,100],[5,5],seed),b=scenario([100,100],[5,5],seed);E.advance(a.s);E.advance(b.s);const winner=s=>s.operationReports.find(r=>r.type==='arrest'&&r.status==='RÉUSSITE').agentId;assert.equal(winner(a.s),winner(b.s));winners.add(winner(a.s));}assert.equal(winners.size,2);});
-test('Main menu preserves campaign info and patch notes, with tutorial under New Game',()=>{const {s}=scenario([100,100]);const html=mainMenu(s);assert.doesNotMatch(html,/data-cmd="(?:mods|tutorial-menu)"/);assert.match(html,/data-cmd="patch-notes"/);assert.match(newGameMenu(),/data-cmd="tutorial-menu"/);assert.match(html,/data-cmd="continue-game"[^>]*>[\s\S]*France · IA Normal · Tour 1 \/ 30<\/small><\/button>/);assert.doesNotMatch(html,/Le monde tient|Six puissances|menu-save/);});
+test('Home preserves campaign info and puts mission modes and options in their own menus',()=>{
+ const {s}=scenario([100,100]);
+ const home=mainMenu(s),options=mainMenu(s,{options:true}),newGame=newGameMenu();
+ assert.deepEqual([...home.matchAll(/data-cmd="([^"]+)"/g)].map(match=>match[1]),['continue-game','new','options']);
+ assert.deepEqual([...options.matchAll(/data-cmd="([^"]+)"/g)].map(match=>match[1]),['patch-notes','settings','rules','save-menu','main-menu']);
+ assert.match(newGame,/data-cmd="tutorial-menu"/);
+ assert.match(newGame,/data-cmd="mp-entry"/);
+ assert.match(home,/data-cmd="continue-game"[^>]*>[\s\S]*France · IA Normal · Tour 1 \/ 30<\/small><\/button>/);
+ assert.doesNotMatch(home,/<footer>/);
+});

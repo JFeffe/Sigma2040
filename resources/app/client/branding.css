@@ -1,0 +1,13 @@
+/* The full game name stays readable in menus and compact command headers. */
+.brand>.brand-wordmark{min-width:0;white-space:normal;line-height:1.15}
+.brand .brand-wordmark>span{display:block;font-size:.65em;letter-spacing:.24em;margin-top:.25em}
+.brand>svg{flex-shrink:0}
+.menu-brand .brand{gap:16px;white-space:normal}
+.menu-brand .brand .brand-wordmark>span{font-size:.65em;letter-spacing:.24em}
+.news-brand{white-space:normal;flex-shrink:0;max-width:190px;line-height:1.2}
+@media(max-width:700px){
+ .menu-brand .brand{font-size:clamp(22px,6vw,34px);gap:12px;letter-spacing:.035em}
+ .training-header .brand{font-size:18px;letter-spacing:1px}
+ .setup-shell .brand{font-size:20px;letter-spacing:1px}
+ .news-brand{max-width:136px;font-size:10px;padding:0 8px}
+}

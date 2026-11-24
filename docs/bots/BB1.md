@@ -47,7 +47,7 @@ sont couverts par les tests d’intégration.
 npm test
 ```
 
-BB1 est intégré au jeu publié : [Jouer à Sigma 2040](https://sigma-2040.docile-hero-2836.chatgpt.site).
+BB1 est intégré au jeu publié : [Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site).
 Les numéros de build, les notes de version et les versions de cache suivent AGENTS.md.
 Le script d’aperçu ci-dessus reste un outil local sans relais réseau de production.
 
@@ -78,9 +78,9 @@ Bootstrap apparié sur 10 000 rééchantillonnages de campagnes (graine 26151005
 Reproduction avec Node.js 20 ou supérieur depuis un clone GitHub :
 
 ```sh
-mkdir -p /tmp/sigma-bb1-174
-git archive a04d15f45b7adc8269586df614adac22f8c2c47b dist/client package.json | tar -x -C /tmp/sigma-bb1-174
-node scripts/benchmark-bb1-travel.mjs /tmp/sigma-bb1-174/dist/client 1200 /tmp/bb1-travel-results.json
+mkdir -p /tmp/shadow-mandate-bb1-174
+git archive a04d15f45b7adc8269586df614adac22f8c2c47b dist/client package.json | tar -x -C /tmp/shadow-mandate-bb1-174
+node scripts/benchmark-bb1-travel.mjs /tmp/shadow-mandate-bb1-174/dist/client 1200 /tmp/bb1-travel-results.json
 ```
 
 Le script lance les deux moteurs, vérifie les parties, enregistre les résultats par graine, les empreintes des sources et les intervalles appariés. Les 421 tests, dont six nouvelles régressions du passage, passent ; les neuf états complets historiques Facile/Normal/Expert restent identiques.

@@ -1,0 +1,5 @@
+Menu typography: Oxanium, Google Fonts. SIL Open Font License, see oxanium-license.txt.
+Source: https://github.com/google/fonts/tree/main/ofl/oxanium
+Earth day and night imagery: Three.js example Earth textures.
+https://github.com/mrdoob/three.js/tree/dev/examples/textures/planets
+Earth imagery credited by Three.js to NASA / Visible Earth.

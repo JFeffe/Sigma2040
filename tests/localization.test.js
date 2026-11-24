@@ -30,6 +30,7 @@ test('English localizes campaign text and wiki searches while preserving charact
   assert.equal(translateText('Déployer 3 agents'),'Deploy 3 agents');
   assert.equal(translateText('Tour 4 · Ordre planifié'),'Turn 4 · Order scheduled');
   assert.equal(translateText('Pays cible'),'Target country');
+  assert.equal(translateText('Turquie'),'Turkey');
   assert.equal(translateText('niveau'),'level');
   assert.equal(translateText('Il faut 25 confiance.'),'Requires 25 confidence.');
   assert.equal(translateText('Effets du module'),'Module details');

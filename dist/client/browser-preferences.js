@@ -1,4 +1,4 @@
-import {legacyStorageKey} from './storage-keys.js?v=242';
+import {legacyStorageKey} from './storage-keys.js?v=243';
 
 // Small UI preferences only; campaign saves never use this fallback store.
 const slot=Symbol.for('shadow-mandate-2040.browser-preferences');

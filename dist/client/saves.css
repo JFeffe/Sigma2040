@@ -1,0 +1,91 @@
+.option-page .command-menu-body {
+ width:min(100%,1080px);
+ margin-inline:auto;
+}
+
+.option-page .command-menu-header {
+ width:min(100%,1080px);
+ margin-inline:auto;
+}
+
+.save-screen {
+ min-width:0;
+}
+
+dialog.save-dialog {
+ width:min(850px,calc(100vw - 32px));
+ max-height:calc(100dvh - 32px);
+ padding:24px;
+}
+
+.save-screen h2 {
+ margin:0 0 6px;
+ font:700 clamp(29px,5vw,45px)/1.05 var(--atlas-display);
+}
+
+.save-intro,.save-slot-status {
+ color:var(--atlas-muted);
+}
+
+.save-slots {
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+ margin:18px 0;
+}
+
+.save-slot.campaign-card {
+ min-height:136px;
+ padding:13px;
+ gap:8px;
+ border:1px solid var(--atlas-edge);
+ border-radius:var(--atlas-radius);
+ background:var(--atlas-raised-card);
+ box-shadow:var(--atlas-card-shadow);
+}
+
+.save-slot.missing {
+ border-style:dashed;
+}
+
+.save-slot.invalid,.save-slot.unavailable {
+ border-color:#a27b62;
+}
+
+.save-slot>header,.save-slot-campaign,.save-slot-actions,.save-actions {
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px;
+ align-items:center;
+}
+
+.save-slot>header {
+ justify-content:space-between;
+}
+
+.save-slot>header>span {
+ color:var(--atlas-accent);
+ font-size:12px;
+}
+
+.save-slot h3,.save-slot p {
+ margin:0;
+}
+
+.save-slot-actions {
+ margin-top:auto;
+}
+
+.save-recovery p {
+ padding:0 10px;
+}
+
+.save-recovery .save-slot-actions {
+ padding:6px 10px 10px;
+}
+
+@media (max-width:590px) {
+ .save-slots {grid-template-columns:1fr;}
+ .save-slot.campaign-card {min-height:0;}
+ dialog.save-dialog {padding:16px;}
+}

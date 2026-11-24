@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as E from '../dist/client/engine.js';
 import {CELL_RULES,selectCells,activeCaptives,captivityTick,cellKnown} from '../dist/client/cell-variants.js';
-import {cellInfoMarkup} from '../dist/client/cell-info.js';
+import {cellInfoBadge} from '../dist/client/cell-info.js';
 import {threatPanel} from '../dist/client/threats-ui.js';
 import {locationActions} from '../dist/client/presentation.js';
 import {playerView} from '../dist/client/multiplayer-core.js';
@@ -40,8 +40,10 @@ test('Failed rescue leaves captivity active; save validation rejects malformed c
  const s=eclipse();E.advance(s);const a=s.agents[0];a.country='DE';E.assign(s,a.id,'rescue',s.captives[0].id);a.task.remaining=1;a.task.chance=0;const before=s.crisis;E.advance(s);assert.equal(activeCaptives(s).length,1);assert.equal(s.crisis,before+6);
  assert.doesNotThrow(()=>E.validateSave(structuredClone(s)));for(const mutate of [s=>s.activeCells.push(4),s=>s.captives[0].country='FR',s=>s.captives[0].lastCrisisTurn=100]){const bad=structuredClone(s);mutate(bad);assert.throws(()=>E.validateSave(bad));}
 });
-test('Unknown cells stay hidden in popup; threats show type; public views share captives and no active-cell list',()=>{
- const s=eclipse();for(const f of Object.values(s.factions))f.known={};s.plots[0].turn=20;assert.equal(cellKnown(s,4),true);delete s.plots[0].announced;assert.equal(cellKnown(s,4),false);assert.doesNotMatch(cellInfoMarkup(s,4),/ÉCLIPSE|Enlèvements/);
+test('Unknown cells stay hidden in tooltips; threats show type; public views share captives and no active-cell list',()=>{
+ const s=eclipse();for(const f of Object.values(s.factions))f.known={};s.plots[0].turn=20;assert.equal(cellKnown(s,4),true);
+ const known=cellInfoBadge(s,4);assert.match(known,/data-rich-tooltip[\s\S]*<template>[\s\S]*ÉCLIPSE/);assert.doesNotMatch(known,/data-cmd=/);
+ delete s.plots[0].announced;assert.equal(cellKnown(s,4),false);assert.doesNotMatch(cellInfoBadge(s,4),/ÉCLIPSE|Enlèvements/);
  s.plots[0].turn=1;assert.match(threatPanel(s),/Enlèvement/);E.advance(s);for(const country of participants){const v=playerView({game:s,members:[]},country);assert.equal(v.activeCells,undefined);assert.deepEqual(v.captives,s.captives);assert.equal(E.rescueTargets(v,country).filter(c=>c.id.startsWith('captive')).length,1);assert.doesNotThrow(()=>threatPanel(v));}
 });
 test('Legacy games remain at +30 and have no experimental roster',()=>{const s=E.createGame('FR',['p0','p1','p2','p3'],42);assert.equal(s.cellVariantRules,undefined);assert.equal(s.plots.length,17);for(const p of s.plots)assert.equal(E.attackDamage(s,p),30);});

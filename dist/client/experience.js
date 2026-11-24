@@ -1,14 +1,14 @@
-import {languageSettingsMarkup,translateText} from './localization.js?v=242';
-import {readStorageItem} from './storage-keys.js?v=242';
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=242';
-import {musicMarkup} from './music.js?v=242';
-import * as E from './engine.js?v=242';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=242';
-import {proofTitle} from './intelligence.js?v=242';
-import {esc,button,portrait,icon} from './ui.js?v=242';
+import {languageSettingsMarkup,translateText} from './localization.js?v=243';
+import {readStorageItem} from './storage-keys.js?v=243';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=243';
+import {musicMarkup} from './music.js?v=243';
+import * as E from './engine.js?v=243';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=243';
+import {proofTitle} from './intelligence.js?v=243';
+import {esc,button,portrait,icon} from './ui.js?v=243';
 const PREF='shadow-mandate-2040-feedback-settings';
-let prefs={sound:false,volume:25,motion:'system'};
-try{const saved=JSON.parse(readStorageItem(localStorage,PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system'};}catch{}
+let prefs={sound:false,volume:25,motion:'system',infoBar:true};
+try{const saved=JSON.parse(readStorageItem(localStorage,PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system',infoBar:saved.infoBar!==false};}catch{}
 let baseline=null,notices=[],resourceChanges={},agentChanges={},expires=0,audioContext=null,lastSound=0;
 const signed=n=>(n>0?'+':'−')+Math.abs(Math.round(n*100)/100);
 export function feedbackSnapshot(s){const f=s.factions[s.player];return {campaign:`${s.seed}:${s.player}`,turn:s.turn,log:s.logId,resources:{budget:f.budget,confidence:f.confidence,score:f.score,crisis:s.crisis},agents:Object.fromEntries(s.agents.filter(a=>a.faction===s.player).map(a=>[a.id,{name:a.name,energy:100-a.fatigue,exposure:a.exposure,status:a.status}])),proofs:Object.fromEntries(f.evidence.map(e=>[e.id,e.contested?'discarded':e.verified?'verified':'pending']))};}
@@ -63,8 +63,20 @@ export function transmission(r){
  const lines={p25:['Rapport transmis. Personne n’a posé de questions.','Mission terminée. La voie est libre.'],p26:['Compte rendu transmis. Je reste sur place.','Mission terminée. L’équipe peut compter sur moi.'],p23:['Rapport transmis. Les prochaines étapes sont prêtes.','Opération terminée. Je prépare la suite.'],p24:['Compte rendu envoyé. On fait le point ensemble.','Mission terminée. Je reste à l’écoute.'],p22:['Rapport transmis. Les indices concordent.','Mission terminée. Je reste sur la piste.'],p21:['Compte rendu transmis. Nos interlocuteurs attendent la suite.','Mission terminée. Les dispositions nécessaires ont été prises.'],p20:['Rapport envoyé. Tout est sous contrôle.','Opération terminée. Je reste en veille.'],p19:['Livraison effectuée. Les détails sont dans mon rapport.','Objectif atteint. Je garde un œil sur la route.'],p0:['Compte rendu transmis. À vous de jouer.','Résultat confirmé. Je reste à votre disposition.'],p12:['Compte rendu envoyé. Quelle est la suite ?','Objectif de mission atteint.'],p13:['C’est fait. Le résultat est dans le dossier.','Compte rendu transmis. On passe à la suite ?'],p14:['Terminé. En attente.','Mission accomplie.'],p15:['Rapport envoyé. Tout est dedans.','Terminé. Je reste joignable sur le canal.'],p18:['Affaire réglée. Vous trouverez les détails dans mon rapport.','Compte rendu envoyé. Je reste en contact.'],p17:['Rapport transmis. Les faits sont dans le dossier.','Opération terminée. Je prépare la suite.'],p16:['Résultat transmis. Je reste attentive.','Compte rendu envoyé au commandement.']};
  const choices=lines[r.agentId]||['Compte rendu transmis.','Opération terminée. En attente des ordres.'];return choices[r.turn%choices.length];
 }
-export function applyPreferences(){applyGraphics();if(typeof document==='undefined')return;document.documentElement.classList.toggle('reduce-feedback',prefs.motion==='reduced');}
-export function updatePreference(key,value){if(key==='sound')prefs.sound=!!value;if(key==='volume')prefs.volume=Math.max(0,Math.min(100,Number(value)||0));if(key==='motion')prefs.motion=value==='reduced'?'reduced':'system';try{localStorage.setItem(PREF,JSON.stringify(prefs));}catch{}applyPreferences();}
+export function applyPreferences(){
+ applyGraphics();
+ if(typeof document==='undefined')return;
+ document.documentElement.classList.toggle('reduce-feedback',prefs.motion==='reduced');
+ document.documentElement.toggleAttribute('data-hide-info-bar',!prefs.infoBar);
+}
+export function updatePreference(key,value){
+ if(key==='sound')prefs.sound=!!value;
+ if(key==='volume')prefs.volume=Math.max(0,Math.min(100,Number(value)||0));
+ if(key==='motion')prefs.motion=value==='reduced'?'reduced':'system';
+ if(key==='infoBar')prefs.infoBar=!!value;
+ try{localStorage.setItem(PREF,JSON.stringify(prefs));}catch{}
+ applyPreferences();
+}
 export function settingsMarkup(){
  const panels=[['general','Général'],['display','Affichage'],['audio','Audio']];
  return `<div class="settings-modal">
@@ -77,7 +89,8 @@ export function settingsMarkup(){
    <div id="settings-display" data-settings-panel="display" hidden>
     ${graphicsMarkup()}
     <section class="feedback-settings">
-     <h3>Animations</h3>
+     <h3>Interface</h3>
+     <label class="feedback-toggle info-bar-toggle"><input id="showInfoBar" type="checkbox" ${prefs.infoBar?'checked':''}> Afficher la barre Info</label>
      <label for="feedbackMotion">Effets de l’interface</label>
      <select id="feedbackMotion">
       <option value="system" ${prefs.motion==='system'?'selected':''}>Suivre les préférences de l’appareil</option>

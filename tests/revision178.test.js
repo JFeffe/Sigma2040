@@ -107,6 +107,14 @@ test('Multiplayer interruptions reach both private reports without disclosing an
 });
 
 test('Government UI and multiplayer use the new diplomatic costs and exactly twelve medical energy',()=>{
- const s=fresh();s.factions.FR.confidence=100;s.factions.FR.cooperation.DE=0;const html=nationalPanel(s,'DE');assert.match(html,/<strong>\+12<\/strong>/);assert.doesNotMatch(html,/\+20|jusqu’à 20 énergie/);assert.match(html,/Hostile → Réticente : 15/);assert.match(html,/Favorable → Soutien total : 5/);
+ const s=fresh(),player=s.factions.FR;player.confidence=100;
+ for(const c of COUNTRIES.filter(c=>!c.power))player.cooperation[c.id]=4;
+ for(const [level,relation,cost] of [[0,'Hostile → Réticente',15],[3,'Favorable → Soutien total',5]]){
+  player.cooperation.DE=level;
+  const html=nationalPanel(s),diplomacy=html.split('class="government-card government-diplomacy"')[1].split('</article>')[0];
+  assert.match(html,/<strong>\+12<\/strong>/);assert.doesNotMatch(html,/\+20|jusqu’à 20 énergie/);
+  assert.ok(diplomacy.includes(relation));
+  assert.ok(diplomacy.includes(`<b data-government-cost>${cost}</b>`));
+ }
  const r=room(),m=r.members[1],f=r.game.factions[m.country],a=E.team(r.game,m.country)[0];a.fatigue=60;f.confidence=100;send(r,m,'government-favor',{type:'medical'});assert.equal(r.game.agents.find(x=>x.id===a.id).fatigue,48);assert.equal(r.game.factions[m.country].medicalUses,1);
 });

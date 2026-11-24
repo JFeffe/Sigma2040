@@ -1,16 +1,14 @@
-import {agentLocation} from './agent-location.js?v=242';
-import * as E from './engine.js?v=242';
-import {COUNTRY,ACTIONS,STAT_NAMES} from './data.js?v=242';
-import {availability,actionResources} from './presentation.js?v=242';
-import {button,esc,icon,portrait,flag,nationalityFlags,talents} from './ui.js?v=242';
-import {countryTargetButtons} from './country-inquiry.js?v=242';
-import {forecastMarkup,missionCostsMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=242';
-import {countryArtHeader} from './country-signals.js?v=242';
-import {proofTitle} from './intelligence.js?v=242';
-import {fullBody} from './visuals.js?v=242';
-import {countryOnMap,operationCountries} from './operation-map.js?v=242';
-import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=242';
-import {exposureLevel} from './exposure.js?v=242';
+import {agentProfileCard} from './personnel-ui.js?v=243';
+import * as E from './engine.js?v=243';
+import {COUNTRY,ACTIONS} from './data.js?v=243';
+import {actionResources} from './presentation.js?v=243';
+import {button,esc,icon,portrait,flag} from './ui.js?v=243';
+import {countryTargetButtons} from './country-inquiry.js?v=243';
+import {forecastMarkup,missionCostsMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=243';
+import {countryArtHeader} from './country-signals.js?v=243';
+import {proofTitle} from './intelligence.js?v=243';
+import {countryOnMap,operationCountries} from './operation-map.js?v=243';
+import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=243';
 
 const headquartersActions=['rest','cyberSupport','counter','analyze','heal'];
 const fieldActions=['cyberSupport','equip','findSafehouse','fieldRest','hide'];
@@ -145,21 +143,12 @@ export function countryOperationsMarkup(s,country,selection={},locked=''){
   <div class="mission-confirm-control">${selected?.o.cost?`<small class="mission-credit-cost">${selected.o.cost} crédits</small>`:''}${button(icon('check')+' Confirmer'+(selected?' · '+esc(selected.a.name):''),'workspace-confirm','primary wide',blocked?'disabled':'')}</div>
  </footer>`:''}`;
 }
-export function floatingAgentMarkup(s,id,{sidebar=false,locked=''}={}){
+export function floatingAgentMarkup(s,id,{locked=''}={}){
  const a=s.agents.find(a=>a.id===id);if(!a)return '<section class="workspace-body">Agent indisponible.</section>';
- const status=availability(a),task=a.task,target=COUNTRY[task?.target]?.name||s.suspects.find(t=>t.id===task?.target)?.name||COUNTRY[a.country].name,own=a.faction===s.player;
- const energy=100-a.fatigue,energyTone=energy>50?'green':energy>25?'yellow':'red';
- const exposure=exposureLevel(a),exposureTone=['green','blue','yellow','orange','red'][exposure],discretion=E.exposureLabel(a);
- const readings=[['bolt','Énergie',energy,energyTone],['eye','Exposition',a.exposure,exposureTone]];
- const weapon=a.weapon?'Avec':'Sans';
- const stats=a.stats.map((n,i)=>`<span title="${STAT_NAMES[i]}">${icon(['scan','target','shield'][i])}<span class="sr-only">${STAT_NAMES[i]}</span> <strong>${n}</strong></span>`).join('');
+ const task=a.task,target=COUNTRY[task?.target]?.name||s.suspects.find(t=>t.id===task?.target)?.name||COUNTRY[a.country].name,own=a.faction===s.player;
  const localActions=countrySidebarActions(s,a.country,own?locked:'Partenaire : consultation uniquement.',a);
- return `<article class="workspace-body floating-agent ${own?'':'coop-ally'}">${sidebar?'':`<header><h2>${esc(a.name)} <span class="agent-nationality">${nationalityFlags(a)}</span></h2></header>`}
- <div class="floating-agent-overview"><div class="floating-agent-portrait">${fullBody(a,{alignTop:true})}</div><div class="floating-agent-facts">${agentLocation(a,{compact:true,pin:true})}${own?'':'<small>Partenaire : consultation uniquement</small>'}<span class="availability ${status.kind}">${esc(status.label)}</span>
- <div class="floating-agent-readings">${readings.map(([symbol,label,value,tone])=>`<span title="${label}">${icon(symbol)}<span class="sr-only">${label}</span><strong class="reading-${tone}">${value}/100</strong></span>`).join('')}</div>
- <div class="floating-agent-stats" aria-label="Statistiques">${stats}</div>
- <div class="floating-agent-gear"><span title="${weapon} arme">${icon('pistol')}<span class="sr-only">Arme</span>${weapon}</span><span title="Niveau de discrétion"><span class="sr-only">Discrétion</span><svg class="icon discretion-meter reading-${exposureTone}" viewBox="0 0 18 14" aria-hidden="true">${Array.from({length:5},(_,i)=>`<rect x="${i*4}" y="${10-i*2}" width="2" height="${4+i*2}" rx=".5" opacity="${i<=exposure?1:.25}"/>`).join('')}</svg>${esc(discretion)}</span></div>
- ${talents(a)}</div></div>
+ return `<article class="workspace-body floating-agent ${own?'':'coop-ally'}">
+ ${agentProfileCard(s,a)}
  ${task||a.status==='captured'?`<section class="floating-agent-mission"><h3>${task?esc(ACTIONS[task.type].name):'Extraction nécessaire'}</h3>${task?`<p>${esc(target)} · ${task.remaining} tour(s) · ${task.chance} % de réussite</p>${own?button('Annuler la mission','cancel','small',`data-id="${id}" ${E.travelInProgress(a)||s.ended?'disabled':''}`):''}`:''}</section>`:''}
  ${localActions}</article>`;
 }

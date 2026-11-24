@@ -31,8 +31,31 @@ test('Sidebar shows agent details on selection, superpower artwork without actio
  const country=makeScreens(s,'JP',null,null,camera).world().split('class="map-dossier')[1].split('<div class="world-overview">')[0];assert.match(country,/compact-country-signals/);assert.doesNotMatch(country,/data-group="access"/);assert.match(country,/data-cmd="country-inquiry"/);assert.ok(country.indexOf('Déployer un agent')<country.indexOf('Hack du pays'));
 });
 test('Cooperative diplomacy other countries exclude all six superpowers, even inactive ones',()=>{
- const d=D.createDraft(['FR','US'],42,'cooperative');while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);const s=E.createGame('FR',d.teams.FR,42,'normal',{gameMode:'cooperative',participants:d.countries,teams:d.teams});const html=makeScreens(s,'FR',null,null,createCamera()).diplomacy().split('diplomacy-countries')[1].split('diplomacy-powers')[0];
+ const d=D.createDraft(['FR','US'],42,'cooperative');while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);const s=E.createGame('FR',d.teams.FR,42,'normal',{gameMode:'cooperative',participants:d.countries,teams:d.teams});const html=makeScreens(s,'FR',null,null,createCamera()).diplomacy().split('diplomacy-countries')[1].split('</section>')[0];
  for(const c of COUNTRIES.filter(c=>!c.power&&!c.expansion))assert.ok(html.includes(c.name));for(const c of COUNTRIES.filter(c=>c.power))assert.ok(!html.includes('<h3>'+c.name+'</h3>'));
+});
+
+test('Diplomacy lists the active powers by descending prestige before the operation countries',()=>{
+ const s=E.createConfiguredGame('FR',DEFAULT_TEAM_IDS,42),powers=Object.keys(s.factions);
+ assert.equal(powers.length,4);
+ powers.forEach((id,index)=>{s.factions[id].score=5*index;});
+ const territory=s.operationCountries[0],player=s.factions.FR;
+ player.access[territory]=true;player.cooperation[territory]=4;
+ const html=makeScreens(s,'FR',null,null,createCamera()).diplomacy();
+ const [,powerCards,otherCards]=html.split(/diplomacy-(?:powers|countries)/);
+ const ids=cards=>[...cards.matchAll(/data-country="([A-Z]+)"/g)].map(match=>match[1]);
+ assert.deepEqual(ids(powerCards),[...powers].reverse());
+ assert.deepEqual(ids(otherCards),s.operationCountries);
+ assert.match(powerCards,/<strong class="diplomacy-score">15 <small>pts<\/small>/);
+ const indicators=cards=>[...cards.matchAll(/<div class="diplomacy-signals"[^>]*>([\s\S]*?)<\/div>/g)].map(match=>match[1]);
+ const territoryIndicators=indicators(otherCards);
+ assert.equal(indicators(powerCards).length,0);
+ assert.equal(territoryIndicators.length,s.operationCountries.length);
+ for(const row of territoryIndicators)assert.equal((row.match(/role="img"/g)||[]).length,6);
+ const ownPowerCard=powerCards.split('data-country="FR"')[1].split('</article>')[0];
+ assert.match(ownPowerCard,/data-id="government"/);
+ assert.match(territoryIndicators[0],/aria-label="Accès : actif"/);
+ assert.match(territoryIndicators[0],/aria-label="Coopération : Soutien total" data-level="4"/);
 });
 
 test('The agent fiche pairs weapon availability with a color-coded discretion meter',()=>{
@@ -43,23 +66,21 @@ test('The agent fiche pairs weapon availability with a color-coded discretion me
   assert.ok(gear.includes(icon('pistol')+`<span class="sr-only">Arme</span>${weapon?'Avec':'Sans'}`));
   assert.ok(gear.includes(`discretion-meter reading-${tone}`));
   assert.equal([...gear.matchAll(/opacity="1"/g)].length,bars);
-  assert.ok(gear.endsWith(`</svg>${label}</span>`));
-  assert.equal(html.split(label).length,2);
+  assert.ok(gear.trimEnd().endsWith(`</svg>${label}</span>`));
+  assert.equal(html.replace(/<template>[\s\S]*?<\/template>/g,'').split(label).length,2);
  }
 });
 
-test('The globe shows both victory objectives and only the foreign agents map toggle',()=>{
+test('The globe omits the campaign objective strip and puts the foreign-agent toggle beside the team',()=>{
  const camera=createCamera(),regular=fresh();
  const html=makeScreens(regular,'FR',null,null,camera).world();
- assert.match(html,/L’Architecte<span class="sr-only"> à arrêter/);
- assert.match(html,/0\/2<\/strong> cellules/);
- assert.doesNotMatch(html,/arrestations|data-map="(?:dome|globe|routes|intel)"/);
- assert.match(html,/data-map="foreign"/);
+ assert.doesNotMatch(html,/objective-strip|data-map="(?:dome|globe|routes|intel)"/);
+ assert.match(html,/class="field-team panel">[\s\S]*data-map="foreign" aria-pressed="true" aria-label="Agents étrangers" title="Agents étrangers">[\s\S]*class="team-grid"/);
  const d=D.createDraft(['FR','US'],42,'cooperative');
  while(D.draftCountry(d))D.pickDraftAgent(d,D.draftCountry(d),D.availableDraftAgents(d)[0].id);
  const coop=E.createConfiguredGame('FR',d.teams.FR,42,'bb2',{gameMode:'cooperative',participants:d.countries,teams:d.teams});
  coop.suspects.find(t=>t.id==='s6').arrested=true;
- assert.match(makeScreens(coop,'FR',null,null,camera).world(),/L’Architecte<span class="sr-only"> arrêté.*0\/3<\/strong> cellules/);
+ assert.doesNotMatch(makeScreens(coop,'FR',null,null,camera).world(),/objective-strip/);
 });
 
 test('Country panels put artwork and live status ahead of the scrolling actions',()=>{
