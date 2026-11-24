@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {existsSync,readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import * as E from '../dist/client/engine.js';
 import {COUNTRIES,COUNTRY,DEFAULT_TEAM_IDS} from '../dist/client/data.js';
@@ -46,12 +46,16 @@ test('Single map clicks still select; a different agent or cancelled click canno
  control.click('a');control.cancel();clock.advance(1000);assert.deepEqual(calls,['select a','select b']);
 });
 
-test('Attack postponement produces a saved public announcement with the old and new deadlines and placeholder image',()=>{
+test('Attack postponement produces an illustrated public announcement with the old and new deadlines',()=>{
  const s=fresh(),p=s.plots[0];s.plots=[p];s.turn=2;p.turn=5;p.country='DE';observeProtection(s,'DE',8);
  E.advance(s);const report=s.attackDelayReports[0];
  assert.equal(report.reason,'protection');assert.equal(report.oldTurn,5);assert.equal(report.attackTurn,7);assert.equal(report.turn,2);assert.equal(report.country,'DE');
  assert.equal(missionCards(s).filter(r=>r.type==='postponement').length,1);assert.equal(revealDelay(report),0);
- const html=missionRevealMarkup(report,0,1);assert.match(html,/Image à venir/);assert.match(html,/Attaque reportée/);assert.match(html,/Fin du tour 5/);assert.match(html,/Fin du tour 7/);assert.match(html,/data-cmd="reveal-next"/);assert.match(html,/data-cmd="reveal-skip"/);
+ const html=missionRevealMarkup(report,0,1);
+ assert.match(html,/<img src="\.\/assets\/missions\/attack-postponed\.webp"/);
+ assert.ok(existsSync(new URL('../dist/client/assets/missions/attack-postponed.webp',import.meta.url)));
+ assert.doesNotMatch(html,/Image à venir/);
+ assert.match(html,/Attaque reportée/);assert.match(html,/Fin du tour 5/);assert.match(html,/Fin du tour 7/);assert.match(html,/data-cmd="reveal-next"/);assert.match(html,/data-cmd="reveal-skip"/);
  const loaded=E.validateSave(structuredClone(s));assert.deepEqual(loaded.attackDelayReports,s.attackDelayReports);
  for(const country of ['FR','US'])assert.deepEqual(playerView({game:loaded,offers:[]},country).attackDelayReports,[report]);
  E.advance(s);assert.deepEqual(s.attackDelayReports,[]);assert.equal(p.turn,7);

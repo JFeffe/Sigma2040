@@ -1,6 +1,6 @@
-import {COUNTRY} from './data.js?v=243';
-import {esc,flag,icon} from './ui.js?v=243';
-import {travelInProgress} from './engine.js?v=243';
+import {COUNTRY} from './data.js?v=244';
+import {esc,flag,icon} from './ui.js?v=244';
+import {travelInProgress} from './engine.js?v=244';
 export function agentLocation(a,{compact=false,pin=false}={}){
  const moving=travelInProgress(a),from=moving?(a.task.origin||a.country):a.country,to=a.task?.target;
  return `<span class="agent-deployment" title="${moving?'Trajet en cours':'Pays actuel'} : ${esc(COUNTRY[from].name)}${moving?' → '+esc(COUNTRY[to].name):''}">${pin?icon('pin'):''}${flag(from)}<span>${moving?(compact?'En transit · ':'En transit depuis · '):compact?'':'Position · '}${esc(COUNTRY[from].name)}${moving?' → '+esc(COUNTRY[to].name):a.country===a.faction?' · QG':''}</span></span>`;

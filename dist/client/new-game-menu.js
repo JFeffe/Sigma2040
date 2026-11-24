@@ -1,6 +1,6 @@
-import {GAME_MODES} from './game-setup.js?v=243';
-import {backToMainMenu,menuSkyMarkup} from './main-menu.js?v=243';
-import {brand,button,icon} from './ui.js?v=243';
+import {GAME_MODES} from './game-setup.js?v=244';
+import {backToMainMenu,menuSkyMarkup} from './main-menu.js?v=244';
+import {brand,button,icon} from './ui.js?v=244';
 
 function gameChoice(label,description,symbol,command,{mode,featured=false}={}){
  return button(`<span class="game-choice-icon">${icon(symbol)}</span>

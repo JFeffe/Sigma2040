@@ -1,9 +1,9 @@
-import {threatCountryClear,relocationCountries} from './threat-placement.js?v=243';
-import {cellName,namedCells,regularCells} from './data.js?v=243';
-import {campaignRules} from './campaign-rules.js?v=243';
-import {operationCountries} from './operation-map.js?v=243';
-import {refuge} from './placement.js?v=243';
-import {COUNTRY} from './data.js?v=243';
+import {threatCountryClear,relocationCountries} from './threat-placement.js?v=244';
+import {cellName,namedCells,regularCells} from './data.js?v=244';
+import {campaignRules} from './campaign-rules.js?v=244';
+import {operationCountries} from './operation-map.js?v=244';
+import {refuge} from './placement.js?v=244';
+import {COUNTRY} from './data.js?v=244';
 // Only resolved, observable events enter Fracture's knowledge. Never inspect agent orders.
 export function initFracture(s){s.fracture??={version:1,cells:Array.from({length:s.coopNetworkRules===1||s.cellVariantRules===1?5:3},()=>({pressure:0,resources:4,cooldown:0})),flights:[],moved:[],defenses:{}};return s.fracture;}
 export function observeFracture(s,cell,amount){if(regularCells(s).includes(cell)){const f=initFracture(s);f.cells[cell].pressure=Math.min(6,f.cells[cell].pressure+amount);}}

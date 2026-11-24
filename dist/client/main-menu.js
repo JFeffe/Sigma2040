@@ -1,10 +1,10 @@
-import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=243';
-import {AI_LEVELS} from './ai-difficulty.js?v=243';
-import {BUILD_VERSION} from './build-version.js?v=243';
-import {campaignRules} from './campaign-rules.js?v=243';
-import {renderRatio} from './graphics.js?v=243';
-import {brand,button,esc,icon} from './ui.js?v=243';
-import {COUNTRY} from './data.js?v=243';
+import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=244';
+import {AI_LEVELS} from './ai-difficulty.js?v=244';
+import {BUILD_VERSION} from './build-version.js?v=244';
+import {campaignRules} from './campaign-rules.js?v=244';
+import {renderRatio} from './graphics.js?v=244';
+import {brand,button,esc,icon} from './ui.js?v=244';
+import {COUNTRY} from './data.js?v=244';
 export function backToMainMenu(command='main-menu'){
  return button(icon('arrow')+'<span>Retour au menu principal</span>',command,'small command-back');
 }

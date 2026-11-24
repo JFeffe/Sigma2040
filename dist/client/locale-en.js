@@ -1,5 +1,7 @@
 // English game copy. Keep the French originals as keys and retain every numbered placeholder.
 export const ENGLISH_MESSAGES={
+ "Illustration « Attaque reportée »": "Attack postponed artwork",
+ "La carte « Attaque reportée » du Bilan mondial affiche maintenant une illustration.": "The Attack postponed card in the Global debrief now features artwork.",
  "Atlas noir et rouge": "Atlas in black and red",
  "Les menus et les panneaux Atlas adoptent une palette noire et rouge, des surfaces texturées et une légère transparence. Le menu de gauche se replie à l’éloignement du curseur sur Monde et reste ouvert dans les autres onglets.": "Atlas menus and panels use a black and red palette with textured, slightly translucent surfaces. The left navigation folds when the pointer moves away in World and stays open in other tabs.",
  "Le menu Options donne accès aux notes de version, aux paramètres, au wiki des règles et à quatre emplacements de sauvegarde. La campagne solo est enregistrée automatiquement dans son emplacement à chaque tour.": "The Options menu opens patch notes, settings, the rules wiki, and four save slots. A solo campaign automatically saves to its slot each turn.",

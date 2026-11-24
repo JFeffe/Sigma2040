@@ -1,14 +1,14 @@
-import {agentProfileCard} from './personnel-ui.js?v=243';
-import * as E from './engine.js?v=243';
-import {COUNTRY,ACTIONS} from './data.js?v=243';
-import {actionResources} from './presentation.js?v=243';
-import {button,esc,icon,portrait,flag} from './ui.js?v=243';
-import {countryTargetButtons} from './country-inquiry.js?v=243';
-import {forecastMarkup,missionCostsMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=243';
-import {countryArtHeader} from './country-signals.js?v=243';
-import {proofTitle} from './intelligence.js?v=243';
-import {countryOnMap,operationCountries} from './operation-map.js?v=243';
-import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=243';
+import {agentProfileCard} from './personnel-ui.js?v=244';
+import * as E from './engine.js?v=244';
+import {COUNTRY,ACTIONS} from './data.js?v=244';
+import {actionResources} from './presentation.js?v=244';
+import {button,esc,icon,portrait,flag} from './ui.js?v=244';
+import {countryTargetButtons} from './country-inquiry.js?v=244';
+import {forecastMarkup,missionCostsMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=244';
+import {countryArtHeader} from './country-signals.js?v=244';
+import {proofTitle} from './intelligence.js?v=244';
+import {countryOnMap,operationCountries} from './operation-map.js?v=244';
+import {agentTravelDestinations,deploymentOptions} from './deployment.js?v=244';
 
 const headquartersActions=['rest','cyberSupport','counter','analyze','heal'];
 const fieldActions=['cyberSupport','equip','findSafehouse','fieldRest','hide'];

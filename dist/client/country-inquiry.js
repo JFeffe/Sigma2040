@@ -1,16 +1,16 @@
-import {localizeContent} from './localization.js?v=243';
-import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=243';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=243';
-import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=243';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=243';
-import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=243';
-import * as E from './engine.js?v=243';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=243';
-import {esc,icon,button,flag,portrait} from './ui.js?v=243';
-import {suspectPortrait} from './fracture-profiles.js?v=243';
-import {countrySignals} from './country-signals.js?v=243';
-import {proofTitle,OUTCOMES} from './intelligence.js?v=243';
-import {forecastMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=243';
+import {localizeContent} from './localization.js?v=244';
+import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=244';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=244';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationSteps,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=244';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=244';
+import {ACTIONS,COUNTRY,CELLS,cellName,STAT_NAMES,TALENTS} from './data.js?v=244';
+import * as E from './engine.js?v=244';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=244';
+import {esc,icon,button,flag,portrait} from './ui.js?v=244';
+import {suspectPortrait} from './fracture-profiles.js?v=244';
+import {countrySignals} from './country-signals.js?v=244';
+import {proofTitle,OUTCOMES} from './intelligence.js?v=244';
+import {forecastMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=244';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.

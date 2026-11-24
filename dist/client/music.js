@@ -1,5 +1,5 @@
-import {readStorageItem} from './storage-keys.js?v=243';
-import {translateText} from './localization.js?v=243';
+import {readStorageItem} from './storage-keys.js?v=244';
+import {translateText} from './localization.js?v=244';
 const KEY='shadow-mandate-2040-music';
 export const TRACKS=[{title:'Ticking Shadows — A Cello Study',artist:'AICanvas',src:'ticking-shadows.mp3'},{title:'Steering Politics',artist:'Grand Project',src:'steering-politics.mp3'},{title:'The Perfect System',artist:'Grand Project',src:'the-perfect-system.mp3'}];
 let prefs={enabled:true,volume:20};

@@ -1,10 +1,10 @@
-import {gameLanguage,translateText} from './localization.js?v=243';
-import {selectOperationMap} from './operation-map.js?v=243';
-import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=243';
-import {draftCountry} from './game-setup.js?v=243';
-import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=243';
-import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=243';
-import {teamBalanceMarkup} from './team-balance.js?v=243';
+import {gameLanguage,translateText} from './localization.js?v=244';
+import {selectOperationMap} from './operation-map.js?v=244';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=244';
+import {draftCountry} from './game-setup.js?v=244';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=244';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=244';
+import {teamBalanceMarkup} from './team-balance.js?v=244';
 
 export function operationMapMarkup(ids){return ids?.length?`<section class="operation-map-brief panel" aria-label="Pays d’opération"><strong>Carte de la campagne · ${ids.length} pays d’opération</strong><ul>${ids.map(id=>`<li>${flag(id)} ${esc(COUNTRY[id].name)}</li>`).join('')}</ul></section>`:'';}
 

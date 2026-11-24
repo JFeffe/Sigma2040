@@ -1,5 +1,5 @@
-import {campaignRules} from './campaign-rules.js?v=243';
-import {rescueTargets} from './cell-variants.js?v=243';
+import {campaignRules} from './campaign-rules.js?v=244';
+import {rescueTargets} from './cell-variants.js?v=244';
 // Estimate only visible, useful field work within a short horizon. No hidden targets.
 export function weaponOpportunity(s,a,E,targets,proofs){
  if(a.weapon||a.country===a.faction)return 0;

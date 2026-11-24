@@ -1,5 +1,5 @@
-import {localizeContent,translateText} from './localization.js?v=243';
-import {readPreference,writePreference} from './browser-preferences.js?v=243';
+import {localizeContent,translateText} from './localization.js?v=244';
+import {readPreference,writePreference} from './browser-preferences.js?v=244';
 // Non-modal windows live outside #app so rendering the globe never destroys them.
 export function clampWindowPosition(x,y,width,height,viewportWidth,viewportHeight){
  return {x:Math.max(8,Math.min(x,Math.max(8,viewportWidth-width-8))),y:Math.max(8,Math.min(y,Math.max(8,viewportHeight-height-8)))};

@@ -1,6 +1,6 @@
-import {CELL_RULES,cellKnown,activeCaptives} from './cell-variants.js?v=243';
-import {cellName,COUNTRY} from './data.js?v=243';
-import {esc,button,flag} from './ui.js?v=243';
+import {CELL_RULES,cellKnown,activeCaptives} from './cell-variants.js?v=244';
+import {cellName,COUNTRY} from './data.js?v=244';
+import {esc,button,flag} from './ui.js?v=244';
 export function cellInfoBadge(s,cell){
  const known=cellKnown(s,cell),name=known?cellName(cell):'Cellule inconnue';
  const rules=known&&s.cellVariantRules===1?CELL_RULES[cell]:null;

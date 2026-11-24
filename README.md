@@ -1,5 +1,11 @@
 # Shadow Mandate 2040
 
+## Build 244 — Illustration « Attaque reportée »
+
+**[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/524bcbb5265a9e9a74ee59a5c71fc1c4a37a54ee...build-244)
+
+La carte « Attaque reportée » du Bilan mondial affiche maintenant une illustration.
+
 ## Build 243 — Atlas noir et rouge
 
 **[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/6728875dd7934749b5d14f7657d68fa323aa82ec...build-243)

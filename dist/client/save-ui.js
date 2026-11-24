@@ -1,7 +1,7 @@
-import { COUNTRY } from './data.js?v=243';
-import { GAME_MODES } from './game-setup.js?v=243';
-import { formatText, gameLanguage } from './localization.js?v=243';
-import { button, esc, flag, icon } from './ui.js?v=243';
+import { COUNTRY } from './data.js?v=244';
+import { GAME_MODES } from './game-setup.js?v=244';
+import { formatText, gameLanguage } from './localization.js?v=244';
+import { button, esc, flag, icon } from './ui.js?v=244';
 
 const statusText = {
   missing: 'Emplacement libre',
