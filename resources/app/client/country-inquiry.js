@@ -1,15 +1,15 @@
-import {localizeContent} from './localization.js?v=245';
-import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=245';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=245';
-import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=245';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=245';
-import {ACTIONS,COUNTRY,cellName,STAT_NAMES,TALENTS} from './data.js?v=245';
-import * as E from './engine.js?v=245';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=245';
-import {esc,icon,button,flag,portrait} from './ui.js?v=245';
-import {suspectPortrait} from './fracture-profiles.js?v=245';
-import {proofTitle} from './intelligence.js?v=245';
-import {operationReadingsMarkup,operationSuccessMarkup,operationIncidentMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=245';
+import {localizeContent} from './localization.js?v=246';
+import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=246';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=246';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=246';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=246';
+import {ACTIONS,COUNTRY,cellName,STAT_NAMES,TALENTS} from './data.js?v=246';
+import * as E from './engine.js?v=246';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=246';
+import {esc,icon,button,flag,portrait} from './ui.js?v=246';
+import {suspectPortrait} from './fracture-profiles.js?v=246';
+import {proofTitle} from './intelligence.js?v=246';
+import {operationReadingsMarkup,operationSuccessMarkup,operationIncidentMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=246';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -126,9 +126,9 @@ function paint(open=false,focusAction=false){
  </div>`:'';
  const country=COUNTRY[t.country],verified=e.filter(p=>p.verified).length;
  const location=t.arrested?'En détention':t.locationUntil>=s.turn?'Localisé jusqu’à la fin du tour '+t.locationUntil:'Position à confirmer';
- const heading=`<header class="inquiry-heading dossier-sheet">
+ const heading=`<header class="inquiry-heading ${plot?'threat-briefing-heading':'dossier-sheet'}">
   <div class="inquiry-identity">${plot?`<span class="inquiry-threat-icon">${icon('shield')}</span>`:suspectPortrait(t)}
-   <div><h2>${esc(plot?plot.kind:t.name)}</h2><div class="case-identity-meta"><small>${plot?'MENACE':esc(t.role)}</small>${cellInfoBadge(s,t.cell)}</div></div>
+   <div><h2>${esc(plot?plot.kind:t.name)}</h2><div class="case-identity-meta">${plot?'':`<small>${esc(t.role)}</small>`}${cellInfoBadge(s,t.cell)}</div></div>
   </div>
   <div class="inquiry-case-country">
    <div class="inquiry-case-place">${flag(t.country)} <strong>${esc(country.name)}</strong></div>
@@ -146,11 +146,12 @@ function paint(open=false,focusAction=false){
   </div>
  </div>`;
  const missing=requirements.filter(r=>!r.done);
- const footer=`<footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(selection.message||locked||done||(missing.length?'':blocked))}</p>${boost}
+ const feedback=selection.message||locked||done||(rows.length&&!missing.length?blocked:'');
+ const footer=`<footer class="inquiry-footer"><p class="inquiry-feedback" role="status">${esc(feedback)}</p>${boost}
   <div class="mission-confirm-control">${button(`${icon('check')} ${selected?'Confirmer avec '+esc(selected.a.name):'Confirmer'}`,'inquiry-confirm','primary wide',blocked?'disabled':'')}</div>
  </footer>`;
  const html=`<section class="country-inquiry ${plot?'threat-inquiry':'case-inquiry'}">${heading}
- <div class="inquiry-body">${isTutorial(s)?`<details class="tutorial-inquiry-note"><summary>Filigrane · Instructions de formation</summary><p>${esc(tutorialHint(s))}</p></details>`:''}
+ <div class="inquiry-body">${isTutorial(s)?`<details class="tutorial-inquiry-note"><summary>Filigrane · Instructions de formation</summary><p translate="no">${esc(tutorialHint(s))}</p></details>`:''}
  ${plot?'':investigationRail(s,t,stage.id)}
  <section class="inquiry-operation operation-card">
  <h3 class="inquiry-single-action" id="inquiryActionTitle" data-action="${type}" tabindex="-1">${esc(ACTIONS[type].name)}</h3>

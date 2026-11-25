@@ -1,5 +1,5 @@
-import {COUNTRIES} from './data.js?v=245';
-import {esc} from './ui.js?v=245';
+import {COUNTRIES} from './data.js?v=246';
+import {esc} from './ui.js?v=246';
 export function cityArt(id,extra=''){const i=COUNTRIES.findIndex(c=>c.id===id),c=COUNTRIES[i];return `<div class="city-art ${extra}" role="img" aria-label="${c.city}, illustration de 2040" style="${c.art?`background-image:url('./assets/${c.art}');background-size:cover;background-position:center`:`--cx:${i%3*50}%;--cy:${Math.floor(i/3)*100/3}%`}"><div class="city-caption"><strong>${c.city}</strong><span>2040 / ${c.id}</span></div></div>`;}
 // Each entry contains the image, the shared-frame horizontal offset, and
 // a profile viewBox around the silhouette with room for its soft edges.
@@ -33,9 +33,9 @@ export function fullBody(agent,{alignTop=false,profile=false}={}){
   const [asset,cropX,profileFrame]=body;
   const viewBox=profile?profileFrame:'187 0 650 1536';
   const characterX=profile?0:187-cropX;
-  const scenery=profile?'':'<image href="./assets/agent-full-background.png?v=245" width="1024" height="1536" class="agent-body-background"/>';
-  return `<svg class="full-body iris-body agent-cutout" viewBox="${viewBox}" role="img" aria-label="${label}" preserveAspectRatio="${alignment}">${scenery}<image href="./assets/${asset}?v=245" x="${characterX}" width="1024" height="1536" class="agent-body-foreground"/></svg>`;
+  const scenery=profile?'':'<image href="./assets/agent-full-background.png?v=246" width="1024" height="1536" class="agent-body-background"/>';
+  return `<svg class="full-body iris-body agent-cutout" viewBox="${viewBox}" role="img" aria-label="${label}" preserveAspectRatio="${alignment}">${scenery}<image href="./assets/${asset}?v=246" x="${characterX}" width="1024" height="1536" class="agent-body-foreground"/></svg>`;
  }
  const i=agent.portrait??0,col=i%6,row=Math.floor(i/6),y=row?524:0,h=row?500:524;
- return `<svg class="full-body" viewBox="${col*256} ${y} 256 ${h}" preserveAspectRatio="${alignment}" role="img" aria-label="${label}"><image href="./assets/agent-bodies.png?v=245" width="1536" height="1024"/></svg>`;
+ return `<svg class="full-body" viewBox="${col*256} ${y} 256 ${h}" preserveAspectRatio="${alignment}" role="img" aria-label="${label}"><image href="./assets/agent-bodies.png?v=246" width="1536" height="1024"/></svg>`;
 }

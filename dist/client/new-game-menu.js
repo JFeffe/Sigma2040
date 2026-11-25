@@ -1,5 +1,5 @@
-import {GAME_MODES} from './game-setup.js?v=245';
-import {brand,button,icon} from './ui.js?v=245';
+import {GAME_MODES} from './game-setup.js?v=246';
+import {brand,button,icon} from './ui.js?v=246';
 
 const modeSymbols={
  regular:['M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M5.5 12l6.5-6.5 6.5 6.5-6.5 6.5Z','M9.5 12h5M12 9.5v5'],

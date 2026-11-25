@@ -80,8 +80,8 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .agent-profile-facts .reading-orange{color:#f0a369}
 .agent-profile-facts .reading-red{color:#f48c93}
 .floating-agent-facts .talents {
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
+ display:flex;
+ flex-wrap:wrap;
  align-items:stretch;
  gap:3px 4px;
  margin:2px 0 0;
@@ -99,7 +99,7 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
  box-shadow:none;
  font-size:10px;
  line-height:1.15;
- overflow-wrap:anywhere;
+ white-space:nowrap;
 }
 .floating-agent-facts .talents>span>.icon {
  width:12px;
@@ -172,4 +172,4 @@ dialog.workspace-window{max-height:calc(100dvh - 16px)}
 .cooperation-tooltip .cooperation-levels th,.cooperation-tooltip .cooperation-levels td{padding:4px 3px;text-align:center;white-space:normal;overflow-wrap:anywhere;letter-spacing:0;border-bottom:1px solid #ffffff24}
 .cooperation-tooltip .cooperation-levels th:first-child{width:25%;text-align:left}
 .cooperation-tooltip .cooperation-levels th:nth-child(4){width:25%}
-.cooperation-tooltip .cooperation-levels [aria-current=true]{background:#294354;color:#e4f2fc}
+.cooperation-tooltip .cooperation-levels [aria-current=true]{background:var(--atlas-selected);color:var(--atlas-ink)}

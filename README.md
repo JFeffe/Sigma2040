@@ -1,5 +1,11 @@
 # Shadow Mandate 2040
 
+## Build 246 — Infobulles, menaces et audio
+
+**[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/120cab0cee4144d3f70d79d73f1ac80b450298c9...build-246)
+
+Les infobulles adoptent le style graphite. Les menaces et les fiches d’agents gagnent en lisibilité, le tutoriel anglais est corrigé et quatre nouveaux effets sonores accompagnent les moments clés.
+
 ## Build 245 — Identité visuelle et repêchage
 
 **[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/7b777ffc9333db4f60b3263c4873f40e27db4357...build-245)

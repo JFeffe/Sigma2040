@@ -86,11 +86,25 @@ dialog.workspace-window :is(input[type="text"],input[type="search"],input[type="
 .setup-columns>.briefing,.setup-shell :is(.operation-map-brief,.draft-candidate,.draft-team-agent,.draft-summary-agent,.draft-confirm-candidate) {
  background:var(--atlas-card);border-color:var(--atlas-edge);
 }
-.setup-shell :is(.recruit-face,.nation,.draft-agent-stats>div),.recruit-dossier-art {
+.setup-shell :is(.nation,.draft-agent-stats>div),.recruit-dossier-art {
  background:var(--atlas-card);border-color:var(--atlas-edge);
 }
+.setup-shell .recruit-face {
+ background:var(--atlas-raised-card);border-color:var(--atlas-edge);
+}
 .setup-shell .recruit-front>.recruit-select::before {
- background:var(--atlas-inset);
+ grid-column:2;margin:0 8px 5px 4px;border-bottom:1px solid #ffffff1c;
+ background:radial-gradient(ellipse at 8% 12%,#ac32431a,transparent 75%);
+}
+.setup-shell :is(.recruit-name,.recruit-portrait-heading)>h3 {
+ font:italic 700 clamp(21px,1.75vw,27px)/1.08 var(--brand-display);
+ letter-spacing:.04em;color:#efedf0;text-shadow:0 1px 3px #0009;
+}
+.setup-shell .recruit-front .recruit-role {
+ gap:5px 7px;margin-top:4px;font-weight:500;letter-spacing:.015em;color:#c7cbd3;
+}
+.setup-shell .recruit-front .recruit-role>span:first-child {
+ overflow-wrap:break-word;
 }
 .setup-shell .recruit-card:is(:hover,.selected),.setup-shell .nation:is(:hover,.active,.selected) {
  border-color:var(--atlas-mark);
@@ -213,10 +227,21 @@ dialog.workspace-window :is(input[type="text"],input[type="search"],input[type="
 .immersive-deck .deck-status > :is(.resource,.crisis-block,.turn-block)>strong {
  font-size:clamp(16px,1.6vw,22px);line-height:1.1;white-space:nowrap;font-variant-numeric:tabular-nums;
 }
+.immersive-deck .deck-status > [data-resource="budget"] {
+ grid-template-columns:auto minmax(0,1fr);column-gap:7px;
+}
+.immersive-deck .deck-status .division-flag {
+ display:flex;grid-column:1;grid-row:1/-1;align-self:center;
+}
+.immersive-deck .deck-status .division-flag .country-code {
+ width:clamp(32px,3vw,44px);height:auto;aspect-ratio:39/29;
+}
 .immersive-deck .deck-status .crisis-block>i {position:absolute;inset:auto 3px 0;height:3px;margin:0;}
 .immersive-deck .deck-status .crisis-block strong,.news-alert b {color:var(--atlas-alert);}
 @media (max-width:520px) {
- .immersive-deck .deck-status {grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;}
+ .immersive-deck .deck-status {grid-template-columns:minmax(0,1.6fr) repeat(4,minmax(0,1fr));gap:6px;}
+ .immersive-deck .deck-status > [data-resource="budget"] {grid-template-rows:minmax(14px,auto) 22px;column-gap:4px;}
+ .immersive-deck .deck-status .division-flag .country-code {width:28px;}
  .immersive-deck .deck-status > :is(.resource,.crisis-block,.turn-block)>span {white-space:normal;}
  .immersive-deck .deck-status > :is(.resource,.crisis-block,.turn-block)>strong>small {font-size:9px;}
 }
@@ -482,6 +507,7 @@ html[data-hide-info-bar] .news-ticker {display:none;}
 /* Integrated portraits leave room above the silhouette and share the card edge. */
 .agent-profile-card {
  display:grid;
+ container:agent-profile / inline-size;
  grid-template: minmax(0,1fr) / minmax(0,min(38%,154px)) minmax(0,1fr);
  inline-size:100%;
  block-size:280px;
@@ -516,7 +542,7 @@ html[data-hide-info-bar] .news-ticker {display:none;}
  background:var(--atlas-inset);
 }
 .agent-profile-portrait:has(>.agent-cutout) {
- background:var(--atlas-inset) url('./assets/agent-full-background.png?v=245') center / cover no-repeat;
+ background:var(--atlas-inset) url('./assets/agent-full-background.png?v=246') center / cover no-repeat;
 }
 .agent-profile-portrait>.full-body {
  display:block;
@@ -536,10 +562,8 @@ html[data-hide-info-bar] .news-ticker {display:none;}
  min-width:0;
  min-height:0;
  padding:8px 9px;
- overflow:auto;
- overscroll-behavior:contain;
  overflow-wrap:anywhere;
- background:url('./assets/atlas-agent-circuit-edge.png?v=245') center / 100% 100% no-repeat,
+ background:url('./assets/atlas-agent-circuit-edge.png?v=246') center / 100% 100% no-repeat,
   linear-gradient(145deg,#262626,#191919 45%,#111111);
 }
 .agent-profile-card .agent-profile-facts>* {
@@ -589,6 +613,24 @@ html[data-hide-info-bar] .news-ticker {display:none;}
 }
 .floating-agent-stats :is(.icon,strong) {
  color:inherit;
+}
+@container agent-profile (max-width:380px) {
+ .agent-profile-card .agent-profile-facts {gap:3px;padding:6px 7px;}
+ .agent-profile-card .agent-profile-heading h2 {font-size:21px;gap:2px 4px;}
+ .agent-profile-card .agent-profile-heading p {line-height:1.2;}
+ .agent-profile-facts .agent-nationality img {width:17px;height:12px;}
+ .agent-profile-facts .agent-deployment {line-height:1.2;}
+ .agent-profile-facts .floating-agent-status {gap:2px 5px;}
+ .agent-profile-card .floating-agent-status .availability {
+  min-height:0;padding:2px 4px;font-size:10px;line-height:1.16;white-space:normal;
+ }
+ .agent-profile-card .agent-profile-facts .icon {width:12px;height:12px;}
+ .agent-profile-facts .floating-agent-readings>span {padding-block:1px 2px;line-height:1.2;}
+ .agent-profile-facts .agent-reading-label {gap:2px;font-size:10px;}
+ .agent-profile-card .agent-profile-facts .floating-agent-stats>span {min-height:0;padding-block:2px;line-height:1.15;}
+ .agent-profile-facts .floating-agent-gear {gap:2px 5px;line-height:1.2;}
+ .agent-profile-card .agent-profile-facts .talents {gap:2px 3px;margin:0;padding-top:3px;}
+ .agent-profile-card .agent-profile-facts .talents>span {min-height:0;padding-block:1px;}
 }
 @media(max-width:420px) {
  .agent-profile-card {grid-template-columns:minmax(0,30%) minmax(0,1fr);}

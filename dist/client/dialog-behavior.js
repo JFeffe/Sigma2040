@@ -1,4 +1,4 @@
-import {gameLanguage,translateText} from './localization.js?v=245';
+import {gameLanguage,translateText} from './localization.js?v=246';
 
 let confirmationPending=false;
 export async function confirmInGame(message){

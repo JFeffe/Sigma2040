@@ -1,15 +1,15 @@
-import {formatText,gameLanguage,translateText} from './localization.js?v=245';
-import {selectOperationMap,travelTurns} from './operation-map.js?v=245';
-import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=245';
-import {draftCountry,draftRoundOrder} from './game-setup.js?v=245';
-import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=245';
-import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=245';
-import {teamBalanceMarkup} from './team-balance.js?v=245';
+import {formatText,gameLanguage,translateText} from './localization.js?v=246';
+import {selectOperationMap,travelTurns} from './operation-map.js?v=246';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=246';
+import {draftCountry,draftRoundOrder} from './game-setup.js?v=246';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=246';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=246';
+import {teamBalanceMarkup} from './team-balance.js?v=246';
 
 export function operationMapMarkup(ids,hq=null){
  if(!ids?.length)return '';
  const withEta=!!COUNTRY[hq]?.power;
- return `<section class="operation-map-brief panel" aria-label="Pays d’opération"><strong>Carte de la campagne · ${ids.length} pays d’opération${withEta?' · depuis le QG':''}</strong><ul>${ids.map(id=>{const turns=withEta?travelTurns(hq,id,{operationCountries:ids}):0;return `<li>${flag(id)} ${esc(COUNTRY[id].name)}${turns?` · ${turns} tour${turns===1?'':'s'}`:''}</li>`;}).join('')}</ul></section>`;
+ return `<section class="operation-map-brief panel" aria-label="Pays d’opération"><ul>${ids.map(id=>{const turns=withEta?travelTurns(hq,id,{operationCountries:ids}):0;return `<li>${flag(id)} ${esc(COUNTRY[id].name)}${turns?` · ${turns} tour${turns===1?'':'s'}`:''}</li>`;}).join('')}</ul></section>`;
 }
 
 export function orderedTeamMarkup(ids,{multi=false,editable=true}={}){

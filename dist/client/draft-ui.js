@@ -1,12 +1,16 @@
-import {formatText,gameLanguage,translateText} from './localization.js?v=245';
-import {selectOperationMap} from './operation-map.js?v=245';
-import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=245';
-import {draftCountry,draftRoundOrder} from './game-setup.js?v=245';
-import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=245';
-import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=245';
-import {teamBalanceMarkup} from './team-balance.js?v=245';
+import {formatText,gameLanguage,translateText} from './localization.js?v=246';
+import {selectOperationMap,travelTurns} from './operation-map.js?v=246';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=246';
+import {draftCountry,draftRoundOrder} from './game-setup.js?v=246';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=246';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=246';
+import {teamBalanceMarkup} from './team-balance.js?v=246';
 
-export function operationMapMarkup(ids){return ids?.length?`<section class="operation-map-brief panel" aria-label="Pays d’opération"><strong>Carte de la campagne · ${ids.length} pays d’opération</strong><ul>${ids.map(id=>`<li>${flag(id)} ${esc(COUNTRY[id].name)}</li>`).join('')}</ul></section>`:'';}
+export function operationMapMarkup(ids,hq=null){
+ if(!ids?.length)return '';
+ const withEta=!!COUNTRY[hq]?.power;
+ return `<section class="operation-map-brief panel" aria-label="Pays d’opération"><ul>${ids.map(id=>{const turns=withEta?travelTurns(hq,id,{operationCountries:ids}):0;return `<li>${flag(id)} ${esc(COUNTRY[id].name)}${turns?` · ${turns} tour${turns===1?'':'s'}`:''}</li>`;}).join('')}</ul></section>`;
+}
 
 export function orderedTeamMarkup(ids,{multi=false,editable=true}={}){
  const prefix=multi?'mp-draft':'solo-draft';
@@ -24,5 +28,5 @@ export function draftScreen(d,country,{multi=false,header='',agents=d.teams[coun
  const status=finished?'Repêchage terminé · choisissez votre chef':formatText('Choix en cours · {0}',translateText(COUNTRY[current].name));
  const countries=`<section class="draft-countries" aria-label="Pays participants">${draftRoundOrder(d).map(c=>`<article class="panel draft-country ${c===current?'current':''} ${c===country?'own':''}"${c===current?' aria-current="true"':''}><header>${flag(c)}<div><strong>${COUNTRY[c].name}</strong><small>${d.humans.includes(c)?'Joueur':'PNJ'}${c===country?' · Vous':''}</small></div></header><ul>${d.teams[c].map(id=>`<li>${esc(DISPLAY_ROSTER.find(a=>a.id===id).name)}</li>`).join('')}${Array.from({length:4-d.teams[c].length},(_,i)=>c===country&&i===0&&preview?`<li class="draft-country-preview">${esc(preview.name)} · À confirmer</li>`:'<li class="muted">À choisir</li>').join('')}</ul></article>`).join('')}</section>`;
  const content=finished?(country?`<div class="draft-final-team"><section class="panel"><h2>Votre équipe · ${COUNTRY[country].name}</h2><p>Le premier agent est votre chef. Réorganisez vos agents, puis confirmez votre équipe.</p>${orderedTeamMarkup(agents,{multi,editable})}${button(confirmed?'Équipe confirmée ✓':'Confirmer mon équipe',multi?'mp-team':'solo-confirm-team','primary wide',confirmed||!editable?'disabled':'')}${!multi?button('Lancer l’opération','start','primary wide',!confirmed?'disabled':''):''}</section>${draftTeamSummary(agents,country)}</div>`:'<p class="notice">Les joueurs choisissent leur chef et confirment leur équipe.</p>'):`<div class="draft-selection"><div class="draft-catalog">${recruitControls(mode,{draft:true})}<div class="recruit-grid draft-recruits">${visibleRecruits(mode,owners).map(a=>`<div class="draft-candidate ${owners.has(a.id)?'taken':''}">${recruitCard(a,[...(d.teams[country]||[]),...(preview?[preview.id]:[])],mode,{cmd:multi?'mp-draft-preview':'solo-draft-preview',preview:true,disabled:!canPick||owners.has(a.id)})}${owners.has(a.id)?`<span class="draft-owner">${flag(owners.get(a.id))} ${COUNTRY[owners.get(a.id)].name}</span>`:''}</div>`).join('')}</div></div>${country?draftTeamSummary(d.teams[country]||[],country,{previewId:preview?.id,multi,canConfirm:canPick}):''}</div>`;
- return `<div class="setup-shell draft-shell"><header>${brand()}<div class="classified"><span class="classified-access">${d.mode==='cooperative'?'MODE COOPÉRATIF':'MODE AVANCÉ'}</span></div></header><main class="setup-main">${header}<div class="draft-heading"><div><span class="eyebrow">REPÊCHAGE EN SERPENTIN · ${d.picks.length}/${d.countries.length*4} AGENTS</span><h1>${status}</h1></div>${controls}</div>${countries}${operationMapMarkup(d.operationCountries??(d.seed!==undefined?selectOperationMap(d.countries,d.seed,d.mode):null))}${content}</main></div>`;
+ return `<div class="setup-shell draft-shell"><header>${brand()}<div class="classified"><span class="classified-access">${d.mode==='cooperative'?'MODE COOPÉRATIF':'MODE AVANCÉ'}</span></div></header><main class="setup-main">${header}<div class="draft-heading"><div><span class="eyebrow">REPÊCHAGE EN SERPENTIN · ${d.picks.length}/${d.countries.length*4} AGENTS</span><h1>${status}</h1></div>${controls}</div>${countries}${operationMapMarkup(d.operationCountries??(d.seed!==undefined?selectOperationMap(d.countries,d.seed,d.mode):null),country)}${content}</main></div>`;
 }

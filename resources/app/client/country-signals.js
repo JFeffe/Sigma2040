@@ -1,8 +1,8 @@
-import {COUNTRY} from './data.js?v=245';
-import {cyberStatus,hasSafehouse} from './engine.js?v=245';
-import {COOPERATION,cooperationTable} from './cooperation.js?v=245';
-import {cityArt} from './visuals.js?v=245';
-import {esc,flag,icon} from './ui.js?v=245';
+import {COUNTRY} from './data.js?v=246';
+import {cyberStatus,hasSafehouse} from './engine.js?v=246';
+import {COOPERATION,cooperationTable} from './cooperation.js?v=246';
+import {cityArt} from './visuals.js?v=246';
+import {esc,flag,icon} from './ui.js?v=246';
 function countrySignalValues(s,id){
  const f=s.factions[s.player],protection=Math.max(0,...Object.values(s.factions).map(x=>x.defense[id]||0));
  const hack=cyberStatus(s,s.player,id);

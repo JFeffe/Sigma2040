@@ -30,10 +30,10 @@ test('Threat indicator counts only attacks not covered by our country at their s
  s.plots[1].turn=9;assert.equal(navigationAvailability(s).threats.badge,'1');assert.match(gameShell(s,'threats','',false),/nav-available nav-threats/);
  s.ended='defeat';assert.deepEqual(navigationAvailability(s),{});
 });
-test('Threat cards show countdown, smaller attack turn and own coverage with no support action',()=>{
+test('Threat cards show the countdown and link to the country regardless of coverage',()=>{
  const s=fresh();s.plots=[{id:'a',cell:0,country:'DE',turn:3,kind:'Attaque',announced:true}];s.factions.FR.defense.DE=3;
- const html=threatPanel(s);assert.match(html,/<strong>0<\/strong> <small>Non couvertes<\/small>[\s\S]*<strong>1<\/strong> <small>Couverte<\/small>/);assert.match(html,/threat-covered/);assert.match(html,/<strong>Attaque à la fin du tour 3<\/strong><small>3 tours pour agir/);assert.match(html,/T3 inclus/);assert.doesNotMatch(html,/data-cmd="country-threat"/);
- s.factions.FR.defense.DE=2;assert.match(threatPanel(s),/fin T2 inclus/);assert.match(threatPanel(s),/À l’attaque T3 : non couverte/);assert.match(threatPanel(s),/data-cmd="country-threat" data-id="a"/);
+ const html=threatPanel(s);assert.match(html,/<strong>0<\/strong> <small>Non couvertes<\/small>[\s\S]*<strong>1<\/strong> <small>Couverte<\/small>/);assert.match(html,/threat-covered/);assert.match(html,/threat-turns[^>]*><strong>3<\/strong> <small>tours<\/small>/);assert.match(html,/<strong>Attaque à la fin du tour 3<\/strong>/);assert.match(html,/T3 inclus/);assert.match(html,/threat-record-controls[\s\S]*data-cmd="map-country" data-id="DE"/);
+ s.factions.FR.defense.DE=2;const uncovered=threatPanel(s);assert.match(uncovered,/fin T2 inclus/);assert.match(uncovered,/À l’attaque T3 : non couverte/);assert.match(uncovered,/data-cmd="map-country" data-id="DE"/);assert.doesNotMatch(uncovered,/data-cmd="country-threat"/);
  s.plots[0].resolved=true;assert.match(threatPanel(s),/Aucune menace annoncée/);
 });
 test('Personnel prominently renders every supplied full-body image and targets the selected co-located agent',()=>{

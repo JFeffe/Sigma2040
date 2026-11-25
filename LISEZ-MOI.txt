@@ -1,4 +1,4 @@
-SHADOW MANDATE  |  ÉDITION PC WINDOWS  |  BUILD 243
+SHADOW MANDATE  |  ÉDITION PC WINDOWS  |  BUILD 246
 
 Windows 10 ou 11, 64 bits. Ouvrir « Shadow Mandate.exe » depuis son dossier
 d’installation. Le jeu fonctionne hors ligne avec le moteur fourni. Le menu

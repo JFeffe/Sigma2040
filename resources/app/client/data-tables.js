@@ -1,5 +1,5 @@
-import {gameLanguage,translateText} from './localization.js?v=245';
-import {esc} from './ui.js?v=245';
+import {gameLanguage,translateText} from './localization.js?v=246';
+import {esc} from './ui.js?v=246';
 export function dataTable(headers,rows,label='Tableau comparatif'){
  return `<div class="data-table-wrap"><table class="data-table" aria-label="${esc(label)}"><thead><tr>${headers.map((h,i)=>`<th scope="col" aria-sort="none"><button type="button" data-sort-column="${i}">${esc(h)} <span aria-hidden="true">↕</span></button></th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((c,i)=>{const o=c&&typeof c==='object'?c:{text:c};return `<td data-label="${esc(headers[i])}" data-sort-value="${esc(o.value??o.text??'')}"${i===0?' class="row-title"':''}>${o.html??esc(o.text)}</td>`;}).join('')}</tr>`).join('')||`<tr><td colspan="${headers.length}">Aucun résultat.</td></tr>`}</tbody></table></div>`;
 }

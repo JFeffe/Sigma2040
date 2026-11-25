@@ -1,14 +1,18 @@
-import {languageSettingsMarkup,translateText} from './localization.js?v=245';
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=245';
-import {musicMarkup} from './music.js?v=245';
-import * as E from './engine.js?v=245';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=245';
-import {proofTitle} from './intelligence.js?v=245';
-import {esc,button,portrait,icon} from './ui.js?v=245';
+import {languageSettingsMarkup,translateText} from './localization.js?v=246';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=246';
+import {musicMarkup} from './music.js?v=246';
+import {playSound} from './sound-cues.js?v=246';
+import {threatStatus} from './threat-status.js?v=246';
+import * as E from './engine.js?v=246';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=246';
+import {proofTitle} from './intelligence.js?v=246';
+import {esc,button,portrait,icon} from './ui.js?v=246';
 const PREF='sigma2040-feedback-settings';
 let prefs={sound:false,volume:25,motion:'system',infoBar:true};
 try{const saved=JSON.parse(localStorage.getItem(PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system',infoBar:saved.infoBar!==false};}catch{}
-let baseline=null,notices=[],resourceChanges={},agentChanges={},expires=0,audioContext=null,lastSound=0;
+let baseline=null,notices=[],resourceChanges={},agentChanges={},expires=0;
+let threatCampaign=null;
+const warnedThreats=new Set();
 const signed=n=>(n>0?'+':'−')+Math.abs(Math.round(n*100)/100);
 export function feedbackSnapshot(s){const f=s.factions[s.player];return {campaign:`${s.seed}:${s.player}`,turn:s.turn,log:s.logId,resources:{budget:f.budget,confidence:f.confidence,score:f.score,crisis:s.crisis},agents:Object.fromEntries(s.agents.filter(a=>a.faction===s.player).map(a=>[a.id,{name:a.name,energy:100-a.fatigue,exposure:a.exposure,status:a.status}])),proofs:Object.fromEntries(f.evidence.map(e=>[e.id,e.contested?'discarded':e.verified?'verified':'pending']))};}
 export function feedbackDiff(before,after){
@@ -18,7 +22,16 @@ export function feedbackDiff(before,after){
  for(const [id,status] of Object.entries(after.proofs))if(before.proofs[id]!==status)proofs.push({id,status,fresh:!before.proofs[id]});
  return {resources,agents,proofs,alerts};
 }
-export function resetExperience(){baseline=null;notices=[];resourceChanges={};agentChanges={};}
+export function resetExperience(){baseline=null;notices=[];resourceChanges={};agentChanges={};threatCampaign=null;warnedThreats.clear();}
+export function trackThreatCues(s){
+ if(s.ended)return;
+ const campaign=`${s.seed}:${s.player}`;
+ if(threatCampaign!==campaign){threatCampaign=campaign;warnedThreats.clear();}
+ const due=threatStatus(s).uncovered.filter(p=>p.turn===s.turn&&!warnedThreats.has(p.id));
+ if(!due.length)return;
+ for(const plot of due)warnedThreats.add(plot.id);
+ playCue('imminent');
+}
 export function trackExperience(s){const next=feedbackSnapshot(s),old=baseline,diff=feedbackDiff(baseline,next);baseline=next;
  if(Object.keys(diff.resources).length||Object.keys(diff.agents).length||old&&old.turn!==next.turn){resourceChanges=diff.resources;agentChanges=diff.agents;expires=Date.now()+7000;}
  const added=diff.proofs.map(p=>{const proof=s.proofs.find(e=>e.id===p.id);return {key:'proof:'+p.id,kind:'proof',proofId:p.id,status:p.status,turn:s.turn,text:`${p.status==='verified'?'Preuve vérifiée':p.status==='discarded'?'Pièce écartée': 'Nouvelle pièce · à vérifier'} — ${proofTitle(proof)}`};});
@@ -101,7 +114,7 @@ export function settingsMarkup(){
     ${musicMarkup()}
     <section class="feedback-settings">
      <h3>Effets sonores</h3>
-     <label class="feedback-toggle"><input id="feedbackSound" type="checkbox" ${prefs.sound?'checked':''}> Sons de transmission et d’alerte</label>
+     <label class="feedback-toggle"><input id="feedbackSound" type="checkbox" ${prefs.sound?'checked':''}> Activer les effets sonores</label>
      <label class="settings-volume" for="feedbackVolume">Volume des effets <output id="feedbackVolumeValue">${prefs.volume}%</output></label>
      <input id="feedbackVolume" type="range" min="0" max="100" value="${prefs.volume}" ${prefs.sound?'':'disabled'}>
      ${button('Écouter un signal','test-sound','small',prefs.sound?'':'disabled title="Activez les sons pour écouter un signal."')}
@@ -111,8 +124,8 @@ export function settingsMarkup(){
  </div>`;
 }
 export function playCue(kind='transmission'){
- if(!prefs.sound||prefs.volume===0||typeof window==='undefined'||document.hidden||Date.now()-lastSound<300)return;
- try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioContext??=new Audio();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});lastSound=Date.now();const notes=kind==='alert'?[420,300]:kind==='discovery'?[650,880,1050]:[620,790],now=audioContext.currentTime;notes.forEach((hz,i)=>{const osc=audioContext.createOscillator(),gain=audioContext.createGain(),start=now+i*.1;osc.type='sine';osc.frequency.value=hz;gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(prefs.volume/100*.11,start+.015);gain.gain.exponentialRampToValueAtTime(.0001,start+.13);osc.connect(gain);gain.connect(audioContext.destination);osc.start(start);osc.stop(start+.15);osc.onended=()=>{osc.disconnect();gain.disconnect();};});}catch{}
+ if(!prefs.sound||prefs.volume===0||typeof window==='undefined'||document.hidden)return;
+ playSound(kind,prefs.volume/100);
 }
 
 export function techUnavailable(s,id){return s.ended?'Campagne terminée.':E.getTechSlots(s,s.player)>=2?'Les deux modules sont occupés.':s.factions[s.player].budget<TECH[id].cost?`Il manque ${TECH[id].cost-s.factions[s.player].budget} crédit(s).`:'';}

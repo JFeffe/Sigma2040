@@ -1,7 +1,7 @@
-import {visiblePlots,visibleLogs} from './engine.js?v=245';
-import {COUNTRY} from './data.js?v=245';
-import {formatText,translateText} from './localization.js?v=245';
-import {esc} from './ui.js?v=245';
+import {visiblePlots,visibleLogs} from './engine.js?v=246';
+import {COUNTRY} from './data.js?v=246';
+import {formatText,translateText} from './localization.js?v=246';
+import {esc} from './ui.js?v=246';
 
 function alertItem(plot,turn){
  const turns=Math.max(0,plot.turn-turn+1);

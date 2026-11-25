@@ -6,7 +6,6 @@
 .agent-pager .btn{font-size:25px;line-height:1;min-width:44px;min-height:44px;padding:5px 12px}
 .patch-unread{border-color:#d6b379!important}.patch-notes-page article.patch-unread{border-left:3px solid #d6b379;padding-left:18px}
 .suspect-grid .arrested{opacity:.55}
-.report-rich-tooltip{max-width:min(360px,calc(100vw - 24px));max-height:65vh;overflow:auto;pointer-events:none}
 .timeline-tooltip-event{padding:8px 0}.timeline-tooltip-event p{margin:3px 0}.timeline-tooltip-event .portrait{width:36px;height:36px;flex:none}
 .deck-content>.mp-status:not(.mp-observer-status){position:relative!important;inset:auto!important;width:fit-content;max-width:100%;margin:0 0 8px auto;padding:5px 8px;min-height:0;gap:8px;display:flex;flex-wrap:wrap;font-size:12px;z-index:2}
 .deck-content>.mp-status:not(.mp-observer-status)>span{display:none}

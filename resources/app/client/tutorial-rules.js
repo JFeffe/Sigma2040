@@ -1,7 +1,9 @@
-import {ACTIONS} from './data.js?v=245';
-import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=245';
-import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=245';
-import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=245';
+import {ACTIONS,COUNTRY} from './data.js?v=246';
+import {proofTitle} from './intelligence.js?v=246';
+import {formatText,translateText} from './localization.js?v=246';
+import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=246';
+import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=246';
+import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=246';
 // Training is a separate, explicitly scripted mode. No campaign uses these rules.
 export const TUTORIAL_IDS=Object.freeze([...COMPACT_IDS,'contact','evidence','arrest',...ADVANCED_TUTORIALS]);
 export const isTutorial=s=>s?.tutorial?.version===1&&TUTORIAL_IDS.includes(s.tutorial.mission);
@@ -76,12 +78,21 @@ export function tutorialAgentPlan(s){
  });
 }
 export function tutorialHint(s){
- const o=tutorialObjective(s);if(!o)return '';if(o.done||o.failed)return o.text;
- if(isCompactTutorial(s))return o.text+' '+tutorialPendingOrders(s).map(x=>s.agents.find(a=>a.id===x.agentId).name+' : '+ACTIONS[x.type].name+(x.target?' ('+(s.suspects.find(t=>t.id===x.target)?.name||x.target)+')':'')+'.').join(' ');
+ const o=tutorialObjective(s);if(!o)return '';if(o.done||o.failed)return translateText(o.text);
  const free=tutorialPendingOrders(s);
- if(ADVANCED_TUTORIALS.includes(s.tutorial.mission))return advancedHint(s,o,free);
- if(!free.length&&s.agents.some(a=>a.task))return 'Tous les ordres utiles sont affectés. Fermez le dossier puis utilisez « Terminer le tour ». Les missions de deux tours continuent au tour suivant. Consultez le rôle de chaque agent ci-dessous.';
- return free.map(x=>{
+ if(isCompactTutorial(s)){
+  const orders=free.map(({agentId,type,target})=>{
+   const name=s.agents.find(a=>a.id===agentId).name;
+   const action=translateText(ACTIONS[type].name);
+   const proof=type==='analyze'?s.proofs.find(p=>p.id===target):null;
+   const label=proof?proofTitle(proof):COUNTRY[target]?.name??s.suspects.find(t=>t.id===target)?.name??s.agents.find(a=>a.id===target)?.name;
+   return label?formatText('{0} : {1} ({2}).',name,action,translateText(label)):formatText('{0} : {1}.',name,action);
+  });
+  return [translateText(o.text),...orders].join(' ');
+ }
+ if(ADVANCED_TUTORIALS.includes(s.tutorial.mission))return translateText(advancedHint(s,o,free));
+ if(!free.length&&s.agents.some(a=>a.task))return translateText('Tous les ordres utiles sont affectés. Fermez le dossier puis utilisez « Terminer le tour ». Les missions de deux tours continuent au tour suivant. Consultez le rôle de chaque agent ci-dessous.');
+ const directions=free.map(x=>{
   const name=s.agents.find(a=>a.id===x.agentId).name;
   switch(x.type){
    case 'travel':return 'Sur le globe, sélectionnez l’Allemagne (Berlin), puis « Déployer un agent », cochez IRIS et confirmez.';
@@ -96,5 +107,7 @@ export function tutorialHint(s){
    case 'rest':return `${name} peut récupérer pendant le travail du terrain : double-cliquez sur son portrait → « Se reposer au QG ».`;
    case 'fieldRest':return `${name} peut récupérer pendant la vérification : double-cliquez sur son portrait → « Se reposer dans la planque ».`;
   }
- }).join(' ')+(free.length>1?' Affectez ces ordres avant de terminer le même tour.':'');
+ });
+ if(free.length>1)directions.push('Affectez ces ordres avant de terminer le même tour.');
+ return directions.map(translateText).join(' ');
 }

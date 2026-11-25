@@ -1,5 +1,5 @@
-import {translateText} from './localization.js?v=245';
-import {npcTutorialObjective} from './tutorial-npc.js?v=245';
+import {translateText} from './localization.js?v=246';
+import {npcTutorialObjective} from './tutorial-npc.js?v=246';
 export const COMPACT_IDS=['basics','inquiry','intervention','shield','recovery','simulation'];
 export const isCompactTutorial=s=>s?.tutorial?.version===1&&COMPACT_IDS.includes(s.tutorial.mission);
 export const COMPACT_BASE={basics:'contact',inquiry:'evidence',intervention:'arrest',shield:'countdown',recovery:'hostile',simulation:'allies'};

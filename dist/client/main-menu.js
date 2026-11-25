@@ -1,11 +1,11 @@
-import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=245';
-import {AI_LEVELS} from './ai-difficulty.js?v=245';
-import {BUILD_VERSION} from './build-version.js?v=245';
-import {menuTitleMarkup} from './menu-title.js?v=245';
-import {campaignRules} from './campaign-rules.js?v=245';
-import {renderRatio} from './graphics.js?v=245';
-import {brand,button,esc,icon} from './ui.js?v=245';
-import {COUNTRY} from './data.js?v=245';
+import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=246';
+import {AI_LEVELS} from './ai-difficulty.js?v=246';
+import {BUILD_VERSION} from './build-version.js?v=246';
+import {menuTitleMarkup} from './menu-title.js?v=246';
+import {campaignRules} from './campaign-rules.js?v=246';
+import {renderRatio} from './graphics.js?v=246';
+import {brand,button,esc,icon} from './ui.js?v=246';
+import {COUNTRY} from './data.js?v=246';
 export function menuChromeMarkup(desktop){
  const build=desktop
   ? `<span class="menu-build">BUILD ${BUILD_VERSION}</span>`
@@ -110,10 +110,10 @@ function playTitleArrival(menu,earth,nav){
   {opacity:0,transform:'translate(-20px, 7px)'},
   {opacity:getComputedStyle(button).opacity,transform:'none'}
  ],{duration:650,delay:titleDuration-1050+i*115,easing:'ease-out',fill:'both'}));
- return [titleAnimation,fade,...pieces,earthAnimation,...buttons];
+ return {animations:[titleAnimation,fade,...pieces,earthAnimation,...buttons],assembly:pieces.at(-1)};
 }
 
-export function mountMenuIntro(menu,earth){
+export function mountMenuIntro(menu,earth,onAssembly){
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
  const nav=menu.querySelector('nav');
  const title=menu.querySelector('.menu-title-art');
@@ -133,7 +133,7 @@ export function mountMenuIntro(menu,earth){
 
  const listeners=new AbortController();
  const {signal}=listeners;
- let panelTimer,pendingTitle=false,titleStarted=0,animations=[];
+ let panelTimer,pendingTitle=false,titleStarted=0,assemblySignalled=false,animations=[];
  const timelineNow=()=>document.timeline.currentTime??performance.now();
  const canAnimate=()=>!!menu.animate&&!menuMotionReduced();
  function cancelAnimations(){
@@ -160,9 +160,15 @@ export function mountMenuIntro(menu,earth){
    panelTimer=setTimeout(finish,Math.max(0,titleDuration-(timelineNow()-titleStarted)));
    return;
   }
-  animations=playTitleArrival(menu,earth,nav);
+  const arrival=playTitleArrival(menu,earth,nav);
+  animations=arrival.animations;
   // Resizing recomputes the camera, keeping all layers on the original document timeline.
   for(const animation of animations)animation.startTime=titleStarted;
+  arrival.assembly?.finished.then(()=>{
+   if(signal.aborted||assemblySignalled||animations!==arrival.animations)return;
+   assemblySignalled=true;
+   onAssembly?.();
+  },()=>{});
   animations[0].finished.then(finish,()=>{});
  }
  async function showTitle(){

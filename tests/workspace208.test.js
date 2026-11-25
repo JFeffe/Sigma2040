@@ -43,7 +43,7 @@ test('Independent dossier and threat controllers retain their own agent, action 
   await first.controller.handleInquiryCommand('inquiry-confirm');await second.controller.handleInquiryCommand('inquiry-confirm');
   assert.equal(a.task.type,'collect');assert.equal(a.task.target,t.id);assert.equal(b.task.type,'surveil');assert.equal(b.task.target,u.id);assert.ok(first.modal.open&&second.modal.open);
   first.modal.close();second.controller.refreshCountryInquiry();assert.ok(second.modal.open);assert.match(second.html(),/Missions affectées/);
-  const threat=pane(),plot=E.visiblePlots(s)[0];threat.controller.openCountryInquiry(plot.id,true);assert.match(threat.html(),/MENACE/);assert.doesNotMatch(threat.html(),/data-cmd="inquiry-action"/);
+  const threat=pane(),plot=E.visiblePlots(s)[0];threat.controller.openCountryInquiry(plot.id,true);assert.match(threat.html(),/threat-briefing-heading/);assert.doesNotMatch(threat.html(),/data-cmd="inquiry-action"/);
  }finally{globalThis.document=previous;}
 });
 

@@ -41,8 +41,13 @@ test('Compact controller switches actions, opens portraits, and assigns only pro
   await handleInquiryCommand('inquiry-action','analyze');assert.match(html,/data-id="validation" aria-pressed="true"/);assert.match(html,/Pièce de ce dossier/);
   await handleInquiryCommand('inquiry-step','access');
   await handleInquiryCommand('inquiry-open-agent',a.id);assert.equal(opened,a.id);
-  const plot=E.visiblePlots(s)[0];a.country=plot.country;
-  await handleInquiryCommand('country-threat',plot.id);assert.match(html,/threat-inquiry[\s\S]*dossier-sheet[\s\S]*operation-card[\s\S]*Protéger une infrastructure/);assert.match(html,/pendant les trois tours suivants/);assert.doesNotMatch(html,/id="inquiryAction"/);
+  const plot=E.visiblePlots(s)[0];E.team(s).forEach(member=>member.country=s.player);
+  await handleInquiryCommand('country-threat',plot.id);
+  assert.match(html,/Aucun agent de votre équipe présent dans ce pays\./);
+  assert.doesNotMatch(html,/Aucun agent disponible pour cette action\./);
+  assert.match(html,/data-cmd="inquiry-confirm" disabled/);
+  a.country=plot.country;
+  await handleInquiryCommand('country-threat',plot.id);assert.match(html,/threat-inquiry[\s\S]*threat-briefing-heading[\s\S]*operation-card[\s\S]*Protéger une infrastructure/);assert.match(html,/pendant les trois tours suivants/);assert.doesNotMatch(html,/id="inquiryAction"/);
   await handleInquiryCommand('inquiry-action','arrest');await handleInquiryCommand('inquiry-agent',a.id);
   readOnly='Observateur';await handleInquiryCommand('inquiry-confirm');assert.equal(assigned,null);
   readOnly='';await handleInquiryCommand('inquiry-confirm');assert.equal(assigned.type,'protect');assert.equal(assigned.target,plot.country);assert.equal(modal.open,true);

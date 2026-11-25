@@ -1,14 +1,14 @@
-import {operationCountries} from './operation-map.js?v=245';
-import {isNpcTutorial} from './tutorial-mode.js?v=245';
-import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=245';
-import {inquiryIndicator} from './inquiry-notifications.js?v=245';
-import {threatStatus} from './threat-status.js?v=245';
-import {campaignRules} from './campaign-rules.js?v=245';
-import {clockMarkup} from './campaign-clock.js?v=245';
-import {newsTicker} from './news.js?v=245';
-import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=245';
-import {COUNTRY} from './data.js?v=245';
-import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=245';
+import {operationCountries} from './operation-map.js?v=246';
+import {isNpcTutorial} from './tutorial-mode.js?v=246';
+import {isTutorial,tutorialObjective} from './tutorial-rules.js?v=246';
+import {inquiryIndicator} from './inquiry-notifications.js?v=246';
+import {threatStatus} from './threat-status.js?v=246';
+import {campaignRules} from './campaign-rules.js?v=246';
+import {clockMarkup} from './campaign-clock.js?v=246';
+import {newsTicker} from './news.js?v=246';
+import {funding,getTechSlots,governmentOptions,visiblePlots} from './engine.js?v=246';
+import {COUNTRY} from './data.js?v=246';
+import {icon,button,flag,brand,formatScore,esc} from './ui.js?v=246';
 export function navigationAvailability(state,unreadInquiry=false,dismissed={}){
  if(state.ended||isTutorial(state)&&!isNpcTutorial(state))return {};
  const count=threatStatus(state).uncovered.length;
@@ -22,9 +22,12 @@ export function gameShell(state,view,content,saveWarning,background='',unreadInq
  const availability=navigationAvailability(state,unreadInquiry,dismissed),f=state.factions[state.player],tabs=[['world','world','Monde'],['inquiry','file','Enquête'],['threats','shield','Menaces'],['operations','module','Module'],['government','shield','Gouvernement'],['diplomacy','seal','Diplomatie'],['agents','people','Agents'],['journal','clock','Journal']];
  return `<div style="${isTutorial(state)?'--training-agents:'+Math.max(1,state.agents.filter(a=>a.faction===state.player&&!['dead','retired'].includes(a.status)).length):''}" class="command-deck obsidian-deck immersive-deck ${isTutorial(state)?'tutorial-deck':''} ${isNpcTutorial(state)?'npc-training':''} ${danger?'crisis-emergency':''} ${view==='world'?'world-active':'menu-active'}">${background?`<div class="world-backdrop">${background}</div>`:''}
   <header class="deck-header">
-   <div class="deck-brand">${brand()}<span class="division-flag" title="${COUNTRY[state.player].name}">${flag(state.player)}</span></div>
+   <div class="deck-brand">${brand()}</div>
    <div class="deck-status" aria-label="Situation de la campagne">
-    <div class="resource" data-resource="budget"><span>BUDGET · +${funding(f).income}/TOUR</span><strong>${f.budget}<small> crédits</small></strong></div>
+    <div class="resource" data-resource="budget">
+     <span class="division-flag" title="${COUNTRY[state.player].name}">${flag(state.player)}</span>
+     <span>BUDGET · +${funding(f).income}/TOUR</span><strong>${f.budget}<small> crédits</small></strong>
+    </div>
     <button class="resource government-button" data-resource="confidence" data-cmd="nav" data-id="government" title="Confiance du gouvernement"><span>CONFIANCE</span><strong>${f.confidence}<small>/100</small></strong></button>
     <div class="resource prestige-resource" data-resource="score"><span>PRESTIGE</span><strong>${formatScore(f.score)}<small> pts</small></strong></div>
     <div class="crisis-block ${danger?'crisis-critical':''}" data-resource="crisis"><span title="Crise mondiale">CRISE <small>+${campaignRules(state).crisisPerTurn}/TOUR</small></span><strong>${state.crisis}%</strong><i><b style="width:${state.crisis}%"></b></i></div>

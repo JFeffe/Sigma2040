@@ -49,4 +49,11 @@ body{background:radial-gradient(ellipse at 45% 0,#34324e55,transparent 55%),#101
 .power-compact header>div{min-width:0}.power-compact h3 .diplomacy-player{font-size:.75em;color:#a8d7d0;font-weight:500;overflow-wrap:anywhere}
 
 
-.operation-map-brief{margin:12px 0;padding:12px 16px}.operation-map-brief ul{display:flex;flex-wrap:wrap;gap:8px 16px;list-style:none;margin:8px 0 0;padding:0}.operation-map-brief li{display:flex;align-items:center;gap:5px}.operation-map-brief img{width:24px;height:auto}.menu-build:hover,.menu-build:focus-visible{text-decoration:underline}
+.operation-map-brief{margin:12px 0;padding:9px 12px;min-inline-size:0}
+.operation-map-brief ul{
+ display:flex;flex-wrap:nowrap;gap:clamp(8px,1.05vw,14px);list-style:none;margin:0;padding:0;
+ overflow-x:auto;scrollbar-width:thin;overscroll-behavior-inline:contain;
+}
+.operation-map-brief li{display:flex;flex:none;align-items:center;gap:5px;font-size:clamp(12px,1.2vw,15px);white-space:nowrap}
+.operation-map-brief .country-code{width:28px;height:20px;min-width:0;flex:none}
+.menu-build:hover,.menu-build:focus-visible{text-decoration:underline}
