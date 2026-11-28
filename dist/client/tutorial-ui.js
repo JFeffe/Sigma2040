@@ -1,9 +1,9 @@
-import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=246';
-import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=246';
-import {tutorialHint,isTutorial,tutorialAgentPlan} from './tutorial-rules.js?v=246';
-import {TUTORIAL_MISSIONS,tutorialMission,tutorialObjective} from './tutorial.js?v=246';
-import {ACTIONS,COUNTRY} from './data.js?v=246';
-import {button,brand,esc,icon} from './ui.js?v=246';
+import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=247';
+import {tutorialTechAllowed,tutorialGovernmentAllowed,tutorialCanWait} from './tutorial-advanced.js?v=247';
+import {tutorialHint,isTutorial,tutorialAgentPlan} from './tutorial-rules.js?v=247';
+import {TUTORIAL_MISSIONS,tutorialMission,tutorialObjective} from './tutorial.js?v=247';
+import {ACTIONS,COUNTRY} from './data.js?v=247';
+import {button,brand,esc,icon} from './ui.js?v=247';
 const header=()=>`<header class="training-header">${brand()}<span class="training-label">ACADÉMIE / SHADOW MANDATE</span></header>`;
 const tutorialSummaries={
  basics:'Repérez les menaces, puis donnez votre premier ordre à IRIS.',

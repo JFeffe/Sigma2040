@@ -34,6 +34,8 @@ test('Compact controller switches actions, opens portraits, and assigns only pro
   await handleInquiryCommand('inquiry-substep','locate');assert.match(html,/data-action="surveil"/);assert.match(html,/data-id="prepare"/);
   await handleInquiryCommand('inquiry-step','proofs');assert.match(html,/data-action="collect"/);assert.doesNotMatch(html,/data-id="analyze"/);
   await handleInquiryCommand('inquiry-step','access');assert.match(html,/data-action="contacts"/);assert.match(html,/data-id="drone"/);assert.doesNotMatch(html,/data-id="intimidate"/);
+  assert.match(html,/Informateur/);
+  assert.match(html,/Collecte de preuves et intrusion numérique disponibles dans ce pays\./);
   assert.match(html,/Optionnel · une fois par pays/);
   await handleInquiryCommand('inquiry-substep','mandate');assert.match(html,/class="inquiry-single-action"[^>]*data-action="authorize"/);
   assert.doesNotMatch(html,/data-cmd="inquiry-action"[^>]*data-id="authorize"/);
@@ -78,7 +80,7 @@ test('Verification remains scoped to the dossier, with a free analyst at headqua
 });
 test('Displayed chances and single boost use the engine; completed steps stay distinct',()=>{
  const s=fresh(),{t,a,f}=local(s);f.access[t.country]=true;f.budget=50;
- assert.equal(inquiryCompleted(s,t,'contacts'),'Contact activé');
+ assert.equal(inquiryCompleted(s,t,'contacts'),'Accès ouvert');
  for(const type of ['collect','surveil','hack'])for(const boost of [false,true]){
   const r=inquiryCandidate(s,t,type,a,null,boost),o=E.options(s,a.id,type,t.id,boost);
   assert.equal(r.o.chance,o.chance);assert.equal(r.o.cost,boost?E.ECONOMY.boostCost:0);assert.equal(r.o.duration,o.duration);

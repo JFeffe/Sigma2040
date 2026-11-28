@@ -1,32 +1,32 @@
-import {operationMapMarkup} from './draft-ui.js?v=246';
-import {operationCountries} from './operation-map.js?v=246';
-import {cellInfoBadge} from './cell-info.js?v=246';
-import {agentLocation} from './agent-location.js?v=246';
-import {attackDelayBanner} from './attack-delay-ui.js?v=246';
-import {countrySidebarActions,floatingAgentMarkup} from './country-operations.js?v=246';
-import {isCooperative,visibleTeam} from './cooperative.js?v=246';
-import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=246';
-import {isTutorial} from './tutorial-rules.js?v=246';
-import {recruitCard,selectedRecruitSlots,recruitControls,visibleRecruits} from './recruit-selection.js?v=246';
-import {aiDifficultyControl} from './ai-difficulty.js?v=246';
-import {threatPanel} from './threats-ui.js?v=246';
-import {personnelPanel} from './personnel-ui.js?v=246';
-import {teamBalanceMarkup} from './team-balance.js?v=246';
-import {COOPERATION,cooperationRules} from './cooperation.js?v=246';
-import {technologyPanel} from './technology-ui.js?v=246';
-import {prestigeHistory} from './prestige.js?v=246';
-import {countryArtHeader,countrySignals,diplomacySignals} from './country-signals.js?v=246';
-import {suspectPortrait,SUSPECT_PROFILES,identityKnown} from './fracture-profiles.js?v=246';
-import {plotStage} from './fracture.js?v=246';
-import {activityRows,techUnavailable} from './experience.js?v=246';
-import {evidenceSummary,nationalPanel,foreignProgress} from './command-ui.js?v=246';
-import {proofTitle} from './intelligence.js?v=246';
-import {countryOptions,statusBadge,availability,caseProgress,sortedCaseTargets} from './presentation.js?v=246';
-import {renderMap} from './map.js?v=246';
-import {cityArt,fullBody} from './visuals.js?v=246';
-import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,TALENTS,STAT_NAMES,ACTIONS,CELLS,cellName,EVIDENCE_NAMES,TECH} from './data.js?v=246';
-import * as E from './engine.js?v=246';
-import {esc,icon,button,flag,nationalities,nationalityFlags,talentIcon,portrait,statlines,talents,brand,heading,formatScore,campaignHeading} from './ui.js?v=246';
+import {operationMapMarkup} from './draft-ui.js?v=247';
+import {operationCountries} from './operation-map.js?v=247';
+import {cellInfoBadge} from './cell-info.js?v=247';
+import {agentLocation} from './agent-location.js?v=247';
+import {attackDelayBanner} from './attack-delay-ui.js?v=247';
+import {countrySidebarActions,floatingAgentMarkup} from './country-operations.js?v=247';
+import {isCooperative,visibleTeam} from './cooperative.js?v=247';
+import {isNpcTutorial,tutorialRecruitment} from './tutorial-mode.js?v=247';
+import {isTutorial} from './tutorial-rules.js?v=247';
+import {recruitCard,selectedRecruitSlots,recruitControls,visibleRecruits} from './recruit-selection.js?v=247';
+import {aiDifficultyControl} from './ai-difficulty.js?v=247';
+import {threatPanel} from './threats-ui.js?v=247';
+import {personnelPanel} from './personnel-ui.js?v=247';
+import {teamBalanceMarkup} from './team-balance.js?v=247';
+import {COOPERATION,cooperationRules} from './cooperation.js?v=247';
+import {technologyPanel} from './technology-ui.js?v=247';
+import {prestigeHistory} from './prestige.js?v=247';
+import {countryArtHeader,countrySignals,diplomacySignals} from './country-signals.js?v=247';
+import {suspectPortrait,SUSPECT_PROFILES,identityKnown} from './fracture-profiles.js?v=247';
+import {plotStage} from './fracture.js?v=247';
+import {activityRows,techUnavailable} from './experience.js?v=247';
+import {evidenceSummary,nationalPanel,foreignProgress} from './command-ui.js?v=247';
+import {proofTitle} from './intelligence.js?v=247';
+import {countryOptions,statusBadge,availability,caseProgress,sortedCaseTargets} from './presentation.js?v=247';
+import {renderMap} from './map.js?v=247';
+import {cityArt,fullBody} from './visuals.js?v=247';
+import {COUNTRIES,COUNTRY,DISPLAY_ROSTER as ROSTER,ROSTER as FULL_ROSTER,TALENTS,STAT_NAMES,ACTIONS,CELLS,cellName,EVIDENCE_NAMES,TECH} from './data.js?v=247';
+import * as E from './engine.js?v=247';
+import {esc,icon,button,flag,nationalities,nationalityFlags,talentIcon,portrait,statlines,talents,brand,heading,formatScore,campaignHeading} from './ui.js?v=247';
 export function setupScreen(country,agents,hasSave,mp=null,aiDifficulty='bb2',gameMode='regular',operationMap=null){const regularSetup=gameMode==='regular',choosingMap=regularSetup&&(mp?.chooseMap||!mp&&operationMap===false);return `<div class="setup-shell"><header>${brand()}<div class="classified"><span class="classified-access">ACCÈS RESTREINT</span><span class="classified-link">CONNEXION SÉCURISÉE</span></div></header><main class="setup-main">${mp?.header||''}${heading('','Opération Ligne de faille','')}<div class="setup-columns"><div class="setup-selection"><section class="setup-country"><div class="section-title"><h2><span>01</span> Choisir votre pays</h2></div><div class="country-grid">${COUNTRIES.filter(c=>c.power).map(c=>`<button class="nation ${c.id===country?'selected':''}" data-cmd="${mp?'mp-country':'country'}" data-id="${c.id}" ${mp?.locked||mp?.taken?.includes(c.id)?'disabled':''} aria-pressed="${c.id===country}">${flag(c.id)}<div><strong>${c.name}</strong></div>${c.id===country?icon('check'):''}</button>`).join('')}</div></section>${operationMapMarkup(operationMap,country)}${choosingMap?'<p class="notice">Confirmez votre pays pour découvrir les six pays d’opération avant de composer votre unité.</p>':['advanced','cooperative'].includes(gameMode)?`<p class="notice">${gameMode==='cooperative'?'Deux pays alliés, quatre agents chacun. Dossiers, preuves, contacts, mandats, planques et hack partagés. Victoire : 3 cellules et l’Architecte en 30 tours. Crise +3 par tour, +30 par attaque réussie. Budgets et diplomatie individuels. Le PNJ prépare ses ordres avant vous.':'Confirmez votre pays pour choisir seize agents parmi les vingt disponibles. Les PNJ complèteront les quatre pays participants.'}</p>`:`<div class="section-title"><h2><span>02</span> Composer votre unité</h2><span class="count">${agents.length} / 4 agents sélectionnés</span></div>${selectedRecruitSlots(agents,mp?'multi':'solo')}${recruitControls(mp?'multi':'solo')}<div class="recruit-grid">${visibleRecruits(mp?'multi':'solo').map(a=>recruitCard(a,agents,mp?'multi':'solo')).join('')}</div>`}</div><aside class="briefing panel">${['advanced','cooperative'].includes(gameMode)?`<div class="setup-brief"><h2>${gameMode==='cooperative'?'Deux pays, huit agents':'Quatre pays, seize agents'}</h2><p>Repêchez quatre agents, puis désignez le chef de votre équipe.</p></div>`:teamBalanceMarkup(agents)}${mp?'':`<div class="setup-game-options">${aiDifficultyControl(aiDifficulty)}</div>`}${mp?'':choosingMap||['advanced','cooperative'].includes(gameMode)?button('Confirmer mon pays','solo-confirm-country','primary setup-launch'):button('Lancer l’opération','start','primary setup-launch',agents.length!==4?'disabled':'')}</aside></div></main><footer>PROGRAMME SIGMA / DIVISION RENSEIGNEMENT <span>2040 · LIGNE DE FAILLE</span></footer></div>`;}
 export function makeScreens(state,selectedCountry,selectedAgent,world,camera,locked=''){
 const f=state.factions[state.player];
@@ -149,7 +149,7 @@ function countryRelation(c,index){
     <div><dt>Exposition de vos agents</dt><dd>${agents.length?agents.map(a=>esc(a.name)+' · '+a.exposure+'/100 · '+E.exposureLabel(a)).join('<br>'):'Aucun agent sur place'}</dd></div>
     <div><dt>Planque de l’équipe</dt><dd>${E.hasSafehouse(state,state.player,c.id)?'Disponible pour tous vos agents':'À trouver'}</dd></div>
    </dl>
-   <p>${f.access[c.id]?'Accès local ouvert.':'Un contact réussi peut ouvrir l’accès local.'}</p>
+   <p>${f.access[c.id]?'Collecte de preuves et intrusion numérique disponibles dans ce pays.':'Ouvrez l’accès aux preuves avec un informateur, le chantage diplomatique ou un drone.'}</p>
    ${sightings.length?`<div class="diplomacy-sightings"><strong>Présences étrangères signalées</strong>
     ${sightings.map(a=>`<p>${flag(a.faction)} ${esc(a.name)} · Équipe ${esc(COUNTRY[a.faction].name)} · observé T${a.turn}</p>`).join('')}
     <small>Dernière observation connue ; mission et position actuelle non confirmées.</small></div>`:'<p>Aucune présence étrangère signalée.</p>'}`;

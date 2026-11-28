@@ -11,7 +11,7 @@ test('Completed local access, safehouse and mandate stay visible but cannot spen
  const allowed=locationActions(a,s);
  for(const type of ['contacts','findSafehouse','authorize']){
   assert.ok(allowed.some(([id])=>id===type));
-  assert.match(E.options(s,a.id,type).error,/terminée/);
+  assert.match(E.options(s,a.id,type).error,type==='contacts'?/Accès déjà ouvert dans ce pays/:/terminée/);
   const before=f.budget;assert.throws(()=>E.assign(s,a.id,type));assert.equal(f.budget,before);
   assert.match(actionOptions(allowed,type,s,a),new RegExp(`value="${type}"[^>]*class="[^"]*action-complete[^"]*"[^>]*>[^<]*Terminé ✓`));
  }

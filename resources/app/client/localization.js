@@ -1,5 +1,5 @@
-import {readPreference,writePreference} from './browser-preferences.js?v=246';
-import {ENGLISH_MESSAGES} from './locale-en.js?v=246';
+import {readPreference,writePreference} from './browser-preferences.js?v=247';
+import {ENGLISH_MESSAGES} from './locale-en.js?v=247';
 
 const LANGUAGE_KEY='shadow-mandate-2040-language';
 let language=readPreference(LANGUAGE_KEY)==='en'?'en':'fr';

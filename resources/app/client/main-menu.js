@@ -1,11 +1,11 @@
-import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=246';
-import {AI_LEVELS} from './ai-difficulty.js?v=246';
-import {BUILD_VERSION} from './build-version.js?v=246';
-import {menuTitleMarkup} from './menu-title.js?v=246';
-import {campaignRules} from './campaign-rules.js?v=246';
-import {renderRatio} from './graphics.js?v=246';
-import {brand,button,esc,icon} from './ui.js?v=246';
-import {COUNTRY} from './data.js?v=246';
+import {RELEASE_LINK,hasReviewedPatchNotes,unreadPatchCount} from './patch-notes.js?v=247';
+import {AI_LEVELS} from './ai-difficulty.js?v=247';
+import {BUILD_VERSION} from './build-version.js?v=247';
+import {menuTitleMarkup} from './menu-title.js?v=247';
+import {campaignRules} from './campaign-rules.js?v=247';
+import {renderRatio} from './graphics.js?v=247';
+import {brand,button,esc,icon} from './ui.js?v=247';
+import {COUNTRY} from './data.js?v=247';
 export function menuChromeMarkup(desktop){
  const build=desktop
   ? `<span class="menu-build">BUILD ${BUILD_VERSION}</span>`

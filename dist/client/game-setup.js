@@ -1,5 +1,5 @@
-import {selectOperationMap} from './operation-map.js?v=246';
-import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=246';
+import {selectOperationMap} from './operation-map.js?v=247';
+import {COUNTRIES,DISPLAY_ROSTER} from './data.js?v=247';
 
 export const GAME_MODES=Object.freeze({regular:'Standard Normal',advanced:'Standard Avancé',cooperative:'Coop'});
 export const PARTICIPANT_COUNT=4;

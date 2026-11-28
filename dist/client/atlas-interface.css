@@ -542,7 +542,7 @@ html[data-hide-info-bar] .news-ticker {display:none;}
  background:var(--atlas-inset);
 }
 .agent-profile-portrait:has(>.agent-cutout) {
- background:var(--atlas-inset) url('./assets/agent-full-background.png?v=246') center / cover no-repeat;
+ background:var(--atlas-inset) url('./assets/agent-full-background.png?v=247') center / cover no-repeat;
 }
 .agent-profile-portrait>.full-body {
  display:block;
@@ -563,7 +563,7 @@ html[data-hide-info-bar] .news-ticker {display:none;}
  min-height:0;
  padding:8px 9px;
  overflow-wrap:anywhere;
- background:url('./assets/atlas-agent-circuit-edge.png?v=246') center / 100% 100% no-repeat,
+ background:url('./assets/atlas-agent-circuit-edge.png?v=247') center / 100% 100% no-repeat,
   linear-gradient(145deg,#262626,#191919 45%,#111111);
 }
 .agent-profile-card .agent-profile-facts>* {

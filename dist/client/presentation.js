@@ -1,10 +1,10 @@
-import {mapCountries} from './operation-map.js?v=246';
-import {rescueTargets} from './cell-variants.js?v=246';
-import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=246';
-import {COUNTRY,ACTIONS} from './data.js?v=246';
-import {icon,esc,countryOption} from './ui.js?v=246';
-import {translateText} from './localization.js?v=246';
-import {evidenceFor,knownTargets,hasSafehouse,options,requiresModule} from './engine.js?v=246';
+import {mapCountries} from './operation-map.js?v=247';
+import {rescueTargets} from './cell-variants.js?v=247';
+import {investigationSteps,investigationProgressMarkup} from './investigation-steps.js?v=247';
+import {COUNTRY,ACTIONS} from './data.js?v=247';
+import {icon,esc,countryOption} from './ui.js?v=247';
+import {translateText} from './localization.js?v=247';
+import {evidenceFor,knownTargets,hasSafehouse,options,requiresModule} from './engine.js?v=247';
 const fieldOnly=new Set(['contacts','authorize','hide','influence','blackmail','drone','rescue']);
 export function locationActions(a,s=null){const home=a.country===a.faction,local=s?knownTargets(s,a.faction).some(t=>!t.arrested&&t.country===a.country):true;return Object.entries(ACTIONS).filter(([id,d])=>!d.disabled&&(home?!d.field&&!fieldOnly.has(id):!d.home)&&(id!=='rescue'||!!s&&rescueTargets(s,a.faction).some(b=>b.country===a.country))&&(id!=='findSafehouse'||!!s||!a.safehouses?.includes(a.country))&&(!['collect','surveil','prepare','arrest','hack','intimidate'].includes(id)||local));}
 export const CONTEXT_ACTIONS=new Set(['collect','surveil','prepare','arrest','hack','intimidate','protect']);
@@ -47,10 +47,10 @@ export function actionUnavailable(s,a,type){
 }
 
 export const ACTION_EFFECTS={
- influence:['Activer un contact : accès local','Coopération +1 niveau'],
+ influence:['Ouvre l’accès aux preuves','Coopération +1 niveau'],
  intimidate:['Recueillir une preuve disponible','Localiser jusqu’à la fin du tour suivant','Exposition +20 (16 avec Infiltration)'],
  hack:['Preuve disponible à vérifier · falsification possible','Hack du pays +1 tour · Recherche +1','Sans localisation · accès requis'],
- drone:['Ouvre l’accès local','Découvre et localise tous les suspects du pays','Sauf l’Architecte encore inconnu · aucune preuve','1 tour · 12 énergie']
+ drone:['Ouvre l’accès aux preuves','Découvre et localise tous les suspects du pays','Sauf l’Architecte encore inconnu · aucune preuve','1 tour · 12 énergie']
 };
 export function actionResourceBadges(type,agent){
  const research={contacts:1,hack:1,counter:2}[type]||0;

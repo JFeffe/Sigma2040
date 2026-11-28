@@ -1,9 +1,9 @@
-import {ACTIONS,COUNTRY} from './data.js?v=246';
-import {proofTitle} from './intelligence.js?v=246';
-import {formatText,translateText} from './localization.js?v=246';
-import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=246';
-import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=246';
-import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=246';
+import {ACTIONS,COUNTRY} from './data.js?v=247';
+import {proofTitle} from './intelligence.js?v=247';
+import {formatText,translateText} from './localization.js?v=247';
+import {COMPACT_IDS,isCompactTutorial,compactObjective} from './tutorial-compact.js?v=247';
+import {isNpcTutorial,tutorialGuaranteed} from './tutorial-mode.js?v=247';
+import {advancedObjective,advancedOrderError,advancedHint,ADVANCED_TUTORIALS} from './tutorial-advanced.js?v=247';
 // Training is a separate, explicitly scripted mode. No campaign uses these rules.
 export const TUTORIAL_IDS=Object.freeze([...COMPACT_IDS,'contact','evidence','arrest',...ADVANCED_TUTORIALS]);
 export const isTutorial=s=>s?.tutorial?.version===1&&TUTORIAL_IDS.includes(s.tutorial.mission);
@@ -16,7 +16,7 @@ export function tutorialObjective(s){
  const result=(step,title,text,orders=[],extra={})=>({step,title,text,orders,done:false,failed:false,...extra});
  if(s.tutorial.mission==='contact'){
   if(s.agents[0].country!=='DE')return result(0,'Rejoindre Berlin','Sélectionnez IRIS, choisissez « Voyager sous passeport » vers l’Allemagne, confirmez l’ordre puis terminez le tour.',[order('p0','travel','DE')]);
-  if(!f.access.DE)return result(1,'Ouvrir un accès local','Le contact nous attend à Berlin. Avec IRIS, affectez « Activer un contact ». Un agent sur place ne suffit pas : l’accès doit être ouvert pour recueillir des preuves.',[order('p0','contacts')]);
+  if(!f.access.DE)return result(1,'Débloquer la collecte','Affectez IRIS à « Informateur » pour pouvoir recueillir des preuves en Allemagne.',[order('p0','contacts')]);
   return result(2,'Contact établi','IRIS a obtenu un accès aux archives du réseau Filigrane. Vous savez maintenant affecter un ordre et le résoudre en terminant le tour.',[],{done:true});
  }
  if(s.tutorial.mission==='evidence'){
@@ -96,7 +96,7 @@ export function tutorialHint(s){
   const name=s.agents.find(a=>a.id===x.agentId).name;
   switch(x.type){
    case 'travel':return 'Sur le globe, sélectionnez l’Allemagne (Berlin), puis « Déployer un agent », cochez IRIS et confirmez.';
-   case 'contacts':return 'IRIS : ouvrez Vesper depuis Berlin, puis « Accès local » → « Activer un contact » et confirmez.';
+   case 'contacts':return 'Ouvrez le dossier Vesper à Berlin, choisissez « Accès » → « Informateur », puis confirmez l’ordre d’IRIS.';
    case 'collect':return `${s.factions.FR.evidence.some(e=>e.contested)?'La falsification est écartée : remplacez-la. ':''}BISHOP : dossier Vesper → « 2 preuves » → « Recueillir une preuve » (2 tours).`;
    case 'analyze':return 'APÉRO : dans le même dossier, « Validation » → « Vérifier une preuve », gardez la première pièce en attente (1 tour). Lancez la vérification dès maintenant, même si BISHOP collecte encore.';
    case 'prepare':return 'BISHOP : dossier Vesper → « Intervention » → « Préparer une arrestation ».';

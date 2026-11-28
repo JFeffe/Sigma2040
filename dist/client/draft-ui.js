@@ -1,10 +1,10 @@
-import {formatText,gameLanguage,translateText} from './localization.js?v=246';
-import {selectOperationMap,travelTurns} from './operation-map.js?v=246';
-import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=246';
-import {draftCountry,draftRoundOrder} from './game-setup.js?v=246';
-import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=246';
-import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=246';
-import {teamBalanceMarkup} from './team-balance.js?v=246';
+import {formatText,gameLanguage,translateText} from './localization.js?v=247';
+import {selectOperationMap,travelTurns} from './operation-map.js?v=247';
+import {COUNTRY,DISPLAY_ROSTER,STAT_NAMES,TALENTS} from './data.js?v=247';
+import {draftCountry,draftRoundOrder} from './game-setup.js?v=247';
+import {brand,button,flag,esc,icon,portrait,talentIcon,sortedTalents} from './ui.js?v=247';
+import {recruitCard,recruitControls,visibleRecruits,statHelp} from './recruit-selection.js?v=247';
+import {teamBalanceMarkup} from './team-balance.js?v=247';
 
 export function operationMapMarkup(ids,hq=null){
  if(!ids?.length)return '';

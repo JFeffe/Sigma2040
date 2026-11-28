@@ -1,8 +1,8 @@
-import { COUNTRY } from './data.js?v=246';
-import { GAME_MODES } from './game-setup.js?v=246';
-import { formatText, gameLanguage } from './localization.js?v=246';
-import { canDeleteCampaignSlot, firstFreeCampaignSlot } from './campaign-slots.js?v=246';
-import { button, esc, flag } from './ui.js?v=246';
+import { COUNTRY } from './data.js?v=247';
+import { GAME_MODES } from './game-setup.js?v=247';
+import { formatText, gameLanguage } from './localization.js?v=247';
+import { canDeleteCampaignSlot, firstFreeCampaignSlot } from './campaign-slots.js?v=247';
+import { button, esc, flag } from './ui.js?v=247';
 
 const statusText = {
   missing: 'Emplacement libre',

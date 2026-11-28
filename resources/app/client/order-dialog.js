@@ -1,4 +1,4 @@
-import {localizeContent} from './localization.js?v=246';
+import {localizeContent} from './localization.js?v=247';
 // Keep the action picker, briefing and reading position while refreshing the forecast.
 export function patchOrderDialog(modal,html,agentId){
  if(!modal.open||!modal.classList.contains('order-modal')||modal.dataset.orderAgent!==agentId)return false;

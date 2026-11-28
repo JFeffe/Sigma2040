@@ -1,5 +1,11 @@
 # Shadow Mandate 2040
 
+## Build 247 — Informateur
+
+**[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/de766f9f355118d06980db5a940bd15d3dac8f74...build-247)
+
+La mission « Informateur » indique ce qu’elle débloque dans le pays : la collecte de preuves et l’intrusion numérique. Dans les dossiers, l’étape s’appelle « Accès ».
+
 ## Build 246 — Infobulles, menaces et audio
 
 **[Jouer à Shadow Mandate 2040](https://sigma-2040.docile-hero-2836.chatgpt.site/)** · [Mise à jour sur GitHub](https://github.com/JFeffe/Sigma2040/compare/120cab0cee4144d3f70d79d73f1ac80b450298c9...build-246)

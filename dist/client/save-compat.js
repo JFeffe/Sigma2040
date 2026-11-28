@@ -1,4 +1,4 @@
-import {legacyStorageKey,readStorageItem} from './storage-keys.js?v=246';
+import {legacyStorageKey,readStorageItem} from './storage-keys.js?v=247';
 
 export const CAMPAIGN_KEY='shadow-mandate-2040-campaign-v1';
 export const ECONOMY_BACKUP_KEY='shadow-mandate-2040-before-free-actions-v82';

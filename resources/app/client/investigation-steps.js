@@ -1,12 +1,12 @@
-import * as E from './engine.js?v=246';
-import {esc,icon,button} from './ui.js?v=246';
+import * as E from './engine.js?v=247';
+import {esc,icon,button} from './ui.js?v=247';
 
 export const INVESTIGATION_SUBSTEPS={
  access:{open:['contacts','influence','drone'],mandate:['authorize']},
  intervention:{prepare:['prepare'],locate:['surveil','intimidate','drone']}
 };
 export const INVESTIGATION_STEPS=[
- {id:'access',short:'Accès local',label:'Établir un accès local',actions:Object.values(INVESTIGATION_SUBSTEPS.access).flat()},
+ {id:'access',short:'Accès',label:'Ouvrir l’accès aux preuves',actions:Object.values(INVESTIGATION_SUBSTEPS.access).flat()},
  {id:'proofs',short:'Preuves',label:'Recueillir deux preuves',actions:['collect','intimidate','hack']},
  {id:'validation',short:'Validation',label:'Valider une preuve',actions:['analyze']},
  {id:'intervention',short:'Intervention',label:'Préparer l’intervention',actions:Object.values(INVESTIGATION_SUBSTEPS.intervention).flat()},
@@ -19,7 +19,7 @@ export function investigationSteps(s,t){
  const done=[access,proofs>=2,verified>=1,prepared&&located,closed];
  const partial=[access&&!mandate,false,false,prepared!==located,false];
  const available=[!closed&&t.country!==s.player,!closed&&(access||!t.intimidated),!closed&&unfinished.length>0,!closed,!closed&&ready&&prepared&&located];
- const details=[access?'Accès ouvert pour le pays':'Contact, chantage ou drone',`${proofs}/2 preuves recevables`,`${verified} vérifiée(s) · ${unfinished.length} à vérifier`,`${prepared?'Préparée':'À préparer'} · ${located?'localisée':'à localiser'}`,closed?'Cible en détention':'Intervention finale'];
+ const details=[access?'Accès ouvert pour le pays':'Informateur, chantage ou drone',`${proofs}/2 preuves recevables`,`${verified} vérifiée(s) · ${unfinished.length} à vérifier`,`${prepared?'Préparée':'À préparer'} · ${located?'localisée':'à localiser'}`,closed?'Cible en détention':'Intervention finale'];
  const steps=INVESTIGATION_STEPS.map((x,i)=>({...x,done:closed||done[i],partial:!closed&&partial[i],available:available[i],detail:closed?'Terminé':details[i]}));
  const next=steps.findIndex(x=>!x.done);
  return {steps,next,done:steps.filter(x=>x.done).length,label:closed?'Affaire résolue':'Prochaine étape : '+steps[next].label.toLowerCase(),proofs,verified,unfinished,access,ready,located,mandate,prepared};
@@ -31,7 +31,7 @@ export function substepForAction(stage,type){return Object.entries(INVESTIGATION
 export function investigationSubsteps(s,t,stage,interactive=false,selected=null){
  const p=investigationSteps(s,t),field=t.country!==s.player;
  const tasks=stage==='access'?
-  [['open','Établir un accès local','unlock',p.access,field,p.access?'Accès ouvert':'Contact, chantage ou drone'],
+  [['open','Accès aux preuves','unlock',p.access,field,p.access?'Accès ouvert':'Informateur, chantage ou drone'],
    ['mandate','Obtenir un mandat','seal',p.mandate,field,'Optionnel · une fois par pays']]:
   [['prepare','Préparer une arrestation','target',p.prepared,p.ready,p.prepared?'Préparation terminée':'Deux preuves, dont une vérifiée'],
    ['locate','Localiser la cible','eye',p.located,true,p.located?'Valide jusqu’à fin T'+t.locationUntil:'Position à actualiser']];

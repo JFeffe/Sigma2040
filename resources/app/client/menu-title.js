@@ -1,4 +1,4 @@
-import {BUILD_VERSION} from './build-version.js?v=246';
+import {BUILD_VERSION} from './build-version.js?v=247';
 
 const titlePrint=`./assets/menu-title-graphite.png?v=${BUILD_VERSION}`;
 const titleMetal=`./assets/brand-triangle.png?v=${BUILD_VERSION}`;

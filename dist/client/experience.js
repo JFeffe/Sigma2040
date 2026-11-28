@@ -1,13 +1,13 @@
-import {languageSettingsMarkup,translateText} from './localization.js?v=246';
-import {readStorageItem} from './storage-keys.js?v=246';
-import {applyGraphics,graphicsMarkup} from './graphics.js?v=246';
-import {musicMarkup} from './music.js?v=246';
-import {playSound} from './sound-cues.js?v=246';
-import {threatStatus} from './threat-status.js?v=246';
-import * as E from './engine.js?v=246';
-import {COUNTRIES,COUNTRY,TECH} from './data.js?v=246';
-import {proofTitle} from './intelligence.js?v=246';
-import {esc,button,portrait,icon} from './ui.js?v=246';
+import {languageSettingsMarkup,translateText} from './localization.js?v=247';
+import {readStorageItem} from './storage-keys.js?v=247';
+import {applyGraphics,graphicsMarkup} from './graphics.js?v=247';
+import {musicMarkup} from './music.js?v=247';
+import {playSound} from './sound-cues.js?v=247';
+import {threatStatus} from './threat-status.js?v=247';
+import * as E from './engine.js?v=247';
+import {COUNTRIES,COUNTRY,TECH} from './data.js?v=247';
+import {proofTitle} from './intelligence.js?v=247';
+import {esc,button,portrait,icon} from './ui.js?v=247';
 const PREF='shadow-mandate-2040-feedback-settings';
 let prefs={sound:false,volume:25,motion:'system',infoBar:true};
 try{const saved=JSON.parse(readStorageItem(localStorage,PREF)||'{}');prefs={sound:saved.sound===true,volume:Number.isFinite(saved.volume)?Math.min(100,Math.max(0,saved.volume)):25,motion:['system','reduced'].includes(saved.motion)?saved.motion:'system',infoBar:saved.infoBar!==false};}catch{}

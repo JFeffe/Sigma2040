@@ -1,4 +1,4 @@
-import {setLocalizedHTML,translateText} from './localization.js?v=246';
+import {setLocalizedHTML,translateText} from './localization.js?v=247';
 
 const tooltipId='report-rich-tooltip';
 const tooltipTrigger='[data-rich-tooltip],[data-info-tooltip]';

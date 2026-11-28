@@ -56,7 +56,7 @@ test('Budget loss clears and disables boost without blocking a free base action;
   openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');await handleInquiryCommand('inquiry-boost');f.budget=0;refreshCountryInquiry();
   assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.match(buttonTag(d.html(),'inquiryBoost'),/aria-pressed="false"/);assert.match(d.html(),/mission-boost-balance is-insufficient"><span>Solde<\/span> <b>0<\/b>/);assert.match(d.html(),/Budget insuffisant/);await handleInquiryCommand('inquiry-boost');assert.equal(a.task,null);await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.bonusCredits,0);assert.equal(f.budget,0);E.cancel(s,a.id);
   f.budget=18;a.stats[0]=10;a.talents=['enquete'];refreshCountryInquiry();assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);assert.match(d.html(),/plafond de 90 %/);await handleInquiryCommand('inquiry-boost');await handleInquiryCommand('inquiry-confirm');assert.equal(a.task.bonusCredits,0);assert.equal(f.budget,18);
-  E.cancel(s,a.id);f.access[t.country]=false;openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');assert.match(d.html(),/accès local/i);assert.match(d.html(),/is-missing/);
+  E.cancel(s,a.id);f.access[t.country]=false;openCountryInquiry(t.id);await handleInquiryCommand('inquiry-action','collect');assert.match(d.html(),/accès aux preuves/i);assert.match(d.html(),/is-missing/);
   d.lock('Tour confirmé');refreshCountryInquiry();assert.match(d.html(),/Tour confirmé/);assert.match(buttonTag(d.html(),'inquiryBoost'),/disabled/);await handleInquiryCommand('inquiry-confirm');assert.equal(a.task,null);
  }finally{d.restore();}
 });

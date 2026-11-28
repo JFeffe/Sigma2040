@@ -1,15 +1,15 @@
-import {localizeContent} from './localization.js?v=246';
-import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=246';
-import {isTutorial,tutorialHint} from './tutorial-rules.js?v=246';
-import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=246';
-import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=246';
-import {ACTIONS,COUNTRY,cellName,STAT_NAMES,TALENTS} from './data.js?v=246';
-import * as E from './engine.js?v=246';
-import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=246';
-import {esc,icon,button,flag,portrait} from './ui.js?v=246';
-import {suspectPortrait} from './fracture-profiles.js?v=246';
-import {proofTitle} from './intelligence.js?v=246';
-import {operationReadingsMarkup,operationSuccessMarkup,operationIncidentMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=246';
+import {localizeContent} from './localization.js?v=247';
+import {cellInfoBadge,captiveMarkup} from './cell-info.js?v=247';
+import {isTutorial,tutorialHint} from './tutorial-rules.js?v=247';
+import {INVESTIGATION_STEPS,INVESTIGATION_SUBSTEPS,investigationRail,investigationSubsteps,stepForAction,substepForAction} from './investigation-steps.js?v=247';
+import {threatCoverage,threatProtectionText,coveringFactions} from './threat-status.js?v=247';
+import {ACTIONS,COUNTRY,cellName,STAT_NAMES,TALENTS} from './data.js?v=247';
+import * as E from './engine.js?v=247';
+import {ACTION_GROUPS,actionResourceBadges} from './presentation.js?v=247';
+import {esc,icon,button,flag,portrait} from './ui.js?v=247';
+import {suspectPortrait} from './fracture-profiles.js?v=247';
+import {proofTitle} from './intelligence.js?v=247';
+import {operationReadingsMarkup,operationSuccessMarkup,operationIncidentMarkup,missionTimingMarkup,missionBoostLabel} from './operations-ui.js?v=247';
 
 const relevant=new Set(['contacts','collect','analyze','surveil','authorize','prepare','arrest','influence','intimidate','hack','drone']);
 // The dropdown owns the ordering. Never maintain a second ordered action list.
@@ -36,10 +36,10 @@ export function threatInquiryModel(s,id,agentId=null,useCredits=false){
 }
 export function inquiryProofs(s,id){return E.evidenceQueue(s,s.player).filter(e=>s.proofs.find(p=>p.id===e.id)?.suspect===id&&!E.analysisAgent(s,s.player,e.id));}
 export function inquiryTarget(s,t,type,proof){return type==='analyze'?(inquiryProofs(s,t.id).find(e=>e.id===proof)?.id||inquiryProofs(s,t.id)[0]?.id||null):['contacts','authorize','influence','protect'].includes(type)?t.country:t.id;}
-export function inquiryCompleted(s,t,type){const f=s.factions[s.player];return t.arrested?'Cible déjà arrêtée':type==='contacts'&&f.access[t.country]?'Contact activé':type==='authorize'&&f.authorized[t.country]?'Mandat obtenu':type==='prepare'&&t.prepared?'Arrestation préparée':type==='intimidate'&&t.intimidated?'Intimidation effectuée':'';}
+export function inquiryCompleted(s,t,type){const f=s.factions[s.player];return t.arrested?'Cible déjà arrêtée':type==='contacts'&&f.access[t.country]?'Accès ouvert':type==='authorize'&&f.authorized[t.country]?'Mandat obtenu':type==='prepare'&&t.prepared?'Arrestation préparée':type==='intimidate'&&t.intimidated?'Intimidation effectuée':'';}
 export function inquiryRequirements(s,t,type){
  const evidence=E.evidenceFor(s,s.player,t.id),f=s.factions[s.player],r=[];
- if(['collect','hack'].includes(type))r.push({done:!!f.access[t.country],label:'Accès local ouvert',action:'contacts'});
+ if(['collect','hack'].includes(type))r.push({done:!!f.access[t.country],label:'Accès aux preuves',action:'contacts'});
  if(['prepare','arrest'].includes(type))r.push({done:evidence.length>=2,label:'Deux preuves recevables',action:'collect'},{done:evidence.some(e=>e.verified),label:'Au moins une preuve vérifiée',action:'analyze'});
  if(type==='arrest')r.push({done:!!t.prepared,label:'Arrestation préparée',action:'prepare'},{done:t.locationUntil>=s.turn,label:'Localisation valide',action:'surveil'});
  return r;
